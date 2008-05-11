@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 public class NCLEditorPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "NCLEditorPlugin";
+	public static final String PLUGIN_ID = "br.ufma.deinf.laws.ncleclipse.editors.NCLEditor";
 
 	// The shared instance
 	private static NCLEditorPlugin plugin;

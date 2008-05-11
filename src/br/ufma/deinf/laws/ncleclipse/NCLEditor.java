@@ -47,8 +47,8 @@ import br.ufma.deinf.laws.ncleclipse.util.NCLDocumentProvider;
 import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
 
 public class NCLEditor extends TextEditor {
-	public static String CONTENT_ASSIST_ACTION = "br.ufma.deinf.labmint.ncleclipse.actions.CONTENT_ASSIST"; 
-	public static String FORMAT_ACTION = "br.ufma.deinf.labmint.ncleclipse.actions.format";
+	public static String CONTENT_ASSIST_ACTION = "br.ufma.deinf.laws.ncleclipse.actions.CONTENT_ASSIST"; 
+	public static String FORMAT_ACTION = "br.ufma.deinf.laws.ncleclipse.actions.format";
 
 	private IEditorInput input;
 	private EditorContentOutlinePage outlinePage;
