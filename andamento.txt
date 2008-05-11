@@ -1,0 +1,42 @@
+Características a implementar:
+	- Posição do cursor quando a tag é inserida:
+		Qual o melhor lugar:
+			Dentro da tag ou no primeiro atributo obrigatório?
+
+	Autocomplete contextual e com template.
+		(Ver o exemplo template editor)
+	
+	Aumentar diminuir tags.
+		(Não faço idéia)
+
+2008-05-02
+	- Implementar Folding
+		Ok!
+2008-04-24
+	- Não sugerir um atributo que já está preenchido!
+		Ok!
+	- Ajeitar o autocomplete para mostrar tags sem filhos
+	na forma <tagname at=''/>
+		Ok!
+		
+2008-03-13
+	Auto identação.
+	Resolvido parcialmente - Implementar XMLAutoIdentStrategy
+
+2008-03-13
+	ContentOutline implementado.
+	É possível navegar no documento através.
+	
+2008-03-10	
+	Formatação automática - Feito
+		(Aprender como executa um editorAction)
+2008-02-27
+	Wizard para criar um documento ncl básico + Connector Base.
+		Ok
+	
+2008-02-16
+	Básico do AutoComplete.
+	
+2008-02-10
+	Coloração das tags.
+		(Sem problemas)

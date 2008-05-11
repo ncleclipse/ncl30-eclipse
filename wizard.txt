@@ -13,16 +13,16 @@ adicionar as dependências:
  	* org.eclipse.ui.ide
  	
 2° Passo: implementar as classes. No nosso caso:
-	* br.ufma.deinf.labmint.ncleclipse.wizards.NCLNewWizard
+	* br.ufma.deinf.laws.ncleclipse.wizards.NCLNewWizard
 		extends Wizard implements INewWizard
 	
-	* br.ufma.deinf.labmint.ncleclipse.wizards.NCLNewWizardPage
+	* br.ufma.deinf.laws.ncleclipse.wizards.NCLNewWizardPage
 		extends WizardPage
 		
-	* br.ufma.deinf.labmint.ncleclipse.wizards.ConnectorBaseNewWizard
+	* br.ufma.deinf.laws.ncleclipse.wizards.ConnectorBaseNewWizard
 		extends NCLWizard
 	
-	* br.ufma.deinf.labmint.ncleclipse.wizards.ConnectorBaseNewWizardBase
+	* br.ufma.deinf.laws.ncleclipse.wizards.ConnectorBaseNewWizardBase
 		extends NCLNewWizardPage
 
 3° Passo registrar as extensões no plugin.xml:

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="br.ufma.deinf.laws.ncleclipse.NCLEditor"
+            contributorClass="br.ufma.deinf.laws.ncleclipse.NCLActionContributor"
+            default="true"
+            extensions="ncl,conn"
+            icon="icons/sample.gif"
+            id="br.ufma.deinf.laws.ncleclipse.editors.NCLEditor"
+            name="NCL Eclipse">
+      </editor>
+   </extension>
+   <!--Editor Actions -->
+   <!-- End of Editor Actions -->
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="ncleclipse"
+            name="NCL">
+      </category>
+      <wizard
+            category="ncleclipse"
+            class="br.ufma.deinf.laws.ncleclipse.wizards.NCLNewWizard"
+            icon="icons/sample.gif"
+            id="ncleclipse.wizards.NCLNewWizard"
+            name="NCL Document">
+      </wizard>
+      <wizard
+            category="ncleclipse"
+            class="br.ufma.deinf.laws.ncleclipse.wizards.ConnectorBaseNewWizard"
+            icon="icons/sample.gif"
+            id="ncleclipse.wizards.ConnectorBaseNewWizard"
+            name="Connector Base Document">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.jdt.ui.category.source"
+            description="%ActionDefinition.format.description"
+            id="br.ufma.deinf.laws.ncleclipse.actions.format"
+            name="%ActionDefinition.format.name">
+      </command>
+   </extension>
+   <extension
+         id="nclerror"
+         name="NCL Error"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.markers.problemmarker">
+      </super>
+      <super
+            type="org.eclipse.core.resources.markers.textmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+</plugin>
