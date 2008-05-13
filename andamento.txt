@@ -1,5 +1,8 @@
 Caracter√≠sticas a implementar:
-	- Posi√ß√£o do cursor quando a tag √© inserida:
+	- Sugest„o do atributo refer de <media>.
+		- Sugere a prÛpria media
+		
+	- PosiÁ„o do cursor quando a tag √© inserida:
 		Qual o melhor lugar:
 			Dentro da tag ou no primeiro atributo obrigat√≥rio?
 
@@ -7,6 +10,9 @@ Caracter√≠sticas a implementar:
 		(Ver o exemplo template editor)
 	
 2008-05-13
+    - Sugest„o dos atributos instance de <media>
+      Ok!
+      
 	- Sugest„o dos tipos MIME para a mÌdia.
 		Ok!
 		
