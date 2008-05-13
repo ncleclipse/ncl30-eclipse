@@ -6,9 +6,10 @@ Características a implementar:
 	Autocomplete contextual e com template.
 		(Ver o exemplo template editor)
 	
-	Aumentar diminuir tags.
-		(Não faço idéia)
-
+2008-05-13
+	- Sugest�o dos tipos MIME para a m�dia.
+		Ok!
+		
 2008-05-02
 	- Implementar Folding
 		Ok!
