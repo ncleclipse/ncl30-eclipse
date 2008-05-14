@@ -86,7 +86,18 @@ public class NCLContentHandler implements ContentHandler{
 	@Override
 	public void startElement(String URI, String localName, String qName,
 			Attributes atts) throws SAXException {
-		//implementação da perspectiva
+		String strPerspective = "";
+		if(perspective.size() > 0 ) strPerspective = perspective.lastElement(); 
+		
+		// Carrega o NCLDocument
+		System.out.println("Adicionando no NCLContentHandler " + qName + " id = "+ atts.getValue("id"));
+		NCLElement nclElement = new NCLElement(localName, strPerspective);
+		for(int i = 0; i < atts.getLength(); i++){
+			nclElement.setAttributeValue(atts.getLocalName(i), atts.getValue(i));
+		}
+		nclDocument.addElement(nclElement, atts.getValue("id"));
+		
+		//Verifica se o elemento atual define uma perspectiva 
 		if(localName.equals("body") 
 				|| localName.equals("context") 
 				|| localName.equals("media")
@@ -95,22 +106,13 @@ public class NCLContentHandler implements ContentHandler{
 				|| localName.equals("ncl"))
 		{
 			if (atts.getValue("id") != null){
-				String strPerspective = "";
+				String strNewPerspective = "";
 				if(nclDocument.alias != null && !nclDocument.alias.equals(""))
-					strPerspective = nclDocument.alias+"#";
-				strPerspective += atts.getValue("id");
-				perspective.push(strPerspective);
+					strNewPerspective = nclDocument.alias+"#";
+				strNewPerspective += atts.getValue("id");
+				perspective.push(strNewPerspective);
 			}
 		}
-		
-		// Carrega o NCLDocument
-		System.out.println("Adicionando no NCLContentHandler " + qName + " id = "+ atts.getValue("id"));
-		NCLElement nclElement = new NCLElement(localName, perspective.lastElement());
-		for(int i = 0; i < atts.getLength(); i++){
-			nclElement.setAttributeValue(atts.getLocalName(i), atts.getValue(i));
-		}
-		nclDocument.addElement(nclElement, atts.getValue("id"));
-		
 		//nclDocument.addElement(qName, atts.getValue("id"));
 		if(localName.equals("importBase")){
 			String alias_ant = nclDocument.getAlias();

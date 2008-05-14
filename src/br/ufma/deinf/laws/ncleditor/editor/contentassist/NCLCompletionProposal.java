@@ -339,9 +339,14 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 		
 		//Referencias que precisam de contexto
 		String perspective = null;
-		boolean needPerspective = false;
 		if(tagname.equals("port") && attribute.equals("interface"))
 			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
+		
+		//TODO: caso o id esteja definido no ncl, aqui temos um problema
+		if(tagname.equals("port") && attribute.equals("component")){
+			String fatherTagName = getFatherTagName(doc, offset);
+			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "id");
+		}
 		
 		if(tagname.equals("bind") && attribute.equals("role"))
 			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "xconnector");		
@@ -371,7 +376,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			}
 		}
 		
-		//Referencias Globais (ou seja, não precisa de contexto)
+		//Referencias Globais (ou seja, nï¿½o precisa de contexto)
 		it = nclReference.iterator();
 		if(perspective == null){
 			it = nclReference.iterator();
