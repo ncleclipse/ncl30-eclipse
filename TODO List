@@ -1,4 +1,5 @@
-Caracter√≠sticas a implementar:
+CaracterÌsticas a implementar:
+
 	- Sugest„o do atributo refer de <media>.
 		- Sugere a prÛpria media
 		
@@ -6,8 +7,6 @@ Caracter√≠sticas a implementar:
 		Qual o melhor lugar:
 			Dentro da tag ou no primeiro atributo obrigat√≥rio?
 
-	Autocomplete contextual e com template.
-		(Ver o exemplo template editor)
 	
 2008-05-13
     - Sugest„o dos atributos instance de <media>
@@ -35,7 +34,7 @@ Caracter√≠sticas a implementar:
 	√â poss√≠vel navegar no documento atrav√©s.
 	
 2008-03-10	
-	Formata√ß√£o autom√°tica - Feito
+	FormataÁ„o autom·tica - Feito
 		(Aprender como executa um editorAction)
 2008-02-27
 	Wizard para criar um documento ncl b√°sico + Connector Base.
