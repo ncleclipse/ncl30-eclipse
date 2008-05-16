@@ -54,7 +54,7 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler
 		int lineNumber = e.getLineNumber();
 		int columnNumber = e.getColumnNumber();
 		MarkerUtilities.setLineNumber(map, lineNumber);
-		MarkerUtilities.setMessage(map, e.getMessage());
+		MarkerUtilities.setMessage(map, "Erro sintático no XML ('"+ e.getMessage()+"').");
 		map.put(IMarker.LOCATION, file.getFullPath().toString());
 
 		Integer charStart = getCharStart(lineNumber, columnNumber);

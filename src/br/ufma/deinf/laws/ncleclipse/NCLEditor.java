@@ -128,6 +128,7 @@ public class NCLEditor extends TextEditor {
 			File docFile = new File(file.getLocationURI());
 			Document doc = null;
 			MessageList.clear();
+			MessageList.setLanguage(MessageList.PORTUGUESE);
 	        try {
 	        		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	        		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -147,7 +148,7 @@ public class NCLEditor extends TextEditor {
 	        catch (Exception e) {
 	        	//TODO Alguma coisa
 	        	e.printStackTrace();
-	        	MessageList.addError(docFile.getAbsolutePath(), e.getMessage(), null);
+	        	MessageList.addError(docFile.getAbsolutePath(), "Erro sint�tico no XML ("+e.getMessage()+")", null, MessageList.PORTUGUESE);
 	        }
 	        
 	        //TODO: Falta pegar a posição do erro e/ou warning!
