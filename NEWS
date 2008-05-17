@@ -1,11 +1,11 @@
 Validador com mensagens em Português.
-
 1. Área Funcional Structure
-  
   - Adicionado o valor "http://www.ncl.org.br/NCL3.0/CausalConnectorProfile"
   ao atributo XMLNS de NCL.
   
-  - NULL era sugerido com atributo de HEAD (bug corrigido).
+  - NULL era sugerido com atributo de HEAD (BUG corrigido).
+  
+  - BODY é obrigado a ter um id! (BUG ou restrição)
   
 2. Área funcional Layout
   

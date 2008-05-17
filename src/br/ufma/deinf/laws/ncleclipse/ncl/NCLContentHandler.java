@@ -15,6 +15,7 @@ import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
 public class NCLContentHandler implements ContentHandler{
 	private NCLDocument nclDocument = null;
 	private Stack<String> perspective;
+	private String perspectiveSemId = "0";
 	@Override
 	public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
 		// TODO Auto-generated method stub
@@ -36,8 +37,7 @@ public class NCLContentHandler implements ContentHandler{
 				|| arg1.equals("context") 
 				|| arg1.equals("media")
 				|| arg1.equals("switch")
-				|| arg1.equals("causalConnector")
-				|| arg1.equals("ncl"))
+				|| arg1.equals("causalConnector"))
 		{
 			System.out.println("pop " + perspective.lastElement());
 			perspective.pop();
@@ -104,14 +104,20 @@ public class NCLContentHandler implements ContentHandler{
 				|| localName.equals("context") 
 				|| localName.equals("media")
 				|| localName.equals("switch")
-				|| localName.equals("causalConnector")
-				|| localName.equals("ncl"))
+				|| localName.equals("causalConnector"))
 		{
 			if (atts.getValue("id") != null){
 				String strNewPerspective = "";
 				if(nclDocument.alias != null && !nclDocument.alias.equals(""))
 					strNewPerspective = nclDocument.alias+"#";
-				strNewPerspective += atts.getValue("id");
+				if(atts.getValue("id") != null)
+					strNewPerspective += atts.getValue("id");
+				else {
+					Integer pTmp = new Integer(perspectiveSemId);
+					pTmp+=1;
+					perspectiveSemId = pTmp.toString();
+					strNewPerspective += perspectiveSemId;
+				}
 				perspective.push(strNewPerspective);
 			}
 		}
