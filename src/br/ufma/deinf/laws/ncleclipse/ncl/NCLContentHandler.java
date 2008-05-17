@@ -31,13 +31,15 @@ public class NCLContentHandler implements ContentHandler{
 	public void endElement(String localName, String arg1, String arg2)
 			throws SAXException {
 		// TODO Auto-generated method stub
-		if(localName.equals("body") 
-				|| localName.equals("context") 
-				|| localName.equals("media")
-				|| localName.equals("switch")
-				|| localName.equals("causalConnector")
-				|| localName.equals("ncl"))
+		System.out.println("end element " + arg1);
+		if(arg1.equals("body") 
+				|| arg1.equals("context") 
+				|| arg1.equals("media")
+				|| arg1.equals("switch")
+				|| arg1.equals("causalConnector")
+				|| arg1.equals("ncl"))
 		{
+			System.out.println("pop " + perspective.lastElement());
 			perspective.pop();
 		}
 	}
@@ -90,7 +92,7 @@ public class NCLContentHandler implements ContentHandler{
 		if(perspective.size() > 0 ) strPerspective = perspective.lastElement(); 
 		
 		// Carrega o NCLDocument
-		System.out.println("Adicionando no NCLContentHandler " + qName + " id = "+ atts.getValue("id"));
+		System.out.println("Adicionando no NCLContentHandler " + qName + " id = "+ atts.getValue("id") + " - perspective = " + strPerspective);
 		NCLElement nclElement = new NCLElement(localName, strPerspective);
 		for(int i = 0; i < atts.getLength(); i++){
 			nclElement.setAttributeValue(atts.getLocalName(i), atts.getValue(i));
