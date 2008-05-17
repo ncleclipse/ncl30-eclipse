@@ -1,8 +1,12 @@
 Características a implementar:
 
-	- Sugestão do atributo refer de <media>.
+	- Sugestão do atributo refer de <media>. (BUG)
 		- Sugere a própria media
-		
+	
+	- Tocar o documento.
+	
+	- Linha e coluna do Erro.
+	
 	- Posição do cursor quando a tag Ã© inserida:
 		Qual o melhor lugar:
 			Dentro da tag ou no primeiro atributo obrigatÃ³rio?
