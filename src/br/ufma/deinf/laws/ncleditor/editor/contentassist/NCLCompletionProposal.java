@@ -343,16 +343,24 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
 		
 		//TODO: caso o id esteja definido no ncl, aqui temos um problema
-		if(tagname.equals("port") && attribute.equals("component")){
+		if((tagname.equals("port") && attribute.equals("component"))
+			|| (tagname.equals("context") && attribute.equals("refer"))
+			|| (tagname.equals("media") && attribute.equals("refer"))){
+			
 			String fatherTagName = getFatherTagName(doc, offset);
 			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "id");
 		}
 		
+		if(tagname.equals("bind") && attribute.equals("component")){
+			String grandFatherTagName = getFatherTagName(doc, getFatherPartitionOffset(doc, offset));
+			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, offset)), "id");
+		}
+		
 		if(tagname.equals("bind") && attribute.equals("role"))
 			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "xconnector");		
-
-		if(tagname.equals("bind") && attribute.equals("role"))
-			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "xconnector");
+		
+		if(tagname.equals("bind") && attribute.equals("interface"))
+			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
 		
 		System.out.println("perspective = " + perspective);
 		Collection nclReference = nclStructure.getNCLReference(tagname, attribute);
@@ -426,7 +434,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 		while(it.hasNext()){
 			Map.Entry<String, Boolean> entry = (Entry<String, Boolean>) it.next();
 			String view = entry.getKey();
-			if(attributeTyped.contains(view)) continue;
+			if(attributeTyped.contains(view) || view==null) continue;
 			String prop = entry.getKey() + "=\"\"";
 			if(prop.startsWith(qualifier)){
 				cursor = prop.length();

@@ -1,0 +1,42 @@
+Validador com mensagens em Português.
+
+1. Área Funcional Structure
+  
+  - Adicionado o valor "http://www.ncl.org.br/NCL3.0/CausalConnectorProfile"
+  ao atributo XMLNS de NCL.
+  
+  - NULL era sugerido com atributo de HEAD (bug corrigido).
+  
+2. Área funcional Layout
+  
+  - Atributo device de regionBase sugere agora os valores systemAudio(i)
+  e systemScreen(i). O validador gera um warning caso o valor do atributo
+  não seja desta forma.
+  
+  - Atributos do tipo SIZE não aceitam DOUBLE (bug)
+  
+3. Área Funcional Components
+
+  - Atributo type, sugere os tipos MIME definidos na norma.
+  
+  - Atributo refer de media/context sugere a própria media/context (BUG).
+  
+  - Atributo instance de media sugere os valores new, instSame, gradSame.
+  
+  - Tipo de dados do atributo coords de area com bug na validação. (BUG).
+  
+  - Muitas dúvidas no switchPort.
+  
+ 
+ 
+Sugestões baseadas em perspectivas:
+- component do bind
+- interface do bind
+- role do bind
+- component do port
+- interface do port
+- refer do media
+- refer do context
+  
+  
+    
