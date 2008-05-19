@@ -133,7 +133,14 @@ public class NCLContentHandler implements ContentHandler{
 			XMLParser parser = new XMLParser();
 			parser.setContentHandler(this);
 			try {
-				parser.doParse(new File(new URI(nclDocument.getParentURI().toString()+"/"+atts.getValue("documentURI"))));
+				if(atts.getValue("documentURI") != null && !atts.getValue("documentURI").equals("")){
+				URI uri = new URI(atts.getValue("documentURI"));
+					if(uri.isAbsolute()){
+						parser.doParse(new File(uri));
+					}
+					else 
+						parser.doParse(new File(new URI(nclDocument.getParentURI().toString()+"/"+atts.getValue("documentURI"))));
+				}
 			} catch (Exception e) {
 				throw new SAXException(e);
 			}
