@@ -1,6 +1,8 @@
 Características a implementar:
-
-	- Sugestão do atributo refer de <media>. (BUG)
+	- importedDocumentBase
+	- importNCL
+	- bindRule
+	- Sugestão do atributo refer de <media>, <context> e <switch>. (BUG)
 		- Sugere a própria media
 	
 	- Tocar o documento.

@@ -343,21 +343,30 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
 		
 		//TODO: caso o id esteja definido no ncl, aqui temos um problema
+		//Contexto é o pai
 		if((tagname.equals("port") && attribute.equals("component"))
 			|| (tagname.equals("context") && attribute.equals("refer"))
-			|| (tagname.equals("media") && attribute.equals("refer"))){
+			|| (tagname.equals("media") && attribute.equals("refer"))
+			|| (tagname.equals("bindRule") && attribute.equals("constituint"))
+			|| (tagname.equals("switch") && attribute.equals("refer"))
+			|| (tagname.equals("defaultComponent") && attribute.equals("component"))){
 			
 			String fatherTagName = getFatherTagName(doc, offset);
 			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "id");
 		}
 		
-		if(tagname.equals("bind") && attribute.equals("component")){
+		//Contexto é o pai do pai
+		if((tagname.equals("bind") && attribute.equals("component"))
+			|| (tagname.equals("mapping") && attribute.equals("component"))){
+			
 			String grandFatherTagName = getFatherTagName(doc, getFatherPartitionOffset(doc, offset));
 			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, offset)), "id");
 		}
 		
-		if(tagname.equals("bind") && attribute.equals("role"))
-			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "xconnector");		
+		if(tagname.equals("bind") && attribute.equals("role")
+			|| (tagname.equals("linkParam") && (attribute.equals("name")))){
+			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "xconnector");
+		}
 		
 		if(tagname.equals("bind") && attribute.equals("interface"))
 			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
@@ -373,6 +382,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			Iterator it2 = elements.iterator();
 			while(it2.hasNext()){
 				text = ((NCLElement)it2.next()).getAttributeValue(nclRefAtual.getRefAttribute());
+				if(text == null) continue;
 				if(text.startsWith(qualifier)){
 					cursor = text.length();
 					System.out.println("Attribute Value Proposal = " + text);
