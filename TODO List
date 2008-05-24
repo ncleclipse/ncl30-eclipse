@@ -2,21 +2,69 @@ Características a implementar:
 	- importedDocumentBase
 	- importNCL
 	- bindRule
+	- Tocar o documento.
+	- Linha e coluna do Erro.
+	- Id do body é obrigatório para o autocomplete funcionar contextualmente.
+	- A lógica para os três profiles (EDTV, BDTV e CausalConnector) não está
+			sendo feita. A lógica seria:
+		
+			Se atributo xmlns do <ncl> é http://www.ncl.org.br/NCL3.0/EDTVProfile então
+			faz como está sendo feito;
+			
+			Se atributo xmlns do <ncl> é http://www.ncl.org.br/NCL3.0/BDTVProfile então
+			não aceita APENAS <meta>, <metadata> e <transactionBase> (o que vai excluir
+			<transaction>) no <head>;
+			
+			Se atributo xmlns do <ncl> é
+			http://www.ncl.org.br/NCL3.0/CausalConnectorProfile então só aceita a
+			estrutura:
+			<ncl>
+			 <head>
+			   <connectorBase>
+			     <causalConnector/>
+			   </connectorBase>
+			 </head>
+			</ncl>
+
+	- (Idéia MUITO BOA!!!) O Luiz sugere que num caso como abaixo:
+			<media id="">
+			</media>
+			
+			Se eu editar no plugin uma barra fechando a TAG assim:
+			
+			<media id=""/>
+			</media>
+			
+			O plugin sumiria com o </media>:
+			<media id=""/>
+			
+			Note que isso é para ser feito apenas se o <media> tiver o content vazio. No
+			caso abaixo, NÃO é para fazer isso:
+			<media id="">
+			 <area id="teste"/>
+			</media>
+			
+			Ficaria ERRADO MESMO mas o usuário não perde o que fez:
+			<media id=""/>
+			 <area id="teste"/>
+			</media>
+	
+
+2008-05-23
+	- attributteType é opcional.
+		Ok! 
+	
+	- O arquivo de conectores não tem extensão .conn, é .ncl mesmo.
+		OK!
+		
 	- Sugestão do atributo refer de <media>, <context> e <switch>. (BUG)
 		- Sugere a própria media
-	
-	- Tocar o documento.
-	
-	- Linha e coluna do Erro.
-	
-	- Posição do cursor quando a tag Ã© inserida:
-		Qual o melhor lugar:
-			Dentro da tag ou no primeiro atributo obrigatÃ³rio?
-
-	
+	Não sugere Mais.
+		OK!
+		
 2008-05-13
     - Sugestão dos atributos instance de <media>
-      Ok!
+      	Ok!
       
 	- Sugestão dos tipos MIME para a mídia.
 		Ok!
@@ -24,31 +72,33 @@ Características a implementar:
 2008-05-02
 	- Implementar Folding
 		Ok!
+		
 2008-04-24
-	- NÃ£o sugerir um atributo que jÃ¡ estÃ¡ preenchido!
+	- Não sugerir um atributo que já está preenchido!
 		Ok!
 	- Ajeitar o autocomplete para mostrar tags sem filhos
 	na forma <tagname at=''/>
 		Ok!
 		
 2008-03-13
-	Auto identaÃ§Ã£o.
+	Auto identação.
 	Resolvido parcialmente - Implementar XMLAutoIdentStrategy
 
 2008-03-13
 	ContentOutline implementado.
-	Ã‰ possÃ­vel navegar no documento atravÃ©s.
+	É possível navegar no documento através da árvore.
 	
 2008-03-10	
 	Formatação automática - Feito
 		(Aprender como executa um editorAction)
+
 2008-02-27
 	Wizard para criar um documento ncl bÃ¡sico + Connector Base.
 		Ok
 	
 2008-02-16
-	BÃ¡sico do AutoComplete.
+	Básico do AutoComplete.
 	
 2008-02-10
-	ColoraÃ§Ã£o das tags.
+	Coloração das tags.
 		(Sem problemas)
