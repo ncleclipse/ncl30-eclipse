@@ -16,7 +16,7 @@ public class ConnectorBaseNewWizardPage extends NCLNewWizardPage {
 	 */
 	public ConnectorBaseNewWizardPage(ISelection selection) {
 		super(selection);
-		setExtension(".conn");
+		setExtension(".ncl");
 		setTitle("Connector Base New Wizard.");
 		setDescription("This wizard creates a new file with *.conn extension that can be opened by the ncl-eclipse editor.");
 		this.selection = selection;

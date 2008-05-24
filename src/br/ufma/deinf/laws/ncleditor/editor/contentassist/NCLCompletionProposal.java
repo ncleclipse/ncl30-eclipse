@@ -383,6 +383,14 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			while(it2.hasNext()){
 				text = ((NCLElement)it2.next()).getAttributeValue(nclRefAtual.getRefAttribute());
 				if(text == null) continue;
+				
+				// refer não pode sugerir a própria media, switch, etc.
+				if(attribute.equals("refer")){ 
+					String idAtual = getAttributeValueFromCurrentTagName(doc, offset, "id");
+					if(idAtual != null)
+						if(text.equals(idAtual)) continue;
+				}
+				
 				if(text.startsWith(qualifier)){
 					cursor = text.length();
 					System.out.println("Attribute Value Proposal = " + text);
