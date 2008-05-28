@@ -114,11 +114,15 @@ public class NCLContentHandler implements ContentHandler{
 			if(atts.getValue("id") != null)
 				strNewPerspective += atts.getValue("id");
 			else {
-				Integer pTmp = new Integer(perspectiveSemId);
-				pTmp += 1;
-				perspectiveSemId = pTmp.toString();
-				strNewPerspective += perspectiveSemId;
-				System.out.println(strNewPerspective);
+				if(perspective.size() > 0){
+					strNewPerspective += perspective.lastElement();
+				}
+				else{
+					Integer pTmp = new Integer(perspectiveSemId);
+					pTmp += 1;
+					perspectiveSemId = pTmp.toString();
+					strNewPerspective += perspectiveSemId;
+				}
 			}
 			perspective.push(strNewPerspective);
 		}

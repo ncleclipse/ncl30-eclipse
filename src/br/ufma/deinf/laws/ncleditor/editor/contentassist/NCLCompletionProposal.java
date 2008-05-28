@@ -11,6 +11,9 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -22,6 +25,8 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.SimpleWildcardTester;
+import org.eclipse.ui.internal.Workbench;
 
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
@@ -352,7 +357,22 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			|| (tagname.equals("defaultComponent") && attribute.equals("component"))){
 			
 			String fatherTagName = getFatherTagName(doc, offset);
-			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "id");
+			try{
+				perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "id");
+			}
+			catch(Exception e){
+				if(fatherTagName.equals("body")){
+					try{
+						perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, offset)), "id");
+					}
+					catch(Exception e1){
+						MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Erro", "Elemento <ncl> ou <body> deve possuir um id para o funcionamento correto do Autocomplete!"); 
+					}
+				}
+				else {
+					MessageDialog.openError(Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Erro", "Elemento <"+fatherTagName+"> deve possuir um id para o funcionamento correto do Autocomplete!");
+				}
+			}
 		}
 		
 		//Contexto é o pai do pai
