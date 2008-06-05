@@ -348,7 +348,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
 		
 		//TODO: caso o id esteja definido no ncl, aqui temos um problema
-		//Contexto é o pai
+		//Contexto ï¿½ o pai
 		if((tagname.equals("port") && attribute.equals("component"))
 			|| (tagname.equals("context") && attribute.equals("refer"))
 			|| (tagname.equals("media") && attribute.equals("refer"))
@@ -375,12 +375,19 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			}
 		}
 		
-		//Contexto é o pai do pai
+		//Contexto ï¿½ o pai do pai
 		if((tagname.equals("bind") && attribute.equals("component"))
 			|| (tagname.equals("mapping") && attribute.equals("component"))){
 			
 			String grandFatherTagName = getFatherTagName(doc, getFatherPartitionOffset(doc, offset));
-			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, offset)), "id");
+			try {
+				perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, offset)), "id");
+			}
+			catch(Exception e){
+				if(grandFatherTagName.equals("body")){
+					perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, offset))), "id");
+				}
+			}
 		}
 		
 		if(tagname.equals("bind") && attribute.equals("role")
@@ -404,7 +411,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 				text = ((NCLElement)it2.next()).getAttributeValue(nclRefAtual.getRefAttribute());
 				if(text == null) continue;
 				
-				// refer não pode sugerir a própria media, switch, etc.
+				// refer nï¿½o pode sugerir a prï¿½pria media, switch, etc.
 				if(attribute.equals("refer")){ 
 					String idAtual = getAttributeValueFromCurrentTagName(doc, offset, "id");
 					if(idAtual != null)
