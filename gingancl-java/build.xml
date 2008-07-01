@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Java-Projects" basedir="." default="ginga-ncl-java">
+	<property name="NCL_PROJECT_DIR" location="..//ncl30-java" />
+	<property name="GINGANCL_PROJECT_DIR" location="." />
+	<property name="EXTERNAL_LIBRARY_PATH" location="${basedir}/lib/ext" />
+	<property name="JMF_LOCATION" location="${EXTERNAL_LIBRARY_PATH}/jmf.jar" />
+	<property name="FOBS_JMF_PLUGIN" location="${EXTERNAL_LIBRARY_PATH}/fobs4jmf.jar" />
+	
+<!--BEGIN - NCL Distribution Files -->
+	<property name="DIST_DIR" location="${basedir}/lib/core" />
+	<property name="NCL_INTERFACE_DIST" location="${DIST_DIR}/nclInterface.jar" />
+	<property name="NCL_IMPLEMENTATION_DIST" location="${DIST_DIR}/nclImplementation.jar" />
+	<property name="NCL_CONVERTER_DIST" location="${DIST_DIR}/nclConverter.jar" />
+<!--END - NCL Distribution Files -->	
+	<target name="create_dist_dir">
+		<mkdir dir="${DIST_DIR}"/>
+	</target>
+	
+	<target name="ginga-ncl-java" depends="create_dist_dir, ncl-java">
+		<ant antfile="${GINGANCL_PROJECT_DIR}/build-gingancl.xml" 
+			dir="${GINGANCL_PROJECT_DIR}" 
+			target="dist-ginga-ncl">
+		</ant>
+	</target>
+	
+	<target name="ncl-java" depends="create_dist_dir" >
+		<ant antfile="${NCL_PROJECT_DIR}/build-ncl.xml" 
+			dir="${NCL_PROJECT_DIR}" 
+			target="dist-ncl">
+		</ant>
+	</target>
+
+	<target name="run" depends="ginga-ncl-java">
+		<ant antfile="${GINGANCL_PROJECT_DIR}/build-gingancl.xml" 
+			dir="${GINGANCL_PROJECT_DIR}" 
+			target="run">
+		</ant>
+	</target>
+	
+	<target name="clean">
+		<ant antfile="${GINGANCL_PROJECT_DIR}/build-gingancl.xml" 
+			dir="${GINGANCL_PROJECT_DIR}" 
+			target="clean">
+		</ant>
+		<ant antfile="${NCL_PROJECT_DIR}/build-ncl.xml" 
+			dir="${NCL_PROJECT_DIR}" 
+			target="clean">
+		</ant>
+	</target>
+	
+</project>

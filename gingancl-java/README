@@ -1,0 +1,34 @@
+Telemedia Labs
+
+1. REQUIREMENTS
+=====================================
+
+JMF (http://java.sun.com/products/java-media/jmf/2.1.1/download.html)
+
+QuickTime (http://developer.apple.com/quicktime/qtjava/installation.html)
+
+Ant (http://ant.apache.org)
+
+JAVA (http://java.sun.com/javase/downloads/index.jsp)
+
+
+2. BUILDNG
+=====================================
+
+Before building, check the following properties at build.xml:
+
+ * JMF_LOCATION 		- Must poinf to your JMF library (jmf.jar). Ex.:"/usr/java/JMF-2.1.1e/lib/jmf.jar"
+ * QUICKTIME_LOCATION 	- Must point to your QuickTime library (QTJava.zip) or. If you are in Windows leave it empty, but make sure you have Quicktime installed. Ex.:"/usr/java/QTJava.zip"
+ * NCL_PROJECT_DIR 		- Must point to where your NCL30 project directory. Ex.:"../ncl30-java"
+ * GINGANCL_PROJECT_DIR	- Must point to where your Ginga-NCL project directory. Ex.:"../ncl30-java"
+
+After that just run the command:
+ * Compiling:
+"ant"
+ * Cleaning:
+"ant clean"
+
+3. QUESTIONS
+=====================================
+ncl @ telemidia.puc-rio.br
+

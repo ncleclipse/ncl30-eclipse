@@ -60,4 +60,24 @@
             value="true">
       </persistent>
    </extension>
+   
+<extension point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut label="NCL Presentation" 
+       icon="icons/sample.gif" 
+       modes="run" 
+       class="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut" 
+       id="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut">
+       <contextualLaunch>
+          <enablement>
+             <with variable="selection">
+                <count value="1"/>
+             </with>
+          </enablement>
+          <contextLabel mode="run" label="NCL Presentation"/>
+       </contextualLaunch>
+		<perspective id="org.eclipse.jdt.ui.JavaPerspective"/>
+     	<perspective id="org.eclipse.debug.ui.DebugPerspective"/>
+    </shortcut>
+  </extension>
+
 </plugin>

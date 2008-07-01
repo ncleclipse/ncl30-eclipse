@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Ginga-NCL" basedir="." default="dist-ginga-ncl">
+	<property name="EXTERNAL_LIBRARY_PATH" location="${basedir}/lib/ext" />
+	<property name="JMF_LOCATION" location="${EXTERNAL_LIBRARY_PATH}/jmf.jar" />
+	<property name="LUAJAVA_LOCATION" location="${EXTERNAL_LIBRARY_PATH}/luajava-1.1.jar" />
+	<property name="COBRA_LOCATION" location="${EXTERNAL_LIBRARY_PATH}/cobra.jar" />
+	<property name="JAVASCRIPT_LOCATION" location="${EXTERNAL_LIBRARY_PATH}/js.jar" />
+	<property name="FOBS_JMF_PLUGIN" location="${EXTERNAL_LIBRARY_PATH}/fobs4jmf.jar" />
+	<property name="NCL_INTERFACE_DIST" location="../ncl30-java/lib/core/nclInterface.jar" />
+	<property name="NCL_IMPLEMENTATION_DIST" location="../ncl30-java/lib/core/nclImplementation.jar" />
+	<property name="NCL_CONVERTER_DIST" location="../ncl30-java/lib/core/nclConverter.jar" />
+
+	<property name="SOURCE.VERSION" value="1.5" />
+	<property name="TARGET.VERSION" value="1.5" />
+	
+<!-- SOURCE DIRS ## BEGIN -->
+	<property name="GINGANCL_INTERFACE_SRC" location="${basedir}/src/gingancl-interface" />
+	<property name="GINGANCL_IMPLEMENTATION_SRC" location="${basedir}/src/gingancl-implementation" />
+	<property name="GINGANCL_ADAPTERS_IMPLEMENTATION_SRC" location="${basedir}/src/gingancl-adapters-implementation" />
+	<property name="GINGACORE_IO_INTERFACE_SRC" location="${basedir}/src/gingacc-io-interface" />
+	<property name="GINGACORE_IO_IMPLEMENTATION_SRC" location="${basedir}/src/gingacc-io-implementation" />
+	<property name="GINGACORE_PLAYER_INTERFACE_SRC" location="${basedir}/src/gingacc-player-interface" />
+	<property name="GINGACORE_PLAYER_IMPLEMENTATION_SRC" location="${basedir}/src/gingacc-player-implementation" />
+	<property name="GINGANCL_GUI_SRC" location="${basedir}/src/gingancl-gui" />
+	<property name="GEM_SRC" location="${basedir}/src/gem" />
+<!-- SOURCE DIRS ## END -->	
+	
+	<property name="GINGANCL_BUILD_DIR" location="${basedir}/classes" />	
+	<property name="GINGANCL_DIR" location="${basedir}" />
+	<property name="GINGANCL_DIST_DIR" location="${GINGANCL_DIR}/lib/core" />
+	
+	<property name="GINGANCL_INTERFACE_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/interface" />
+	<property name="GINGANCL_INTERFACE_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GINGANCL_INTERFACE_DIST" location="${GINGANCL_INTERFACE_DIST_DIR}/gingancl-Interfaces.jar" />
+	
+	<property name="GINGANCL_IMPLEMENTATION_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/implementation" />
+	<property name="GINGANCL_IMPLEMENTATION_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GINGANCL_IMPLEMENTATION_DIST" location="${GINGANCL_IMPLEMENTATION_DIST_DIR}/gingancl-Impl.jar" />
+	
+	<property name="GINGANCL_ADAPTERS_IMPLEMENTATION_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/adapters-impl" />
+	<property name="GINGANCL_ADAPTERS_IMPLEMENTATION_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GINGANCL_ADAPTERS_IMPLEMENTATION_DIST" location="${GINGANCL_ADAPTERS_IMPLEMENTATION_DIST_DIR}/gingancl-adapters-Impl.jar" />
+	
+	<property name="GINGANCL_GUI_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/gui" />
+	<property name="GINGANCL_GUI_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GINGANCL_GUI_DIST" location="${GINGANCL_GUI_DIST_DIR}/gingancl-gui.jar" />
+	
+	<property name="GINGACORE_IO_INTERFACE_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/gingacc-io-interface" />
+	<property name="GINGACORE_IO_INTERFACE_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GINGACORE_IO_INTERFACE_DIST" location="${GINGANCL_GUI_DIST_DIR}/gingacc-io-interface.jar" />
+	
+	<property name="GINGACORE_IO_IMPLEMENTATION_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/gingacc-io-impl" />
+	<property name="GINGACORE_IO_IMPLEMENTATION_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GINGACORE_IO_IMPLEMENTATION_DIST" location="${GINGANCL_GUI_DIST_DIR}/gingacc-io-impl.jar" />
+	
+	<property name="GINGACORE_PLAYER_INTERFACE_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/gingacc-player-interface" />
+	<property name="GINGACORE_PLAYER_INTERFACE_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GINGACORE_PLAYER_INTERFACE_DIST" location="${GINGANCL_GUI_DIST_DIR}/gingacc-player-interface.jar" />
+		
+	<property name="GINGACORE_PLAYER_IMPLEMENTATION_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/gingacc-player-impl" />
+	<property name="GINGACORE_PLAYER_IMPLEMENTATION_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GINGACORE_PLAYER_IMPLEMENTATION_DIST" location="${GINGANCL_GUI_DIST_DIR}/gingacc-player-impl.jar" />
+	
+	<property name="GEM_BUILD_DIR" location="${GINGANCL_BUILD_DIR}/gem" />
+	<property name="GEM_DIST_DIR" location="${GINGANCL_DIST_DIR}" />
+	<property name="GEM_DIST" location="${GEM_DIST_DIR}/gem.jar" />
+	
+	<target name="compile-gingacc-io-interface" depends="dist-gem">
+		<mkdir dir="${GINGACORE_IO_INTERFACE_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GINGACORE_IO_INTERFACE_BUILD_DIR}"
+			   srcdir="${GINGACORE_IO_INTERFACE_SRC}"
+			   >
+			<classpath>
+				<pathelement location="${GEM_DIST}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist-gingacc-io-interface" depends="compile-gingacc-io-interface" >
+		<mkdir dir="${GINGACORE_IO_INTERFACE_DIST_DIR}"/>
+		<jar jarfile="${GINGACORE_IO_INTERFACE_DIST}" basedir="${GINGACORE_IO_INTERFACE_BUILD_DIR}"/>
+	</target>
+		
+	<target name="clean-gingacc-io-interface">
+		<delete dir="${GINGACORE_IO_INTERFACE_BUILD_DIR}"/>
+		<delete file="${GINGACORE_IO_INTERFACE_DIST}"/>
+	</target>
+	
+	<target name="compile-gingacc-io-implementation" 
+			depends="dist-gingacc-io-interface,dist-gem">
+		<mkdir dir="${GINGACORE_IO_IMPLEMENTATION_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GINGACORE_IO_IMPLEMENTATION_BUILD_DIR}"
+			   srcdir="${GINGACORE_IO_IMPLEMENTATION_SRC}"
+			   >
+			<classpath>
+				<pathelement location="${GINGACORE_IO_INTERFACE_DIST}"/>
+				<pathelement location="${GEM_DIST}"/>
+			</classpath>
+		</javac>
+	</target>
+		
+	<target name="dist-gingacc-io-implementation" depends="compile-gingacc-io-implementation" >
+		<mkdir dir="${GINGACORE_IO_IMPLEMENTATION_DIST_DIR}"/>
+		<jar jarfile="${GINGACORE_IO_IMPLEMENTATION_DIST}" basedir="${GINGACORE_IO_IMPLEMENTATION_BUILD_DIR}"/>
+	</target>
+		
+	<target name="clean-gingacc-io-implementation">
+		<delete dir="${GINGACORE_IO_IMPLEMENTATION_BUILD_DIR}"/>
+		<delete file="${GINGACORE_IO_IMPLEMENTATION_DIST}"/>
+	</target>
+	
+	<target name="compile-gingacc-player-interface" 
+			depends="dist-gingacc-io-interface, dist-gem">
+		<mkdir dir="${GINGACORE_PLAYER_INTERFACE_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GINGACORE_PLAYER_INTERFACE_BUILD_DIR}"
+			   srcdir="${GINGACORE_PLAYER_INTERFACE_SRC}"
+			   >
+			<classpath>
+				<pathelement location="${GINGACORE_IO_INTERFACE_DIST}"/>
+				<pathelement location="${GEM_DIST}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist-gingacc-player-interface" depends="compile-gingacc-player-interface" >
+		<mkdir dir="${GINGACORE_PLAYER_INTERFACE_DIST_DIR}"/>
+		<jar jarfile="${GINGACORE_PLAYER_INTERFACE_DIST}" basedir="${GINGACORE_PLAYER_INTERFACE_BUILD_DIR}"/>
+	</target>
+		
+	<target name="clean-gingacc-player-interface">
+		<delete dir="${GINGACORE_PLAYER_INTERFACE_BUILD_DIR}"/>
+		<delete file="${GINGACORE_PLAYER_INTERFACE_DIST}"/>
+	</target>
+	
+	<target name="compile-gingacc-player-implementation" 
+			depends="dist-gingacc-io-implementation,dist-gingacc-player-interface,dist-gem,
+			dist-gingancl-implementation,dist-gingancl-interface">
+		<mkdir dir="${GINGACORE_PLAYER_IMPLEMENTATION_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GINGACORE_PLAYER_IMPLEMENTATION_BUILD_DIR}"
+			   srcdir="${GINGACORE_PLAYER_IMPLEMENTATION_SRC}"
+			   >
+			<classpath>
+				<pathelement location="${GINGACORE_IO_INTERFACE_DIST}"/>
+				<pathelement location="${GINGACORE_IO_IMPLEMENTATION_DIST}"/>
+				<pathelement location="${GINGACORE_PLAYER_INTERFACE_DIST}"/>
+				<pathelement location="${GINGANCL_IMPLEMENTATION_DIST}"/>
+				<pathelement location="${GINGANCL_INTERFACE_DIST}"/>
+				<pathelement location="${JMF_LOCATION}"/>
+				<pathelement location="${COBRA_LOCATION}"/>
+				<pathelement location="${JAVASCRIPT_LOCATION}"/>
+				<pathelement location="${LUAJAVA_LOCATION}"/>
+				<pathelement location="${GEM_DIST}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist-gingacc-player-implementation" depends="compile-gingacc-player-implementation" >
+		<mkdir dir="${GINGACORE_PLAYER_IMPLEMENTATION_DIST_DIR}"/>
+		<jar jarfile="${GINGACORE_PLAYER_IMPLEMENTATION_DIST}" basedir="${GINGACORE_PLAYER_IMPLEMENTATION_BUILD_DIR}"/>
+	</target>
+		
+	<target name="clean-gingacc-player-implementation">
+		<delete dir="${GINGACORE_PLAYER_IMPLEMENTATION_BUILD_DIR}"/>
+		<delete file="${GINGACORE_PLAYER_IMPLEMENTATION_DIST}"/>
+	</target>
+	
+	<target name="compile-gingancl-adapters-implementation" 
+			depends="dist-gingancl-interface,dist-gingacc-player-interface,
+			dist-gingancl-implementation,dist-gingacc-player-implementation,dist-gingacc-io-interface">
+		<fail unless="NCL_INTERFACE_DIST">
+			NCL30 Build (${NCL_INTERFACE_DIST}) file not found. 
+		</fail>
+		<mkdir dir="${GINGANCL_ADAPTERS_IMPLEMENTATION_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GINGANCL_ADAPTERS_IMPLEMENTATION_BUILD_DIR}"
+			   srcdir="${GINGANCL_ADAPTERS_IMPLEMENTATION_SRC}"
+			   >
+			<classpath>
+				<pathelement location="${NCL_INTERFACE_DIST}"/>
+				<pathelement location="${GINGANCL_INTERFACE_DIST}"/>
+				<pathelement location="${GINGANCL_IMPLEMENTATION_DIST}"/>
+				<pathelement location="${GINGACORE_PLAYER_INTERFACE_DIST}"/>
+				<pathelement location="${GINGACORE_PLAYER_IMPLEMENTATION_DIST}"/>
+				<pathelement location="${GINGACORE_IO_INTERFACE_DIST}"/>
+			</classpath>
+		</javac>
+	</target>
+		
+	<target name="dist-gingancl-adapters-implementation" depends="compile-gingancl-adapters-implementation" >
+		<mkdir dir="${GINGANCL_ADAPTERS_IMPLEMENTATION_DIST_DIR}"/>
+		<jar jarfile="${GINGANCL_ADAPTERS_IMPLEMENTATION_DIST}" basedir="${GINGANCL_ADAPTERS_IMPLEMENTATION_BUILD_DIR}"/>
+	</target>
+		
+	<target name="clean-gingancl-adapters-implementation">
+		<delete dir="${GINGANCL_ADAPTERS_IMPLEMENTATION_BUILD_DIR}"/>
+		<delete file="${GINGANCL_ADAPTERS_IMPLEMENTATION_DIST}"/>
+	</target>
+	
+	<target name="compile-gingancl-interface" 
+			depends="dist-gingacc-io-interface,dist-gingacc-player-interface">
+		<fail unless="NCL_INTERFACE_DIST">
+			NCL30 Build (${NCL_INTERFACE_DIST}) file not found. 
+		</fail>
+		<mkdir dir="${GINGANCL_INTERFACE_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GINGANCL_INTERFACE_BUILD_DIR}"
+			   srcdir="${GINGANCL_INTERFACE_SRC}"
+			   >
+			<classpath>
+				<pathelement location="${NCL_INTERFACE_DIST}"/>
+				<pathelement location="${GINGACORE_IO_INTERFACE_DIST}"/>
+				<pathelement location="${GINGACORE_PLAYER_INTERFACE_DIST}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist-gingancl-interface" depends="compile-gingancl-interface" >
+			<mkdir dir="${GINGANCL_INTERFACE_DIST_DIR}"/>
+			<jar jarfile="${GINGANCL_INTERFACE_DIST}" basedir="${GINGANCL_INTERFACE_BUILD_DIR}"/>
+	</target>
+	
+	<target name="clean-gingancl-interface">
+		<delete dir="${GINGANCL_INTERFACE_BUILD_DIR}"/>
+		<delete file="${GINGANCL_INTERFACE_DIST}"/>
+	</target>
+	
+	<target name="compile-gingancl-implementation" 
+			depends="dist-gingancl-interface,dist-gingacc-io-interface,dist-gingacc-player-interface,
+			dist-gingacc-io-implementation">
+		<mkdir dir="${GINGANCL_IMPLEMENTATION_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GINGANCL_IMPLEMENTATION_BUILD_DIR}"
+			   srcdir="${GINGANCL_IMPLEMENTATION_SRC}"
+			   >
+			<classpath>
+				<pathelement location="${GINGANCL_INTERFACE_DIST}"/>
+				<pathelement location="${GINGACORE_IO_INTERFACE_DIST}"/>
+				<pathelement location="${GINGACORE_IO_IMPLEMENTATION_DIST}"/>
+				<pathelement location="${GINGACORE_PLAYER_INTERFACE_DIST}"/>
+				<pathelement location="${NCL_INTERFACE_DIST}"/>
+				<pathelement location="${NCL_IMPLEMENTATION_DIST}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist-gingancl-implementation" depends="compile-gingancl-implementation" >
+		<mkdir dir="${GINGANCL_IMPLEMENTATION_DIST_DIR}"/>
+		<jar jarfile="${GINGANCL_IMPLEMENTATION_DIST}" basedir="${GINGANCL_IMPLEMENTATION_BUILD_DIR}"/>
+	</target>
+	
+	<target name="clean-gingancl-implementation">
+		<delete dir="${GINGANCL_IMPLEMENTATION_BUILD_DIR}"/>
+		<delete file="${GINGANCL_IMPLEMENTATION_DIST}"/>
+	</target>
+	
+	<target name="compile-gingancl-gui" 
+			depends="dist-gingancl-interface,dist-gingancl-implementation,
+			dist-gem,dist-gingacc-io-implementation">
+		<mkdir dir="${GINGANCL_GUI_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GINGANCL_GUI_BUILD_DIR}"
+			   srcdir="${GINGANCL_GUI_SRC}"
+			   >
+			<classpath>
+				<pathelement location="${GINGANCL_INTERFACE_DIST}"/>
+				<pathelement location="${GINGANCL_IMPLEMENTATION_DIST}"/>
+				<pathelement location="${GINGACORE_IO_IMPLEMENTATION_DIST}"/>
+				<pathelement location="${NCL_INTERFACE_DIST}"/>
+				<pathelement location="${NCL_CONVERTER_DIST}"/>
+				<pathelement location="${GEM_DIST}"/>
+			</classpath>
+		</javac>
+		<copy todir="${GINGANCL_GUI_BUILD_DIR}">
+			<fileset dir="${GINGANCL_GUI_SRC}">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="dist-gingancl-gui" depends="compile-gingancl-gui">
+		<mkdir dir="${GINGANCL_GUI_DIST_DIR}"/>
+		<jar jarfile="${GINGANCL_GUI_DIST}" basedir="${GINGANCL_GUI_BUILD_DIR}"/>
+	</target>
+	
+	<target name="clean-gingancl-gui">
+		<delete dir="${GINGANCL_GUI_BUILD_DIR}"/>
+		<delete file="${GINGANCL_GUI_DIST}"/>
+	</target>
+
+	<target name="compile-gem">
+		<mkdir dir="${GEM_BUILD_DIR}"/>
+		<javac
+			   source="${SOURCE.VERSION}"
+			   target="${TARGET.VERSION}"
+			   destdir="${GEM_BUILD_DIR}"
+			   srcdir="${GEM_SRC}"
+			   >
+		</javac>
+	</target>
+	
+	<target name="dist-gem" depends="compile-gem" >
+			<mkdir dir="${GEM_DIST_DIR}"/>
+			<jar jarfile="${GEM_DIST}" basedir="${GEM_BUILD_DIR}"/>
+	</target>
+	
+	<target name="clean-gem">
+		<delete dir="${GEM_BUILD_DIR}"/>
+		<delete file="${GEM_DIST}"/>
+	</target>
+	
+	<target name="dist-ginga-ncl" depends="dist-gingancl-interface,dist-gingancl-implementation,
+			dist-gingancl-gui,dist-gem,dist-gingancl-adapters-implementation" >
+		<copy todir="${GINGANCL_DIR}/gingaNclConfig">
+			<fileset dir="${GINGANCL_GUI_SRC}/gingaNclConfig"/>
+	  	</copy>
+		<copy todir="${GINGANCL_DIR}/gingaNclGuiFiles">
+			<fileset dir="${GINGANCL_GUI_SRC}/gingaNclGuiFiles"/>
+	  	</copy>
+		<copy todir="${GINGANCL_DIR}/nclConfig">
+			<fileset dir="${GINGANCL_GUI_SRC}/nclConfig"/>
+	  	</copy>
+</target>
+	
+	<target name="clean-ginga-ncl" 
+			depends="clean-gingancl-interface,clean-gingancl-implementation,clean-gingancl-gui,clean-gem,
+				clean-gingacc-io-implementation,clean-gingacc-io-interface,clean-gingacc-player-implementation,
+				clean-gingacc-player-interface,clean-gingancl-adapters-implementation">
+		<delete dir="${GINGANCL_DIR}/gingaNclConfig"/>
+		<delete dir="${GINGANCL_DIR}/gingaNclGuiFiles"/>
+		<delete dir="${GINGANCL_DIR}/nclConfig"/>
+		<delete dir="${GINGANCL_BUILD_DIR}"/>
+	</target>
+	
+	<target name="all" depends="dist-ginga-ncl,run">
+	</target>
+	
+	<target name="clean" depends="clean-ginga-ncl">
+	</target>
+	
+	<target name="run" depends="dist-ginga-ncl" >
+		<java
+			classname="br.pucrio.telemidia.ginga.ncl.gui.GingaPlayerWindow"
+	        fork="true"
+	        failonerror="true"
+	        >
+			<jvmarg value="-Xmx512M" />
+			<sysproperty key="java.library.path" path="${java.library.path}:${GINGANCL_EXTERNAL_LIBRARY_PATH}:${EXTERNAL_LIBRARY_PATH}" />
+	        <classpath>
+	        	<pathelement location="${GINGACORE_IO_INTERFACE_DIST}"/>
+	        	<pathelement location="${GINGACORE_IO_IMPLEMENTATION_DIST}"/>
+	        	<pathelement location="${GINGACORE_PLAYER_INTERFACE_DIST}"/>
+	        	<pathelement location="${GINGACORE_PLAYER_IMPLEMENTATION_DIST}"/>
+	        	<pathelement location="${GINGANCL_IMPLEMENTATION_DIST}"/>
+	        	<pathelement location="${GINGANCL_INTERFACE_DIST}"/>
+	        	<pathelement location="${GINGANCL_ADAPTERS_IMPLEMENTATION_DIST}"/>
+	           	<pathelement location="${GINGANCL_GUI_DIST}"/>
+    			<pathelement location="${GEM_DIST}"/>
+				<pathelement location="${NCL_CONVERTER_DIST}"/>
+				<pathelement location="${NCL_INTERFACE_DIST}"/>
+				<pathelement location="${NCL_IMPLEMENTATION_DIST}"/>
+				<pathelement location="${JMF_LOCATION}"/>
+	        	<pathelement location="${LUAJAVA_LOCATION}"/>
+	        	<pathelement location="${FOBS_JMF_PLUGIN}"/>
+	        </classpath>
+	    </java>
+	</target>
+</project>	

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ncl30-java"/>
+	<classpathentry kind="src" path="src/gingancl-gui"/>
+	<classpathentry kind="src" path="src/gingancl-implementation"/>
+	<classpathentry kind="src" path="src/gingacc-player-implementation"/>
+	<classpathentry kind="src" path="src/gingacc-io-interface"/>
+	<classpathentry kind="src" path="src/gingancl-interface"/>
+	<classpathentry kind="src" path="src/gingancl-adapters-implementation"/>
+	<classpathentry kind="src" path="src/gingacc-player-interface"/>
+	<classpathentry kind="src" path="src/gem"/>
+	<classpathentry kind="src" path="src/gingacc-io-implementation"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/cobra.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/fobs4jmf.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/jmf.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/js.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/luajava-1.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
