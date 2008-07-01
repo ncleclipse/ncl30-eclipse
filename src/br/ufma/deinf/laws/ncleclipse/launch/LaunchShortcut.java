@@ -3,6 +3,7 @@ package br.ufma.deinf.laws.ncleclipse.launch;
 import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -27,7 +28,9 @@ public class LaunchShortcut implements ILaunchShortcut {
 	}
 	
 	public void run(String file){
-		String gingaNcl = "D:/workspace/ncl-eclipse/gingancl-java";
+		String path = Platform.getInstallLocation().getURL().getPath();
+		String gingaNcl = path.substring(1)+"/plugins/ncl_eclipse_1.0.0/gingancl-java";
+		System.out.println(gingaNcl);
 		String cmd [] = new String[1];
 		cmd[0] = "\""+gingaNcl+"/gingancl.bat\" "
 			+"\""+file+"\"";
