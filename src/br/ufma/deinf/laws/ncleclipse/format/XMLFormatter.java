@@ -38,7 +38,7 @@ public class XMLFormatter {
 		output.append(quote);
 		output.append(" encoding=");
 		output.append(quote);
-		output.append(encoding);
+		output.append(document.getXmlEncoding());
 		output.append(quote);
 		output.append("?>");
 		output.append(lineEnd);
