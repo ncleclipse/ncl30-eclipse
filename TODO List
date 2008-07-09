@@ -1,8 +1,8 @@
 Características a implementar:
+	- Ctrl+Shift+F - Não funciona. Só funciona no Menu Edit->Format.
 	- importedDocumentBase
 	- importNCL
 	- bindRule
-	- Tocar o documento.
 	- Linha e coluna do Erro.
 	- Id do body é obrigatório para o autocomplete funcionar contextualmente.
 	- A lógica para os três profiles (EDTV, BDTV e CausalConnector) não está
@@ -48,8 +48,19 @@ Características a implementar:
 			<media id=""/>
 			 <area id="teste"/>
 			</media>
-	
+Versão 1.0.0
+2008-07-05
+	- Tocar o documento no Linux.
+		Ok!
 
+2008-07-03
+	- Bug no Format com Encoding - sempre setava UTF-8
+		Ok!
+	
+2008-07-01
+	- Tocar documento NCL através do Emulador (Launch)
+		Ok!
+ 
 2008-05-23
 	- attributteType é opcional.
 		Ok! 

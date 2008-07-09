@@ -30,25 +30,32 @@ public class LaunchShortcut implements ILaunchShortcut {
 	
 	public void run(String file){
 		String gingaNcl = platformPath+"/plugins/ncl_eclipse_1.0.0/gingancl-java";
-		String cmd [] = new String[2];
-		String args [] = new String[1];
 		System.out.println(Platform.getOS());
-		if(Platform.getOS().equals("win32")){
-			gingaNcl = platformPath+"/plugins/ncl_eclipse_1.0.0/gingancl-java";
+		if(Platform.getOS().equals("win32")){ //Windows
+			String cmd [] = new String[1];
+			gingaNcl = platformPath+"plugins/ncl_eclipse_1.0.0/gingancl-java";
 			cmd[0] = "\""+gingaNcl+"/gingancl.bat\" "
 				+"\""+file+"\"";
+			System.out.println(cmd[0]);
+			try {
+				Process p = DebugPlugin.exec(cmd, new java.io.File(gingaNcl));
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		else {
+		else { //Linux
+			String cmd [] = new String[2];
 			gingaNcl = "/"+platformPath+"plugins/ncl_eclipse_1.0.0/gingancl-java/";
 			cmd[0] = gingaNcl+"gingancl.sh";
 			cmd[1] = file;
 			System.out.println(cmd[0]);
-		}
-		try {
-			Process p = DebugPlugin.exec(cmd, new java.io.File(gingaNcl));
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				Process p = DebugPlugin.exec(cmd, new java.io.File(gingaNcl));
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
