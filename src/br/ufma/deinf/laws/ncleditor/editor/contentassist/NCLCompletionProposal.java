@@ -395,6 +395,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, offset), "xconnector");
 		}
 		
+		if(tagname.equals("bindParam") && attribute.equals("name")){
+			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, offset)), "xconnector");
+		}
+		
 		if(tagname.equals("bind") && attribute.equals("interface"))
 			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
 		
