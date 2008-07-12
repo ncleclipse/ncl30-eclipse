@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -63,12 +63,12 @@ public class NCLDocument{
 		elements.put(tagname, atts);
 	}
 	
-	public void addElement(String tagname, String id) {
+	/*public void addElement(String tagname, String id) {
 		// TODO Auto-generated method stub
 		if(alias != null && !alias.equals(""))
 				elements.put(tagname, alias + "#" +id);		
 		else elements.put(tagname, id);
-	}
+	}*/
 	
 	public void addElement(NCLElement element, String id) {
 		// TODO Auto-generated method stub
@@ -108,5 +108,24 @@ public class NCLDocument{
 			
 		}
 		return elementsFromPerspective;
+	}
+	
+	public NCLElement getElementById(String id){
+		Set keySet = getElements().keySet();
+		if (elements == null) return null;
+		Iterator it = keySet.iterator();
+		while(it.hasNext()){
+			Collection elements = getElements().get((String)it.next());
+			if (elements == null) return null;
+			Iterator it2 = elements.iterator();
+			while(it2.hasNext()){
+				NCLElement nclElement = (NCLElement)it2.next();
+				String idElement = nclElement.getAttributes().get("id");
+				if( idElement != null && idElement.equals(id)){
+					return nclElement;
+				}
+			}
+		}
+		return null;
 	}
 }

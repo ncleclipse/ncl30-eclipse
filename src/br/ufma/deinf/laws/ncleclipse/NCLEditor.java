@@ -3,6 +3,7 @@ package br.ufma.deinf.laws.ncleclipse;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -15,6 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -254,17 +256,27 @@ public class NCLEditor extends TextEditor {
 			//this will hold the new annotations along
 			//with their corresponding positions
 			HashMap newAnnotations = new HashMap();
+			HashMap<Position, Boolean> oldPosisitions = new HashMap<Position, Boolean>();
+			if(oldAnnotations != null){
+				for(int i = 0; i < oldAnnotations.length; i++){
+					ProjectionAnnotation tmp = (ProjectionAnnotation) oldAnnotations[i];
+					if(tmp.isCollapsed()){
+						oldPosisitions.put(annotationModel.getPosition(tmp), true);					
+					}
+				}
+			}
 			
-			for(int i =0;i<positions.size();i++)
+			for(int i =0; i<positions.size(); i++)
 			{
 				ProjectionAnnotation annotation = new ProjectionAnnotation();
-				
+				if(oldPosisitions.containsKey(positions.get(i)) && oldPosisitions.get(positions.get(i)).booleanValue()) //if was collapsed
+					annotation.markCollapsed();
 				newAnnotations.put(annotation,positions.get(i));
-				
 				annotations[i]=annotation;
 			}
 			
-			annotationModel.modifyAnnotations(oldAnnotations,newAnnotations,null);
+			//Melhorar isto aqui Remover apenas as necessárias e não todas as antigas
+			annotationModel.modifyAnnotations(oldAnnotations,newAnnotations, null);
 			
 			oldAnnotations=annotations;
 		}

@@ -344,8 +344,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 		
 		//Referencias que precisam de contexto
 		String perspective = null;
-		if(tagname.equals("port") && attribute.equals("interface"))
-			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
 		
 		//TODO: caso o id esteja definido no ncl, aqui temos um problema
 		//Contexto � o pai
@@ -399,8 +397,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			perspective = getAttributeValueFromCurrentTagName(doc, getFatherPartitionOffset(doc, getFatherPartitionOffset(doc, offset)), "xconnector");
 		}
 		
-		if(tagname.equals("bind") && attribute.equals("interface"))
+		if(tagname.equals("bind") && attribute.equals("interface")
+			|| tagname.equals("port") && attribute.equals("interface")){
+			NCLElement element;
 			perspective = getAttributeValueFromCurrentTagName(doc, offset, "component");
+			element = nclDocument.getElementById(perspective);
+			while(element != null && element.getAttributes().get("refer") != null){
+				perspective = element.getAttributeValue("refer");
+				System.out.println(perspective);
+				element = nclDocument.getElementById(perspective);	
+			}
+		}
 		
 		System.out.println("perspective = " + perspective);
 		Collection nclReference = nclStructure.getNCLReference(tagname, attribute);
