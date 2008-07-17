@@ -3,7 +3,6 @@ package br.ufma.deinf.laws.ncleclipse;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 

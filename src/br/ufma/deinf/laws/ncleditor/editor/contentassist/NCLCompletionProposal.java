@@ -62,7 +62,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 		text = doc.get();
 		boolean isAttributeValue = isAttributeValue(doc, offset);
 		boolean isAttribute = isAttribute(doc, offset);
-        
+        boolean isEndTagName = isEndTagName(doc, offset);
 		Point selectedRange = viewer.getSelectedRange();
 		if(selectedRange.y > 0){
 			//TODO:
@@ -70,7 +70,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 		else {
 			System.out.println("Attributo = " + isAttribute);
 			String qualifier = getQualifier(doc, offset);
-			if(isAttributeValue){
+			if(isEndTagName){
+				computeEndTagName(doc, qualifier, offset, propList);
+			}
+			else if(isAttributeValue){
 				computeAttributesValuesProposals(doc, qualifier, offset, propList);
 			}
 			else if(!isAttribute){
@@ -84,6 +87,20 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 		return proposals;
 	}
 	
+	private void computeEndTagName(IDocument doc, String qualifier, int offset,
+			List propList) {
+		// TODO Auto-generated method stub
+		return;
+		
+		/*int qlen = qualifier.length();
+		System.out.println("qualifier = " + qualifier);
+		String fatherTagName = getFatherTagName(doc, offset);
+		String text = "</"+fatherTagName+">";
+		CompletionProposal proposal = 
+				new CompletionProposal(text, offset - qlen, qlen, cursor, null, text, null, null);
+			propList.add(proposal); */
+	}
+
 	/**
 	 * Computa as tags que serão propostas para o usuário
 	 * @param qualifier
@@ -663,6 +680,18 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 			return false;
 		}
 	}
+	private boolean isEndTagName(IDocument document, int documentOffset)
+    {
+    	ITypedRegion region;
+		try {
+			region = document.getPartition(documentOffset);
+			if(region.getType() == XMLPartitionScanner.XML_END_TAG)
+	    		return true;
+	    	return false;
+		} catch (BadLocationException e) {
+			return false;
+		}
+    }
     /**
      * Utilizado para determinar se a palavra corrente que está sendo digitada é
      * um atributo. Irá retornar verdadeiro se encontrar o padrão no âmbito da atual partição

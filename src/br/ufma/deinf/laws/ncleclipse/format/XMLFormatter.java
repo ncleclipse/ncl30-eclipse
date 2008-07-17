@@ -225,14 +225,22 @@ public class XMLFormatter {
 			NodeList children = element.getChildNodes();
 			if (children.getLength() == 1
 					&& element.getFirstChild() instanceof Text) {
-				output.append(">");
-				level++;
-				processChildNodes(children);
-				level--;
-				output.append("</");
-				output.append(element.getNodeName());
-				output.append(">");
-				output.append(lineEnd);
+				Text el = (Text)element.getFirstChild();
+				System.out.println("aqui eu " + el.getData());
+				if(el.getData().trim().equals("")){ // remove empty text element 
+					output.append("/>");
+					output.append(lineEnd);
+				}
+				else{
+					output.append(">");
+					level++;
+					processChildNodes(children);
+					level--;
+					output.append("</");
+					output.append(element.getNodeName());
+					output.append(">");
+					output.append(lineEnd);
+				}
 			} else {
 				output.append(">");
 				output.append(lineEnd);

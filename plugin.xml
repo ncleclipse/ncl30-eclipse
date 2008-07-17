@@ -15,6 +15,14 @@
       </editor>
    </extension>
    <!--Editor Actions -->
+   <extension
+         point="org.eclipse.ui.bindings">
+         <key
+         	commandId="br.ufma.deinf.laws.ncleclipse.actions.format"
+         	contextId="org.eclipse.ui.globalScope"
+         	schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         	sequence="Ctrl+Shift+F"/>
+   </extension>
    <!-- End of Editor Actions -->
    <extension
          point="org.eclipse.ui.newWizards">

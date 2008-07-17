@@ -1,11 +1,11 @@
 package br.ufma.deinf.laws.ncleclipse.launch;
 
-import java.io.IOException;
-
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.internal.ui.views.console.ConsoleMessages;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -38,7 +38,10 @@ public class LaunchShortcut implements ILaunchShortcut {
 				+"\""+file+"\"";
 			System.out.println(cmd[0]);
 			try {
-				Process p = DebugPlugin.exec(cmd, new java.io.File(gingaNcl));
+				Process process = DebugPlugin.exec(cmd, new java.io.File(gingaNcl));
+				//IProcess p = DebugPlugin.newProcess(null, process, "Ginga NCL Emulator");
+				//TODO: Aparecer mensagens no console
+				
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
