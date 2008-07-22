@@ -2,7 +2,6 @@ package br.ufma.deinf.laws.ncleclipse.ncl;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Stack;
 
 import org.xml.sax.Attributes;
