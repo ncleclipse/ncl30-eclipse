@@ -3,6 +3,7 @@ package br.ufma.deinf.laws.ncleclipse.marker;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -14,6 +15,8 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.xml.sax.SAXParseException;
 
+import br.ufma.deinf.gia.labmint.composer.NCLValidator;
+import br.ufma.deinf.gia.labmint.message.Message;
 import br.ufma.deinf.laws.ncleclipse.xml.XMLValidationError;
 import br.ufma.deinf.laws.ncleclipse.xml.XMLValidationErrorHandler;
 
@@ -114,5 +117,63 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler
 			return null;
 		}
 	}
+	
+	public void MarkNCLValidatorErrorsAndWarnings(){
+        //TODO: Falta pegar a posição do erro e/ou warning!
+		Vector <Message> warnings = NCLValidator.getWarnings();
+		Vector <Message> erros = NCLValidator.getErrors();	
+		//Imprime os warning
+		Map map = new HashMap();
+		map.put(IMarker.LOCATION, file.getFullPath().toString());
+		
+		map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_WARNING));
+		for(int i = 0; i < warnings.size(); i++){
+			try
+			{
+				int lineNumber = (new Integer((String)warnings.get(i).getElement().getUserData("startLine"))).intValue();
+				int columnNumber = (new Integer((String)warnings.get(i).getElement().getUserData("startColumn"))).intValue();
+				Integer charStart = getCharStart(lineNumber, columnNumber);
+				if (charStart != null)
+					map.put(IMarker.CHAR_START, charStart);
 
+				Integer charEnd = getCharEnd(lineNumber, columnNumber);
+				if (charEnd != null)
+					map.put(IMarker.CHAR_END, charEnd);
+
+				MarkerUtilities.setMessage(map, warnings.get(i).getDescription());
+				MarkerUtilities.setLineNumber(map, new Integer((String)warnings.get(i).getElement().getUserData("startLine")));
+				MarkerUtilities.createMarker(file, map, IMarker.PROBLEM);
+				
+			}
+			catch (CoreException ee)
+			{
+				ee.printStackTrace();
+			}
+		}
+		//Imprime os erros
+		map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
+		for(int i = 0; i < erros.size(); i++){
+			try
+			{
+				int lineNumber = (new Integer((String)erros.get(i).getElement().getUserData("startLine"))).intValue();
+				int columnNumber = (new Integer((String)erros.get(i).getElement().getUserData("startColumn"))).intValue();
+				Integer charStart = getCharStart(lineNumber, columnNumber);
+				if (charStart != null)
+					map.put(IMarker.CHAR_START, charStart);
+
+				Integer charEnd = getCharEnd(lineNumber, columnNumber);
+				if (charEnd != null)
+					map.put(IMarker.CHAR_END, charEnd);
+
+				MarkerUtilities.setMessage(map, erros.get(i).getDescription());
+				MarkerUtilities.setLineNumber(map, new Integer((String)erros.get(i).getElement().getUserData("startLine")));
+				
+				MarkerUtilities.createMarker(file, map, IMarker.PROBLEM);
+			}
+			catch (CoreException ee)
+			{
+				ee.printStackTrace();
+			}
+		}
+	}
 }

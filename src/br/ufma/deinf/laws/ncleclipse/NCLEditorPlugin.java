@@ -1,7 +1,14 @@
 package br.ufma.deinf.laws.ncleclipse;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -59,4 +66,15 @@ public class NCLEditorPlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
+	
+	public static final String LINK_ICON = "br.ufma.deinf.laws.ncleclipse.image.link_icon";
+	
+	protected void initializeImageRegistry(ImageRegistry registry) {
+        Bundle bundle = Platform.getBundle(PLUGIN_ID);
+        IPath path = new Path("icons/sample.gif");
+        URL url = Platform.find(bundle, path);
+        ImageDescriptor desc = ImageDescriptor.createFromURL(url);
+        registry.put(LINK_ICON, desc);
+    }
+
 }

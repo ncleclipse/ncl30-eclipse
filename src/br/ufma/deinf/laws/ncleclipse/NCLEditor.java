@@ -50,14 +50,9 @@ package br.ufma.deinf.laws.ncleclipse;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -77,7 +72,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.w3c.dom.Document;
@@ -86,8 +80,8 @@ import org.xml.sax.helpers.LocatorImpl;
 import br.ufma.deinf.gia.labmint.composer.NCLValidator;
 import br.ufma.deinf.gia.labmint.document.NclValidatorDocument;
 import br.ufma.deinf.gia.labmint.main.NclParseErrorHandler;
-import br.ufma.deinf.gia.labmint.message.Message;
 import br.ufma.deinf.gia.labmint.message.MessageList;
+import br.ufma.deinf.gia.labmint.xml.XMLParserExtend;
 import br.ufma.deinf.laws.ncleclipse.marker.MarkingErrorHandler;
 import br.ufma.deinf.laws.ncleclipse.outline.EditorContentOutlinePage;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
@@ -157,6 +151,7 @@ public class NCLEditor extends TextEditor {
 		validateAndMark();
 
 	}
+	
 	protected void validateAndMark(){
 		try
 		{
@@ -178,12 +173,14 @@ public class NCLEditor extends TextEditor {
 			MessageList.clear();
 			MessageList.setLanguage(MessageList.PORTUGUESE);
 	        try {
-	        		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	        		DocumentBuilder db = dbf.newDocumentBuilder();
+	        		XMLParserExtend parserExtend = new XMLParserExtend();
+	        		
 	        		NclParseErrorHandler p = new NclParseErrorHandler();
 	        		p.setFile(docFile.getAbsolutePath());
-	        		db.setErrorHandler(p);
-	        		doc = db.parse(docFile);
+	        		parserExtend.setErrorHandler(p);
+	        		parserExtend.parse(file.getLocationURI().getPath());
+	        		
+	        		doc = parserExtend.getDocument();
 	        		
 	        		Vector <NclValidatorDocument> documents = new Vector<NclValidatorDocument>();
 	        		//NclDocumentManager.resetDocumentManager();
@@ -198,42 +195,7 @@ public class NCLEditor extends TextEditor {
 	        	e.printStackTrace();
 	        	MessageList.addError(docFile.getAbsolutePath(), "Erro sint�tico no XML ("+e.getMessage()+")", null, MessageList.PORTUGUESE);
 	        }
-	        
-	        //TODO: Falta pegar a posição do erro e/ou warning!
-			Vector <Message> warnings = NCLValidator.getWarnings();
-			Vector <Message> erros = NCLValidator.getErrors();	
-			//Imprime os warning
-			Map map = new HashMap();
-			map.put(IMarker.LOCATION, file.getFullPath().toString());
-			
-			map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_WARNING));
-			for(int i = 0; i < warnings.size(); i++){
-				try
-				{
-					MarkerUtilities.setMessage(map, warnings.get(i).getDescription());
-					MarkerUtilities.createMarker(file, map, IMarker.PROBLEM);
-					
-				}
-				catch (CoreException ee)
-				{
-					ee.printStackTrace();
-				}
-			}
-			//Imprime os erros
-			map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
-			for(int i = 0; i < erros.size(); i++){
-				try
-				{
-					MarkerUtilities.setMessage(map, erros.get(i).getDescription());
-					MarkerUtilities.createMarker(file, map, IMarker.PROBLEM);
-					
-				}
-				catch (CoreException ee)
-				{
-					ee.printStackTrace();
-				}
-			}			
-			
+	        markingErrorHandler.MarkNCLValidatorErrorsAndWarnings();
 		}
 		catch (Exception e)
 		{
