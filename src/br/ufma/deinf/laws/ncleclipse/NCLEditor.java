@@ -1,5 +1,6 @@
 /******************************************************************************
-Este arquivo é parte da implementação do ambiente de autoria NCL Eclipse.
+Este arquivo é parte da implementação do ambiente de autoria em Nested Context
+Language - NCL Eclipse.
 
 Direitos Autorais Reservados (c) 2007-2008 UFMA/LAWS (Laboratório de Sistemas Avançados da Web) 
 
@@ -22,7 +23,8 @@ http://www.laws.deinf.ufma.br/ncleclipse
 http://www.laws.deinf.ufma.br
 http://www.laws.deinf.ufma.br/~roberto
 ******************************************************************************
-This file is part of the authoring environment NCL Eclipse.
+This file is part of the authoring environment in Nested Context Language -
+NCL Eclipse.
 
 Copyright: 2007-2008 UFMA/LAWS (Laboratory of Advanced Web Systems), All Rights Reserved.
 
