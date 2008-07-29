@@ -13,9 +13,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.debug.core,
- org.eclipse.debug.ui
+ org.eclipse.debug.ui,
+ org.eclipse.ui.console
 Eclipse-LazyStart: true
 Bundle-ClassPath: bin/,
+ icons/,
  lib/xercesImpl.jar,
  lib/xml-apis.jar
 Bundle-Vendor: Laboratory of Advanced Web Systems (http://laws.deinf.ufma.br)

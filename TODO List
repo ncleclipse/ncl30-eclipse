@@ -1,10 +1,9 @@
 Características a implementar:
-	- Ctrl+Shift+F - Não funciona. Só funciona no Menu Edit->Format.
+	- Comentários sobre a licença em todos os arquivos.
 	- importedDocumentBase
 	- importNCL
 	- bindRule
-	- Linha e coluna do Erro.
-	- Id do body é obrigatório para o autocomplete funcionar contextualmente.
+	- Linha e coluna do Erro. (Quase Ok)
 	- A lógica para os três profiles (EDTV, BDTV e CausalConnector) não está
 			sendo feita. A lógica seria:
 		
@@ -49,6 +48,14 @@ Características a implementar:
 			 <area id="teste"/>
 			</media>
 Versão 1.0.0
+2008-07-23
+	- Mensagens do Emulador no console. 
+		Ok!
+	
+2008-07-17
+	- Ctrl+Shift+F - Não funciona. Só funciona no Menu Edit->Format.
+		Resolvido. Ver plugin.xml org.eclipse.ui.bindings
+		
 2008-07-05
 	- Tocar o documento no Linux.
 		Ok!
