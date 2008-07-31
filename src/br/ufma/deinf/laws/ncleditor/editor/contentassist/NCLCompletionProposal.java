@@ -11,8 +11,6 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -25,7 +23,6 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.SimpleWildcardTester;
 import org.eclipse.ui.internal.Workbench;
 
 import br.ufma.deinf.laws.ncl.AttributeValues;
@@ -424,6 +421,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor{
 				System.out.println(perspective);
 				element = nclDocument.getElementById(perspective);	
 			}
+		}
+		
+		if(tagname.equals("media") && attribute.equals("src")){
+			//TODO: compute paths
 		}
 		
 		System.out.println("perspective = " + perspective);

@@ -45,88 +45,83 @@ public class LaunchShortcut implements ILaunchShortcut {
 		
 		String gingaNcl = platformPath+"/plugins/ncl_eclipse_1.0.0/gingancl-java";
 		System.out.println(Platform.getOS());
+		String cmd [];
 		if(Platform.getOS().equals("win32")){ //Windows
-			String cmd [] = new String[1];
+			cmd = new String[2];
 			gingaNcl = platformPath+"plugins/ncl_eclipse_1.0.0/gingancl-java";
-			cmd[0] = "\""+gingaNcl+"/gingancl.bat\" "
-				+"\""+file+"\"";
-			System.out.println(cmd[0]);
-			try {
-				final Process process = DebugPlugin.exec(cmd, new java.io.File(gingaNcl));
-				final InputStream is = process.getInputStream();
-				final InputStream es = process.getErrorStream();
-				
-				//IProcess p = DebugPlugin.newProcess(null, process, "Ginga NCL Emulator");
-				Thread isThread = new Thread() {
-					public void run() {
-						BufferedReader isReader = new BufferedReader(new InputStreamReader(is));
-						String isString;
-						// 	You don't care that the readLine will block
-						// 	because it is running in a different thread.
-						try {
-							while ((isString = isReader.readLine()) != null) {
-								// This may need to be executed on the Display
-								// Thread. If so, you need to wrap the
-								// ocons.println call in a Display.asyncExec() call.
-								stream.println(isString);
+			cmd[0] = "\""+gingaNcl+"/gingancl.bat\"";
+			cmd[1] = "\""+file+"\"";
+			System.out.println(cmd[0]+" "+cmd[1]);
+		}
+		else { //Linux
+			cmd = new String[2];
+			gingaNcl = "/"+platformPath+"plugins/ncl_eclipse_1.0.0/gingancl-java/";
+			cmd[0] = gingaNcl+"gingancl.sh";
+			cmd[1] = file;
+			System.out.println(cmd[0] + " "+ cmd[1]);
+		}
+		try {
+			final Process process = DebugPlugin.exec(cmd, new java.io.File(gingaNcl));
+			final InputStream is = process.getInputStream();
+			final InputStream es = process.getErrorStream();
+			
+			//IProcess p = DebugPlugin.newProcess(null, process, "Ginga NCL Emulator");
+			Thread isThread = new Thread() {
+				public void run() {
+					BufferedReader isReader = new BufferedReader(new InputStreamReader(is));
+					String isString;
+					// 	You don't care that the readLine will block
+					// 	because it is running in a different thread.
+					try {
+						while ((isString = isReader.readLine()) != null) {
+							// This may need to be executed on the Display
+							// Thread. If so, you need to wrap the
+							// ocons.println call in a Display.asyncExec() call.
+							stream.println(isString);
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+			isThread.start();
+
+			Thread esThread = new Thread() {
+				    public void run() {
+				        byte[] buffer = new byte[100];
+				        try {
+							while (es.read(buffer) != -1) {
+								stream.write(buffer);
 							}
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					}
-				};
-				isThread.start();
-
-				Thread esThread = new Thread() {
-					    public void run() {
-					        byte[] buffer = new byte[100];
-					        try {
-								while (es.read(buffer) != -1) {
-									stream.write(buffer);
-								}
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-					}
-				};
-				esThread.start();
-				
-				Thread controlPlugin = new Thread(){
-					public void run() {
-						while(true){
-							try{
-								int exit = process.exitValue();
-								System.out.println("destruindo console");
-								ConsolePlugin.getDefault().getConsoleManager().removeConsoles(consoles);
-								return;
-							}
-							catch(IllegalThreadStateException e){
-							}
+				}
+			};
+			esThread.start();
+			
+			Thread controlPlugin = new Thread(){
+				public void run() {
+					while(true){
+						try{
+							int exit = process.exitValue();
+							System.out.println("destruindo console");
+							ConsolePlugin.getDefault().getConsoleManager().removeConsoles(consoles);
+							return;
+						}
+						catch(IllegalThreadStateException e){
 						}
 					}
-				};
-				controlPlugin.start();
-				//TODO: Aparecer mensagens no console
-				
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else { //Linux
-			String cmd [] = new String[2];
-			gingaNcl = "/"+platformPath+"plugins/ncl_eclipse_1.0.0/gingancl-java/";
-			cmd[0] = gingaNcl+"gingancl.sh";
-			cmd[1] = file;
-			System.out.println(cmd[0]);
-			try {
-				Process p = DebugPlugin.exec(cmd, new java.io.File(gingaNcl));
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				}
+			};
+			controlPlugin.start();
+			//TODO: Aparecer mensagens no console
+			
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
