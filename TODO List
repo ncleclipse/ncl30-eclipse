@@ -1,5 +1,7 @@
 Características a implementar:
 	- Comentários sobre a licença em todos os arquivos.
+	- Sugestão do atributo src de media.
+	- Adicionar atalhos de teclados para inserção de medias, contexto, etc. Também acessível através de clique com o botão esquerdo+source+New (media, context, etc.)
 	- importedDocumentBase
 	- importNCL
 	- bindRule
