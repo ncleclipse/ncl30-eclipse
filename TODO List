@@ -1,4 +1,15 @@
 Características a implementar:
+	- Sugestão de <area>, <property>, etc que são do elemento que referencia outro.
+	Ex:
+		<media id="m1">
+			<area id="a11"/>
+			<area id="a12"/>
+		</media>
+		<media id="m2" refer="m1">
+			<area id="a21"/>
+		</media>
+	Só está sugerindo a11 e a12. Deve sugerir a21 também!
+
 	- Comentários sobre a licença em todos os arquivos.
 	- Sugestão do atributo src de media.
 	- Adicionar atalhos de teclados para inserção de medias, contexto, etc. Também acessível através de clique com o botão esquerdo+source+New (media, context, etc.)
