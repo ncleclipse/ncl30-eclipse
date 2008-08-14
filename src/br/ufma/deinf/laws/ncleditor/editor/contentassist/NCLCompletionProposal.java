@@ -470,7 +470,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		}
 
 		if (tagname.equals("bind") && attribute.equals("interface")
-				|| tagname.equals("port") && attribute.equals("interface")) {
+				|| tagname.equals("port") && attribute.equals("interface")
+				|| tagname.equals("mapping") && attribute.equals("interface")) {
 			NCLElement element;
 			perspective = getAttributeValueFromCurrentTagName(doc, offset,
 					"component");
