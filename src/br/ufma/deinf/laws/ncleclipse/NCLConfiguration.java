@@ -17,9 +17,9 @@ import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
@@ -33,7 +33,7 @@ import br.ufma.deinf.laws.ncleclipse.util.IXMLColorConstants;
 import br.ufma.deinf.laws.ncleclipse.util.NCLDoubleClickStrategy;
 import br.ufma.deinf.laws.ncleditor.editor.contentassist.NCLCompletionProposal;
 
-public class NCLConfiguration extends SourceViewerConfiguration {
+public class NCLConfiguration extends TextSourceViewerConfiguration {
 	private NCLDoubleClickStrategy doubleClickStrategy;
 	private XMLTagScanner tagScanner;
 	private XMLScanner scanner;
