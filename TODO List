@@ -61,6 +61,12 @@ Características a implementar:
 			<media id=""/>
 			 <area id="teste"/>
 			</media>
+
+Versão 1.1.0
+2008-08-26
+	- Tooltip do erro/warning aparecendo
+		Ok!
+		
 Versão 1.0.0
 2008-07-23
 	- Mensagens do Emulador no console. 
