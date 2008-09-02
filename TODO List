@@ -1,5 +1,5 @@
-Características a implementar:
-	- Sugestão de <area>, <property>, etc que são do elemento que referencia outro.
+Caracterï¿½sticas a implementar:
+	- Sugestï¿½o de <area>, <property>, etc que sï¿½o do elemento que referencia outro.
 	Ex:
 		<media id="m1">
 			<area id="a11"/>
@@ -8,27 +8,27 @@ Características a implementar:
 		<media id="m2" refer="m1">
 			<area id="a21"/>
 		</media>
-	Só está sugerindo a11 e a12. Deve sugerir a21 também!
+	Sï¿½ estï¿½ sugerindo a11 e a12. Deve sugerir a21 tambï¿½m!
 
-	- Comentários sobre a licença em todos os arquivos.
-	- Sugestão do atributo src de media.
-	- Adicionar atalhos de teclados para inserção de medias, contexto, etc. Também acessível através de clique com o botão esquerdo+source+New (media, context, etc.)
+	- Comentï¿½rios sobre a licenï¿½a em todos os arquivos.
+	- Sugestï¿½o do atributo src de media.
+	- Adicionar atalhos de teclados para inserï¿½ï¿½o de medias, contexto, etc. Tambï¿½m acessï¿½vel atravï¿½s de clique com o botï¿½o esquerdo+source+New (media, context, etc.)
 	- importedDocumentBase
 	- importNCL
 	- bindRule
 	- Linha e coluna do Erro. (Quase Ok)
-	- A lógica para os três profiles (EDTV, BDTV e CausalConnector) não está
-			sendo feita. A lógica seria:
+	- A lï¿½gica para os trï¿½s profiles (EDTV, BDTV e CausalConnector) nï¿½o estï¿½
+			sendo feita. A lï¿½gica seria:
 		
-			Se atributo xmlns do <ncl> é http://www.ncl.org.br/NCL3.0/EDTVProfile então
-			faz como está sendo feito;
+			Se atributo xmlns do <ncl> ï¿½ http://www.ncl.org.br/NCL3.0/EDTVProfile entï¿½o
+			faz como estï¿½ sendo feito;
 			
-			Se atributo xmlns do <ncl> é http://www.ncl.org.br/NCL3.0/BDTVProfile então
-			não aceita APENAS <meta>, <metadata> e <transactionBase> (o que vai excluir
+			Se atributo xmlns do <ncl> ï¿½ http://www.ncl.org.br/NCL3.0/BDTVProfile entï¿½o
+			nï¿½o aceita APENAS <meta>, <metadata> e <transactionBase> (o que vai excluir
 			<transaction>) no <head>;
 			
-			Se atributo xmlns do <ncl> é
-			http://www.ncl.org.br/NCL3.0/CausalConnectorProfile então só aceita a
+			Se atributo xmlns do <ncl> ï¿½
+			http://www.ncl.org.br/NCL3.0/CausalConnectorProfile entï¿½o sï¿½ aceita a
 			estrutura:
 			<ncl>
 			 <head>
@@ -38,7 +38,7 @@ Características a implementar:
 			 </head>
 			</ncl>
 
-	- Idéia MUITO BOA!!!) Acho que isso foi resolvido pelo Crtl+Shift+F
+	- Idï¿½ia MUITO BOA!!!) Acho que isso foi resolvido pelo Crtl+Shift+F
 	O Luiz sugere que num caso como abaixo:
 			<media id="">
 			</media>
@@ -51,29 +51,34 @@ Características a implementar:
 			O plugin sumiria com o </media>:
 			<media id=""/>
 			
-			Note que isso é para ser feito apenas se o <media> tiver o content vazio. No
-			caso abaixo, NÃO é para fazer isso:
+			Note que isso ï¿½ para ser feito apenas se o <media> tiver o content vazio. No
+			caso abaixo, Nï¿½O ï¿½ para fazer isso:
 			<media id="">
 			 <area id="teste"/>
 			</media>
 			
-			Ficaria ERRADO MESMO mas o usuário não perde o que fez:
+			Ficaria ERRADO MESMO mas o usuï¿½rio nï¿½o perde o que fez:
 			<media id=""/>
 			 <area id="teste"/>
 			</media>
 
-Versão 1.1.0
+Versï¿½o 1.1.0
+2008-09-01
+	- BUG Consertado: NCLNewWizardPage - Falso negativo. Gerava um erro quando atualizava o nome do arquivo. 
+		SÃ³ Ã© pra gerar quando a extensÃ£o do arquivo for diferente de ".ncl". 
+		Ok! 
+	
 2008-08-26
 	- Tooltip do erro/warning aparecendo
 		Ok!
 		
-Versão 1.0.0
+Versï¿½o 1.0.0
 2008-07-23
 	- Mensagens do Emulador no console. 
 		Ok!
 	
 2008-07-17
-	- Ctrl+Shift+F - Não funciona. Só funciona no Menu Edit->Format.
+	- Ctrl+Shift+F - Nï¿½o funciona. Sï¿½ funciona no Menu Edit->Format.
 		Resolvido. Ver plugin.xml org.eclipse.ui.bindings
 		
 2008-07-05
@@ -85,26 +90,26 @@ Versão 1.0.0
 		Ok!
 	
 2008-07-01
-	- Tocar documento NCL através do Emulador (Launch)
+	- Tocar documento NCL atravï¿½s do Emulador (Launch)
 		Ok!
  
 2008-05-23
-	- attributteType é opcional.
+	- attributteType ï¿½ opcional.
 		Ok! 
 	
-	- O arquivo de conectores não tem extensão .conn, é .ncl mesmo.
+	- O arquivo de conectores nï¿½o tem extensï¿½o .conn, ï¿½ .ncl mesmo.
 		OK!
 		
-	- Sugestão do atributo refer de <media>, <context> e <switch>. (BUG)
-		- Sugere a própria media
-	Não sugere Mais.
+	- Sugestï¿½o do atributo refer de <media>, <context> e <switch>. (BUG)
+		- Sugere a prï¿½pria media
+	Nï¿½o sugere Mais.
 		OK!
 		
 2008-05-13
-    - Sugestão dos atributos instance de <media>
+    - Sugestï¿½o dos atributos instance de <media>
       	Ok!
       
-	- Sugestão dos tipos MIME para a mídia.
+	- Sugestï¿½o dos tipos MIME para a mï¿½dia.
 		Ok!
 		
 2008-05-02
@@ -112,22 +117,22 @@ Versão 1.0.0
 		Ok!
 		
 2008-04-24
-	- Não sugerir um atributo que já está preenchido!
+	- Nï¿½o sugerir um atributo que jï¿½ estï¿½ preenchido!
 		Ok!
 	- Ajeitar o autocomplete para mostrar tags sem filhos
 	na forma <tagname at=''/>
 		Ok!
 		
 2008-03-13
-	Auto identação.
+	Auto identaï¿½ï¿½o.
 	Resolvido parcialmente - Implementar XMLAutoIdentStrategy
 
 2008-03-13
 	ContentOutline implementado.
-	É possível navegar no documento através da árvore.
+	ï¿½ possï¿½vel navegar no documento atravï¿½s da ï¿½rvore.
 	
 2008-03-10	
-	Formatação automática - Feito
+	Formataï¿½ï¿½o automï¿½tica - Feito
 		(Aprender como executa um editorAction)
 
 2008-02-27
@@ -135,8 +140,8 @@ Versão 1.0.0
 		Ok
 	
 2008-02-16
-	Básico do AutoComplete.
+	Bï¿½sico do AutoComplete.
 	
 2008-02-10
-	Coloração das tags.
+	Coloraï¿½ï¿½o das tags.
 		(Sem problemas)
