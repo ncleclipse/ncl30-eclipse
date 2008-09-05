@@ -17,8 +17,9 @@ public class XMLAutoIdentStrategy extends DefaultIndentLineAutoEditStrategy{
 		 * Method declared on IAutoIndentStrategy
 		 */
 		public void customizeDocumentCommand(IDocument d, DocumentCommand c) {
-			if (c.length == 0 && c.text != null && endsWithDelimiter(d, c.text))
+			if (c.length == 0 && c.text != null && endsWithDelimiter(d, c.text)){
 				smartIndentAfterNewLine(d, c);
+			}
 			else if (">".equals(c.text)) { //$NON-NLS-1$
 				smartInsertAfterBracket(d, c);
 			}
@@ -88,7 +89,7 @@ public class XMLAutoIdentStrategy extends DefaultIndentLineAutoEditStrategy{
 				switch (curr) {
 					case '/' :
 							if(begin < end){
-								char next = document.getChar(begin);
+								char next = document.getChar(begin++);
 								if(next == '>'){
 									if(!ignoreCloseBrackets)
 										bracketcount--;
@@ -96,11 +97,11 @@ public class XMLAutoIdentStrategy extends DefaultIndentLineAutoEditStrategy{
 							}
 					case '<' :
 						if (begin < end) {
-							char next= document.getChar(begin);
+							char next= document.getChar(begin++);
 							if (next == '!') {
 								// a comment starts, advance to the comment end
 								begin= getCommentEnd(document, begin + 1, end);
-							} else if (next == '<') {
+							} else if (next == '/') {
 								// '//'-comment: nothing to do anymore on this line 
 								begin= end;
 							}

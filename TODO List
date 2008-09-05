@@ -63,6 +63,10 @@ Caracter�sticas a implementar:
 			</media>
 
 Vers�o 1.1.0
+2008-09-05
+	- Ajuste Técnico: ENTER depois de um "<a/>" estava danda um tab a mais.
+		Ok!
+
 2008-09-01
 	- BUG Consertado: NCLNewWizardPage - Falso negativo. Gerava um erro quando atualizava o nome do arquivo. 
 		Só é pra gerar quando a extensão do arquivo for diferente de ".ncl". 
