@@ -1,4 +1,7 @@
 Caracter�sticas a implementar:
+	- Ctrl+Shift+F
+		Não atualiza os Markers.
+	
 	- Sugest�o de <area>, <property>, etc que s�o do elemento que referencia outro.
 	Ex:
 		<media id="m1">
@@ -64,6 +67,9 @@ Caracter�sticas a implementar:
 
 Vers�o 1.1.0
 2008-09-05
+	- Não suportava a sugestão de papel de attributeAssessment.
+		Ok!
+		
 	- Ajuste Técnico: ENTER depois de um "<a/>" estava danda um tab a mais.
 		Ok!
 
