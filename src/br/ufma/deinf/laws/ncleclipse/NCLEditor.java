@@ -1,27 +1,27 @@
 /******************************************************************************
-Este arquivo È parte da implementaÁ„o do ambiente de autoria em Nested Context
+Este arquivo √© parte da implementa√ß√£o do ambiente de autoria em Nested Context
 Language - NCL Eclipse.
 
-Direitos Autorais Reservados (c) 2007-2008 UFMA/LAWS (LaboratÛrio de Sistemas AvanÁados da Web) 
+Direitos Autorais Reservados (c) 2007-2008 UFMA/LAWS (Laborat√≥rio de Sistemas Avan√ßados da Web) 
 
-Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo sob 
-os termos da LicenÁa P˙blica Geral GNU vers„o 2 conforme publicada pela Free 
+Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo sob 
+os termos da Licen√ßa P√∫blica Geral GNU vers√£o 2 conforme publicada pela Free 
 Software Foundation.
 
-Este programa È distribuÌdo na expectativa de que seja ˙til, porÈm, SEM 
-NENHUMA GARANTIA; nem mesmo a garantia implÌcita de COMERCIABILIDADE OU 
-ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral do 
-GNU vers„o 2 para mais detalhes. 
+Este programa √© distribu√≠do na expectativa de que seja √∫til, por√©m, SEM 
+NENHUMA GARANTIA; nem mesmo a garantia impl√≠cita de COMERCIABILIDADE OU 
+ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral do 
+GNU vers√£o 2 para mais detalhes. 
 
-VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU vers„o 2 junto 
-com este programa; se n„o, escreva para a Free Software Foundation, Inc., no 
-endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA. 
+Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU vers√£o 2 junto 
+com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no 
+endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA. 
 
-Para maiores informaÁıes:
-rg.albuquerque @ gmail.com
+Para maiores informa√ß√µes:
+ncleclipse@laws.deinf.ufma.br
 http://www.laws.deinf.ufma.br/ncleclipse
 http://www.laws.deinf.ufma.br
-http://www.laws.deinf.ufma.br/~roberto
+
 ******************************************************************************
 This file is part of the authoring environment in Nested Context Language -
 NCL Eclipse.
@@ -42,11 +42,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 For further information contact:
-rg.albuquerque @ gmail.com
+ncleclipse@laws.deinf.ufma.br
 http://www.laws.deinf.ufma.br/ncleclipse
 http://www.laws.deinf.ufma.br
-http://www.laws.deinf.ufma.br/~roberto
+
 *******************************************************************************/
+
 package br.ufma.deinf.laws.ncleclipse;
 
 import java.io.File;
@@ -195,7 +196,7 @@ public class NCLEditor extends TextEditor {
 	        catch (Exception e) {
 	        	//TODO Alguma coisa
 	        	e.printStackTrace();
-	        	MessageList.addError(docFile.getAbsolutePath(), "Erro sint·tico no XML ("+e.getMessage()+")", null, MessageList.PORTUGUESE);
+	        	MessageList.addError(docFile.getAbsolutePath(), "Erro sintÔøΩtico no XML ("+e.getMessage()+")", null, MessageList.PORTUGUESE);
 	        }
 	        markingErrorHandler.MarkNCLValidatorErrorsAndWarnings();
 		}
@@ -285,7 +286,7 @@ public class NCLEditor extends TextEditor {
 				annotations[i]=annotation;
 			}
 			
-			//Melhorar isto aqui Remover apenas as necess·rias e n„o todas as antigas
+			//Melhorar isto aqui Remover apenas as necessÔøΩrias e nÔøΩo todas as antigas
 			annotationModel.modifyAnnotations(oldAnnotations,newAnnotations, null);
 			
 			oldAnnotations=annotations;
