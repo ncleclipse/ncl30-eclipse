@@ -440,15 +440,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		// Referencias que precisam de contexto
 		String perspective = null;
-
 		// TODO: caso o id esteja definido no ncl, aqui temos um problema
 		// Contexto � o pai
 		if ((tagname.equals("port") && attribute.equals("component"))
-				|| (tagname.equals("context") && attribute.equals("refer"))
-				|| (tagname.equals("media") && attribute.equals("refer"))
 				|| (tagname.equals("bindRule") && attribute
 						.equals("constituint"))
-				|| (tagname.equals("switch") && attribute.equals("refer"))
 				|| (tagname.equals("defaultComponent") && attribute
 						.equals("component"))) {
 
@@ -702,6 +698,14 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					text = ((NCLElement) it2.next())
 							.getAttributeValue(nclRefAtual.getRefAttribute());
 					System.out.println(text);
+					// refer n�o pode sugerir a pr�pria media, switch, etc.
+					if (attribute.equals("refer")) {
+						String idAtual = getAttributeValueFromCurrentTagName(doc,
+								offset, "id");
+						if (idAtual != null)
+							if (text.equals(idAtual))
+								continue;
+					}
 					if (text.startsWith(qualifier)) {
 						cursor = text.length();
 						System.out

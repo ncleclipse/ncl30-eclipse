@@ -176,7 +176,7 @@ public class NCLContentHandler implements ContentHandler{
 			perspective.push(strNewPerspective);
 		}
 		//nclDocument.addElement(qName, atts.getValue("id"));
-		if(localName.equals("importBase")){
+		if(localName.equals("importBase") || localName.equals("importNCL")){
 			String alias_ant = nclDocument.getAlias();
 			String alias = alias_ant;
 			System.out.println("importando documento... alias: " + atts.getValue("alias") + " src:" + atts.getValue("documentURI"));

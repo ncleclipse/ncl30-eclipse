@@ -66,6 +66,10 @@ Caracter�sticas a implementar:
 			</media>
 
 Vers�o 1.1.0
+2008-09-12
+	- Sugest�o do atributo refer de <media>, <context> e <switch>. (BUG)
+		Sugeria apenas o que estava no contexto.
+		Ok!
 2008-09-05
 	- Não suportava a sugestão de papel de attributeAssessment.
 		Ok!
