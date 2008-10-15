@@ -524,9 +524,48 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			element = nclDocument.getElementById(perspective);
 			while (element != null
 					&& element.getAttributes().get("refer") != null) {
-				perspective = element.getAttributeValue("refer");
-				System.out.println(perspective);
-				element = nclDocument.getElementById(perspective);
+				Collection nclReference = nclStructure.getNCLReference(tagname,
+						attribute);
+				//Computa os valores de atributos dos elementos filhos do refer
+				
+				//Refatorar este código... Isto está repetindo o que está sendo feito lá embaixo
+				String perspectivetmp = element.getAttributeValue("refer");
+				element = nclDocument.getElementById(perspectivetmp);
+				if (nclReference == null)
+					return;
+				Iterator it = nclReference.iterator();
+				while (it.hasNext()) {
+					NCLReference nclRefAtual = (NCLReference) it.next();
+					Collection elements = nclDocument.getElementsFromPerspective(
+							nclRefAtual.getRefTagname(), perspectivetmp);
+					if (elements == null)
+						continue;
+					Iterator it2 = elements.iterator();
+					while (it2.hasNext()) {
+						text = ((NCLElement) it2.next()).getAttributeValue(nclRefAtual
+								.getRefAttribute());
+						if (text == null)
+							continue;
+
+						// refer n�o pode sugerir a pr�pria media, switch, etc.
+						if (attribute.equals("refer")) {
+							String idAtual = getAttributeValueFromCurrentTagName(doc,
+									offset, "id");
+							if (idAtual != null)
+								if (text.equals(idAtual))
+									continue;
+						}
+
+						if (text.startsWith(qualifier)) {
+							cursor = text.length();
+							System.out.println("Attribute Value Proposal = " + text);
+							CompletionProposal proposal = new CompletionProposal(text,
+									offset - qlen, qlen, cursor, null, text, null, null);
+
+							propList.add(proposal);
+						}
+					}
+				}
 			}
 		}
 
@@ -576,103 +615,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			/*
-			//compute paths
-			File file = null;
-			File parent = null;
-			URI uri = null;
-			int lastIndexofSeparator = qualifier.lastIndexOf("/");
-			String children[];
-			
-			//relative path
-			file = new File(currentFile.getLocationURI());
-			file = new File(file.getParentFile().toString());
-			if(!qualifier.equals("")){
-				file = new File(file.toString()+"/"+qualifier);
-				if(!file.isDirectory())
-					file = new File(file.getParent()+"/");
-			}
-			//System.out.println("Parent URI = "+file.toURI());
-			children = file.list();
-			if (children == null) {
-				// Either dir does not exist or is not a directory
-			} else {
-				for (int i = 0; i < children.length; i++) {
-					if(lastIndexofSeparator != -1)
-						text = qualifier.substring(0, lastIndexofSeparator)+"/"+children[i];
-					else text = children[i];
-					String parentPath = file.toURI().getPath();
-					if(!parentPath.endsWith("/")) parentPath += "/";
-					String path = parentPath+children[i];
-					//System.out.println("Text = "+ text);
-					//System.out.println("Parent = "+ parentPath);
-					//System.out.println("Path = "+ path);
-					String startWith = null;
-					
-					if(lastIndexofSeparator != -1) 
-							startWith = parentPath+qualifier.substring(lastIndexofSeparator+1);
-					else startWith = parentPath+qualifier;
-					
-					if(path.startsWith(startWith))
-					{
-						cursor = text.length();
-						System.out.println("Attribute Value Proposal = "
-								+ text);
-						CompletionProposal proposal = new CompletionProposal(
-								text, offset - qlen, qlen, cursor, null,
-								text, null, null);
-						propList.add(proposal);
-					}
-				}
-			}
-			if(qualifier.equals("")) return;
-			
-			
-			//TODO: absolute path
-			try {
-				uri = new URI(qualifier);
-				file = new File(uri.getPath());
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				file = new File(qualifier.replaceFirst("file:///", ""));
-			}
-			System.out.println("Qualifier = "+qualifier);
-			System.out.println(file.toString());
-			if(!file.isDirectory())
-				file = new File(file.getParent()+"/");
-			children = file.list();
-			if (children == null) {
-				// Either dir does not exist or is not a directory
-			} else {
-				for (int i = 0; i < children.length; i++) {
-					if(lastIndexofSeparator != -1)
-						text = qualifier.substring(0, lastIndexofSeparator)+"/"+children[i];
-					else text = children[i];
-					String parentPath = file.toURI().getPath();
-					if(!parentPath.endsWith("/")) parentPath += "/";
-					String path = parentPath+children[i];
-					//System.out.println("Text = "+ text);
-					//System.out.println("Parent = "+ parentPath);
-					//System.out.println("Path = "+ path);
-					String startWith = null;
-					
-					if(lastIndexofSeparator != -1) 
-							startWith = parentPath+qualifier.substring(lastIndexofSeparator+1);
-					else startWith = parentPath+qualifier;
-					
-					if(path.startsWith(startWith))
-					{
-						cursor = text.length();
-						System.out.println("Attribute Value Proposal = "
-								+ text);
-						CompletionProposal proposal = new CompletionProposal(
-								text, offset - qlen, qlen, cursor, null,
-								text, null, null);
-						propList.add(proposal);
-					}
-				}
-			}*/
 		}
 
 		System.out.println("perspective = " + perspective);
