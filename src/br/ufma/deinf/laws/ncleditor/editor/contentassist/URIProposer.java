@@ -16,12 +16,12 @@ import br.ufma.deinf.laws.util.UrlUtils;
  * that is a substring of the final URI that the users want write.
  */
 
-public class URISuggest {
+public class URIProposer {
 	String rootPath;
 	URI uriRoot;
 	boolean isRelative = false;
 	
-	public URISuggest(String rootPath) throws URISyntaxException {
+	public URIProposer(String rootPath) throws URISyntaxException {
 		this.rootPath = UrlUtils.encodeURL(rootPath);
 		uriRoot = new URI(this.rootPath);
 		System.out.println(this.rootPath);
@@ -110,7 +110,7 @@ public class URISuggest {
 	 * @throws URISyntaxException
 	 */
 	public static void main(String [] args) throws URISyntaxException{
-		URISuggest fs = new URISuggest("file:///C:/");
+		URIProposer fs = new URIProposer("file:///C:/");
 		Vector <String> v = fs.getDirectories("file:///C:/Users/usuario/Program Files (x86)/");
 		System.out.println("## DIRECTORIES ##");
 		for(int i = 0; i < v.size(); i++){

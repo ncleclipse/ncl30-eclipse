@@ -549,7 +549,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			file = new File(currentFile.getLocationURI());
 			file = new File(file.getParentFile().toString());
 			try {
-				URISuggest fs = new URISuggest(currentFile.getParent().getLocationURI().toString());
+				URIProposer fs = new URIProposer(currentFile.getParent().getLocationURI().toString());
 				Vector <String> v = fs.getDirectories(qualifier);
 				for(int i = 0; i < v.size(); i++){
 						if(v.get(i).startsWith(qualifier)){
@@ -560,7 +560,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							propList.add(proposal);
 						}
 				}
-				fs = new URISuggest(currentFile.getParent().getLocationURI().toString());
+				fs = new URIProposer(currentFile.getParent().getLocationURI().toString());
 				v = fs.getFiles(qualifier);
 				for(int i = 0; i < v.size(); i++){
 						if(v.get(i).startsWith(qualifier)){
