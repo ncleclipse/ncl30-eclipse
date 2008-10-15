@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
 Este arquivo é parte da implementação do ambiente de autoria em Nested Context
 Language - NCL Eclipse.
 
@@ -545,7 +545,38 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						propList.add(proposal);
 					}
 				}
-			
+			File file = null;
+			file = new File(currentFile.getLocationURI());
+			file = new File(file.getParentFile().toString());
+			try {
+				URISuggest fs = new URISuggest(currentFile.getParent().getLocationURI().toString());
+				Vector <String> v = fs.getDirectories(qualifier);
+				for(int i = 0; i < v.size(); i++){
+						if(v.get(i).startsWith(qualifier)){
+							cursor = v.get(i).length();
+							CompletionProposal proposal = new CompletionProposal(
+								v.get(i), offset - qlen, qlen, cursor, null,
+								v.get(i), null, null);
+							propList.add(proposal);
+						}
+				}
+				fs = new URISuggest(currentFile.getParent().getLocationURI().toString());
+				v = fs.getFiles(qualifier);
+				for(int i = 0; i < v.size(); i++){
+						if(v.get(i).startsWith(qualifier)){
+							cursor = v.get(i).length();
+							CompletionProposal proposal = new CompletionProposal(
+								v.get(i), offset - qlen, qlen, cursor, null,
+								v.get(i), null, null);
+							propList.add(proposal);
+						}
+				}
+				return;
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			/*
 			//compute paths
 			File file = null;
 			File parent = null;
@@ -641,7 +672,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						propList.add(proposal);
 					}
 				}
-			}
+			}*/
 		}
 
 		System.out.println("perspective = " + perspective);
