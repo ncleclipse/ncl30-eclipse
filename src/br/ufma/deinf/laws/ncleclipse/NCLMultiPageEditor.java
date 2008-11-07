@@ -107,7 +107,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 		try {
 			editor = new NCLEditor();
 			int index = addPage(editor, getEditorInput());
-			setPageText(index, "Text");
+			setPageText(index, editor.getTitle());
 		} catch (PartInitException e) {
 			ErrorDialog.openError(
 				getSite().getShell(),
@@ -132,36 +132,8 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 				null,
 				e.getStatus());
 		}
-		/*Composite composite = new Composite(getContainer(), SWT.NONE);
-		GridLayout layout = new GridLayout();
-		composite.setLayout(layout);
-		layout.numColumns = 2;
-
-		Button fontButton = new Button(composite, SWT.NONE);
-		GridData gd = new GridData(GridData.BEGINNING);
-		gd.horizontalSpan = 2;
-		fontButton.setLayoutData(gd);
-		fontButton.setText("Load...");
-		
-		fontButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				setFont();
-			}
-		});*/
-		/*layoutEditor = new NCLLayoutEditor();
-
-		int index;
-		try {
-			index = addPage(layoutEditor, getEditorInput());
-			setPageText(index, "Layout");
-		} catch (PartInitException e) {
-			ErrorDialog.openError(
-					getSite().getShell(),
-					"Error creating nested text editor",
-					null,
-					e.getStatus());
-		}*/
 	}
+	
 	/**
 	 * Creates the pages of the multi-page editor.
 	 */
@@ -211,7 +183,6 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 		if (!(editorInput instanceof IFileEditorInput))
 			throw new PartInitException("Invalid Input: Must be IFileEditorInput");	
 		super.init(site, editorInput);
-		setTitle(editorInput.)
 	}
 	/* (non-Javadoc)
 	 * Method declared on IEditorPart.
@@ -259,29 +230,6 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 			font = new Font(text.getDisplay(), fontData);
 			text.setFont(font);
 		}
-	}
-	/**
-	 * Sorts the words in page 0, and shows them in page 2.
-	 */
-	void sortWords() {
-
-		String editorText =
-			editor.getDocumentProvider().getDocument(editor.getEditorInput()).get();
-
-		StringTokenizer tokenizer =
-			new StringTokenizer(editorText, " \t\n\r\f!@#\u0024%^&*()-_=+`~[]{};:'\",.<>/?|\\");
-		ArrayList editorWords = new ArrayList();
-		while (tokenizer.hasMoreTokens()) {
-			editorWords.add(tokenizer.nextToken());
-		}
-
-		Collections.sort(editorWords, Collator.getInstance());
-		StringWriter displayText = new StringWriter();
-		for (int i = 0; i < editorWords.size(); i++) {
-			displayText.write(((String) editorWords.get(i)));
-			displayText.write(System.getProperty("line.separator"));
-		}
-		text.setText(displayText.toString());
 	}
 	
 	public NCLEditor getNCLEditor(){

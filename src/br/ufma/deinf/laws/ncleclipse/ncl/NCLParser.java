@@ -56,20 +56,21 @@ import java.io.FileReader;
 import java.io.StringReader;
 
 import org.apache.xerces.parsers.SAXParser;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 public class NCLParser {
 		private ErrorHandler errorHandler;
-		private NCLContentHandler contentHandler;
+		private ContentHandler contentHandler;
 
 		public void setErrorHandler(ErrorHandler errorHandler)
 		{
 			this.errorHandler = errorHandler;
 		}
 
-		public void setContentHandler(NCLContentHandler contentHandler)
+		public void setContentHandler(ContentHandler contentHandler)
 		{
 			this.contentHandler = contentHandler;
 		}
