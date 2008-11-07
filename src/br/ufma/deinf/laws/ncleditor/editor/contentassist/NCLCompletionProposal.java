@@ -51,7 +51,6 @@ http://www.laws.deinf.ufma.br
 package br.ufma.deinf.laws.ncleditor.editor.contentassist;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,6 +70,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
+import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -87,7 +87,9 @@ import org.eclipse.ui.part.FileEditorInput;
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
-import br.ufma.deinf.laws.ncleclipse.NCLEditor;
+import br.ufma.deinf.laws.ncl.help.NCLHelper;
+import br.ufma.deinf.laws.ncl.help.NCLHelperFactory;
+import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
@@ -197,8 +199,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (tagname.startsWith(qualifier) || tagname2.startsWith(qualifier)) {
 				String text = computeTagStructure(tagname, indent);
 
+				//get a help info to user
+				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+				
 				CompletionProposal proposal = new CompletionProposal(text,
-						offset - qlen, qlen, cursor, null, tagname, null, null);
+						offset - qlen, qlen, cursor, null, tagname, null, helpInfo);
 				propList.add(proposal);
 			}
 
@@ -214,9 +219,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						|| tagname2.startsWith(qualifier)) {
 					String text = computeTagStructure(tagname, indent);
 
+					String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+					//get a help information to user
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, tagname, null,
-							null);
+							helpInfo);
 					propList.add(proposal);
 				}
 			}
@@ -395,9 +402,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	 * @param offset
 	 * @param propList
 	 */
-	// TODO: fazer contextual, saber de qual tag o cara está digitando e quais
-	// os atributos
-	// que já foram preenchidos
 	private void computeAttributesValuesProposals(IDocument doc,
 			String qualifier, int offset, List propList) {
 		int qlen = qualifier.length();
@@ -430,9 +434,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		String nclText = doc.get();
 		NCLContentHandler nclContentHandler = new NCLContentHandler();
 		NCLDocument nclDocument = new NCLDocument();
-		nclDocument.setParentURI(((NCLEditor) PlatformUI.getWorkbench()
+		nclDocument.setParentURI(((NCLMultiPageEditor) PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage().getActiveEditor())
-				.getInputFile().getParent().getLocationURI());
+				.getNCLEditor().getInputFile().getParent().getLocationURI());
 		nclContentHandler.setNclDocument(nclDocument);
 		NCLParser parser = new NCLParser();
 		parser.setContentHandler(nclContentHandler);
@@ -725,9 +729,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (prop.startsWith(qualifier)) {
 				cursor = prop.length();
 
-				System.out.println("Attribute Proposal = " + prop);
+				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(currentTagname, view);
+
 				CompletionProposal proposal = new CompletionProposal(prop,
-						offset - qlen, qlen, cursor, null, view, null, null);
+						offset - qlen, qlen, cursor, null, view, null, helpInfo);
 
 				propList.add(proposal);
 			}
