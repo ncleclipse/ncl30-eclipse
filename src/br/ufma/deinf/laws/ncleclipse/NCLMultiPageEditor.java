@@ -50,12 +50,6 @@ http://www.laws.deinf.ufma.br
 
 package br.ufma.deinf.laws.ncleclipse;
 
-import java.io.StringWriter;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.StringTokenizer;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -78,6 +72,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor;
+import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 
 public class NCLMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener{
 	/** The text editor used in page 0. */
@@ -139,7 +134,10 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	 */
 	protected void createPages() {
 		createNCLEditorPage();
-		createLayoutViewPage();
+		if(NCLEditorPlugin.getDefault().getPreferenceStore().
+				getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR) 
+			)
+			createLayoutViewPage();
 	}
 	/**
 	 * The <code>MultiPageEditorPart</code> implementation of this 
