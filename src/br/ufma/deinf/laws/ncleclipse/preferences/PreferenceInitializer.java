@@ -17,7 +17,12 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = NCLEditorPlugin.getDefault().getPreferenceStore();
-		store.setDefault(PreferenceConstants.P_NCL_LAYOUT_EDITOR, true);
+		store.setDefault(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE, true);
+		store.setDefault(PreferenceConstants.P_SSH_RUN_IP, "192.168.0.1");
+		store.setDefault(PreferenceConstants.P_SSH_RUN_USER,
+				"root");
+		store.setDefault(PreferenceConstants.P_SSH_RUN_PASSW,
+			"telemidia");
 	}
 
 }

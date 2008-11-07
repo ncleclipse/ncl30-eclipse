@@ -19,14 +19,14 @@ import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
  * be accessed directly via the preference store.
  */
 
-public class ViewsPreferencePage
+public class RunSSHPreferencePage
 	extends FieldEditorPreferencePage
 	implements IWorkbenchPreferencePage {
 
-	public ViewsPreferencePage() {
+	public RunSSHPreferencePage() {
 		super(GRID);
 		setPreferenceStore(NCLEditorPlugin.getDefault().getPreferenceStore());
-		setDescription("Preferences related to NCL Eclipse Views");
+		setDescription("Run Ginga-NCL in Set-top box");
 	}
 	
 	/**
@@ -37,11 +37,11 @@ public class ViewsPreferencePage
 	 */
 	public void createFieldEditors() {
 		addField(
-			new BooleanFieldEditor(
-				PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE,
-				"&Open Layout View Editor",
-				getFieldEditorParent()));
-
+			new StringFieldEditor(PreferenceConstants.P_SSH_RUN_IP, "&IP of Set-top box (or Virtual set-top box):", getFieldEditorParent()));
+		addField(
+				new StringFieldEditor(PreferenceConstants.P_SSH_RUN_USER, "&User", getFieldEditorParent()));
+		addField(
+				new StringFieldEditor(PreferenceConstants.P_SSH_RUN_PASSW, "&Password:", getFieldEditorParent()));
 	}
 
 	/* (non-Javadoc)
