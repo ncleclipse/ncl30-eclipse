@@ -1,8 +1,10 @@
 package br.ufma.deinf.laws.ncleclipse.preferences;
 
-import org.eclipse.jface.preference.*;
-import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
+
 import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 
 /**
@@ -40,8 +42,9 @@ public class RunSSHPreferencePage
 			new StringFieldEditor(PreferenceConstants.P_SSH_RUN_IP, "&IP of Set-top box (or Virtual set-top box):", getFieldEditorParent()));
 		addField(
 				new StringFieldEditor(PreferenceConstants.P_SSH_RUN_USER, "&User", getFieldEditorParent()));
-		addField(
-				new StringFieldEditor(PreferenceConstants.P_SSH_RUN_PASSW, "&Password:", getFieldEditorParent()));
+		StringFieldEditor passw = new StringFieldEditor(PreferenceConstants.P_SSH_RUN_PASSW, "&Password:", getFieldEditorParent());
+		passw.getTextControl(getFieldEditorParent()).setEchoChar('*');
+		addField(passw);
 	}
 
 	/* (non-Javadoc)

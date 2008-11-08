@@ -5,6 +5,10 @@ package br.ufma.deinf.laws.ncleclipse.preferences;
  */
 public class PreferenceConstants {
 
-	public static final String P_NCL_LAYOUT_EDITOR = "pathPreference";
+	public static final String P_NCL_LAYOUT_EDITOR_ACTIVATE = "layoutPreference";
+
+	public static final String P_SSH_RUN_USER = "nclEclipseSshUserRunPreference";
+	public static final String P_SSH_RUN_PASSW = "nclEclipseSshPasswRunPreference";
+	public static final String P_SSH_RUN_IP = "nclEclipseSshIpRunPreference";
 	
 }

@@ -135,7 +135,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	protected void createPages() {
 		createNCLEditorPage();
 		if(NCLEditorPlugin.getDefault().getPreferenceStore().
-				getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR) 
+				getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE) 
 			)
 			createLayoutViewPage();
 	}
