@@ -70,7 +70,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
-import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -87,8 +86,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
-import br.ufma.deinf.laws.ncl.help.NCLHelper;
-import br.ufma.deinf.laws.ncl.help.NCLHelperFactory;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
@@ -129,9 +126,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		List propList = new ArrayList();
 		IDocument doc = viewer.getDocument();
 		text = doc.get();
-		isAttributeValue = isAttributeValue(doc, offset);
-		isAttribute = isAttribute(doc, offset);
-		isEndTagName = isEndTagName(doc, offset);
+		NCLSourceDocument nclDoc = (NCLSourceDocument)doc;
+		isAttributeValue = nclDoc.isAttributeValue(offset);
+		isAttribute = nclDoc.isAttribute(offset);
+		isEndTagName = nclDoc.isEndTagName(offset);
 		Point selectedRange = viewer.getSelectedRange();
 		if (selectedRange.y > 0) {
 			// TODO:
@@ -145,7 +143,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						propList);
 			} else if (!isAttribute) {
 				computeTagsProposals(doc, qualifier, offset, propList);
-			} else if (!isTagname(doc, offset))
+			} else if (!nclDoc.isTagname(offset))
 				computeAttributesProposals(doc, qualifier, offset, propList);
 		}
 		ICompletionProposal[] proposals = new ICompletionProposal[propList
@@ -183,16 +181,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		int qlen = qualifier.length();
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		String indent = getIndentLine(doc, offset);
+		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
 
 		// fazer um filtro para buscar apenas as tags filhas da getFatherTagname
 		System.out.println("## Log: Pai da tag onde estou digitando : "
-				+ getFatherTagName(doc, offset));
+				+ nclDoc.getFatherTagName(offset));
 		Map<String, Map<String, Character>> nesting = nclStructure.getNesting();
 		Vector<String> childrenStr = new Vector<String>();
 		// Procuro todos os filhos da tagname do meu pai e coloco no vector
 		// childrenStr
 
-		String fatherTagName = getFatherTagName(doc, offset);
+		String fatherTagName = nclDoc.getFatherTagName(offset);
 		if (fatherTagName.equals("")) {
 			String tagname = "ncl";
 			String tagname2 = "<" + tagname;
@@ -200,7 +199,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				String text = computeTagStructure(tagname, indent);
 
 				//get a help info to user
-				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+				//String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+				String helpInfo = "help";
 				
 				CompletionProposal proposal = new CompletionProposal(text,
 						offset - qlen, qlen, cursor, null, tagname, null, helpInfo);
@@ -219,7 +219,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						|| tagname2.startsWith(qualifier)) {
 					String text = computeTagStructure(tagname, indent);
 
-					String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+					//String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+					String helpInfo="help";
 					//get a help information to user
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, tagname, null,
@@ -247,118 +248,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		 */
 	}
 
-	/**
-	 * Computa o offset do pai
-	 * 
-	 * @param document
-	 * @param documentOffset
-	 * @return
-	 */
-	private int getFatherPartitionOffset(IDocument document, int documentOffset) {
-		try {
-			ITypedRegion region = document.getPartition(documentOffset); // região
-																			// q eu
-																			// estou
-			int partitionOffset = region.getOffset();
-			// resolve o problema do usuário começar digitando <, ignora a
-			// partição atual
-			while (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
-				text = document.get(region.getOffset(), region.getLength());
-				region = document.getPartition(--documentOffset);
-			}
-			Stack<Integer> pilha = new Stack<Integer>();
-			do { // procura a tag pai
-				text = document.get(region.getOffset(), region.getLength());
-				if (region.getType().equals(XMLPartitionScanner.XML_END_TAG))
-					pilha.push(new Integer(1));
-				else if (region.getType().equals(
-						XMLPartitionScanner.XML_START_TAG)
-						&& !text.endsWith("/>")) {
-					if (pilha.size() == 0)
-						break;
-					pilha.pop();
-				}
-				partitionOffset--;
-				region = document.getPartition(partitionOffset);
-				partitionOffset = region.getOffset();
-			} while (true);
-			return partitionOffset;
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-
-	/**
-	 * Computa a tagname pai da atual
-	 * 
-	 * @return
-	 */
-	private String getFatherTagName(IDocument document, int documentOffset) {
-		return getCurrentTagname(document, getFatherPartitionOffset(document,
-				documentOffset));
-	}
-
-	/**
-	 * Retorna a partição anterior
-	 * 
-	 * @param d
-	 * @param r
-	 * @return
-	 */
-	public static ITypedRegion getPreviousPartition(IDocument d, ITypedRegion r) {
-		if (r == null)
-			return null;
-		if (r.getOffset() < 1)
-			return null;
-		ITypedRegion pr = null;
-		try {
-			pr = d.getPartition(r.getOffset() - 1);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		return pr;
-	}
-
-	/**
-	 * Retorna a partição anterior do tipo XML_START_TAG
-	 * 
-	 * @param d
-	 * @param offset
-	 * @return
-	 * @throws BadLocationException
-	 */
-	public static ITypedRegion getPreviousTagPartition(IDocument d, int offset)
-			throws BadLocationException {
-		ITypedRegion partition = d.getPartition(offset);
-		if (partition == null
-				|| partition.getType()
-						.equals(XMLPartitionScanner.XML_START_TAG)) {
-			return partition;
-		}
-		return getPreviousTagPartition(d, partition);
-	}
-
-	/***************************************************************************
-	 * Gets the previous partition of type BEGIN_TAG or END_TAG.
-	 * 
-	 * @param d
-	 *            The document containing the partitions
-	 * @param r
-	 *            The current partition
-	 * @return The partition representing the previous tag in the document, or
-	 *         <code>null</code> if no such partition can be found.
-	 */
-	public static ITypedRegion getPreviousTagPartition(IDocument d,
-			ITypedRegion r) {
-		ITypedRegion partition = getPreviousPartition(d, r);
-		while (partition != null
-				&& !partition.getType().equals(
-						XMLPartitionScanner.XML_START_TAG)) {
-			partition = getPreviousPartition(d, partition);
-		}
-		return partition;
-	}
 
 	/**
 	 * Computa a estrutura da Tag Valores Defaults, atributos obrigatórios,
@@ -406,8 +295,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String qualifier, int offset, List propList) {
 		int qlen = qualifier.length();
 		// Verificar se existe valor pré-definido
-		String tagname = getCurrentTagname(doc, offset);
-		String attribute = getCurrentAttribute(doc, offset);
+		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
+		String tagname = nclDoc.getCurrentTagname(offset);
+		String attribute = nclDoc.getCurrentAttribute(offset);
 		System.out.println("tag: " + tagname + " attr:" + attribute);
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		Vector<String> prop = AttributeValues.getValues(nclStructure
@@ -452,16 +342,16 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				|| (tagname.equals("defaultComponent") && attribute
 						.equals("component"))) {
 
-			String fatherTagName = getFatherTagName(doc, offset);
+			String fatherTagName = nclDoc.getFatherTagName(offset);
 			try {
-				perspective = getAttributeValueFromCurrentTagName(doc,
-						getFatherPartitionOffset(doc, offset), "id");
+				perspective = nclDoc.getAttributeValueFromCurrentTagName(
+						nclDoc.getFatherPartitionOffset(offset), "id");
 			} catch (Exception e) {
 				if (fatherTagName.equals("body")) {
 					try {
-						perspective = getAttributeValueFromCurrentTagName(doc,
-								getFatherPartitionOffset(doc,
-										getFatherPartitionOffset(doc, offset)),
+						perspective = nclDoc.getAttributeValueFromCurrentTagName(
+								nclDoc.getFatherPartitionOffset(
+										nclDoc.getFatherPartitionOffset(offset)),
 								"id");
 					} catch (Exception e1) {
 						MessageDialog
@@ -490,18 +380,16 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if ((tagname.equals("bind") && attribute.equals("component"))
 				|| (tagname.equals("mapping") && attribute.equals("component"))) {
 
-			String grandFatherTagName = getFatherTagName(doc,
-					getFatherPartitionOffset(doc, offset));
+			String grandFatherTagName = nclDoc.getFatherTagName(nclDoc.getFatherPartitionOffset(offset));
 			try {
-				perspective = getAttributeValueFromCurrentTagName(doc,
-						getFatherPartitionOffset(doc, getFatherPartitionOffset(
-								doc, offset)), "id");
+				perspective = nclDoc.getAttributeValueFromCurrentTagName(
+						nclDoc.getFatherPartitionOffset(nclDoc.getFatherPartitionOffset(offset)), "id");
 			} catch (Exception e) {
 				if (grandFatherTagName.equals("body")) {
-					perspective = getAttributeValueFromCurrentTagName(doc,
-							getFatherPartitionOffset(doc,
-									getFatherPartitionOffset(doc,
-											getFatherPartitionOffset(doc,
+					perspective = nclDoc.getAttributeValueFromCurrentTagName(
+							nclDoc.getFatherPartitionOffset(
+									nclDoc.getFatherPartitionOffset(
+											nclDoc.getFatherPartitionOffset(
 													offset))), "id");
 				}
 			}
@@ -509,21 +397,20 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		if (tagname.equals("bind") && attribute.equals("role")
 				|| (tagname.equals("linkParam") && (attribute.equals("name")))) {
-			perspective = getAttributeValueFromCurrentTagName(doc,
-					getFatherPartitionOffset(doc, offset), "xconnector");
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(
+					nclDoc.getFatherPartitionOffset(offset), "xconnector");
 		}
 
 		if (tagname.equals("bindParam") && attribute.equals("name")) {
-			perspective = getAttributeValueFromCurrentTagName(doc,
-					getFatherPartitionOffset(doc, getFatherPartitionOffset(doc,
-							offset)), "xconnector");
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(
+					nclDoc.getFatherPartitionOffset(nclDoc.getFatherPartitionOffset(offset)), "xconnector");
 		}
 
 		if (tagname.equals("bind") && attribute.equals("interface")
 				|| tagname.equals("port") && attribute.equals("interface")
 				|| tagname.equals("mapping") && attribute.equals("interface")) {
 			NCLElement element;
-			perspective = getAttributeValueFromCurrentTagName(doc, offset,
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(offset,
 					"component");
 			element = nclDocument.getElementById(perspective);
 			while (element != null
@@ -553,8 +440,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						// refer n�o pode sugerir a pr�pria media, switch, etc.
 						if (attribute.equals("refer")) {
-							String idAtual = getAttributeValueFromCurrentTagName(doc,
-									offset, "id");
+							String idAtual = nclDoc.getAttributeValueFromCurrentTagName(offset, "id");
 							if (idAtual != null)
 								if (text.equals(idAtual))
 									continue;
@@ -642,8 +528,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				// refer n�o pode sugerir a pr�pria media, switch, etc.
 				if (attribute.equals("refer")) {
-					String idAtual = getAttributeValueFromCurrentTagName(doc,
-							offset, "id");
+					String idAtual = nclDoc.getAttributeValueFromCurrentTagName(offset, "id");
 					if (idAtual != null)
 						if (text.equals(idAtual))
 							continue;
@@ -677,8 +562,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					System.out.println(text);
 					// refer n�o pode sugerir a pr�pria media, switch, etc.
 					if (attribute.equals("refer")) {
-						String idAtual = getAttributeValueFromCurrentTagName(doc,
-								offset, "id");
+						String idAtual = nclDoc.getAttributeValueFromCurrentTagName(offset, "id");
 						if (idAtual != null)
 							if (text.equals(idAtual))
 								continue;
@@ -709,11 +593,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private void computeAttributesProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
 		int qlen = qualifier.length();
+		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
 		System.out.println("Computing Attributes proposals...");
-		String currentTagname = getCurrentTagname(doc, offset);
+		String currentTagname = nclDoc.getCurrentTagname(offset);
 		System.out.println("Current Tag Name = " + currentTagname);
 
-		List<String> attributeTyped = getAttributesTyped(doc, offset);
+		List<String> attributeTyped = nclDoc.getAttributesTyped(offset);
 
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		Map<String, Boolean> atts = nclStructure.getAttributes(currentTagname);
@@ -729,7 +614,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (prop.startsWith(qualifier)) {
 				cursor = prop.length();
 
-				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(currentTagname, view);
+	//			String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(currentTagname, view);
+				String helpInfo = "help";
 
 				CompletionProposal proposal = new CompletionProposal(prop,
 						offset - qlen, qlen, cursor, null, view, null, helpInfo);
@@ -739,63 +625,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		}
 	}
 
-	private String getCurrentTagname(IDocument document, int documentOffset) {
-		try {
-			ITypedRegion region = document.getPartition(documentOffset);
-			int partitionOffset = region.getOffset();
-			int readLength = region.getLength();
-			ColorManager colorManager = new ColorManager();
-			scanner = new XMLTagScanner(colorManager);
 
-			String text = document.get(partitionOffset, readLength);
-			int p = 0;
-			char ch;
-			String tagname = "";
-			ch = text.charAt(0);
-			while (true) {
-				if (p + 1 >= text.length()
-						|| !Character.isJavaIdentifierPart(text.charAt(p + 1)))
-					break;
-				ch = text.charAt(++p);
-				tagname += ch;
-			}
-			return tagname;
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
-
-	private String getAttributeValueFromCurrentTagName(IDocument doc,
-			int offset, String attribute) {
-		try {
-			ITypedRegion region = doc.getPartition(offset);
-			int partitionOffset = region.getOffset();
-			int readLength = region.getLength();
-
-			String text = doc.get(partitionOffset, readLength);
-			int p = text.indexOf(attribute);
-			p += attribute.length();
-			String value = "";
-			boolean firstQuote = false;
-			while (true) {
-				p++;
-				if (p > text.length())
-					return "";
-				if (text.charAt(p) == '\'' || text.charAt(p) == '\"')
-					if (!firstQuote) {
-						firstQuote = true;
-						continue;
-					} else
-						return value;
-				if (firstQuote)
-					value += text.charAt(p);
-			}
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
 
 	/**
 	 * Retorna o qualificador, ou seja, o que o usuário já digitou, utilizado
@@ -898,138 +728,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		return null;
 	}
 
-	private boolean isTagname(IDocument document, int documentOffset) {
-		boolean isTagname = false;
-		try {
-			ITypedRegion region = document.getPartition(documentOffset);
-			String text = document.get(region.getOffset(), documentOffset
-					- region.getOffset());
-			char ch;
-			int p = text.length() - 1;
-			while (true) {
-				ch = text.charAt(p--);
-				if (ch == '<')
-					return true;
-				if (Character.isLetter(ch))
-					continue;
-				System.out.println("ch = " + ch);
-				return false;
-			}
-		} catch (BadLocationException e) {
-			// TODO: handle exception
-			return false;
-		}
-	}
 
-	private boolean isEndTagName(IDocument document, int documentOffset) {
-		ITypedRegion region;
-		try {
-			region = document.getPartition(documentOffset);
-			if (region.getType() == XMLPartitionScanner.XML_END_TAG)
-				return true;
-			return false;
-		} catch (BadLocationException e) {
-			return false;
-		}
-	}
-
-	/**
-	 * Utilizado para determinar se a palavra corrente que está sendo digitada
-	 * é um atributo. Irá retornar verdadeiro se encontrar o padrão no
-	 * âmbito da atual partição Tem que melhorar ainda. Falta verificar se é
-	 * o valor de um atributo.
-	 */
-	private boolean isAttribute(IDocument document, int documentOffset) {
-		ITypedRegion region;
-		try {
-			region = document.getPartition(documentOffset);
-			if (region.getType() == XMLPartitionScanner.XML_START_TAG)
-				return !isTagname(document, documentOffset)
-						&& !isAttributeValue(document, documentOffset);
-			return false;
-		} catch (BadLocationException e) {
-			return false;
-		}
-	}
-
-	String currentAttribute;
-
-	private boolean isAttributeValue(IDocument doc, int offset) {
-		ITypedRegion region;
-		try {
-			region = doc.getPartition(offset--);
-			if (region.getType() == XMLPartitionScanner.XML_START_TAG) {
-				int partitionOffset = region.getOffset();
-				currentAttribute = "";
-				System.out
-						.println("Verificando se está digitando o valor de um atributo");
-				boolean firstQuote = true;
-				boolean findingAttributeName = false;
-				int beginAttributeName = -1, endAttributeName = -1;
-				while (true && offset >= partitionOffset) {
-					char ch = doc.getChar(offset--);
-					if (findingAttributeName) {
-						if (Character.isJavaIdentifierPart(ch)) {
-							if (endAttributeName == -1) {
-								endAttributeName = offset;
-							}
-							continue;
-						}
-						if (Character.isWhitespace(ch)
-								&& endAttributeName != -1) {
-							currentAttribute = doc.get(offset + 2,
-									endAttributeName - (offset));
-							return true;
-						}
-						if (Character.isWhitespace(ch))
-							continue;
-						return false;
-					}
-					if (ch == '\'' || ch == '\"') {
-						if (firstQuote) {
-							firstQuote = false;
-							continue;
-						}
-						return false;
-					}
-					if (ch == '=')
-						findingAttributeName = true;
-				}
-			}
-			return false;
-		} catch (BadLocationException e) {
-			return false;
-		}
-	}
-
-	private String getCurrentAttribute(IDocument doc, int offset) {
-		if (isAttributeValue(doc, offset))
-			return currentAttribute;
-		return "";
-	}
-
-	private List<String> getAttributesTyped(IDocument doc, int offset) {
-		List list = new ArrayList<String>();
-		try {
-			ITypedRegion region = doc.getPartition(offset);
-			if (region.getType() == XMLPartitionScanner.XML_START_TAG) {
-				String currentPartition = doc.get(region.getOffset(), region
-						.getLength());
-				Pattern p = Pattern.compile("\\s[a-zA-Z]+");
-				Matcher m = p.matcher(currentPartition); // get a matcher
-															// object
-				while (m.find()) {
-					list
-							.add(currentPartition.substring(m.start() + 1, m
-									.end()));
-				}
-			}
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return list;
-	}
 
 	private TextInfo currentText(IDocument document, int documentOffset) {
 

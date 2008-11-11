@@ -1,4 +1,14 @@
 Caracter�sticas a implementar:
+	- Sincronização com % ainda não funciona.
+	
+	- Adicionar novas regiões, faltando refletir no código
+	
+	- Bug no MultiPageActionContributor
+		- As ações do Gef funcionam perfeitamente mas não vão embora quando as
+		ações de texto devem aparecer
+		
+	- Estudar o Web Standard Tool e verificar a possibilidade de incluí-lo no NCL Eclipse.
+	
 	- Ctrl+Shift+F
 		Não atualiza os Markers.
 	
@@ -66,6 +76,25 @@ Caracter�sticas a implementar:
 			</media>
 
 Vers�o 1.1.0
+2008-10-15
+	- Sugest�o de URL.
+		- Quase pronto. Problema no C:
+	
+	- Sugest�o de <area>, <property>, etc que s�o do elemento que referencia outro.
+		Ok!
+		Ex:
+			<media id="m1">
+				<area id="a11"/>
+				<area id="a12"/>
+			</media>
+			<media id="m2" refer="m1">
+				<area id="a21"/>
+			</media>
+		S� est� sugerindo a11 e a12. Deve sugerir a21 tamb�m!
+		  
+	- Enter depois do fecha elemento (</>). Antes dava um tab. Agora n�o!
+		Ok!
+		
 2008-09-12
 	- Sugest�o do atributo refer de <media>, <context> e <switch>. (BUG)
 		Sugeria apenas o que estava no contexto.

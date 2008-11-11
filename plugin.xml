@@ -5,13 +5,27 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="br.ufma.deinf.laws.ncleclipse.NCLEditor"
-            contributorClass="br.ufma.deinf.laws.ncleclipse.NCLActionContributor"
+            class="br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor"
+            contributorClass="br.ufma.deinf.laws.ncleclipse.NCLMultiPageActionBarContributor"
             default="true"
             extensions="ncl,conn"
             icon="icons/sample.gif"
-            id="br.ufma.deinf.laws.ncleclipse.editors.NCLEditor"
+            id="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor"
             name="NCL Eclipse">
+      </editor>
+      <editor
+            class="br.ufma.deinf.laws.ncleclipse.NCLEditor"
+            contributorClass="br.ufma.deinf.laws.ncleclipse.NCLActionContributor"
+            default="false"
+            id="br.ufma.deinf.laws.ncleclipse.editor.texteditor"
+            name="NCL Text Editor">
+      </editor>
+      <editor
+            class="br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor"
+            contributorClass="br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditorActionBarContributor"
+            default="true"
+            id="br.ufma.deinf.laws.ncleclipse.editors.layout"
+            name="NCL Layout Editor">
       </editor>
    </extension>
    <!--Editor Actions -->
@@ -87,5 +101,18 @@
      	<perspective id="org.eclipse.debug.ui.DebugPerspective"/>
     </shortcut>
   </extension>
+<extension
+      point="org.eclipse.pde.ui.pluginContent">
+   <wizard
+         class="plugincontentwizard.PluginContentWizard1"
+         id="ncl30-eclipse.wizard1"
+         java="true"
+         name="name"
+         pureOSGi="false"
+         rcp="false"
+         requiresActivator="false"
+         ui-content="true">
+   </wizard>
+</extension>
 
 </plugin>

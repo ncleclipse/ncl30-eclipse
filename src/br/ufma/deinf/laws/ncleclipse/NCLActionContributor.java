@@ -99,6 +99,7 @@ public class NCLActionContributor extends TextEditorActionContributor {
 			toolBarManager.add(new Separator());
 			//toolBarManager.add(fTogglePresentation);
 		}
+		bars.getToolBarManager().remove(ITextEditorActionConstants.DELETE);
 	}
 	
 	public void setActiveEditor(IEditorPart part) {

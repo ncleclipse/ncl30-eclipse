@@ -56,11 +56,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -72,21 +68,14 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor;
-import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
+import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditorActionBarContributor;
+import br.ufma.deinf.laws.ncleditor.editor.contentassist.NCLSourceDocument;
 
 public class NCLMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener{
 	/** The text editor used in page 0. */
 	private NCLEditor editor;
 	private NCLLayoutEditor layoutEditor;
-
-	/** */
-	//private NCLLayoutEditor layoutEditor;
 	
-	/** The font chosen in page 1. */
-	private Font font;
-
-	/** The text widget used in page 2. */
-	private StyledText text;
 	/**
 	 * Creates a multi-page editor example.
 	 */
@@ -119,6 +108,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 		try {
 			layoutEditor = new NCLLayoutEditor();
 			int index = addPage(layoutEditor, getEditorInput());
+			layoutEditor.setNclSourceDocument((NCLSourceDocument)editor.getInputDocument());
 			setPageText(index, "Layout");
 		} catch (PartInitException e) {
 			ErrorDialog.openError(
@@ -134,10 +124,10 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	 */
 	protected void createPages() {
 		createNCLEditorPage();
-		if(NCLEditorPlugin.getDefault().getPreferenceStore().
-				getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE) 
-			)
-			createLayoutViewPage();
+		//if(NCLEditorPlugin.getDefault().getPreferenceStore().
+		//		getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE) 
+		//	)
+		createLayoutViewPage();
 	}
 	/**
 	 * The <code>MultiPageEditorPart</code> implementation of this 
@@ -152,7 +142,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	 * Saves the multi-page editor's document.
 	 */
 	public void doSave(IProgressMonitor monitor) {
-		getEditor(0).doSave(monitor);
+		getActiveEditor().doSave(monitor);
 	}
 	/**
 	 * Saves the multi-page editor's document as another file.
@@ -164,6 +154,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 		editor.doSaveAs();
 		setPageText(0, editor.getTitle());
 		setInput(editor.getEditorInput());
+		updateTitle();
 	}
 	/* (non-Javadoc)
 	 * Method declared on IEditorPart
@@ -191,12 +182,24 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	/**
 	 * Calculates the contents of page 1 when the it is activated.
 	 */
+	NCLActionContributor nclActionContributor = null;
+	NCLLayoutEditorActionBarContributor nclLayoutActionBarContributor = null;
+	boolean layoutActive = false;
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
 		if (newPageIndex == 1) {
 			layoutEditor.refreshGraphicalViewer();
+			layoutActive = true;
 		}
+		else if(newPageIndex == 0 && layoutEditor != null && layoutActive){
+			layoutEditor.refreshNCLSourceDocument();
+			layoutActive = false;
+		}
+
+		NCLMultiPageActionBarContributor ac = new NCLMultiPageActionBarContributor();		
+		ac.setActiveEditor(getEditor(newPageIndex));
 	}
+
 	/**
 	 * Closes all project files on project close.
 	 */
@@ -215,22 +218,19 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 			});
 		}
 	}
-	/**
-	 * Sets the font related data to be applied to the text in page 2.
-	 */
-	void setFont() {
-		FontDialog fontDialog = new FontDialog(getSite().getShell());
-		fontDialog.setFontList(text.getFont().getFontData());
-		FontData fontData = fontDialog.open();
-		if (fontData != null) {
-			if (font != null)
-				font.dispose();
-			font = new Font(text.getDisplay(), fontData);
-			text.setFont(font);
-		}
-	}
-	
+
 	public NCLEditor getNCLEditor(){
 		return editor;
 	}
+	
+	public IEditorPart getActivePageAsEditor(){
+		return getEditor(getActivePage());
+	}
+	
+	void updateTitle() {
+		  IEditorInput input = getNCLEditor().getEditorInput();
+		  setPartName(input.getName());
+		  setTitleToolTip(input.getToolTipText());
+	}
+
 }

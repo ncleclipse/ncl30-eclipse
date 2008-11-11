@@ -57,7 +57,6 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.IDocument;
@@ -73,7 +72,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -87,7 +85,6 @@ import br.ufma.deinf.gia.labmint.document.NclValidatorDocument;
 import br.ufma.deinf.gia.labmint.main.NclParseErrorHandler;
 import br.ufma.deinf.gia.labmint.message.MessageList;
 import br.ufma.deinf.gia.labmint.xml.XMLParserExtend;
-import br.ufma.deinf.laws.ncl.help.NCLHelper;
 import br.ufma.deinf.laws.ncleclipse.marker.MarkingErrorHandler;
 import br.ufma.deinf.laws.ncleclipse.outline.EditorContentOutlinePage;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
@@ -108,7 +105,7 @@ public class NCLEditor extends TextEditor {
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new NCLConfiguration(colorManager, this));
 		setDocumentProvider(new NCLDocumentProvider());
-		loadHelp();
+		//loadHelp();
 	}
 	
 	public void dispose() {
@@ -210,7 +207,7 @@ public class NCLEditor extends TextEditor {
 		}
 	}
 	
-	protected IDocument getInputDocument()
+	public IDocument getInputDocument()
 	{
 		IDocument document = getDocumentProvider().getDocument(input);
 		return document;
@@ -315,10 +312,10 @@ public class NCLEditor extends TextEditor {
 	     * Responsável por carregar as informações que serão mostradas
 	     * no help contextual
 	     */
-	    protected void loadHelp(){
+/*	    protected void loadHelp(){
 	    	NCLHelper nclHelper = NCLHelper.getNCLHelper();
 	    	//nclHelper.setHelpFileName(Platform.getInstallLocation().getDefault().getPath()+"/plugins/ncl_eclipse_1.0.0/resources/help.txt");
 	    	nclHelper.setHelpFileName("/home/roberto/workspace/ncl30-helper/resources/help.txt");
 	    	nclHelper.buildHelp();
-	    }
+	    } */
 }
