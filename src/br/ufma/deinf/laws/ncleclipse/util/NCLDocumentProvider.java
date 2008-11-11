@@ -56,10 +56,16 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
+import br.ufma.deinf.laws.ncleditor.editor.contentassist.NCLSourceDocument;
 
 
 public class NCLDocumentProvider extends FileDocumentProvider {
 
+	@Override
+	protected IDocument createEmptyDocument() {
+		// TODO Auto-generated method stub
+		return new NCLSourceDocument();
+	}
 	protected IDocument createDocument(Object element) throws CoreException {
 		IDocument document = super.createDocument(element);
 		if (document != null) {
