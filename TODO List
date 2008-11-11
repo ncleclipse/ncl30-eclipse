@@ -1,36 +1,21 @@
-Caracter�sticas a implementar:
+Características a implementar:
 	- Sincronização com % ainda não funciona.
-	
 	- Adicionar novas regiões, faltando refletir no código
-	
 	- Bug no MultiPageActionContributor
 		- As ações do Gef funcionam perfeitamente mas não vão embora quando as
 		ações de texto devem aparecer
 		
 	- Estudar o Web Standard Tool e verificar a possibilidade de incluí-lo no NCL Eclipse.
-	
-	- Ctrl+Shift+F
-		Não atualiza os Markers.
-	
-	- Sugest�o de <area>, <property>, etc que s�o do elemento que referencia outro.
-	Ex:
-		<media id="m1">
-			<area id="a11"/>
-			<area id="a12"/>
-		</media>
-		<media id="m2" refer="m1">
-			<area id="a21"/>
-		</media>
-	S� est� sugerindo a11 e a12. Deve sugerir a21 tamb�m!
-
-	- Coment�rios sobre a licen�a em todos os arquivos.
-	- Sugest�o do atributo src de media.
+	- Ctrl+Shift+F: Não atualiza os Markers.
+	- Comentários sobre a licença em todos os arquivos.
+	- Sugestão do atributo src de media (Quase pronto).
+	- Drag and Drop to add media.
 	- Adicionar atalhos de teclados para inser��o de medias, contexto, etc. Tamb�m acess�vel atrav�s de clique com o bot�o esquerdo+source+New (media, context, etc.)
 	- importedDocumentBase
 	- importNCL
 	- bindRule
 	- Linha e coluna do Erro. (Quase Ok)
-	- A l�gica para os tr�s profiles (EDTV, BDTV e CausalConnector) n�o est�
+	- A lógica para os três profiles (EDTV, BDTV e CausalConnector) não est�
 			sendo feita. A l�gica seria:
 		
 			Se atributo xmlns do <ncl> � http://www.ncl.org.br/NCL3.0/EDTVProfile ent�o
@@ -75,12 +60,22 @@ Caracter�sticas a implementar:
 			 <area id="teste"/>
 			</media>
 
-Vers�o 1.1.0
+Versão 1.1.0
+2008-11-07
+	- Adicionada páginas de Preferencia:
+		- View Preferences
+		- SSH Preferences
+
+2008-11-06
+	- Editor com duas páginas
+		- Textual
+		- Layout
+		
 2008-10-15
-	- Sugest�o de URL.
+	- Sugestão de URL.
 		- Quase pronto. Problema no C:
 	
-	- Sugest�o de <area>, <property>, etc que s�o do elemento que referencia outro.
+	- Sugestão de <area>, <property>, etc que s�o do elemento que referencia outro.
 		Ok!
 		Ex:
 			<media id="m1">
@@ -95,22 +90,6 @@ Vers�o 1.1.0
 	- Enter depois do fecha elemento (</>). Antes dava um tab. Agora n�o!
 		Ok!
 		
-2008-09-12
-	- Sugest�o do atributo refer de <media>, <context> e <switch>. (BUG)
-		Sugeria apenas o que estava no contexto.
-		Ok!
-2008-09-05
-	- Não suportava a sugestão de papel de attributeAssessment.
-		Ok!
-		
-	- Ajuste Técnico: ENTER depois de um "<a/>" estava danda um tab a mais.
-		Ok!
-
-2008-09-01
-	- BUG Consertado: NCLNewWizardPage - Falso negativo. Gerava um erro quando atualizava o nome do arquivo. 
-		Só é pra gerar quando a extensão do arquivo for diferente de ".ncl". 
-		Ok! 
-	
 2008-08-26
 	- Tooltip do erro/warning aparecendo
 		Ok!
