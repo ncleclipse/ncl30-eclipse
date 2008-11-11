@@ -57,11 +57,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.Vector;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -86,14 +83,13 @@ import org.eclipse.ui.part.FileEditorInput;
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
+import br.ufma.deinf.laws.ncl.help.NCLHelper;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
-import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
-import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 
 /**
  * Implementa o ContentAssist
@@ -199,8 +195,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				String text = computeTagStructure(tagname, indent);
 
 				//get a help info to user
-				//String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
-				String helpInfo = "help";
+				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+				//String helpInfo = "help";
 				
 				CompletionProposal proposal = new CompletionProposal(text,
 						offset - qlen, qlen, cursor, null, tagname, null, helpInfo);
@@ -219,9 +215,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						|| tagname2.startsWith(qualifier)) {
 					String text = computeTagStructure(tagname, indent);
 
-					//String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
-					String helpInfo="help";
 					//get a help information to user
+					String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+					//String helpInfo="help";
+					
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, tagname, null,
 							helpInfo);
@@ -614,8 +611,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (prop.startsWith(qualifier)) {
 				cursor = prop.length();
 
-	//			String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(currentTagname, view);
-				String helpInfo = "help";
+				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(currentTagname, view);
+				//String helpInfo = "help";
 
 				CompletionProposal proposal = new CompletionProposal(prop,
 						offset - qlen, qlen, cursor, null, view, null, helpInfo);

@@ -85,6 +85,7 @@ import br.ufma.deinf.gia.labmint.document.NclValidatorDocument;
 import br.ufma.deinf.gia.labmint.main.NclParseErrorHandler;
 import br.ufma.deinf.gia.labmint.message.MessageList;
 import br.ufma.deinf.gia.labmint.xml.XMLParserExtend;
+import br.ufma.deinf.laws.ncl.help.NCLHelper;
 import br.ufma.deinf.laws.ncleclipse.marker.MarkingErrorHandler;
 import br.ufma.deinf.laws.ncleclipse.outline.EditorContentOutlinePage;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
@@ -105,7 +106,7 @@ public class NCLEditor extends TextEditor {
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new NCLConfiguration(colorManager, this));
 		setDocumentProvider(new NCLDocumentProvider());
-		//loadHelp();
+		loadHelp();
 	}
 	
 	public void dispose() {
@@ -312,10 +313,10 @@ public class NCLEditor extends TextEditor {
 	     * Responsável por carregar as informações que serão mostradas
 	     * no help contextual
 	     */
-/*	    protected void loadHelp(){
+	    protected void loadHelp(){
 	    	NCLHelper nclHelper = NCLHelper.getNCLHelper();
 	    	//nclHelper.setHelpFileName(Platform.getInstallLocation().getDefault().getPath()+"/plugins/ncl_eclipse_1.0.0/resources/help.txt");
 	    	nclHelper.setHelpFileName("/home/roberto/workspace/ncl30-helper/resources/help.txt");
 	    	nclHelper.buildHelp();
-	    } */
+	    }
 }

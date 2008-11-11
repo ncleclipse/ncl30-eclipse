@@ -69,6 +69,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 
 import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor;
 import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditorActionBarContributor;
+import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleditor.editor.contentassist.NCLSourceDocument;
 
 public class NCLMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener{
@@ -124,10 +125,10 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	 */
 	protected void createPages() {
 		createNCLEditorPage();
-		//if(NCLEditorPlugin.getDefault().getPreferenceStore().
-		//		getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE) 
-		//	)
-		createLayoutViewPage();
+		if(NCLEditorPlugin.getDefault().getPreferenceStore().
+				getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE) 
+			)
+			createLayoutViewPage();
 	}
 	/**
 	 * The <code>MultiPageEditorPart</code> implementation of this 
