@@ -13,20 +13,7 @@
             id="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor"
             name="NCL Eclipse">
       </editor>
-      <editor
-            class="br.ufma.deinf.laws.ncleclipse.NCLEditor"
-            contributorClass="br.ufma.deinf.laws.ncleclipse.NCLActionContributor"
-            default="false"
-            id="br.ufma.deinf.laws.ncleclipse.editor.texteditor"
-            name="NCL Text Editor">
-      </editor>
-      <editor
-            class="br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor"
-            contributorClass="br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditorActionBarContributor"
-            default="true"
-            id="br.ufma.deinf.laws.ncleclipse.editors.layout"
-            name="NCL Layout Editor">
-      </editor>
+
    </extension>
    <!--Editor Actions -->
    <extension
@@ -102,17 +89,44 @@
     </shortcut>
   </extension>
 <extension
-      point="org.eclipse.pde.ui.pluginContent">
-   <wizard
-         class="plugincontentwizard.PluginContentWizard1"
-         id="ncl30-eclipse.wizard1"
-         java="true"
-         name="name"
-         pureOSGi="false"
-         rcp="false"
-         requiresActivator="false"
-         ui-content="true">
-   </wizard>
+      point="org.eclipse.ui.preferencePages">
+   <page
+         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+         class="br.ufma.deinf.laws.ncleclipse.preferences.ViewsPreferencePage"
+         id="br.ufma.deinf.laws.ncleclipse.preferences.NCLEclipseViewsPreferencePage"
+         name="NCL Eclipse Views Preferences">
+   </page>
+   <page
+         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+         class="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
+         id="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
+         name="SHH Run Preferences">
+   </page>
 </extension>
-
+<extension
+      point="org.eclipse.core.runtime.preferences">
+   <initializer
+         class="br.ufma.deinf.laws.ncleclipse.preferences.PreferenceInitializer">
+   </initializer>
+   <initializer
+         class="br.ufma.deinf.laws.ncleclipse.preferences.PreferenceInitializer">
+   </initializer>
+</extension>
+<extension
+      point="org.eclipse.ui.preferencePages">
+   <page
+         class="br.ufma.deinf.laws.ncleclipse.preferences.NCLPreferencePage"
+         id="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+         name="NCL">
+   </page>
+</extension>
+<extension
+      point="org.eclipse.rse.ui.archivehandlers">
+   <archivehandler
+         class="systemarchivehandler.SystemArchiveHandler1"
+         fileNameExtension="ncl30-eclipse.archivehandler1"
+         id="ncl30-eclipse.archivehandler1"
+         name="ncl30-eclipse.archivehandler1">
+   </archivehandler>
+</extension>
 </plugin>
