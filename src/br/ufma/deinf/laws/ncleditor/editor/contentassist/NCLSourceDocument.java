@@ -10,6 +10,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.ITypedRegion;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
@@ -443,5 +445,40 @@ public class NCLSourceDocument extends Document{
 			e.printStackTrace();
 		}
 		return list;
+	}
+	
+	public void removeElement(String id){
+		removeElement(id,0);
+	}
+	
+	public boolean removeElement(String id, int offset){
+		try{
+			int elementOffset = getElementOffset(id, offset);
+			ITypedRegion region = getPartition(offset); 
+			replace(region.getOffset(), region.getLength(), "");
+			//faltando tratar o caso de ser aninhado!
+			return true;
+		}
+		catch (BadLocationException e) {
+			return true; //or false?
+		}
+		
+	}
+	/**
+	 * Return the offset of the element with identificator equals to id
+	 * @param id
+	 * @param offset
+	 * @return
+	 * @throws BadLocationException
+	 */
+	public int getElementOffset(String id, int offset) throws BadLocationException{
+		ITypedRegion region = getNextTagPartition(offset);
+		if(region == null) throw new BadLocationException();
+		String startTag = get(region.getOffset(), region.getLength());
+		String currentId = getAttributeValueFromCurrentTagName(region.getOffset(), "id");
+		if(currentId != null)
+			if(currentId.equals(id))
+				return offset;
+		return getElementOffset(id, region.getOffset()+region.getLength()+1);
 	}
 }

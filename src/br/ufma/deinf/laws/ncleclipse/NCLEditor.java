@@ -317,6 +317,12 @@ public class NCLEditor extends TextEditor {
 	    	NCLHelper nclHelper = NCLHelper.getNCLHelper();
 	    	//nclHelper.setHelpFileName(Platform.getInstallLocation().getDefault().getPath()+"/plugins/ncl_eclipse_1.0.0/resources/help.txt");
 	    	nclHelper.setHelpFileName("/home/roberto/workspace/ncl30-helper/resources/help.txt");
-	    	nclHelper.buildHelp();
+	    	try {
+	    		nclHelper.buildHelp();
+	    	}
+	    	catch (Exception e) {
+	    		e.printStackTrace();
+			}
+
 	    }
 }

@@ -120,6 +120,7 @@
          name="NCL">
    </page>
 </extension>
+<!--
 <extension
       point="org.eclipse.rse.ui.archivehandlers">
    <archivehandler
@@ -129,4 +130,5 @@
          name="ncl30-eclipse.archivehandler1">
    </archivehandler>
 </extension>
+-->
 </plugin>
