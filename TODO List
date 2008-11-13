@@ -1,4 +1,5 @@
 Características a implementar:
+	- Problema com um atributo encostado em />
 	- Sincronização com % ainda não funciona.
 	- Adicionar novas regiões, faltando refletir no código
 	- Bug no MultiPageActionContributor
