@@ -197,6 +197,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				//get a help info to user
 				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
 				//String helpInfo = "help";
+				//String helpInfo = "help";
 				
 				CompletionProposal proposal = new CompletionProposal(text,
 						offset - qlen, qlen, cursor, null, tagname, null, helpInfo);
@@ -217,6 +218,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 					//get a help information to user
 					String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+					//String helpInfo = "help";
 					//String helpInfo="help";
 					
 					CompletionProposal proposal = new CompletionProposal(text,
@@ -612,6 +614,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				cursor = prop.length();
 
 				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(currentTagname, view);
+				//String helpInfo = "help";
 				//String helpInfo = "help";
 
 				CompletionProposal proposal = new CompletionProposal(prop,

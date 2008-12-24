@@ -1,0 +1,1072 @@
+ncl | self |
+Elemento raíz do documento.| 
+
+ncl | id | 
+Identifica univocamente o elemento dentro
+do documento NCL. 
+Seu valor é um identificador XML.|
+
+ncl | xmlns |
+Declara um namespace XML, isto é, ele declara 
+a coleção primária de construções XML utilizada 
+pelo documento. O valor do atributo é o URL 
+(Uniform Resource Locator) que identifica onde 
+o namespace está oficialmente definido. |
+
+ncl | title | 
+Oferece informação adicional sobre o elemento. 
+Os valores do atributo title podem ser utilizados 
+por agentes de usuários de várias formas. |
+
+head | self |
+A ordem na qual os elementos filhos de <head> devem 
+obrigatoriamente ser declarados é: 
+importedDocumentBase?, ruleBase?, transitionBase?, 
+regionBase*, descriptorBase?, connectorBase?, meta*, 
+metadata* |
+
+regionBase | self |
+Base de regiões do documento NCL.
+Define um conjunto de elementos <region> cada qual 
+podendo conter outro conjunto de elementos <region> 
+aninhados, e assim por diante, recursivamente. |
+
+regionBase | id |
+Identifica univocamente o elemento dentro do 
+documento NCL. 
+Seu valor é um identificador XML |
+
+regionBase | device |
+Identifica a associação de um elemento <regionBase> 
+a um dispositivo onde acontecerá a apresentação. 
+Este atributo pode ter os valores: “systemScreen(i)” 
+ou “systemAudio(i)”. O dispositivo escolhido define as 
+variáveis globais do ambiente: systemScreenSize(i), 
+systemScreenGraphicSize(i) e systemAudioType(i). |
+
+region | self |
+Define em que posição do dispositivo os objetos serão 
+inicialmente apresentados. A posição de uma região, 
+conforme especificada por seus atributos top, bottom, 
+left e right, é sempre relativa à geometria-pai, que é 
+definida pelo elemento <region> pai ou pela área total 
+do dispositivo, no caso das regiões no primeiro nível 
+de aninhamento. |
+
+region | id |
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML. |
+
+region | title |
+Oferece informação adicional sobre o elemento. Os 
+valores do atributo title podem ser utilizados por 
+agentes de usuários de várias formas. |
+
+region | top | 
+Posiciona a margem superior da região na distância 
+especificada a partir da margem superior da região-pai 
+(ou margem superior do dispositivo, no caso da região 
+no primeiro nível de aninhamento). Pode ter valores 
+percentuais não-negativos, ou unidades de pixels. |
+
+region | left |
+Posiciona a margem esquerda da região na distância 
+especificada a partir da esquerda da região-pai 
+(ou margem esquerda do dispositivo, no caso da região 
+no primeiro nível de aninhamento). Pode ter valores 
+percentuais não-negativos, ou unidades de pixels. |
+
+region | bottom |
+Posiciona a margem inferior da região na distância 
+especificada a partir da margem inferior da região-pai
+(ou margem inferior do dispositivo, no caso da região 
+no primeiro nível de aninhamento). Pode ter valores 
+percentuais não-negativos, ou unidades de pixels. |
+
+region | right | 
+Posiciona a margem direita da região na distância 
+especificada a partir da margem direita da região-pai 
+(ou margem direita do dispositivo, no caso da região
+no primeiro nível de aninhamento). Pode ter valores 
+percentuais não-negativos, ou unidades de pixels. |
+
+
+region | width |
+Define a largura de uma região. 
+Pode ter valores percentuais não-negativos, ou 
+unidades de pixels. |
+
+region | height |
+Define a altura de uma região.
+Pode ter valores percentuais não-negativos, ou 
+unidades de pixels. |
+
+region | zIndex | 
+Especifica a precedência de sobreposição da região. 
+Regiões com maiores valores de zIndex devem ser 
+obrigatoriamente empilhadas no topo de regiões 
+com valores de zIndex menores. 
+Se duas regiões tiverem a mesmo valor de zIndex vale 
+a ordem temporal. |
+
+descriptorBase | self |
+Especifica o conjunto de descritores de um documento 
+e deve ser filho do elemento <head> |
+
+descriptorBase | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+descriptor | self | 
+Contêm um conjunto de atributos opcionais, 
+agrupando todas as definições espaço-temporais 
+a serem usadas de acordo com o tipo de objeto 
+a ser apresentado. 
+A definição de elementos <descriptor> deve 
+obrigatoriamente ser incluída no cabeçalho do documento, 
+dentro do elemento <descriptorBase> |
+
+descriptor | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+descriptor | player | 
+Identifica a ferramenta de apresentação a ser utilizada |
+
+descriptor | region | 
+Refere-se à região definida pelos 
+elementos <region> do <regionBase> |
+
+descriptor | explicitDur | 
+A duração ideal de um objeto |
+
+descriptor | freeze | 
+Especifica o que acontece com um 
+objeto ao final de sua apresentação |
+
+descriptor | moveLeft | 
+Especifica um valor igual ao valor do focusIndex 
+associado ao elemento sobre o qual o foco será 
+aplicado quando a tecla “seta para a esquerda” 
+(“left arrow key”) for pressionada |
+
+descriptor | moveRight | 
+Especifica um valor igual ao valor do focusIndex 
+associado ao elemento sobre o qual o foco será
+aplicado quando a tecla “seta para a direita" 
+(“right arrow key”) for pressionada |
+
+descriptor | moveUp | 
+Especifica um valor igual ao valor do focusIndex 
+associado ao elemento sobre o qual o foco será 
+aplicado quando a tecla “seta para cima” 
+(“up arrow key”) for pressionada |
+
+descriptor | moveDown | 
+Especifica um valor igual ao valor do focusIndex 
+associado ao elemento sobre o qual o foco será 
+aplicado quando a tecla “seta para baixo” 
+(“down arrow key”) for pressionada |
+
+descriptor | focusIndex | 
+Especifica um índice para o elemento <media> sobre o 
+qual o foco pode ser aplicado, quando esse elemento 
+estiver em exibição, utilizando o elemento <descriptor> 
+que definiu o atributo. 
+Quando um elemento <descriptor> não definir esse atributo, 
+ele é considerado como se não pudesse receber o foco.
+Em um determinado momento da apresentação, 
+se o foco não tiver sido ainda definido, ou se estiver perdido, 
+um foco será inicialmente aplicado ao elemento que estiver 
+sendo apresentado cujo descritor tenha o menor valor de índice. 
+Os valores do atributo focusIndex devem 
+obrigatoriamente ser únicos em um documento NCL |
+
+descriptor | focusBorderColor | 
+Define a cor de destaque e pode receber
+os nomes reservados de cor: “white”, “black”, 
+“silver”, “gray”, “red”, “maroon”, “fuchsia”, 
+“purple”, “lime”, “green”, “yellow”, 
+“olive”, “blue”, “navy”, “aqua”, ou “teal” |
+
+descriptor | focusBorderWidth | 
+Define a largura em pixels da borda em destaque
+(0 significa que nenhuma borda aparece, valores positivos 
+significam que a borda está fora do conteúdo do objeto e 
+valores negativos significam que a borda 
+é desenhada sobre o conteúdo do objeto) |
+
+descriptor | focusBorderTransparency | 
+Define a transparência da cor de destaque. 
+Deve obrigatoriamente ser um valor real entre 0 e 1, 
+ou um valor real na faixa [0,100] 
+terminando com o caractere “%” (por exemplo, 30 %), 
+com “1” ou “100 %” significando 
+transparência total e “0” ou “0 %” 
+significando nenhuma transparência |
+
+descriptor | focusSrc | 
+Especifica um conteúdo alternativo a ser apresentado, 
+ao invés do conteúdo da apresentação atual, 
+se um elemento receber o foco. 
+Esse atributo segue as mesmas regras do 
+atributo src do elemento <media> |
+
+descriptor | selBorderColor | 
+Especifica uma cor de borda, quando selecionada, 
+a caixa definida pelos atributos de posicionamento de elemento |
+
+descriptor | focusSelSrc | 
+Especifica um conteúdo de mídia alternativo 
+a ser apresentado, quando um elemento em foco 
+é selecionado pressionando a tecla de ativação. 
+Este atributo segue as mesmas regras do 
+atributo src do elemento <media> |
+
+descriptor | transIn | 
+Referência uma transição que deverá iniciar 
+no começo da duração ativa dos elementos de mídia 
+(quando a apresentação do objeto inicia). 
+É uma lista separada por ponto e vírgula 
+dos identificadores de transição. 
+Cada um dos identificadores deve obrigatoriamente 
+corresponder ao valor do identificador XML 
+de um dos elementos de transição anteriormente 
+definidos no elemento <transitionBase>. 
+O objetivo da lista separada por ponto e vírgula 
+é permitir que os autores especifiquem um conjunto 
+de transições alternativas (fallback) 
+se a transição preferida não estiver disponível |
+
+descriptor | transOut | 
+Referência uma transição que deverá iniciar no final 
+da duração ativa dos elementos de mídia 
+(quando a apresentação do objeto transita do 
+estado ocorrendo para preparado). 
+É uma lista separada por ponto e vírgula 
+dos identificadores de transição. 
+Cada um dos identificadores deve obrigatoriamente 
+corresponder ao valor do identificador XML 
+de um dos elementos de transição anteriormente 
+definidos no elemento <transitionBase>. 
+O objetivo da lista separada por ponto e vírgula 
+é permitir que os autores especifiquem um conjunto 
+de transições alternativas (fallback) 
+se a transição preferida não estiver disponível |
+
+descriptorParam | self | 
+São utilizados para parametrizar o controle 
+da apresentação do objeto associado com 
+o elemento descritor. 
+Esses parâmetros podem, por exemplo, 
+redefinir alguns valores de atributos 
+definidos pelos atributos da região |
+
+descriptorParam | name | 
+Indica o nome do parâmetro/atributo |
+
+descriptorParam | value | 
+Especifica um valor inicial para o 
+parâmetro/atributo definido |
+
+descriptorSwitch | self | 
+Contém um conjunto de descritores alternativos a 
+ser associado a um objeto. 
+A escolha de <descriptorSwitch> é feita em tempo 
+de apresentação, utilizando regras de 
+teste previamente definidas |
+
+descriptorSwitch | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+defaultDescriptor | self | 
+Identifica o elemento (default) que deve obrigatoriamente 
+ser selecionado se nenhuma das regras bindRule for 
+avaliada como verdadeira |
+
+defaultDescriptor | descriptor | 
+Referencia um <descriptor> default, 
+filhos de <descriptorSwitch>, 
+se nenhuma das regras bindRule for 
+avaliada como verdadeira |
+
+ruleBase | self | 
+Permite a definição de regras que, quando satisfeitas, 
+selecionam alternativas para a apresentação do documento 
+e deve obrigatoriamente ser definido como elemento-filho 
+do elemento <head> |
+
+ruleBase | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+rule | self | 
+Definem regras simples, ou seja, 
+que comparam apenas um valor com uma variável |
+
+rule | id |  
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+rule | var | 
+Uma variável que deve obrigatoriamente ser 
+uma propriedade do nó settings 
+(elemento <media> do tipo application/x-ginga-settings), 
+ou seja, o atributo var deve obrigatoriamente possuir 
+o mesmo valor do atributo name de um elemento <property>, 
+definido como filho do elemento <media> 
+do tipo application/x-ginga-settings |
+
+rule | comparator | 
+Um comparador (eq,ne,gt,ge,lt,le) que relaciona 
+a variável definida por var com 
+um valor definido por value. | 
+
+compositeRule | self | 
+Definem regras compostas, ou seja, 
+composições de regras simples |
+
+compositeRule | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+compositeRule | operator | 
+Define como suas regras-filhas serão relacionadas. 
+Este atributo pode ter os valores "or" e "and". |
+
+bindRule | self | 
+Utilizado para associar regras com componentes 
+de um elemento <switch> ou <descriptorSwitch>. |
+
+bindRule | constituent | 
+Referência um componente filho do <swicth> 
+ou <descriptorSwitch> ao qual este pertence |
+
+bindRule | rule | 
+Referência uma das regras filhas do elemento <bindRule>, 
+seja esta regras simples ou composta |
+
+importBase | self | 
+Permitir que uma base de entidades seja incorporada
+ a outra base já existente |
+
+importBase | documentURI | 
+Refere-se a um URI correspondente ao documento NCL
+ contendo a base a ser importada |
+
+importBase | alias | 
+Especifica um nome a ser utilizado como prefixo quando 
+for necessário referir-se a elementos dessa base importada. 
+O nome do atributo alias deve obrigatoriamente ser único 
+em um documento e seu escopo é restrito 
+ao documento que o definiu. 
+A referência teria o formato: alias#element_id. 
+A operação de importação é transitiva, ou seja, 
+se a baseA importa a baseB que importa a baseC, 
+então a baseA importa a baseC.
+ Entretanto, o alias definido para a baseC dentro da baseB 
+obrigatoriamente não deve ser considerado pela baseA |
+
+importedDocumentBase | self | 
+Especifica um conjunto de documentos NCL importados 
+e deve obrigatoriamente ser definido como 
+elemento-filho do elemento <head> |
+
+importedDocumentBase | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+importNCL | self | 
+Utilizado para importar um documento NCL. 
+Todas as bases definidas dentro de um documento NCL, 
+bem como o elemento <body> do documento, são importados 
+todos de uma vez, através do elemento <importNCL>. 
+As bases são tratadas como se cada uma tivesse 
+sido importada por um elemento <importBase>. 
+O elemento <body> importado será tratado como um elemento <context>. 
+O elemento <importNCL> não “inclui” o documento NCL referido, 
+mas apenas torna o documento referenciado visível 
+para que os seus componentes possam ser reusados pelo documento 
+que definiu o elemento <importNCL>. Assim, o <body> importado, 
+bem como quaisquer de seus nós, pode ser reusado dentro 
+do elemento <body> do documento NCL que realizou a importação. 
+A operação do elemento <importNCL> também tem propriedade transitiva,
+ ou seja, se o documentoA importar o documentoB que importa documentoC, 
+então o documentoA importa o documentoC. 
+Entretanto, o alias definido para o documentoC dentro do documentoB 
+obrigatoriamente não deve ser considerado pelo documentoA |
+
+importNCL | documentURI | 
+Refere-se a um URI correspondente ao 
+documento a ser importado |
+
+importNCL | alias | 
+Especifica um nome a ser utilizado quando 
+for realizada uma referência a elementos 
+desse documento importado. 
+Como no elemento <importBase>, o nome deve 
+obrigatoriamente ser único (type=ID) e seu escopo 
+é restrito ao documento que definiu o atributo alias. 
+A referência teria o formato: alias#element_id. 
+É importante notar que o mesmo alias convém ser 
+utilizado quando é necessário referir-se a elementos 
+definidos nas bases do documento importado 
+(<regionBase>, <connectorBase>, <descriptorBase> etc) |
+
+transitionBase | self | 
+Especifica um conjunto de efeitos de transição e 
+deve obrigatoriamente ser definido como 
+elemento-filho do elemento <head> |
+
+transitionBase | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+transition | self | 
+Permite que um padrão (template) de transição seja definido. 
+As transições são classificadas de acordo com uma taxonomia 
+de dois níveis: tipos e subtipos. 
+Cada tipo de transição descreve um grupo de transições que 
+são intimamente relacionadas. 
+Dentro desse tipo, cada uma das transições individuais é 
+associada a um subtipo que enfatiza as características 
+distintas da transição |
+
+transition | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+transition | type | 
+Obrigatório e utilizado para especificar a transição geral. 
+Se o tipo nomeado não for suportado pelo formatador NCL, 
+a transição deve obrigatoriamente ser ignorada. Isso não é 
+uma condição de erro, pois as implementações são livres 
+para ignorar transições |
+
+transition | subtype | 
+Fornece o controle específico para a transição. 
+Esse atributo é opcional e, se especificado, deve 
+obrigatoriamente ser um dos subtipos de transição 
+apropriados para o tipo correspondente. 
+Se esse atributo não for especificado, a transição 
+deve obrigatoriamente ser revertida para o subtipo 
+default do tipo especificado |
+
+transition | dur | 
+Especifica a duração da transição em segundos. 
+A duração default é de 1s |
+
+transition | startProgress | 
+Especifica a quantidade de efeito de 
+transição do início da execução. 
+Os valores permitidos são 
+números reais na faixa [0.0,1.0]. 
+Por exemplo, pode-se querer iniciar um crossfade com 
+imagem destino já transparente em 50 % inicialmente. 
+Para esse caso, o startProgress seria 0.5. 
+O valor default é 0.0 |
+
+transition | endProgress | 
+Especifica a quantidade de efeito de 
+transição ao término da execução. 
+Os valores permitidos são números reais na faixa [0.0,1.0] 
+e o valor desse atributo deve obrigatoriamente 
+ser maior ou igual ao valor do atributo startProgress. 
+Se endProgress for igual a startProgress, então a transmissão 
+permanece em um valor fixo pela duração da transmissão. 
+O valor default é 1.0 |
+
+transition | direction | 
+Especifica a direção em que ocorrerá a transição. 
+Os valores permitidos são “forward” e “reverse”. 
+O valor default é “forward”. 
+Nem todas as transições terão 
+interpretações reversas significantes. 
+Por exemplo, um crossfade não é uma transição geométrica e, 
+portanto, não tem interpretação de direção reversa. 
+As transições que não têm interpretação reversa devem 
+ter o atributo direction ignorado e 
+o valor default "forward" assumido |
+
+transition | fadeColor | 
+Especifica a cor final ou inicial do fade, 
+se o valor do atributo type for “fade” e 
+o valor do atributo subtype for “fadeToColor” ou “fadeFromColor”. 
+Caso contrário o atributo fadeColor deve 
+obrigatoriamente ser ignorado. 
+O valor default é “black”. |
+
+transition | horRepeat | 
+Especifica quantas vezes será realizado o padrão 
+de transições ao longo do eixo horizontal. 
+O valor default é 1 (o padrão ocorre uma vez horizontalmente) |
+
+transition | vertRepeat | 
+Especifica quantas vezes será realizado o padrão 
+de transição ao longo do eixo vertical. 
+O valor default é 1 (o padrão ocorre uma vez verticalmente) |
+
+transition| borderWidth | 
+Especifica a largura de uma borda 
+gerada ao longo de uma área apagada. 
+Os valores permitidos são inteiros maiores ou iguais a 0. 
+Se o valor de borderWidth for igual a 0, então convém que 
+nenhuma borda seja gerada ao longo da área apagada. 
+O valor default é 0. 
+Se o valor do atributo type não for "fade", 
+então o atributo borderColor especifica o conteúdo de 
+uma borda gerada ao longo de uma área apagada. 
+Se o valor desse atributo for uma cor, 
+então a borda gerada é preenchida com a cor definida. 
+Se o valor deste atributo for “blend”, 
+então a borda gerada é uma mistura 
+aditiva (ou blur) das fontes de mídia. 
+O valor default para esse atributo é “black”. |
+
+connectorBase | self |
+Permite o agrupamento de conectores. 
+O conteúdo exato de uma base de conectores é 
+especificado por um perfil de linguagem que 
+utiliza as facilidades oferecidas pelos conectores. |
+
+connectorBase | id |
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML. |
+
+causalConnector | self |
+Representa uma relação causal que pode ser utilizada 
+por elementos <link> em documentos. 
+Em uma relação causal, uma condição 
+deve obrigatoriamente ser satisfeita 
+para disparar uma ação.
+Especifica, através de seus elementos-filhos, 
+um conjunto de pontos da interface, chamados papéis.
+Este elemento tem uma expressão de cola (glue expression), 
+que define uma expressão de condição e uma de ação. 
+Quando a expressão de condição é satisfeita, 
+a expressão de ação deve obrigatoriamente ser executada. |
+
+causalConnector | id |
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+simpleCondition | self |
+Define uma expressão de condição simples 
+que deve ser satisfeita para executar uma ação. |
+
+simpleCondition | role |
+Um role (papel) é um ponto de interface do conector, 
+que pode ser associado a interfaces de nós por 
+um elo que referencia o conector. 
+O valor deste atributo deve obrigatoriamente 
+ser único no conjunto de roles do conector.|
+
+simpleCondition | eventType |
+Define um tipo de evento do conector,
+que pode ser de presentation, selection e attribution. 
+Pode ser inferido pelo valor do atributo role se 
+forem utilizados valores reservados.
+Se um valor de eventType for “selection”, o role pode 
+também definir sobre qual dispositivo a seleção se refere 
+(por exemplo, teclas de um teclado ou controle remoto), 
+através do seu atributo key.|
+
+simpleCondition | transition |
+Define um tipo de transição a qual a condição se refere.
+Pode ser inferido pelo valor do atributo role se 
+forem utilizados valores reservados.|
+
+simpleCondition | min |
+Especifica o número mínimo (atributo min) dos participantes 
+que podem exercer o papel (número de binds) quando 
+o <causalConnector> é utilizado para criar um <link>. 
+O valor mínimo da cardinalidade deve obrigatoriamente 
+ser sempre um valor finito positivo, maior que zero e 
+menor ou igual ao valor máximo da cardinalidade. 
+Se a cardinalidade mínima não for informada, “1” 
+deve obrigatoriamente ser assumido como valor (default). |
+
+simpleCondition | max |
+Especifica o máximo (atributo max) dos participantes 
+que podem exercer o papel (número de binds) quando 
+o <causalConnector> é utilizado para criar um <link>. 
+Se a cardinalidade máxima não for informada, “1” 
+deve obrigatoriamente ser assumido como valor (default). 
+Quando o valor máximo de cardinalidade for maior que um, 
+vários participantes podem executar o mesmo papel (role), 
+isto é, pode haver várias ligações (binds) 
+conectando diversos nós ao mesmo papel. 
+O valor “unbounded” pode ser dado ao atributo max, 
+se o role puder ter binds ilimitados associados a ele. |
+
+simpleCondition | qualifier |
+Especifica a relação lógica entre os binds de condição simples. 
+Os valores possíveis para o atributo qualifier são: 
+“or” (ou) ou “and” (e). 
+Se o qualificador (atributo qualifier) estabelecer 
+um operador lógico “or”, o elo será acionado 
+quando da ocorrência de qualquer condição. 
+Se o qualificador estabelecer um operador lógico “and”, 
+o elo será acionado após a ocorrência 
+de todas as condições simples. 
+Se não especificado, deve-se obrigatoriamente 
+assumir o valor (default) “or”. |
+
+simpleCondition | delay |
+Especifica que a condição é verdadeira após 
+um período de retardo a partir do momento 
+em que a transição ocorre. |
+
+simpleCondition | key |
+Especifica qual tecla do controle foi selecionada. |
+
+compoundCondition | self |
+Define uma expressão de condição composta, 
+ou seja, composições de condições simples 
+que deve ser satisfeita para executar uma ação. |
+
+compoundCondition | operator |
+Especifica o relacionamento de seus elementos-filhos: 
+<simpleCondition>, <compoundCondition>, 
+<assessmentStatement> e <compoundStatement>.
+Os valores possiveis são Booleanos (“and” ou “or”). |
+
+compoundCondition | delay |
+Especifica que a condição composta é verdadeira 
+depois que um tempo de retardo do momento em 
+que a expressão, relacionada a seus 
+elementos-filhos, for verdadeira. |
+
+simpleAction | self |
+Define uma expressão de ação simples que capta ações 
+que podem ser executadas em relações causais. |
+
+simpleAction | role |
+Um role (papel) é um ponto de interface do conector, 
+que pode ser associado a interfaces de nós por 
+um elo que referencia o conector. 
+O valor deste atributo deve obrigatoriamente 
+ser único no conjunto de roles do conector. |
+
+simpleAction | eventType |
+Define um tipo de evento do conector,
+que pode ser de presentation, selection e attribution. 
+Pode ser inferido pelo valor do atributo role se 
+forem utilizados valores reservados.
+Se um valor eventType for “attribution”, 
+o elemento <simpleAction> também deve 
+obrigatoriamente definir o valor a ser atribuído, 
+através de seu atributo value. |
+
+simpleAction | value |
+Se um valor eventType for “attribution”, 
+este atributo deve obrigatoriamente 
+definir o valor a ser atribuído.
+Se esse valor for especificado como “$anyName” 
+(onde o $ é símbolo reservado e anyName 
+é qualquer cadeia de caracteres, 
+exceto um dos nomes reservados para papéis), 
+o valor a ser atribuído deve ser obtido da 
+propriedade ligada à role=“anyName”, 
+definida em um elemento <bind> do 
+elemento <link> que utiliza o conector. 
+Se esse valor não puder ser obtido,
+ nenhuma atribuição deve ser realizada. |
+
+simpleAction | min |
+Especifica o número mínimo (atributo min) dos participantes 
+que podem exercer o papel (número de binds) quando 
+o <causalConnector> é utilizado para criar um <link>. 
+O valor mínimo da cardinalidade deve obrigatoriamente 
+ser sempre um valor finito positivo, maior que zero e 
+menor ou igual ao valor máximo da cardinalidade. 
+Se a cardinalidade mínima não for informada, “1” 
+deve obrigatoriamente ser assumido como valor (default). |
+
+simpleAction | max |
+Especifica o máximo (atributo max) dos participantes 
+que podem exercer o papel (número de binds) quando 
+o <causalConnector> é utilizado para criar um <link>. 
+Se a cardinalidade máxima não for informada, “1” 
+deve obrigatoriamente ser assumido como valor (default). 
+Quando o valor máximo de cardinalidade for maior que um, 
+vários participantes podem executar o mesmo papel (role), 
+isto é, pode haver várias ligações (binds) 
+conectando diversos nós ao mesmo papel. 
+O valor “unbounded” pode ser dado ao atributo max, 
+se o role puder ter binds ilimitados associados a ele. |
+
+simpleAction | delay |
+Especifica, quando definido, que a ação deve 
+obrigatoriamente ser disparada apenas após 
+esperar pelo tempo especificado. |
+
+simpleAction | qualifier |
+Especifica a relação lógica entre os binds de ação simples. 
+Os valores possíveis para o atributo qualifier são: 
+“seq” (sequêncial) ou “par” (paralelo). |
+
+compoundAction | self |
+Define uma expressão de ação composta, 
+ou seja, composições de ações simples 
+que devem ser executadas. |
+
+compoundAction | operator |
+Especfica o relacionamento entre seus elementos-filhos: 
+<simpleAction> e <compoundAction>. 
+Ações compostas paralelas ("par") e sequênciais ("seq") 
+especificam que a execução das ações deve 
+obrigatoriamente ser feita em qualquer ordem ou 
+em uma ordem específica, respectivamente. |
+
+compoundAction | delay |
+Especifica que a ação composta deve obrigatoriamente 
+ser aplicada após o retardo especificado. |
+
+attributeAssessment | self |
+--/--. |
+
+attributeAssessment | role |
+Um role (papel) é um ponto de interface do conector, 
+que pode ser associado a interfaces de nós por 
+um elo que referencia o conector. 
+O valor deste atributo deve obrigatoriamente 
+ser único no conjunto de roles do conector. |
+
+attributeAssessment | eventType |
+Define um tipo de evento do conector,
+que pode ser de presentation, selection e attribution.
+Se o valor de eventType for “selection” (seleção), 
+convém ao <attibuteAssessment> também definir sobre 
+qual equipamento a seleção se refere 
+(por exemplo, teclas de um teclado ou controle remoto), 
+através do seu atributo key. 
+Se o valor eventType for “presentation”, 
+o atributo attributeType especifica o atributo de evento 
+(“occurrences” ou “repetitions”) ou o estado do evento (“state”); 
+se o valor eventType for “selection”, 
+o atributo attributeType é opcional e, se presente, 
+pode ter o valor “occurrences” (default) ou “state”; 
+se o eventType for “attribution” o attributeType é opcional e 
+pode ter o valor “nodeProperty” (default), 
+“occurrences”, “repetition” ou “state”. |
+
+attributeAssessment | attributeType |
+Especifica qual tipo de atribuição será executada 
+em relação ao que foi definido no atributo eventType. |
+
+attributeAssessment | offset |
+Um valor de compensação que pode ser adicionado 
+a um <attributeAssessment> antes da comparação, 
+por exemplo, uma compensação pode ser adicionada 
+a uma avaliação de atributo para especificar: 
+“a posição vertical da tela mais 50 pixels”. |
+
+attributeAssessment | key |
+Especifica qual tecla do controle foi selecionada. |
+
+valueAssessment | self |
+Especifica um valor que pode ser um valor de estado de evento, 
+ou qualquer valor a ser comparado com 
+uma propriedade do nó ou atributo de evento. |
+
+valueAssessment | value |
+Deve obrigatoriamente assumir um valor de estado de evento, 
+ou qualquer valor a ser comparado com 
+uma propriedade do nó ou atributo de evento. |
+
+assessmentStatement | self |
+Define uma comparação a ser realizada a partir dos valores
+inferidos dos seus elementos-filhos 
+(elementos <attributeAssessment> e <valueAssessment>). |
+
+assessmentStatement | comparator |
+Compara os valores inferidos a partir dos seus elementos-filhos 
+(elementos <attributeAssessment> e <valueAssessment>). |
+
+compoundStatement | self |
+Especfica o relacionamento entre seus elementos-filhos: 
+<assessmentStatement> e <compoundStatement>. |
+
+compoundStatement | operator |
+Especfica o relacionamento entre seus elementos-filhos: 
+<assessmentStatement> e <compoundStatement>.
+Com um valor Booleano (“and” ou “or”). |
+
+compoundStatement | isNegated |
+Pode ser definido para especificar se o elemento-filho 
+do <compoundStatement> deve obrigatoriamente 
+ser negado antes que a operação Booleana seja avaliada. |
+
+connectorParam | self |
+Utilizados para parametrizar valores 
+dos atributos dos conectores. 
+Para especificar quais atributos recebem 
+valores de parâmetro definidos pelo conector, 
+seus valores são especificados como o nome 
+do parâmetro, precedido pelo símbolo $. |
+
+connectorParam | name |
+Especifica qual o nome do atributo que será parametrizado. |
+
+connectorParam | type |
+Especficia qual o tipo de dado do atributo 
+que está sendo parametrizado. |
+
+body | self | 
+Em NCL o <body> é tratado como um <context>. 
+Quando um documento NCL é importado através do <importNCL> 
+o elemento <body> importado será 
+tratado como um elemento <context> |
+
+body | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+context | self | 
+Contêm um conjunto de nós e um conjunto de elos |
+
+context | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+context | refer | 
+Referencia um elemento id que será reusado. 
+Se o nó referenciado for definido dentro 
+de um documento D importado, o valor do atributo refer 
+deve obrigatoriamente ter o formato “alias#id”, 
+onde “alias” é o valor do atributo alias 
+associado ao documento D importado. 
+Quando um elemento declara um atributo refer, 
+todos os atributos e elementos-filhos definidos 
+pelo elemento referenciado são herdados |
+
+port | self | 
+Especifica uma porta de um nó de composição 
+com seu respectivo mapeamento para uma interface |
+
+port | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+port | interface | 
+Identifica uma interface de um componente 
+(objetos de mídia ou nós de composição) |
+
+port | component | 
+Identifica um dos componentes 
+(objetos de mídia ou nós de composição) 
+pertencentes ao seu contexto |
+
+media | self | 
+Define os tipos básicos de objetos de mídia |
+
+media | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+media | src | 
+Define um URI (Uniform Resource Identifier) 
+do conteúdo do objeto |
+
+media | type | 
+Define o tipo do objeto. 
+Deve obrigatoriamente seguir 
+o formato MIME Media Types |
+
+media | descriptor | 
+Refere-se a um elemento do conjunto de descritores 
+do documento (<descriptor> ou <descriptorSwicth>). 
+Determina a associação dos descritores 
+com os componentes do documento |
+
+media | refer | 
+Referencia um elemento id que será reusado. 
+Se o nó referenciado for definido dentro 
+de um documento D importado, o valor do atributo refer 
+deve obrigatoriamente ter o formato “alias#id”, 
+onde “alias” é o valor do atributo alias 
+associado ao documento D importado. 
+Quando um elemento declara um atributo refer, 
+todos os atributos e elementos-filhos definidos 
+pelo elemento referenciado são herdados |
+
+area | self | 
+Definição de âncoras de conteúdo representando 
+porções espaço-temporais, textuais, 
+com base no número de amostras de áudio 
+ou frames de vídeo |
+
+area | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+area | coords | 
+Define âncoras de conteúdo representando 
+porções espaciais (como em XHTML) |
+
+area | begin | 
+Define o inicio de âncoras de conteúdo 
+representando porções temporais |
+
+area | end | 
+Define o fim de âncoras de conteúdo 
+representando porções temporais |
+
+area | text | 
+Define uma cadeia de caracteres no 
+texto de uma âncora textual |
+
+area | position | 
+Define a ocorrência de cadeias de 
+caracteres no texto de uma âncora textual |
+
+area | first | 
+Define a amostra/frame inicial da âncora do áudio/vídeo |
+
+area | last | 
+Define a amostra/frame final da âncora do áudio/vídeo |
+
+area | label | 
+Especifica uma cadeia de caracteres que deve ser 
+utilizada pelo exibidor de mídias para 
+identificar uma região de conteúdo |
+
+property | self | 
+É utilizado para definir uma propriedade 
+ou grupo de propriedades de um nó, 
+como uma de suas interfaces (âncora) |
+
+property | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+property | name | 
+Indica o nome da propriedade ou grupo de propriedades |
+
+property | value | 
+Atributo opcional que define um valor inicial 
+para a propriedade name. 
+O elemento pai não pode ter elementos <property> 
+com os mesmos valores para o atributo name |
+
+switchPort | self | 
+Permite a criação de interfaces de elemento <switch>, 
+que podem ser mapeadas a um conjunto de interfaces 
+alternativas de nós internos, permitindo a 
+um elo ancorar no componente escolhido 
+quando o <switch> é processado |
+
+switchPort | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+mapping | self | 
+Define um caminho a partir do <switchPort> 
+para uma interface (atributo interface) 
+de um dos componentes do <switch> 
+(especificados por seu atributo component) |
+
+mapping | component | 
+Identifica um dos componentes do <switch> 
+no qual o mapeamento se encontra |
+
+mapping | interface | 
+Identifica uma interface do componente 
+referenciado pelo atributo component |
+
+switch | self | 
+Permite a definição de nós alternativos a serem 
+escolhidos em tempo de apresentação do documento |
+
+switch | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+switch | refer | 
+Referencia um elemento id que será reusado. 
+Se o nó referenciado for definido dentro de 
+um documento D importado, o valor do atributo refer 
+deve obrigatoriamente ter o formato “alias#id”, 
+onde “alias” é o valor do atributo alias 
+associado ao documento D importado. 
+Quando um elemento declara um atributo refer, 
+todos os atributos e elementos-filhos definidos 
+pelo elemento referenciado são herdados |
+
+defaultComponent | self | 
+Identifica o elemento (default) que deve 
+obrigatoriamente ser selecionado se nenhuma 
+das regras bindRule for avaliada como verdadeira |
+
+defaultComponent | component | 
+Referencia o elemento (default), filho do <switch>, 
+que deve obrigatoriamente ser selecionado se nenhuma 
+das regras bindRule for avaliada como verdadeira |
+
+link | self | 
+Responsável por definir os elos, que utilizam conectores |
+
+link | id | 
+Identifica univocamente o elemento dentro do documento NCL. 
+Seu valor é um identificador XML |
+
+link | xconnector | 
+Atributo obrigatório que refere-se ao URI 
+de um conector hipermídia. 
+A referência deve obrigatoriamente ter o formato 
+alias#connector_id, ou documentURI_value#connector_id, 
+para conectores definidos em um documento externo, 
+ou simplesmente connector_id, 
+para conectores definidos no próprio documento. |
+
+bind | self | 
+Permite associar nós a papéis (roles) do conector |
+
+bind | role | 
+Usado para fazer referência a um papel do conector |
+
+bind | component | 
+Usado para identificar um dos componentes 
+(objetos de mídia ou nós de composição) 
+pertencentes ao seu contexto |
+
+bind | interface | 
+Usado para fazer referência a uma interface de 
+um componente (objetos de mídia ou nós de composição). 
+Pode referir-se a qualquer interface do nó, isto é, 
+uma âncora, uma propriedade ou uma porta, 
+se for um nó de composição. 
+O atributo interface é opcional. 
+Quando não é especificado, a associação é feita 
+com todo o conteúdo do nó |
+
+bind | descriptor | 
+Usado para fazer referência a um descritor 
+a ser associado com o nó, 
+conforme definido no <descriptorBase> |
+
+bindParam | self | 
+Definem valores para os parâmetros 
+definidos pelos conectores |
+
+bindParam | name | 
+Deve obrigatoriamente fazer referência 
+ao nome de um parâmetro do conector |
+
+bindParam | value | 
+Deve obrigatoriamente definir um valor 
+a ser atribuído ao respectivo parâmetro |
+
+linkParam | self | 
+Definem valores para os parâmetros 
+definidos pelos conectores |
+
+linkParam | name | 
+Deve obrigatoriamente fazer referência 
+ao nome de um parâmetro do conector |
+
+linkParam | value | 
+Deve obrigatoriamente definir um valor 
+a ser atribuído ao respectivo parâmetro

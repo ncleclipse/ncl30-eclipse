@@ -57,6 +57,7 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.IDocument;
@@ -315,14 +316,14 @@ public class NCLEditor extends TextEditor {
 	     */
 	    protected void loadHelp(){
 	    	NCLHelper nclHelper = NCLHelper.getNCLHelper();
-	    	//nclHelper.setHelpFileName(Platform.getInstallLocation().getDefault().getPath()+"/plugins/ncl_eclipse_1.0.0/resources/help.txt");
-	    	nclHelper.setHelpFileName("/home/roberto/workspace/ncl30-helper/resources/help.txt");
+	    	nclHelper.setHelpFileName(Platform.getInstallLocation().getURL().getPath()+"plugins/ncl_eclipse_1.0.0/resources/help.txt");
+	    	System.out.println(Platform.getInstallLocation().getURL().getPath()+"plugins/ncl_eclipse_1.0.0/resources/help.txt");
+	    	//nclHelper.setHelpFileName("/home/roberto/workspace/ncl30-helper/resources/help.txt");
 	    	try {
 	    		nclHelper.buildHelp();
 	    	}
 	    	catch (Exception e) {
 	    		e.printStackTrace();
 			}
-
 	    }
 }
