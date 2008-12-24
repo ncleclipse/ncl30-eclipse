@@ -336,10 +336,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// TODO: caso o id esteja definido no ncl, aqui temos um problema
 		// Contexto � o pai
 		if ((tagname.equals("port") && attribute.equals("component"))
-				|| (tagname.equals("bindRule") && attribute
-						.equals("constituint"))
-				|| (tagname.equals("defaultComponent") && attribute
-						.equals("component"))) {
+				|| (tagname.equals("bindRule") && attribute.equals("constituent"))
+				|| (tagname.equals("defaultComponent") && attribute.equals("component"))) {
 
 			String fatherTagName = nclDoc.getFatherTagName(offset);
 			try {
