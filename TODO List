@@ -11,12 +11,12 @@ Características a implementar:
 	- Comentários sobre a licença em todos os arquivos.
 	- Sugestão do atributo src de media (Quase pronto).
 	- Drag and Drop to add media.
-	- Adicionar atalhos de teclados para inser��o de medias, contexto, etc. Tamb�m acess�vel atrav�s de clique com o bot�o esquerdo+source+New (media, context, etc.)
+	- Adicionar atalhos de teclados para inserir medias, contexto, etc. Tamb�m acess�vel atrav�s de clique com o bot�o esquerdo+source+New (media, context, etc.)
 	- importedDocumentBase
 	- importNCL
 	- bindRule
 	- Linha e coluna do Erro. (Quase Ok)
-	- A lógica para os três profiles (EDTV, BDTV e CausalConnector) não est�
+	- A lógica para os três profiles (EDTV, BDTV e CausalConnector) não está
 			sendo feita. A l�gica seria:
 		
 			Se atributo xmlns do <ncl> � http://www.ncl.org.br/NCL3.0/EDTVProfile ent�o
