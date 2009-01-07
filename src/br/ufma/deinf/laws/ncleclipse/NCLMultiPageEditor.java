@@ -92,7 +92,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 		try {
 			editor = new NCLEditor();
 			int index = addPage(editor, getEditorInput());
-			setPageText(index, editor.getTitle());
+			setPageText(index, "NCL File");
 		} catch (PartInitException e) {
 			ErrorDialog.openError(
 				getSite().getShell(),
@@ -129,6 +129,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 				getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE) 
 			)
 			createLayoutViewPage();
+		updateTitle();
 	}
 	/**
 	 * The <code>MultiPageEditorPart</code> implementation of this 
@@ -143,7 +144,11 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	 * Saves the multi-page editor's document.
 	 */
 	public void doSave(IProgressMonitor monitor) {
-		getActiveEditor().doSave(monitor);
+		IEditorPart editor = getEditor(0);
+		editor.doSave(monitor);
+		editor = getEditor(1);
+		editor.doSave(monitor);
+		updateTitle();
 	}
 	/**
 	 * Saves the multi-page editor's document as another file.
@@ -230,7 +235,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	
 	void updateTitle() {
 		  IEditorInput input = getNCLEditor().getEditorInput();
-		  setPartName(input.getName());
+		  setPartName(editor.getInput().getName());
 		  setTitleToolTip(input.getToolTipText());
 	}
 
