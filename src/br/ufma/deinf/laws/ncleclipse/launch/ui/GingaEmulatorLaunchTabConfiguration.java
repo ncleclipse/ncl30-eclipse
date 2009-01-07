@@ -56,11 +56,12 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+
+//FIXME: Fazer igual ao GingaVM
 public class GingaEmulatorLaunchTabConfiguration extends AbstractLaunchConfigurationTab {
 	Label fProjectLabel;
 	Text fProjectText;

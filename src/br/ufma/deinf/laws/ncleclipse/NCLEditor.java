@@ -317,8 +317,10 @@ public class NCLEditor extends TextEditor {
 	    protected void loadHelp(){
 	    	NCLHelper nclHelper = NCLHelper.getNCLHelper();
 	    	nclHelper.setHelpFileName(Platform.getInstallLocation().getURL().getPath()+"plugins/ncl_eclipse_1.0.0/resources/help.txt");
+	    	
+	    	//FIXME: Verificar uma forma de fazer sem o ncl_eclipse_1.0.0
 	    	System.out.println(Platform.getInstallLocation().getURL().getPath()+"plugins/ncl_eclipse_1.0.0/resources/help.txt");
-	    	//nclHelper.setHelpFileName("/home/roberto/workspace/ncl30-helper/resources/help.txt");
+	    	
 	    	try {
 	    		nclHelper.buildHelp();
 	    	}

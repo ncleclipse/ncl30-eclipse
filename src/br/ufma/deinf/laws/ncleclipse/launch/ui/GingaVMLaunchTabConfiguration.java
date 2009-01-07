@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 
-//TODO: Habilitar o botão apply (ainda não sei como)
+//FIXME: Habilitar o Botão Apply buscar os projetos e arquivos com extensão NCL 
 public class GingaVMLaunchTabConfiguration extends AbstractLaunchConfigurationTab{
 	private Label fProjectLabel;
 	private Text fProjectText;
