@@ -73,7 +73,7 @@
 <extension point="org.eclipse.debug.ui.launchShortcuts">
     <shortcut label="NCL Presentation" 
        icon="icons/sample.gif" 
-       modes="run" 
+       modes="run, debug" 
        class="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut" 
        id="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut">
        <contextualLaunch>
@@ -119,6 +119,62 @@
          id="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
          name="NCL">
    </page>
+</extension>
+<extension
+      point="org.eclipse.debug.core.launchConfigurationTypes">
+   <launchConfigurationType
+         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaEmulatorLaunchConfiguration"
+         id="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration"
+         modes="run,debug"
+         name="Ginga Emulator">
+   </launchConfigurationType>
+   <launchConfigurationType
+         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaVMLaunchConfiguration"
+         id="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration"
+         modes="run, debug"
+         name="Ginga Virtual Machine">
+   </launchConfigurationType>
+</extension>
+<extension
+      point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+   <launchConfigurationTypeImage
+         configTypeID="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration"
+         icon="icons/gingavm-launching.gif"
+         id="br.ufma.deinf.laws.nleclipse.launching.ui.GingaVMLaunchConfigurationTypeImage">
+   </launchConfigurationTypeImage>
+   <launchConfigurationTypeImage
+         configTypeID="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration"
+         icon="icons/gingaemulator-launching.gif"
+         id="br.ufma.deinf.laws.nleclipse.launching.ui.GingaEmulatorLaunchConfigurationTypeImage">
+   </launchConfigurationTypeImage>
+</extension>
+<extension
+      point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+   <launchConfigurationTabGroup
+         class="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaVMTabGroup"
+         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaVMLauchConfigurationTabGroup"
+         type="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration">
+   </launchConfigurationTabGroup>
+   <launchConfigurationTabGroup
+         class="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaEmulatorTabGroup"
+         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaEmulatorLauchConfigurationTabGroup"
+         type="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration">
+   </launchConfigurationTabGroup>
+</extension>
+<extension
+      point="org.eclipse.debug.ui.launchConfigurationTabs">
+   <tab
+         class="launchconfigurationtab.LaunchConfigurationTab1"
+         group="ncl30-eclipse.tab1"
+         id="ncl30-eclipse.tab1"
+         name="ncl30-eclipse.tab1">
+   </tab>
+   <tab
+         class="launchconfigurationtab.LaunchConfigurationTab2"
+         group="ncl30-eclipse.tab2"
+         id="ncl30-eclipse.tab2"
+         name="ncl30-eclipse.tab2">
+   </tab>
 </extension>
 <!--
 <extension

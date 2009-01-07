@@ -1,4 +1,8 @@
 Características a implementar:
+	- Launch Configuration Type
+		- Ginga Emulator Launch Configuration
+		- Ginga VM Launch Emulator
+	
 	- Problema com um atributo encostado em />
 	- Sincronização com % ainda não funciona.
 	- Adicionar novas regiões, faltando refletir no código
