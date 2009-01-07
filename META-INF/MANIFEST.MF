@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: NCL Eclipse
 Bundle-SymbolicName: ncl_eclipse;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.1.0
 Bundle-Activator: br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
