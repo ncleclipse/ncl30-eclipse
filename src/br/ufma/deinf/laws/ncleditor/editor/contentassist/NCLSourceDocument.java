@@ -61,6 +61,45 @@ public class NCLSourceDocument extends Document{
 	}
 	
 	/**
+	 * Returns the father partition. The atual partition is a XML_END_TAG.
+	 */
+	public int getFatherPartitionOffsetFromEndTag(int documentOffset){
+		try {
+			ITypedRegion region = getPartition(documentOffset); // região
+			String text;										// q eu
+																// estou
+			int partitionOffset = region.getOffset();
+			Stack<Integer> pilha = new Stack<Integer>();
+			//ignora a partição atual (já se sabe que a atual é uma XML_END_TAG)
+			
+			text = get(region.getOffset(), region.getLength());
+			region = getPartition(region.getOffset()-1);
+			System.out.println(text);
+			do { // procura a tag pai
+				text = get(region.getOffset(), region.getLength());
+				System.out.println(text);
+				if (region.getType().equals(XMLPartitionScanner.XML_END_TAG))
+					pilha.push(new Integer(1));
+				else if (region.getType().equals(
+						XMLPartitionScanner.XML_START_TAG)
+						&& !text.endsWith("/>")) {
+					System.out.println(pilha.size());
+					if (pilha.size() == 0)
+						break;
+					pilha.pop();
+				}
+				partitionOffset--;
+				region = getPartition(partitionOffset);
+				partitionOffset = region.getOffset();
+			} while (true);
+			return partitionOffset;
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	/**
 	 * Computa a tagname pai da atual
 	 * 
 	 * @return

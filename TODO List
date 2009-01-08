@@ -66,6 +66,9 @@ Características a implementar:
 			</media>
 
 Versão 1.1.0
+2009-01-07
+	- Sugestão de XML_END_TAG quando o usuário digita </
+	
 2008-11-07
 	- Adicionada páginas de Preferencia:
 		- View Preferences
@@ -80,7 +83,7 @@ Versão 1.1.0
 	- Sugestão de URL.
 		- Quase pronto. Problema no C:
 	
-	- Sugestão de <area>, <property>, etc que s�o do elemento que referencia outro.
+	- Sugestão de <area>, <property>, etc que são do elemento que referencia outro.
 		Ok!
 		Ex:
 			<media id="m1">
@@ -90,9 +93,9 @@ Versão 1.1.0
 			<media id="m2" refer="m1">
 				<area id="a21"/>
 			</media>
-		S� est� sugerindo a11 e a12. Deve sugerir a21 tamb�m!
+		Só está sugerindo a11 e a12. Deve sugerir a21 também!
 		  
-	- Enter depois do fecha elemento (</>). Antes dava um tab. Agora n�o!
+	- Enter depois do fecha elemento (</>). Antes dava um tab. Agora não!
 		Ok!
 		
 2008-08-26

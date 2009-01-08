@@ -150,16 +150,18 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 	private void computeEndTagName(IDocument doc, String qualifier, int offset,
 			List propList) {
-		// TODO Auto-generated method stub
+		int qlen = qualifier.length();
+		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
+		int fatherOffset = nclDoc.getFatherPartitionOffsetFromEndTag(offset);
+		String tagname = nclDoc.getCurrentTagname(fatherOffset);
+		
+		String prop = "</"+tagname+">";
+		
+		CompletionProposal proposal = new CompletionProposal(prop,
+				offset - qlen, qlen, cursor, null, prop, null, null);
+		propList.add(proposal);
 		return;
 
-		/*
-		 * int qlen = qualifier.length(); System.out.println("qualifier = " +
-		 * qualifier); String fatherTagName = getFatherTagName(doc, offset);
-		 * String text = "</"+fatherTagName+">"; CompletionProposal proposal =
-		 * new CompletionProposal(text, offset - qlen, qlen, cursor, null, text,
-		 * null, null); propList.add(proposal);
-		 */
 	}
 
 	/**
