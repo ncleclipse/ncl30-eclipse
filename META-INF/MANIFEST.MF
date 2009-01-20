@@ -19,6 +19,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-LazyStart: true
 Bundle-ClassPath: bin/,
  icons/,
+ resources/,
  lib/xercesImpl.jar,
  lib/xml-apis.jar
 Bundle-Vendor: Laboratory of Advanced Web Systems (http://laws.deinf.ufma.br)

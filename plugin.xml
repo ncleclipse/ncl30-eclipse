@@ -123,10 +123,10 @@
 <extension
       point="org.eclipse.debug.core.launchConfigurationTypes">
    <launchConfigurationType
-         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaEmulatorLaunchConfiguration"
+         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaLaunchConfiguration"
          id="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration"
          modes="run,debug"
-         name="Ginga Emulator">
+         name="Ginga Player">
    </launchConfigurationType>
    <launchConfigurationType
          delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaVMLaunchConfiguration"
@@ -145,7 +145,7 @@
    <launchConfigurationTypeImage
          configTypeID="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration"
          icon="icons/gingaemulator-launching.gif"
-         id="br.ufma.deinf.laws.nleclipse.launching.ui.GingaEmulatorLaunchConfigurationTypeImage">
+         id="br.ufma.deinf.laws.nleclipse.launching.ui.GingaLaunchConfigurationTypeImage">
    </launchConfigurationTypeImage>
 </extension>
 <extension
@@ -156,8 +156,8 @@
          type="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration">
    </launchConfigurationTabGroup>
    <launchConfigurationTabGroup
-         class="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaEmulatorTabGroup"
-         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaEmulatorLauchConfigurationTabGroup"
+         class="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaLaunchTabGroup"
+         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaLauchConfigurationTabGroup"
          type="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration">
    </launchConfigurationTabGroup>
 </extension>

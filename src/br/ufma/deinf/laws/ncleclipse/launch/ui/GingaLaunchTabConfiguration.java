@@ -50,6 +50,7 @@ http://www.laws.deinf.ufma.br
 package br.ufma.deinf.laws.ncleclipse.launch.ui;
 
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
@@ -63,46 +64,51 @@ import org.eclipse.swt.widgets.Text;
 
 //FIXME: Fazer igual ao GingaVM
 public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab {
-	Label fProjectLabel;
-	Text fProjectText;
-	Label fNCLFileLabel;
-	Text fNCLFileText;
-	Label fNCLLauncherPathLabel;
-	Text fNCLLauncherPathText;
+	protected Label fProjectLabel;
+	protected Text fProjectText;
+	protected Label fNCLFileLabel;
+	protected Text fNCLFileText;
+	protected Label fNCLLauncherPathLabel;
+	protected Text fNCLLauncherPathText;
 	
-	@Override
+	public static String DEFAULT_PROJECT = "";
+	public static String DEFAULT_NCL_FILE = "";
+	public static String DEFAULT_NCL_LAUNCHER_PATH = "/misc/gingaNcl";
+	
+	protected GridLayout topLayout = null;
+	protected Composite composite = null;
 	public void createControl(Composite parent) {
 		// TODO Auto-generated method stub
-		Composite comp = new Composite(parent, SWT.NONE);
-		GridLayout topLayout = new GridLayout();
+		composite = new Composite(parent, SWT.NONE);
+		topLayout = new GridLayout();
 		topLayout.numColumns = 2;
-		comp.setLayout(topLayout);
-		setControl(comp);
+		composite.setLayout(topLayout);
+		setControl(composite);
 		
 		GridData gd;
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		//Project
-			fProjectLabel = new Label(comp, SWT.NONE);
+			fProjectLabel = new Label(composite, SWT.NONE);
 			fProjectLabel.setText("Project:");
-			fProjectText = new Text(comp, SWT.SINGLE | SWT.BORDER);
+			fProjectText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			fProjectText.setLayoutData(gd);
 		
 		
 		//NCL File
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			
-			fNCLFileLabel = new Label(comp, SWT.NONE);
+			fNCLFileLabel = new Label(composite, SWT.NONE);
 			fNCLFileLabel.setText("NCL File:");
-			fNCLFileText = new Text(comp, SWT.SINGLE | SWT.BORDER);
+			fNCLFileText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			fNCLFileText.setLayoutData(gd);
 			
 		//Launcher Path
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			
-			fNCLLauncherPathLabel = new Label(comp, SWT.NONE);
+			fNCLLauncherPathLabel = new Label(composite, SWT.NONE);
 			fNCLLauncherPathLabel.setText("NCL Launcher Path:");
-			fNCLLauncherPathText = new Text(comp, SWT.SINGLE | SWT.BORDER);
+			fNCLLauncherPathText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			fNCLLauncherPathText.setLayoutData(gd);
 	}
 
@@ -115,19 +121,36 @@ public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab 
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		// TODO Auto-generated method stub
-		
+		try {
+			fProjectText.setText(configuration.getAttribute("project", DEFAULT_PROJECT));
+			fNCLFileText.setText(configuration.getAttribute("nclFile", DEFAULT_NCL_FILE));
+			fNCLLauncherPathText.setText(configuration.getAttribute("nclLauncherPath", DEFAULT_NCL_LAUNCHER_PATH));
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		// TODO Auto-generated method stub
-		
+		configuration.setAttribute("project", fProjectText.getText());
+		configuration.setAttribute("nclFile", fNCLFileText.getText());
+		configuration.setAttribute("nclLauncherPath", fNCLLauncherPathText.getText());
 	}
 
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/**
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#isValid(ILaunchConfiguration)
+	 */
+	public boolean isValid(ILaunchConfiguration launchConfig) {
+		setErrorMessage(null);
+		//TODO: validate 
+		return true;
 	}
 	
 }

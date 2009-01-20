@@ -62,26 +62,16 @@ import org.eclipse.swt.widgets.Text;
 
 
 //FIXME: Habilitar o Botão Apply buscar os projetos e arquivos com extensão NCL 
-public class GingaVMLaunchTabConfiguration extends AbstractLaunchConfigurationTab{
-	private Label fProjectLabel;
-	private Text fProjectText;
-	private Label fNCLFileLabel;
-	private Text fNCLFileText;
-	private Label fNCLLauncherPathLabel;
-	private Text fNCLLauncherPathText;
-	private Label fRemoteAppDirPathLabel;
-	private Text fRemoteAppDirPathText;
-	private Label fHostLabel;
-	private Text fHostText;
-	private Label fUserNameLabel;
-	private Text fUserNameText;
-	private Label fUserPasswordLabel;
-	private Text fUserPasswordText;
-	
-	
-	public static String DEFAULT_PROJECT = "";
-	public static String DEFAULT_NCL_FILE = "";
-	public static String DEFAULT_NCL_LAUNCHER_PATH = "/misc/gingaNcl";
+public class GingaVMLaunchTabConfiguration extends GingaLaunchTabConfiguration {
+	protected Label fRemoteAppDirPathLabel;
+	protected Text fRemoteAppDirPathText;
+	protected Label fHostLabel;
+	protected Text fHostText;
+	protected Label fUserNameLabel;
+	protected Text fUserNameText;
+	protected Label fUserPasswordLabel;
+	protected Text fUserPasswordText;
+
 	public static String DEFAULT_REMOTE_APP_DIR_PATH = "/misc/ncl30/";
 	public static String DEFAULT_HOST = "192.168.117.1";
 	public static String DEFAULT_USER_NAME = "root";
@@ -89,69 +79,41 @@ public class GingaVMLaunchTabConfiguration extends AbstractLaunchConfigurationTa
 	
 	@Override
 	public void createControl(Composite parent) {
-		// TODO Auto-generated method stub
-		Composite comp = new Composite(parent, SWT.NONE);
-		GridLayout topLayout = new GridLayout();
-		topLayout.numColumns = 2;
-		comp.setLayout(topLayout);
-		setControl(comp);
+		super.createControl(parent);
 		
 		GridData gd;
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-
-		//Project
-			fProjectLabel = new Label(comp, SWT.NONE);
-			fProjectLabel.setText("Project:");
-			fProjectText = new Text(comp, SWT.SINGLE | SWT.BORDER);
-			fProjectText.setLayoutData(gd);
-		
-		
-		//NCL File
-			gd = new GridData(GridData.FILL_HORIZONTAL);
-			
-			fNCLFileLabel = new Label(comp, SWT.NONE);
-			fNCLFileLabel.setText("NCL File:");
-			fNCLFileText = new Text(comp, SWT.SINGLE | SWT.BORDER);
-			fNCLFileText.setLayoutData(gd);
-			
-		//Launcher Path
-			gd = new GridData(GridData.FILL_HORIZONTAL);
-			
-			fNCLLauncherPathLabel = new Label(comp, SWT.NONE);
-			fNCLLauncherPathLabel.setText("NCL Launcher Path:");
-			fNCLLauncherPathText = new Text(comp, SWT.SINGLE | SWT.BORDER);
-			fNCLLauncherPathText.setLayoutData(gd);
 			
 		//Remote App
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			
-			fRemoteAppDirPathLabel = new Label(comp, SWT.NONE);
+			fRemoteAppDirPathLabel = new Label(composite, SWT.NONE);
 			fRemoteAppDirPathLabel.setText("Remote apps directory path:");
-			fRemoteAppDirPathText = new Text(comp, SWT.SINGLE | SWT.BORDER);
+			fRemoteAppDirPathText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			fRemoteAppDirPathText.setLayoutData(gd);
 
 		//Host
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			
-			fHostLabel = new Label(comp, SWT.NONE);
+			fHostLabel = new Label(composite, SWT.NONE);
 			fHostLabel.setText("Host:");
-			fHostText = new Text(comp, SWT.SINGLE | SWT.BORDER);
+			fHostText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			fHostText.setLayoutData(gd);
 
 		//User name
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			
-			fUserNameLabel = new Label(comp, SWT.NONE);
+			fUserNameLabel = new Label(composite, SWT.NONE);
 			fUserNameLabel.setText("User name:");
-			fUserNameText = new Text(comp, SWT.SINGLE | SWT.BORDER);
+			fUserNameText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			fUserNameText.setLayoutData(gd);
 		
 		//User password
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			
-			fUserPasswordLabel = new Label(comp, SWT.NONE);
+			fUserPasswordLabel = new Label(composite, SWT.NONE);
 			fUserPasswordLabel.setText("User password:");
-			fUserPasswordText = new Text(comp, SWT.SINGLE | SWT.BORDER);
+			fUserPasswordText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			fUserPasswordText.setLayoutData(gd);
 	}
 
@@ -163,9 +125,7 @@ public class GingaVMLaunchTabConfiguration extends AbstractLaunchConfigurationTa
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
-			fProjectText.setText(configuration.getAttribute("project", DEFAULT_PROJECT));
-			fNCLFileText.setText(configuration.getAttribute("nclFile", DEFAULT_NCL_FILE));
-			fNCLLauncherPathText.setText(configuration.getAttribute("nclLauncherPath", DEFAULT_NCL_LAUNCHER_PATH));
+			super.initializeFrom(configuration);
 			fRemoteAppDirPathText.setText(configuration.getAttribute("remoteAppDirPath", DEFAULT_REMOTE_APP_DIR_PATH));
 			fHostText.setText(configuration.getAttribute("host", DEFAULT_HOST));
 			fUserNameText.setText(configuration.getAttribute("userName", DEFAULT_USER_NAME));
@@ -178,9 +138,7 @@ public class GingaVMLaunchTabConfiguration extends AbstractLaunchConfigurationTa
 
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute("project", fProjectText.getText());
-		configuration.setAttribute("nclFile", fNCLFileText.getText());
-		configuration.setAttribute("nclLauncherPath", fNCLLauncherPathText.getText());
+		super.performApply(configuration);
 		configuration.setAttribute("remoteAppDirPath", fRemoteAppDirPathText.getText());
 		configuration.setAttribute("host", fHostText.getText());
 		configuration.setAttribute("userName", fUserNameText.getText());
