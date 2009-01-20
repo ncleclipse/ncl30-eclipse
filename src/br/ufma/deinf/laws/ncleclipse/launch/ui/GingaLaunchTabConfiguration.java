@@ -62,7 +62,7 @@ import org.eclipse.swt.widgets.Text;
 
 
 //FIXME: Fazer igual ao GingaVM
-public class GingaEmulatorLaunchTabConfiguration extends AbstractLaunchConfigurationTab {
+public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab {
 	Label fProjectLabel;
 	Text fProjectText;
 	Label fNCLFileLabel;
