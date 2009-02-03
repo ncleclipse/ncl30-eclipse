@@ -51,12 +51,16 @@ http://www.laws.deinf.ufma.br
 package br.ufma.deinf.laws.ncleclipse;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -315,13 +319,11 @@ public class NCLEditor extends TextEditor {
 	     * no help contextual
 	     */
 	    protected void loadHelp(){
-	    	NCLHelper nclHelper = NCLHelper.getNCLHelper();
-	    	nclHelper.setHelpFileName(Platform.getInstallLocation().getURL().getPath()+"plugins/ncl_eclipse_1.0.0/resources/help.txt");
-	    	
-	    	//FIXME: Verificar uma forma de fazer sem o ncl_eclipse_1.0.0
-	    	System.out.println(Platform.getInstallLocation().getURL().getPath()+"plugins/ncl_eclipse_1.0.0/resources/help.txt");
-	    	
 	    	try {
+	    		NCLHelper nclHelper = NCLHelper.getNCLHelper();
+		    	nclHelper.setHelpFileName(NCLEditorPlugin.getResourcesLocation().getPath()+"resources/help.txt");
+		    	//FIXME: Verificar uma forma de fazer sem o ncl_eclipse_1.0.0
+		    	//System.out.println(NCLEditorPlugin.getResourcesLocation().getPath()+"resources/help.txt");
 	    		nclHelper.buildHelp();
 	    	}
 	    	catch (Exception e) {

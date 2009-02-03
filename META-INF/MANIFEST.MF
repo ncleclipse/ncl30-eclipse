@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: NCL Eclipse
-Bundle-SymbolicName: ncl_eclipse;singleton:=true
-Bundle-Version: 1.1.0
+Bundle-SymbolicName: br.ufma.deinf.laws.ncleclipse;singleton:=true
+Bundle-Version: 1.3.0
 Bundle-Activator: br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
@@ -15,12 +15,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.ui.console,
- org.eclipse.gef;bundle-version="3.4.1"
+ org.eclipse.gef;bundle-version="3.4.1",
+ org.apache.xerces;bundle-version="2.9.0"
 Eclipse-LazyStart: true
 Bundle-ClassPath: bin/,
  icons/,
- resources/,
- lib/xercesImpl.jar,
- lib/xml-apis.jar
+ resources/
 Bundle-Vendor: Laboratory of Advanced Web Systems (http://laws.deinf.ufma.br)
 

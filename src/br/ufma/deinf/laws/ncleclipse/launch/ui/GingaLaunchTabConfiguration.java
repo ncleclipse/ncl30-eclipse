@@ -63,6 +63,8 @@ import org.eclipse.swt.widgets.Text;
 
 
 //FIXME: Fazer igual ao GingaVM
+//TODO: Busca do project ver new wizard
+
 public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab {
 	protected Label fProjectLabel;
 	protected Text fProjectText;

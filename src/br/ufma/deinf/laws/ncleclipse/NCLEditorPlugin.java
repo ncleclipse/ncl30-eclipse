@@ -49,8 +49,10 @@ http://www.laws.deinf.ufma.br
 *******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse;
 
+import java.io.IOException;
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -66,7 +68,7 @@ import org.osgi.framework.BundleContext;
 public class NCLEditorPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "br.ufma.deinf.laws.ncleclipse.editors.NCLEditor";
+	public static final String PLUGIN_ID = "br.ufma.deinf.laws.ncleclipse";
 
 	// The shared instance
 	private static NCLEditorPlugin plugin;
@@ -121,9 +123,15 @@ public class NCLEditorPlugin extends AbstractUIPlugin {
 	protected void initializeImageRegistry(ImageRegistry registry) {
         Bundle bundle = Platform.getBundle(PLUGIN_ID);
         IPath path = new Path("icons/sample.gif");
-        URL url = Platform.find(bundle, path);
+        URL url = FileLocator.find(bundle, path, null);
         ImageDescriptor desc = ImageDescriptor.createFromURL(url);
         registry.put(LINK_ICON, desc);
     }
-
+	
+	static public URL getResourcesLocation() throws IOException{
+		URL url = FileLocator.find(Platform.getBundle(PLUGIN_ID), new Path("resources/"), null);
+		//System.out.println(url);
+		return FileLocator.toFileURL(url);
+		
+	}
 }
