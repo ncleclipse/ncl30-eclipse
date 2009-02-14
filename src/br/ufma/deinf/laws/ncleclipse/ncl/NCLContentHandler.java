@@ -88,7 +88,8 @@ public class NCLContentHandler implements ContentHandler{
 				|| arg1.equals("context") 
 				|| arg1.equals("media")
 				|| arg1.equals("switch")
-				|| arg1.equals("causalConnector"))
+				|| arg1.equals("causalConnector")
+				|| arg1.equals("descriptorSwitch"))
 		{
 			perspective.pop();
 		}
@@ -155,7 +156,8 @@ public class NCLContentHandler implements ContentHandler{
 				|| localName.equals("context") 
 				|| localName.equals("media")
 				|| localName.equals("switch")
-				|| localName.equals("causalConnector"))
+				|| localName.equals("causalConnector")
+				|| localName.equals("descriptorSwitch"))
 		{
 			String strNewPerspective = "";
 			if(nclDocument.alias != null && !nclDocument.alias.equals(""))
