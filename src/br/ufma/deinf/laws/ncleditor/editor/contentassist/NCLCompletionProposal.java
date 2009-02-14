@@ -341,6 +341,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				|| (tagname.equals("bindRule") && attribute.equals("constituent"))
 				|| (tagname.equals("defaultComponent") && attribute.equals("component"))) {
 
+			System.out.println("aqqqqqq");
 			String fatherTagName = nclDoc.getFatherTagName(offset);
 			try {
 				perspective = nclDoc.getAttributeValueFromCurrentTagName(
@@ -514,6 +515,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		Iterator it = nclReference.iterator();
 		while (it.hasNext()) {
 			NCLReference nclRefAtual = (NCLReference) it.next();
+			
 			Collection elements = nclDocument.getElementsFromPerspective(
 					nclRefAtual.getRefTagname(), perspective);
 			if (elements == null)
