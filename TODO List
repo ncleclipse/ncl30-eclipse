@@ -66,6 +66,12 @@ Características a implementar:
 			</media>
 
 Versão 1.3.3
+2009-03-11
+	- Consertado posição do cursor quando se inseria uma endtag pela sugestão.
+		
+	- Codificação de mensagens de erro com acento.
+		OK!
+	
 2009-02-16
 	- Refer de contexto pode referenciar um id de um body, context ou ncl.
 	- PENDENTE: Provavelmente não pode referenciar um contexto que seja seu pai (Verificar com o Luiz) 
