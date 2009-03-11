@@ -51,17 +51,12 @@ http://www.laws.deinf.ufma.br
 package br.ufma.deinf.laws.ncleclipse;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.IDocument;
@@ -88,6 +83,7 @@ import org.xml.sax.helpers.LocatorImpl;
 import br.ufma.deinf.gia.labmint.composer.NCLValidator;
 import br.ufma.deinf.gia.labmint.document.NclValidatorDocument;
 import br.ufma.deinf.gia.labmint.main.NclParseErrorHandler;
+import br.ufma.deinf.gia.labmint.message.MessageHandler;
 import br.ufma.deinf.gia.labmint.message.MessageList;
 import br.ufma.deinf.gia.labmint.xml.XMLParserExtend;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
@@ -181,6 +177,11 @@ public class NCLEditor extends TextEditor {
 			File docFile = new File(file.getLocationURI());
 			Document doc = null;
 			MessageList.clear();
+			
+			//getting the description error file
+			NCLValidatorErrorMessages prop = new NCLValidatorErrorMessages();
+			MessageHandler.setProperties(prop);
+			
 			MessageList.setLanguage(MessageList.PORTUGUESE);
 	        try {
 	        		XMLParserExtend parserExtend = new XMLParserExtend();
@@ -203,7 +204,9 @@ public class NCLEditor extends TextEditor {
 	        catch (Exception e) {
 	        	//TODO Alguma coisa
 	        	e.printStackTrace();
-	        	MessageList.addError(docFile.getAbsolutePath(), "Erro sint�tico no XML ("+e.getMessage()+")", null, MessageList.PORTUGUESE);
+	        	Vector <String> args = new Vector<String>();
+	        	args.add(e.getMessage());
+	        	MessageList.addError(docFile.getAbsolutePath(), 1002, null, args);
 	        }
 	        markingErrorHandler.MarkNCLValidatorErrorsAndWarnings();
 		}
