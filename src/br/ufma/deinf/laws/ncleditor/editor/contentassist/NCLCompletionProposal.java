@@ -156,7 +156,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		String tagname = nclDoc.getCurrentTagname(fatherOffset);
 		
 		String prop = "</"+tagname+">";
-		
+		cursor = prop.length();
 		CompletionProposal proposal = new CompletionProposal(prop,
 				offset - qlen, qlen, cursor, null, prop, null, null);
 		propList.add(proposal);
