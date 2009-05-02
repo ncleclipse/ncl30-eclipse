@@ -250,9 +250,10 @@ public class NCLSourceDocument extends Document{
 	}
 	
 	String currentAttribute;
-
+	private int startAttributeValueOffset = -1;
 	public boolean isAttributeValue(int offset) {
 		ITypedRegion region;
+		startAttributeValueOffset = -1;
 		try {
 			region = getPartition(offset--);
 			if (region.getType() == XMLPartitionScanner.XML_START_TAG) {
@@ -284,6 +285,7 @@ public class NCLSourceDocument extends Document{
 					}
 					if (ch == '\'' || ch == '\"') {
 						if (firstQuote) {
+							startAttributeValueOffset = offset+1;
 							firstQuote = false;
 							continue;
 						}
@@ -299,6 +301,17 @@ public class NCLSourceDocument extends Document{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param offset
+	 * @return
+	 */
+	public int getStartAttributeValueOffset(int offset){
+		if(isAttributeValue(offset)){
+			return startAttributeValueOffset;
+		}
+		return -1;
+	}
 	/**
 	 * Utilizado para determinar se a palavra corrente que está sendo digitada
 	 * é um atributo. Irá retornar verdadeiro se encontrar o padrão no

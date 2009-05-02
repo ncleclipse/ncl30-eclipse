@@ -59,6 +59,8 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -72,6 +74,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
+import br.ufma.deinf.laws.ncleclipse.hyperlinks.NCLEclipseHyperlinkDetector;
 import br.ufma.deinf.laws.ncleclipse.scanners.CDataScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLScanner;
@@ -243,4 +246,13 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 				: new DefaultIndentLineAutoEditStrategy());
 		return new IAutoEditStrategy[] { strategy };
 	}
+	
+	/**
+	 * Add NCLEclipse Hyperlink Detector to Source Viewer Configuration
+	 */
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+	    return new IHyperlinkDetector[] { new NCLEclipseHyperlinkDetector(),
+	    		new URLHyperlinkDetector() };
+	}
+
 }
