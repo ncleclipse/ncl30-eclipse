@@ -343,37 +343,37 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			System.out.println("aqqqqqq");
 			String fatherTagName = nclDoc.getFatherTagName(offset);
-			try {
+			
 				perspective = nclDoc.getAttributeValueFromCurrentTagName(
 						nclDoc.getFatherPartitionOffset(offset), "id");
-			} catch (Exception e) {
-				if (fatherTagName.equals("body")) {
-					try {
-						perspective = nclDoc.getAttributeValueFromCurrentTagName(
-								nclDoc.getFatherPartitionOffset(
-										nclDoc.getFatherPartitionOffset(offset)),
-								"id");
-					} catch (Exception e1) {
+				if(perspective == null){
+					if (fatherTagName.equals("body")) {
+							perspective = nclDoc.getAttributeValueFromCurrentTagName(
+									nclDoc.getFatherPartitionOffset(
+											nclDoc.getFatherPartitionOffset(offset)),
+									"id");
+						 if(perspective == null){
+							MessageDialog
+									.openError(
+											Workbench.getInstance()
+													.getActiveWorkbenchWindow()
+													.getShell(),
+											"Erro",
+											"Elemento <ncl> ou <body> deve possuir um id para o funcionamento correto do Autocomplete!");
+							return;
+						 }
+					} else {
 						MessageDialog
 								.openError(
 										Workbench.getInstance()
 												.getActiveWorkbenchWindow()
 												.getShell(),
 										"Erro",
-										"Elemento <ncl> ou <body> deve possuir um id para o funcionamento correto do Autocomplete!");
+										"Elemento <"
+												+ fatherTagName
+												+ "> deve possuir um id para o funcionamento correto do Autocomplete!");
 					}
-				} else {
-					MessageDialog
-							.openError(
-									Workbench.getInstance()
-											.getActiveWorkbenchWindow()
-											.getShell(),
-									"Erro",
-									"Elemento <"
-											+ fatherTagName
-											+ "> deve possuir um id para o funcionamento correto do Autocomplete!");
 				}
-			}
 		}
 
 		// Contexto � o pai do pai
