@@ -75,13 +75,13 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
+import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHover;
 import br.ufma.deinf.laws.ncleclipse.hyperlinks.NCLEclipseHyperlinkDetector;
 import br.ufma.deinf.laws.ncleclipse.scanners.CDataScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTextScanner;
-import br.ufma.deinf.laws.ncleclipse.texthover.NCLTextHover;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.IXMLColorConstants;
 import br.ufma.deinf.laws.ncleclipse.util.NCLDoubleClickStrategy;
