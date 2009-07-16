@@ -268,8 +268,8 @@ public class NCLSourceDocument extends Document{
 			if (region.getType() == XMLPartitionScanner.XML_START_TAG) {
 				int partitionOffset = region.getOffset();
 				currentAttribute = "";
-				System.out
-						.println("Verificando se está digitando o valor de um atributo");
+				//System.out
+				//		.println("Verificando se está digitando o valor de um atributo");
 				boolean firstQuote = true;
 				boolean findingAttributeName = false;
 				int beginAttributeName = -1, endAttributeName = -1;

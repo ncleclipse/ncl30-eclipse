@@ -54,6 +54,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Stack;
 
+import org.eclipse.jface.text.Position;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -65,6 +66,7 @@ public class NCLContentHandler implements ContentHandler{
 	private NCLDocument nclDocument = null;
 	private Stack<String> perspective;
 	private String perspectiveSemId = "0";
+	private Locator locator;
 	
 	@Override
 	public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
@@ -118,7 +120,7 @@ public class NCLContentHandler implements ContentHandler{
 	@Override
 	public void setDocumentLocator(Locator arg0) {
 		// TODO Auto-generated method stub
-		
+		this.locator = arg0;
 	}
 
 	@Override
@@ -144,7 +146,8 @@ public class NCLContentHandler implements ContentHandler{
 		
 		// Carrega o NCLDocument
 		System.out.println("Adicionando no NCLContentHandler " + qName + " id = "+ atts.getValue("id") + " - perspective = " + strPerspective);
-		NCLElement nclElement = new NCLElement(localName, strPerspective);
+		
+		NCLElement nclElement = new NCLElement(localName, strPerspective, locator.getLineNumber()-1);
 		for(int i = 0; i < atts.getLength(); i++){
 			nclElement.setAttributeValue(atts.getLocalName(i), atts.getValue(i));
 		}
