@@ -61,6 +61,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
@@ -74,8 +75,8 @@ import br.ufma.deinf.laws.ncleditor.editor.contentassist.NCLSourceDocument;
 
 public class NCLMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener{
 	/** The text editor used in page 0. */
-	private NCLEditor editor;
-	private NCLLayoutEditor layoutEditor;
+	private NCLEditor editor = null;
+	private NCLLayoutEditor layoutEditor = null;
 	
 	/**
 	 * Creates a multi-page editor example.
@@ -146,8 +147,11 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	public void doSave(IProgressMonitor monitor) {
 		IEditorPart editor = getEditor(0);
 		editor.doSave(monitor);
-		editor = getEditor(1);
-		editor.doSave(monitor);
+		//Ajeitar
+		if(layoutEditor != null){
+			editor = getEditor(1);
+			editor.doSave(monitor);
+		}
 		updateTitle();
 	}
 	/**
@@ -175,8 +179,8 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	 */
 	public void init(IEditorSite site, IEditorInput editorInput)
 		throws PartInitException {
-		if (!(editorInput instanceof IFileEditorInput))
-			throw new PartInitException("Invalid Input: Must be IFileEditorInput");	
+		//if (!(editorInput instanceof IFileEditorInput) && !(editorInput instanceof IStorageEditorInput))
+			//throw new PartInitException("Invalid Input: Must be IFileEditorInput");	
 		super.init(site, editorInput);
 	}
 	/* (non-Javadoc)
@@ -194,7 +198,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
 		if (newPageIndex == 1) {
-			layoutEditor.refreshGraphicalViewer();
+			layoutEditor.remakeGraphicalViewer();
 			layoutActive = true;
 		}
 		else if(newPageIndex == 0 && layoutEditor != null && layoutActive){
