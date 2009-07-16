@@ -22,7 +22,7 @@ ncleclipse@laws.deinf.ufma.br
 http://www.laws.deinf.ufma.br/ncleclipse
 http://www.laws.deinf.ufma.br
 
-******************************************************************************
+ ******************************************************************************
 This file is part of the authoring environment in Nested Context Language -
 NCL Eclipse.
 
@@ -46,7 +46,7 @@ ncleclipse@laws.deinf.ufma.br
 http://www.laws.deinf.ufma.br/ncleclipse
 http://www.laws.deinf.ufma.br
 
-*******************************************************************************/
+ *******************************************************************************/
 
 package br.ufma.deinf.laws.ncleditor.editor.contentassist;
 
@@ -60,7 +60,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -73,12 +72,13 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.part.FileEditorInput;
 
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
@@ -99,15 +99,17 @@ import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
  */
 public class NCLCompletionProposal implements IContentAssistProcessor {
 	private XMLTagScanner scanner;
-	private IFile currentFile;
+	private File currentFile;
 	private String text;
-	private String protocols[] = {"file:///", "http://", "rtsp://", "rtp://", "sbtvd-ts://"};
+	private String protocols[] = { "file:///", "http://", "rtsp://", "rtp://",
+			"sbtvd-ts://" };
 	private boolean isAttributeValue;
 	private boolean isAttribute;
 	private boolean isEndTagName;
+
 	/**
-	 * Responsável por computar os valores que aparecerão na lista de
-	 * sugestões. Retorna uma lista de ICompletionProposal
+	 * Responsável por computar os valores que aparecerão na lista de sugestões.
+	 * Retorna uma lista de ICompletionProposal
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
@@ -117,12 +119,27 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 		IWorkbenchPage page = win.getActivePage();
 		IEditorPart editor = page.getActiveEditor();
-		currentFile = ((FileEditorInput) editor.getEditorInput()).getFile();
-
 		List propList = new ArrayList();
+
+		try {
+			if (editor.getEditorInput() instanceof IFileEditorInput) {
+				currentFile = ((IFileEditorInput) editor.getEditorInput())
+						.getFile().getFullPath().toFile();
+			} else {
+				currentFile = new File(((IURIEditorInput) editor
+						.getEditorInput()).getURI());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			ICompletionProposal[] proposal = new ICompletionProposal[0];
+			return proposal;
+		}
+
 		IDocument doc = viewer.getDocument();
 		text = doc.get();
-		NCLSourceDocument nclDoc = (NCLSourceDocument)doc;
+
+		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+
 		isAttributeValue = nclDoc.isAttributeValue(offset);
 		isAttribute = nclDoc.isAttribute(offset);
 		isEndTagName = nclDoc.isEndTagName(offset);
@@ -151,14 +168,16 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private void computeEndTagName(IDocument doc, String qualifier, int offset,
 			List propList) {
 		int qlen = qualifier.length();
-		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
+
+		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+
 		int fatherOffset = nclDoc.getFatherPartitionOffsetFromEndTag(offset);
 		String tagname = nclDoc.getCurrentTagname(fatherOffset);
-		
-		String prop = "</"+tagname+">";
+
+		String prop = "</" + tagname + ">";
 		cursor = prop.length();
-		CompletionProposal proposal = new CompletionProposal(prop,
-				offset - qlen, qlen, cursor, null, prop, null, null);
+		CompletionProposal proposal = new CompletionProposal(prop, offset
+				- qlen, qlen, cursor, null, prop, null, null);
 		propList.add(proposal);
 		return;
 
@@ -172,14 +191,16 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	 * @param propList
 	 */
 	private int cursor; // calcula a posição que o cursor ficará para cada
-						// estrutura proposta
+
+	// estrutura proposta
 
 	private void computeTagsProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
 		int qlen = qualifier.length();
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		String indent = getIndentLine(doc, offset);
-		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
+
+		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
 
 		// fazer um filtro para buscar apenas as tags filhas da getFatherTagname
 		System.out.println("## Log: Pai da tag onde estou digitando : "
@@ -196,13 +217,15 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (tagname.startsWith(qualifier) || tagname2.startsWith(qualifier)) {
 				String text = computeTagStructure(tagname, indent);
 
-				//get a help info to user
-				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
-				//String helpInfo = "help";
-				//String helpInfo = "help";
-				
+				// get a help info to user
+				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
+						tagname);
+				// String helpInfo = "help";
+				// String helpInfo = "help";
+
 				CompletionProposal proposal = new CompletionProposal(text,
-						offset - qlen, qlen, cursor, null, tagname, null, helpInfo);
+						offset - qlen, qlen, cursor, null, tagname, null,
+						helpInfo);
 				propList.add(proposal);
 			}
 
@@ -218,11 +241,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						|| tagname2.startsWith(qualifier)) {
 					String text = computeTagStructure(tagname, indent);
 
-					//get a help information to user
-					String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
-					//String helpInfo = "help";
-					//String helpInfo="help";
-					
+					// get a help information to user
+					String helpInfo = NCLHelper.getNCLHelper()
+							.getHelpDescription(tagname);
+					// String helpInfo = "help";
+					// String helpInfo="help";
+
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, tagname, null,
 							helpInfo);
@@ -237,9 +261,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		 * Map<String, Map<String, Boolean>> atts =
 		 * nclStructure.getAttributes(); Iterator it =
 		 * atts.entrySet().iterator(); while(it.hasNext()){ Map.Entry<String,
-		 * Map<String, Boolean>> entry = (Entry<String, Map<String,
-		 * Boolean>>) it.next(); String tagname = entry.getKey(); String
-		 * tagname2 = "<"+tagname; if(tagname.startsWith(qualifier) ||
+		 * Map<String, Boolean>> entry = (Entry<String, Map<String, Boolean>>)
+		 * it.next(); String tagname = entry.getKey(); String tagname2 =
+		 * "<"+tagname; if(tagname.startsWith(qualifier) ||
 		 * tagname2.startsWith(qualifier)){ String text =
 		 * computeTagStructure(tagname, indent);
 		 * 
@@ -248,7 +272,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		 * propList.add(proposal); } }
 		 */
 	}
-
 
 	/**
 	 * Computa a estrutura da Tag Valores Defaults, atributos obrigatórios,
@@ -274,7 +297,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		}
 		String ret;
 		if (children.size() == 0) { // caso nao tenha filhos fecha a tag junto
-									// com a start
+			// com a start
 			ret = "<" + tagname + attributes + "/>" + "\r\n" + indent;
 			cursor = ret.length();
 		} else {
@@ -296,7 +319,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String qualifier, int offset, List propList) {
 		int qlen = qualifier.length();
 		// Verificar se existe valor pré-definido
-		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
+
+		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+
 		String tagname = nclDoc.getCurrentTagname(offset);
 		String attribute = nclDoc.getCurrentAttribute(offset);
 		System.out.println("tag: " + tagname + " attr:" + attribute);
@@ -325,9 +350,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		String nclText = doc.get();
 		NCLContentHandler nclContentHandler = new NCLContentHandler();
 		NCLDocument nclDocument = new NCLDocument();
-		nclDocument.setParentURI(((NCLMultiPageEditor) PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage().getActiveEditor())
-				.getNCLEditor().getInputFile().getParent().getLocationURI());
+		nclDocument.setParentURI(currentFile.getParentFile().toURI());
 		nclContentHandler.setNclDocument(nclDocument);
 		NCLParser parser = new NCLParser();
 		parser.setContentHandler(nclContentHandler);
@@ -338,72 +361,78 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// TODO: caso o id esteja definido no ncl, aqui temos um problema
 		// Contexto � o pai
 		if ((tagname.equals("port") && attribute.equals("component"))
-				|| (tagname.equals("bindRule") && attribute.equals("constituent"))
-				|| (tagname.equals("defaultComponent") && attribute.equals("component"))) {
+				|| (tagname.equals("bindRule") && attribute
+						.equals("constituent"))
+				|| (tagname.equals("defaultComponent") && attribute
+						.equals("component"))) {
 
 			System.out.println("aqqqqqq");
 			String fatherTagName = nclDoc.getFatherTagName(offset);
-			
-				perspective = nclDoc.getAttributeValueFromCurrentTagName(
-						nclDoc.getFatherPartitionOffset(offset), "id");
-				if(perspective == null){
-					if (fatherTagName.equals("body")) {
-							perspective = nclDoc.getAttributeValueFromCurrentTagName(
-									nclDoc.getFatherPartitionOffset(
-											nclDoc.getFatherPartitionOffset(offset)),
-									"id");
-						 if(perspective == null){
-							MessageDialog
-									.openError(
-											Workbench.getInstance()
-													.getActiveWorkbenchWindow()
-													.getShell(),
-											"Erro",
-											"Elemento <ncl> ou <body> deve possuir um id para o funcionamento correto do Autocomplete!");
-							return;
-						 }
-					} else {
+
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
+					.getFatherPartitionOffset(offset), "id");
+			if (perspective == null) {
+				if (fatherTagName.equals("body")) {
+					perspective = nclDoc.getAttributeValueFromCurrentTagName(
+							nclDoc.getFatherPartitionOffset(nclDoc
+									.getFatherPartitionOffset(offset)), "id");
+					if (perspective == null) {
 						MessageDialog
 								.openError(
 										Workbench.getInstance()
 												.getActiveWorkbenchWindow()
 												.getShell(),
 										"Erro",
-										"Elemento <"
-												+ fatherTagName
-												+ "> deve possuir um id para o funcionamento correto do Autocomplete!");
+										"Elemento <ncl> ou <body> deve possuir um id para o funcionamento correto do Autocomplete!");
+						return;
 					}
+				} else {
+					MessageDialog
+							.openError(
+									Workbench.getInstance()
+											.getActiveWorkbenchWindow()
+											.getShell(),
+									"Erro",
+									"Elemento <"
+											+ fatherTagName
+											+ "> deve possuir um id para o funcionamento correto do Autocomplete!");
 				}
+			}
 		}
 
 		// Contexto � o pai do pai
 		if ((tagname.equals("bind") && attribute.equals("component"))
 				|| (tagname.equals("mapping") && attribute.equals("component"))) {
 
-			String grandFatherTagName = nclDoc.getFatherTagName(nclDoc.getFatherPartitionOffset(offset));
+			String grandFatherTagName = nclDoc.getFatherTagName(nclDoc
+					.getFatherPartitionOffset(offset));
 			try {
-				perspective = nclDoc.getAttributeValueFromCurrentTagName(
-						nclDoc.getFatherPartitionOffset(nclDoc.getFatherPartitionOffset(offset)), "id");
+				perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
+						.getFatherPartitionOffset(nclDoc
+								.getFatherPartitionOffset(offset)), "id");
 			} catch (Exception e) {
 				if (grandFatherTagName.equals("body")) {
-					perspective = nclDoc.getAttributeValueFromCurrentTagName(
-							nclDoc.getFatherPartitionOffset(
-									nclDoc.getFatherPartitionOffset(
-											nclDoc.getFatherPartitionOffset(
-													offset))), "id");
+					perspective = nclDoc
+							.getAttributeValueFromCurrentTagName(
+									nclDoc
+											.getFatherPartitionOffset(nclDoc
+													.getFatherPartitionOffset(nclDoc
+															.getFatherPartitionOffset(offset))),
+									"id");
 				}
 			}
 		}
 
 		if (tagname.equals("bind") && attribute.equals("role")
 				|| (tagname.equals("linkParam") && (attribute.equals("name")))) {
-			perspective = nclDoc.getAttributeValueFromCurrentTagName(
-					nclDoc.getFatherPartitionOffset(offset), "xconnector");
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
+					.getFatherPartitionOffset(offset), "xconnector");
 		}
 
 		if (tagname.equals("bindParam") && attribute.equals("name")) {
-			perspective = nclDoc.getAttributeValueFromCurrentTagName(
-					nclDoc.getFatherPartitionOffset(nclDoc.getFatherPartitionOffset(offset)), "xconnector");
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
+					.getFatherPartitionOffset(nclDoc
+							.getFatherPartitionOffset(offset)), "xconnector");
 		}
 
 		if (tagname.equals("bind") && attribute.equals("interface")
@@ -417,9 +446,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					&& element.getAttributes().get("refer") != null) {
 				Collection nclReference = nclStructure.getNCLReference(tagname,
 						attribute);
-				//Computa os valores de atributos dos elementos filhos do refer
-				
-				//Refatorar este código... Isto está repetindo o que está sendo feito lá embaixo
+				// Computa os valores de atributos dos elementos filhos do refer
+
+				// Refatorar este código... Isto está repetindo o que está sendo
+				// feito lá embaixo
 				String perspectivetmp = element.getAttributeValue("refer");
 				element = nclDocument.getElementById(perspectivetmp);
 				if (nclReference == null)
@@ -427,20 +457,24 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				Iterator it = nclReference.iterator();
 				while (it.hasNext()) {
 					NCLReference nclRefAtual = (NCLReference) it.next();
-					Collection elements = nclDocument.getElementsFromPerspective(
-							nclRefAtual.getRefTagname(), perspectivetmp);
+					Collection elements = nclDocument
+							.getElementsFromPerspective(nclRefAtual
+									.getRefTagname(), perspectivetmp);
 					if (elements == null)
 						continue;
 					Iterator it2 = elements.iterator();
 					while (it2.hasNext()) {
-						text = ((NCLElement) it2.next()).getAttributeValue(nclRefAtual
-								.getRefAttribute());
+						text = ((NCLElement) it2.next())
+								.getAttributeValue(nclRefAtual
+										.getRefAttribute());
 						if (text == null)
 							continue;
 
 						// refer n�o pode sugerir a pr�pria media, switch, etc.
 						if (attribute.equals("refer")) {
-							String idAtual = nclDoc.getAttributeValueFromCurrentTagName(offset, "id");
+							String idAtual = nclDoc
+									.getAttributeValueFromCurrentTagName(
+											offset, "id");
 							if (idAtual != null)
 								if (text.equals(idAtual))
 									continue;
@@ -448,9 +482,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						if (text.startsWith(qualifier)) {
 							cursor = text.length();
-							System.out.println("Attribute Value Proposal = " + text);
-							CompletionProposal proposal = new CompletionProposal(text,
-									offset - qlen, qlen, cursor, null, text, null, null);
+							System.out.println("Attribute Value Proposal = "
+									+ text);
+							CompletionProposal proposal = new CompletionProposal(
+									text, offset - qlen, qlen, cursor, null,
+									text, null, null);
 
 							propList.add(proposal);
 						}
@@ -460,45 +496,44 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		}
 
 		if ((tagname.equals("media") && attribute.equals("src"))
-			|| (tagname.equals("importBase") && attribute.equals("documentURI"))) {
-			//suggest the protocols
+				|| (tagname.equals("importBase") && attribute
+						.equals("documentURI"))) {
+			// suggest the protocols
 			for (int i = 0; i < protocols.length; i++) {
 				text = protocols[i];
 				if (text.startsWith(qualifier)) {
 					cursor = text.length();
-					System.out.println("Attribute Value Proposal = "
-							+ text);
-						CompletionProposal proposal = new CompletionProposal(
-							text, offset - qlen, qlen, cursor, null,
-							text, null, null);
+					System.out.println("Attribute Value Proposal = " + text);
+					CompletionProposal proposal = new CompletionProposal(text,
+							offset - qlen, qlen, cursor, null, text, null, null);
+					propList.add(proposal);
+				}
+			}
+			File file = null;
+			file = new File(currentFile.toURI());
+			try {
+				URIProposer fs = new URIProposer(currentFile.getParent()
+						.toString());
+				Vector<String> v = fs.getDirectories(qualifier);
+				for (int i = 0; i < v.size(); i++) {
+					if (v.get(i).startsWith(qualifier)) {
+						cursor = v.get(i).length();
+						CompletionProposal proposal = new CompletionProposal(v
+								.get(i), offset - qlen, qlen, cursor, null, v
+								.get(i), null, null);
 						propList.add(proposal);
 					}
 				}
-			File file = null;
-			file = new File(currentFile.getLocationURI());
-			file = new File(file.getParentFile().toString());
-			try {
-				URIProposer fs = new URIProposer(currentFile.getParent().getLocationURI().toString());
-				Vector <String> v = fs.getDirectories(qualifier);
-				for(int i = 0; i < v.size(); i++){
-						if(v.get(i).startsWith(qualifier)){
-							cursor = v.get(i).length();
-							CompletionProposal proposal = new CompletionProposal(
-								v.get(i), offset - qlen, qlen, cursor, null,
-								v.get(i), null, null);
-							propList.add(proposal);
-						}
-				}
-				fs = new URIProposer(currentFile.getParent().getLocationURI().toString());
+				fs = new URIProposer(currentFile.getParent().toString());
 				v = fs.getFiles(qualifier);
-				for(int i = 0; i < v.size(); i++){
-						if(v.get(i).startsWith(qualifier)){
-							cursor = v.get(i).length();
-							CompletionProposal proposal = new CompletionProposal(
-								v.get(i), offset - qlen, qlen, cursor, null,
-								v.get(i), null, null);
-							propList.add(proposal);
-						}
+				for (int i = 0; i < v.size(); i++) {
+					if (v.get(i).startsWith(qualifier)) {
+						cursor = v.get(i).length();
+						CompletionProposal proposal = new CompletionProposal(v
+								.get(i), offset - qlen, qlen, cursor, null, v
+								.get(i), null, null);
+						propList.add(proposal);
+					}
 				}
 				return;
 			} catch (URISyntaxException e) {
@@ -515,7 +550,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		Iterator it = nclReference.iterator();
 		while (it.hasNext()) {
 			NCLReference nclRefAtual = (NCLReference) it.next();
-			
+
 			Collection elements = nclDocument.getElementsFromPerspective(
 					nclRefAtual.getRefTagname(), perspective);
 			if (elements == null)
@@ -529,7 +564,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				// refer n�o pode sugerir a pr�pria media, switch, etc.
 				if (attribute.equals("refer")) {
-					String idAtual = nclDoc.getAttributeValueFromCurrentTagName(offset, "id");
+					String idAtual = nclDoc
+							.getAttributeValueFromCurrentTagName(offset, "id");
 					if (idAtual != null)
 						if (text.equals(idAtual))
 							continue;
@@ -563,7 +599,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					System.out.println(text);
 					// refer n�o pode sugerir a pr�pria media, switch, etc.
 					if (attribute.equals("refer")) {
-						String idAtual = nclDoc.getAttributeValueFromCurrentTagName(offset, "id");
+						String idAtual = nclDoc
+								.getAttributeValueFromCurrentTagName(offset,
+										"id");
 						if (idAtual != null)
 							if (text.equals(idAtual))
 								continue;
@@ -594,7 +632,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private void computeAttributesProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
 		int qlen = qualifier.length();
-		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
+
+		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+
 		System.out.println("Computing Attributes proposals...");
 		String currentTagname = nclDoc.getCurrentTagname(offset);
 		System.out.println("Current Tag Name = " + currentTagname);
@@ -615,9 +655,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (prop.startsWith(qualifier)) {
 				cursor = prop.length();
 
-				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(currentTagname, view);
-				//String helpInfo = "help";
-				//String helpInfo = "help";
+				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
+						currentTagname, view);
+				// String helpInfo = "help";
+				// String helpInfo = "help";
 
 				CompletionProposal proposal = new CompletionProposal(prop,
 						offset - qlen, qlen, cursor, null, view, null, helpInfo);
@@ -626,8 +667,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 	}
-
-
 
 	/**
 	 * Retorna o qualificador, ou seja, o que o usuário já digitou, utilizado
@@ -640,25 +679,25 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private String getQualifier(IDocument doc, int offset) {
 		// TODO Auto-generated method stub
 		StringBuffer buf = new StringBuffer();
-		if(isAttributeValue){
+		if (isAttributeValue) {
 			while (true) {
 				try {
 					char c = doc.getChar(--offset);
 					if (c == '\"' || c == '\'')
 						return buf.reverse().toString();
-					 else
+					else
 						buf.append(c);
 				} catch (BadLocationException e) {
 					return "";
 				}
 			}
-		}
-		else{
+		} else {
 			while (true) {
 				try {
 					char c = doc.getChar(--offset);
-					if (Character.isLetter(c) || c == '<' || c == '/' || c == '#'
-						|| c == '.' || c == ':' || Character.isDigit(c)) {
+					if (Character.isLetter(c) || c == '<' || c == '/'
+							|| c == '#' || c == '.' || c == ':'
+							|| Character.isDigit(c)) {
 						buf.append(c);
 					} else
 						return buf.reverse().toString();
@@ -670,8 +709,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	}
 
 	/**
-	 * Retorna uma string com o número de tabulação da linha atual. Útil
-	 * para colocar o final de tag alinhado com o inicial
+	 * Retorna uma string com o número de tabulação da linha atual. Útil para
+	 * colocar o final de tag alinhado com o inicial
 	 * 
 	 * @param doc
 	 * @param offset
@@ -729,8 +768,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
 
 	private TextInfo currentText(IDocument document, int documentOffset) {
 

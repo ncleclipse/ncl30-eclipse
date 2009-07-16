@@ -66,6 +66,7 @@ public class NCLDocumentProvider extends FileDocumentProvider {
 		// TODO Auto-generated method stub
 		return new NCLSourceDocument();
 	}
+	
 	protected IDocument createDocument(Object element) throws CoreException {
 		IDocument document = super.createDocument(element);
 		if (document != null) {
