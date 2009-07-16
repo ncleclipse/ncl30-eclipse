@@ -72,8 +72,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.texteditor.ContentAssistAction;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -91,6 +94,7 @@ import br.ufma.deinf.laws.ncleclipse.marker.MarkingErrorHandler;
 import br.ufma.deinf.laws.ncleclipse.outline.EditorContentOutlinePage;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.NCLDocumentProvider;
+import br.ufma.deinf.laws.ncleclipse.util.NCLTextDocumentProvider;
 import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
 
 public class NCLEditor extends TextEditor {
@@ -106,7 +110,6 @@ public class NCLEditor extends TextEditor {
 		super();
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new NCLConfiguration(colorManager, this));
-		setDocumentProvider(new NCLDocumentProvider());
 		loadHelp();
 	}
 	
@@ -136,6 +139,7 @@ public class NCLEditor extends TextEditor {
 	
 	protected void doSetInput(IEditorInput newInput) throws CoreException
 	{
+		setDocumentProvider(createDocumentProvider(newInput));
 		super.doSetInput(newInput);
 		this.input = newInput;
 
@@ -143,6 +147,18 @@ public class NCLEditor extends TextEditor {
 			outlinePage.setInput(input); // update content outline
 		
 		validateAndMark();
+	}
+
+	private IDocumentProvider createDocumentProvider(IEditorInput input2) {
+		System.out.println(input2.getClass().toString());
+		if(input2 instanceof IFileEditorInput){
+            return new NCLDocumentProvider();
+		} else if(input2 instanceof IURIEditorInput){
+			NCLTextDocumentProvider docProvider = new NCLTextDocumentProvider();
+			return docProvider;
+		} else {
+            return new TextFileDocumentProvider();
+		}
 	}
 
 	protected void editorSaved()
@@ -163,28 +179,29 @@ public class NCLEditor extends TextEditor {
 		{
 			IDocument document = getInputDocument();
 			String text = document.get();
-			MarkingErrorHandler markingErrorHandler = new MarkingErrorHandler(getInputFile(), document);
-			markingErrorHandler.setDocumentLocator(new LocatorImpl());
-			markingErrorHandler.removeExistingMarkers();
-			
-			//Validação Xerces
-			XMLParser parser = new XMLParser();
-			parser.setErrorHandler(markingErrorHandler);
-			parser.doParse(text);
-			
-			//Validação ncl30-validator
 			IFile file = getInputFile();
-			File docFile = new File(file.getLocationURI());
-			Document doc = null;
-			MessageList.clear();
+			if(file != null){
+				MarkingErrorHandler markingErrorHandler = new MarkingErrorHandler(getInputFile(), document);
+				markingErrorHandler.setDocumentLocator(new LocatorImpl());
+				markingErrorHandler.removeExistingMarkers();
 			
-			//getting the description error file
-			NCLValidatorErrorMessages prop = new NCLValidatorErrorMessages();
-			MessageHandler.setProperties(prop);
+				//Validação Xerces
+				XMLParser parser = new XMLParser();
+				parser.setErrorHandler(markingErrorHandler);
+				parser.doParse(text);
 			
-			MessageList.setLanguage(MessageList.PORTUGUESE);
-	        try {
-	        		XMLParserExtend parserExtend = new XMLParserExtend();
+				//Validação ncl30-validator
+				File docFile = file.getFullPath().toFile();
+				Document doc = null;
+				MessageList.clear();
+			
+				//	getting the description error file
+				NCLValidatorErrorMessages prop = new NCLValidatorErrorMessages();
+				MessageHandler.setProperties(prop);
+			
+				MessageList.setLanguage(MessageList.PORTUGUESE);
+				try {
+					XMLParserExtend parserExtend = new XMLParserExtend();
 	        		
 	        		NclParseErrorHandler p = new NclParseErrorHandler();
 	        		p.setFile(docFile.getAbsolutePath());
@@ -200,15 +217,16 @@ public class NCLEditor extends TextEditor {
 	        		       		
 	        		NCLValidator.validate(documents);
 	       		        		
-	        } 
-	        catch (Exception e) {
-	        	//TODO Alguma coisa
-	        	e.printStackTrace();
-	        	Vector <String> args = new Vector<String>();
-	        	args.add(e.getMessage());
-	        	MessageList.addError(docFile.getAbsolutePath(), 1002, null, args);
-	        }
-	        markingErrorHandler.MarkNCLValidatorErrorsAndWarnings();
+		        } 
+		        catch (Exception e) {
+		        	//TODO Alguma coisa
+		        	e.printStackTrace();
+		        	Vector <String> args = new Vector<String>();
+		        	args.add(e.getMessage());
+		        	MessageList.addError(docFile.getAbsolutePath(), 1002, null, args);
+		        }
+		        markingErrorHandler.MarkNCLValidatorErrorsAndWarnings();
+			}
 		}
 		catch (Exception e)
 		{
@@ -224,9 +242,11 @@ public class NCLEditor extends TextEditor {
 
 	public IFile getInputFile()
 	{
-		IFileEditorInput ife = (IFileEditorInput) input;
-		IFile file = ife.getFile();
-		return file;
+			if(input instanceof IFileEditorInput){
+				IFile file = ((IFileEditorInput)input).getFile();
+				return file;
+			}
+			return null;
 	}
 	
 	public IEditorInput getInput()
