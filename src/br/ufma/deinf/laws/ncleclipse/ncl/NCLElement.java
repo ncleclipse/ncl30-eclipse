@@ -67,6 +67,15 @@ public class NCLElement
 	
 	private NCLElement parent;
 	private Position position; // ver utilidade depois
+	public int getLineNumber() {
+		return lineNumber;
+	}
+
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
+
+	private int lineNumber;
 
 	public NCLElement(String name)
 	{
@@ -79,7 +88,15 @@ public class NCLElement
 		super();
 		this.tagName = name;
 		this.perspective = perspective;
-	}	
+	}
+	
+	public NCLElement(String name, String perspective, int lineNumber)
+	{
+		super();
+		this.tagName = name;
+		this.perspective = perspective;
+		this.lineNumber = lineNumber;
+	}
 
 	public List getChildrenDTDElements()
 	{
