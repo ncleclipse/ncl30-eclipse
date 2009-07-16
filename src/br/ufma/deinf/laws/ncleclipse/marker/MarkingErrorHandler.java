@@ -55,7 +55,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -76,10 +75,10 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler
 
 	public static final String ERROR_MARKER_ID = "editorarticle.dtderror";
 
-	private IFile file;
 	private IDocument document;
+	private IResource file;
 
-	public MarkingErrorHandler(IFile file, IDocument document)
+	public MarkingErrorHandler(IResource file, IDocument document)
 	{
 		super();
 		this.file = file;
