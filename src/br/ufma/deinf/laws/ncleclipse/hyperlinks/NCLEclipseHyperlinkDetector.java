@@ -1,8 +1,6 @@
 package br.ufma.deinf.laws.ncleclipse.hyperlinks;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
@@ -11,12 +9,18 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 import br.ufma.deinf.laws.ncl.NCLStructure;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleditor.editor.contentassist.NCLSourceDocument;
 
 public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector{
+	ITextEditor editor = null;
+	
+	public NCLEclipseHyperlinkDetector(ITextEditor editor){
+		this.editor = editor;
+	}
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
 		
@@ -49,7 +53,7 @@ if(!tmp){
 						IRegion region1 = new Region(startAttributeValue, attrValue.length());
 						System.out.println(attrValue + " "+(startAttributeValue+1)+" " +(attrValue.length()));
 						
-						return new IHyperlink[] {new NCLEclipseHyperlink(region1, attrValue)};
+						return new IHyperlink[] {new NCLEclipseHyperlink(editor, region1, attrValue)};
 					}
 					
 				}
@@ -77,7 +81,7 @@ if(!tmp){
 		    System.out.println(lineInfo.getOffset());
 		    IRegion region1 = new Region(lineInfo.getOffset()+begin+1,text.length()-1);
 		    System.out.println(text + " "+(lineInfo.getOffset()+begin+1) +" " +text.length());
-		    return new IHyperlink[] {new NCLEclipseHyperlink(region1,text)};
+		    return new IHyperlink[] {new NCLEclipseHyperlink(editor, region1,text)};
 	}
 
 }

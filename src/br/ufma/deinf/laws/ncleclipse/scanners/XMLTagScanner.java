@@ -65,12 +65,14 @@ import br.ufma.deinf.laws.ncleclipse.util.NCLWhitespaceDetector;
 
 
 public class XMLTagScanner extends RuleBasedScanner {
-
+	public final static String XML_ATTR_VALUE = "__xml_attr_value";
+	
 	public XMLTagScanner(ColorManager manager) {
 		IToken string =
-			new Token(
-				new TextAttribute(manager.getColor(IXMLColorConstants.STRING)));
+			new Token(new TextAttribute(manager.getColor(IXMLColorConstants.STRING)));
 
+		IToken attrValue = new Token(XML_ATTR_VALUE);
+		
 		IRule[] rules = new IRule[3];
 
 		// Add rule for double quotes

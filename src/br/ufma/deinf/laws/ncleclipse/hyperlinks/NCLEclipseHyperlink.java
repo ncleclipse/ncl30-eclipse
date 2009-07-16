@@ -2,17 +2,22 @@ package br.ufma.deinf.laws.ncleclipse.hyperlinks;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 public class NCLEclipseHyperlink implements IHyperlink {
-
+	int start;
+	int length;
+	
 	private String location;
 	private IRegion region;
 	
-	public NCLEclipseHyperlink(IRegion region, String text) {
+	ITextEditor editor;
+	
+	public NCLEclipseHyperlink(ITextEditor editor, IRegion region, String text) {
 	    this.region= region;
 	    this.location = text;
+	    
+	    this.editor = editor;
 	}
 	
 	public IRegion getHyperlinkRegion() {
@@ -20,11 +25,10 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	}
 	
 	public void open() {
-	    if(location!=null)
+	    if(location != null)
 	    {
-	        TextEditor editor = (TextEditor) Workbench.getInstance().getActiveWorkbenchWindow().getActivePage();
-	        editor.selectAndReveal(1,0);
-	        editor.setFocus();
+	        this.editor.setHighlightRange(0, 10, true);
+	      //  this.editor.setFocus();
 	    }
 	}
 	public String getTypeLabel() {
