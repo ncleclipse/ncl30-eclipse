@@ -8,16 +8,25 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
-
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
+import br.ufma.deinf.laws.ncleclipse.util.XMLPartitioner;
 
 public class NCLSourceDocument extends Document{
 	private XMLTagScanner scanner;
+	
+	public NCLSourceDocument() {
+		super();
+	}
+	public NCLSourceDocument(IDocument doc){
+		super(doc.get());
+		//System.out.println("TESTE"+ doc.get());
+	}
 	/**
 	 * Computa o offset do pai
 	 * 
@@ -532,5 +541,30 @@ public class NCLSourceDocument extends Document{
 			if(currentId.equals(id))
 				return offset;
 		return getElementOffset(id, region.getOffset()+region.getLength()+1);
+	}
+	
+	/**
+	 * Create a new SourceDocument from a IDocument object.
+	 * The changes in the SourceDocument will not be made in the original IDocument.
+	 * Use this function just to read the content. 
+	 * @param doc
+	 * @return
+	 */
+	public static NCLSourceDocument createNCLSourceDocumentFromIDocument(IDocument doc){
+		if(doc instanceof NCLSourceDocument) return (NCLSourceDocument)doc;
+		NCLSourceDocument document = new NCLSourceDocument();
+		document.set(doc.get());
+		IDocumentPartitioner partitioner = new XMLPartitioner(
+				new XMLPartitionScanner(), new String[] {
+						XMLPartitionScanner.XML_START_TAG,
+						XMLPartitionScanner.XML_PI,
+						XMLPartitionScanner.XML_DOCTYPE,
+						XMLPartitionScanner.XML_END_TAG,
+						XMLPartitionScanner.XML_TEXT,
+						XMLPartitionScanner.XML_CDATA,
+						XMLPartitionScanner.XML_COMMENT });
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
+		return document;
 	}
 }
