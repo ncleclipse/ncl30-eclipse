@@ -251,7 +251,7 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	 * Add NCLEclipse Hyperlink Detector to Source Viewer Configuration
 	 */
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-	    return new IHyperlinkDetector[] { new NCLEclipseHyperlinkDetector(),
+	    return new IHyperlinkDetector[] { new NCLEclipseHyperlinkDetector(editor),
 	    		new URLHyperlinkDetector() };
 	}
 
