@@ -22,7 +22,7 @@ ncleclipse@laws.deinf.ufma.br
 http://www.laws.deinf.ufma.br/ncleclipse
 http://www.laws.deinf.ufma.br
 
-******************************************************************************
+ ******************************************************************************
 This file is part of the authoring environment in Nested Context Language -
 NCL Eclipse.
 
@@ -46,13 +46,14 @@ ncleclipse@laws.deinf.ufma.br
 http://www.laws.deinf.ufma.br/ncleclipse
 http://www.laws.deinf.ufma.br
 
-*******************************************************************************/
+ *******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse;
 
 import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -80,6 +81,7 @@ import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTextScanner;
+import br.ufma.deinf.laws.ncleclipse.texthover.NCLTextHover;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.IXMLColorConstants;
 import br.ufma.deinf.laws.ncleclipse.util.NCLDoubleClickStrategy;
@@ -246,13 +248,21 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 				: new DefaultIndentLineAutoEditStrategy());
 		return new IAutoEditStrategy[] { strategy };
 	}
-	
+
 	/**
 	 * Add NCLEclipse Hyperlink Detector to Source Viewer Configuration
 	 */
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-	    return new IHyperlinkDetector[] { new NCLEclipseHyperlinkDetector(editor),
-	    		new URLHyperlinkDetector() };
+		return new IHyperlinkDetector[] {
+				new NCLEclipseHyperlinkDetector(editor),
+				new URLHyperlinkDetector() };
+	}
+
+	/*
+	 * (non-Javadoc) Method declared on SourceViewerConfiguration
+	 */
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
+		return new NCLTextHover(sourceViewer);
 	}
 
 }
