@@ -65,6 +65,16 @@ Características a implementar:
 			 <area id="teste"/>
 			</media>
 
+Versão 1.3.5.1
+2009-07-15
+	- Possibilidade de abrir arquivos externos adicionada.
+	- Ainda falta marcação de erros!
+	
+Versão 1.3.4
+2009-07-10
+	- Adicionado clip, beginOffset e endOffset ao elemento <area/>.
+	- Comentado o código que validava se um papel nao estava definido no conector (isso por causa do pegadali).
+	
 Versão 1.3.3
 2009-03-11
 	- Consertado posição do cursor quando se inseria uma endtag pela sugestão.
