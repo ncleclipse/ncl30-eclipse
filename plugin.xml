@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -24,7 +23,34 @@
          	schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
          	sequence="Ctrl+Shift+F"/>
    </extension>
+   <!-- extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+         label="Sample Action Set"
+         visible="true"
+         id="br.ufma.deinf.laws.ncleclipse.actionSet">
+		 <action
+		 		id = "br.ufma.deinf.laws.ncleclipse.actions.play"
+		      	class="br.ufma.deinf.laws.ncleclipse.actions.Play"
+		      	toolbarPath="Normal/exampleGroup"
+		      	icon="icons/play.gif"
+		      	label="Play"
+		      	tooltip="Play the NCL File">
+		   </action>
+		   <action
+		 		id = "br.ufma.deinf.laws.ncleclipse.actions.stop"
+		      	class="br.ufma.deinf.laws.ncleclipse.actions.Stop"
+		      	toolbarPath="Normal/exampleGroup"
+		      	icon="icons/stop.gif"
+		      	label="Play"
+		      	tooltip="Play the NCL File">
+		   </action>
+
+
+      </actionSet>
+   </extension -->
    <!-- End of Editor Actions -->
+   
    <extension
          point="org.eclipse.ui.newWizards">
       <category
@@ -102,6 +128,12 @@
          id="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
          name="SHH Run Preferences">
    </page>
+   <page
+         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+         class="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
+         id="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
+         name="Run Ginga-NCL">
+   </page>
 </extension>
 <extension
       point="org.eclipse.core.runtime.preferences">
@@ -176,6 +208,8 @@
          name="ncl30-eclipse.tab2">
    </tab>
 </extension>
+
+
 <!--
 <extension
       point="org.eclipse.rse.ui.archivehandlers">
