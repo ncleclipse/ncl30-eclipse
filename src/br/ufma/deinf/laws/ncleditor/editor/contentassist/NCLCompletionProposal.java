@@ -122,8 +122,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		try {
 			if (editor.getEditorInput() instanceof IFileEditorInput) {
-				currentFile = ((IFileEditorInput) editor.getEditorInput())
-						.getFile().getFullPath().toFile();
+				currentFile = new File(((IFileEditorInput) editor.getEditorInput())
+						.getFile().getLocationURI());
 			} else {
 				currentFile = new File(((IURIEditorInput) editor
 						.getEditorInput()).getURI());
