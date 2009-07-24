@@ -198,7 +198,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
 		if (newPageIndex == 1) {
-			layoutEditor.remakeGraphicalViewer();
+			layoutEditor.refreshGraphicalViewer();
 			layoutActive = true;
 		}
 		else if(newPageIndex == 0 && layoutEditor != null && layoutActive){
