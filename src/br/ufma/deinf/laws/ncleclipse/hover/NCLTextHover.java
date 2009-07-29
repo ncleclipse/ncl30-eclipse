@@ -14,9 +14,9 @@ public class NCLTextHover extends DefaultTextHover {
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		if (hoverRegion != null) {
-			return "Eu aqui!";
+			return null;
 		}
-		return "NULL";
+		return null;
 	}
 
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
