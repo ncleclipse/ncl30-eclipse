@@ -510,9 +510,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 			File file = null;
 			file = new File(currentFile.toURI());
+			/** Nao sugerindo temporariamente
 			try {
-				URIProposer fs = new URIProposer(currentFile.getParent()
-						.toString());
+				URIProposer fs = new URIProposer(currentFile.getParent());
 				Vector<String> v = fs.getDirectories(qualifier);
 				for (int i = 0; i < v.size(); i++) {
 					if (v.get(i).startsWith(qualifier)) {
@@ -539,6 +539,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			*/
 		}
 
 		System.out.println("perspective = " + perspective);
