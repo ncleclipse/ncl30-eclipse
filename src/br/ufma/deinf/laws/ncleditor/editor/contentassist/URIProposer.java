@@ -33,6 +33,8 @@ public class URIProposer {
 		
 		if(isRelative){
 			if(qualifier.contains("/")){
+				System.out.println(uriRoot.getPath() + "/" + 
+						qualifier.substring(0, qualifier.lastIndexOf("/")));
 				file = new File(uriRoot.getPath() + "/" + 
 						qualifier.substring(0, qualifier.lastIndexOf("/"))); // is relative
 			}
