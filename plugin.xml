@@ -134,6 +134,12 @@
          id="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
          name="Run Ginga-NCL">
    </page>
+   <page
+         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+         class="br.ufma.deinf.laws.ncleclipse.preferences.Language"
+         id="br.ufma.deinf.laws.ncleclipse.preferences.Language"
+         name="NCL Language">
+   </page>
 </extension>
 <extension
       point="org.eclipse.core.runtime.preferences">
