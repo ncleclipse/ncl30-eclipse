@@ -23,6 +23,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				"root");
 		store.setDefault(PreferenceConstants.P_SSH_RUN_PASSW,
 			"telemidia");
+		
+		store.setDefault(PreferenceConstants.P_LANGUAGE, "messagesPt.properties");
 	}
 
 }

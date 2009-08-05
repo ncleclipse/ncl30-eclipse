@@ -4,14 +4,19 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
+
 public class NCLValidatorErrorMessages extends Properties{
 
-	private static final String RESOURCE_BUNDLE = "messages";//$NON-NLS-1$
+	private static String RESOURCE_BUNDLE = "messages";
 
-	private static ResourceBundle fgResourceBundle = ResourceBundle
-			.getBundle(RESOURCE_BUNDLE);
+	private static ResourceBundle fgResourceBundle = null;
 
 	NCLValidatorErrorMessages() {
+		RESOURCE_BUNDLE = NCLEditorPlugin.getDefault().getPreferenceStore().
+			getString(PreferenceConstants.P_LANGUAGE);
+		System.out.println(RESOURCE_BUNDLE);
+		fgResourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
 	}
 
 	public static String getString(String key) {
