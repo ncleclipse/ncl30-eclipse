@@ -27,13 +27,16 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
 
+		//get the region offset
 		int offset = region.getOffset();
 		NCLSourceDocument doc = (NCLSourceDocument) textViewer.getDocument();
 		ITypedRegion typedRegion;
+		
 		boolean tmp = false;
 		if (!tmp) {
 			try {
 				typedRegion = doc.getPartition(region.getOffset());
+				
 				// Return null if partition is different to XML_START_TAG
 				if (typedRegion.getType() != XMLPartitionScanner.XML_START_TAG)
 					return null;
@@ -67,7 +70,6 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 				}
 
 			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return null;
@@ -87,6 +89,8 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 		String text = line.substring(begin + 1, end);
 		IRegion region1 = new Region(lineInfo.getOffset() + begin + 1, text
 				.length() - 1);
+		
+		//Return new Hiperlink
 		return new IHyperlink[] { new NCLEclipseHyperlink(textViewer, this.textEditor, region1,
 				text) };
 	}
