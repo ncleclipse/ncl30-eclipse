@@ -327,6 +327,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		Vector<String> prop = AttributeValues.getValues(nclStructure
 				.getDataType(tagname, attribute));
+		
 		if (prop.size() > 0) {
 			for (int i = 0; i < prop.size(); i++) {
 				if (prop.get(i).startsWith(qualifier)) {
@@ -354,18 +355,19 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		NCLParser parser = new NCLParser();
 		parser.setContentHandler(nclContentHandler);
 		parser.doParse(nclText);
+		
+		boolean hasContextId = false; //Usado quando verificar se o contexto tem id (em especial no caso do body, onde o id é opcional)
 
 		// Referencias que precisam de contexto
 		String perspective = null;
 		// TODO: caso o id esteja definido no ncl, aqui temos um problema
-		// Contexto � o pai
+		// Contexto é o pai
 		if ((tagname.equals("port") && attribute.equals("component"))
 				|| (tagname.equals("bindRule") && attribute
 						.equals("constituent"))
 				|| (tagname.equals("defaultComponent") && attribute
 						.equals("component"))) {
-
-			System.out.println("aqqqqqq");
+			
 			String fatherTagName = nclDoc.getFatherTagName(offset);
 
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
@@ -399,17 +401,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 
-		// Contexto � o pai do pai
+		// Contexto é o pai do pai
 		if ((tagname.equals("bind") && attribute.equals("component"))
 				|| (tagname.equals("mapping") && attribute.equals("component"))) {
 
 			String grandFatherTagName = nclDoc.getFatherTagName(nclDoc
 					.getFatherPartitionOffset(offset));
-			try {
+			
 				perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
 						.getFatherPartitionOffset(nclDoc
 								.getFatherPartitionOffset(offset)), "id");
-			} catch (Exception e) {
+			if(perspective == null){
 				if (grandFatherTagName.equals("body")) {
 					perspective = nclDoc
 							.getAttributeValueFromCurrentTagName(
@@ -418,8 +420,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 													.getFatherPartitionOffset(nclDoc
 															.getFatherPartitionOffset(offset))),
 									"id");
+					hasContextId = false;
 				}
-			}
+			} else hasContextId = true;
 		}
 
 		if (tagname.equals("bind") && attribute.equals("role")
@@ -547,42 +550,57 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				attribute);
 		if (nclReference == null)
 			return;
-		Iterator it = nclReference.iterator();
-		while (it.hasNext()) {
-			NCLReference nclRefAtual = (NCLReference) it.next();
-
-			Collection elements = nclDocument.getElementsFromPerspective(
-					nclRefAtual.getRefTagname(), perspective);
-			if (elements == null)
-				continue;
-			Iterator it2 = elements.iterator();
-			while (it2.hasNext()) {
-				text = ((NCLElement) it2.next()).getAttributeValue(nclRefAtual
-						.getRefAttribute());
-				if (text == null)
-					continue;
-
-				// refer n�o pode sugerir a pr�pria media, switch, etc.
-				if (attribute.equals("refer")) {
-					String idAtual = nclDoc
-							.getAttributeValueFromCurrentTagName(offset, "id");
-					if (idAtual != null)
-						if (text.equals(idAtual))
-							continue;
-				}
-
-				if (text.startsWith(qualifier)) {
-					cursor = text.length();
-					System.out.println("Attribute Value Proposal = " + text);
-					CompletionProposal proposal = new CompletionProposal(text,
-							offset - qlen, qlen, cursor, null, text, null, null);
-
+		
+		CompletionProposal proposal = null;
+		Iterator it = null;
+		
+		if(perspective != null){
+			//Pode sugerir o id do context ou body (desde que id do body exista)
+			if(hasContextId && !attribute.equals("refer")){
+					cursor = perspective.length();
+					proposal = new CompletionProposal(perspective,
+							offset - qlen, qlen, cursor, null, perspective, null, null);
+	
 					propList.add(proposal);
+			}
+	
+			it = nclReference.iterator();
+			while (it.hasNext()) {
+				NCLReference nclRefAtual = (NCLReference) it.next();
+	
+				Collection elements = nclDocument.getElementsFromPerspective(
+						nclRefAtual.getRefTagname(), perspective);
+				if (elements == null)
+					continue;
+				Iterator it2 = elements.iterator();
+				while (it2.hasNext()) {
+					text = ((NCLElement) it2.next()).getAttributeValue(nclRefAtual
+							.getRefAttribute());
+					if (text == null)
+						continue;
+	
+					// refer não pode sugerir a própria media, switch, etc.
+					if (attribute.equals("refer")) {
+						String idAtual = nclDoc
+								.getAttributeValueFromCurrentTagName(offset, "id");
+						if (idAtual != null)
+							if (text.equals(idAtual))
+								continue;
+					}
+	
+					if (text.startsWith(qualifier)) {
+						cursor = text.length();
+						System.out.println("Attribute Value Proposal = " + text);
+						proposal = new CompletionProposal(text,
+								offset - qlen, qlen, cursor, null, text, null, null);
+	
+						propList.add(proposal);
+					}
 				}
 			}
 		}
 
-		// Referencias Globais (ou seja, n�o precisa de contexto)
+		// Referencias Globais (ou seja, não precisa de contexto)
 		it = nclReference.iterator();
 		if (perspective == null) {
 			it = nclReference.iterator();
@@ -610,7 +628,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						cursor = text.length();
 						System.out
 								.println("Attribute Value Proposal = " + text);
-						CompletionProposal proposal = new CompletionProposal(
+						proposal = new CompletionProposal(
 								text, offset - qlen, qlen, cursor, null, text,
 								null, null);
 
