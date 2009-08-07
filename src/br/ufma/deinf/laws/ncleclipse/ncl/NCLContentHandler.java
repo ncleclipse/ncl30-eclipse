@@ -1,28 +1,4 @@
 /******************************************************************************
-Este arquivo é parte da implementação do ambiente de autoria em Nested Context
-Language - NCL Eclipse.
-
-Direitos Autorais Reservados (c) 2007-2008 UFMA/LAWS (Laboratório de Sistemas Avançados da Web) 
-
-Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob 
-os termos da Licença Pública Geral GNU versão 2 conforme publicada pela Free 
-Software Foundation.
-
-Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral do 
-GNU versão 2 para mais detalhes. 
-
-Você deve ter recebido uma cópia da Licença Pública Geral do GNU versão 2 junto 
-com este programa; se não, escreva para a Free Software Foundation, Inc., no 
-endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA. 
-
-Para maiores informações:
-ncleclipse@laws.deinf.ufma.br
-http://www.laws.deinf.ufma.br/ncleclipse
-http://www.laws.deinf.ufma.br
-
-******************************************************************************
 This file is part of the authoring environment in Nested Context Language -
 NCL Eclipse.
 
@@ -54,7 +30,6 @@ import java.io.File;
 import java.net.URI;
 import java.util.Stack;
 
-import org.eclipse.jface.text.Position;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -83,7 +58,6 @@ public class NCLContentHandler implements ContentHandler{
 	@Override
 	public void endElement(String localName, String arg1, String arg2)
 			throws SAXException {
-		// TODO Auto-generated method stub
 		System.out.println("end element " + arg1);
 		if(arg1.equals("body")
 				|| arg1.equals("ncl")
