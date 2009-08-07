@@ -96,7 +96,8 @@
       </persistent>
    </extension>
    
-<extension point="org.eclipse.debug.ui.launchShortcuts">
+<!-- Removido ateh que Exista uma versao do Ginga para windows
+extension point="org.eclipse.debug.ui.launchShortcuts">
     <shortcut label="NCL Presentation" 
        icon="icons/sample.gif" 
        modes="run, debug" 
@@ -113,7 +114,7 @@
 		<perspective id="org.eclipse.jdt.ui.JavaPerspective"/>
      	<perspective id="org.eclipse.debug.ui.DebugPerspective"/>
     </shortcut>
-  </extension>
+  </extension -->
 <extension
       point="org.eclipse.ui.preferencePages">
    <page
