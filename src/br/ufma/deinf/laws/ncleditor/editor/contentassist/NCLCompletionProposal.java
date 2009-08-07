@@ -360,7 +360,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		// Referencias que precisam de contexto
 		String perspective = null;
-		// TODO: caso o id esteja definido no ncl, aqui temos um problema
 		// Contexto é o pai
 		if ((tagname.equals("port") && attribute.equals("component"))
 				|| (tagname.equals("bindRule") && attribute

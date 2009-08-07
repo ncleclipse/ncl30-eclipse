@@ -1,10 +1,11 @@
 Características a implementar:
+	- Ao renomear arquivo perguntar para o usuario se ele deseja renomear o identificador do arquivo tambem.
 	- Launch Configuration Type
 		- Ginga Emulator Launch Configuration
 		- Ginga VM Launch Emulator
 	
 	- Problema com um atributo encostado em />
-	- Sincronização com % ainda não funciona.
+	- Sincronizacao com % ainda nao funciona.
 	- Adicionar novas regiões, faltando refletir no código
 	- Bug no MultiPageActionContributor
 		- As ações do Gef funcionam perfeitamente mas não vão embora quando as
@@ -62,10 +63,13 @@ Características a implementar:
 			
 			Ficaria ERRADO MESMO mas o usu�rio n�o perde o que fez:
 			<media id=""/>
-			 <area id="teste"/>
+				<area id="teste"/>
 			</media>
 
 Versão 1.3.5.3
+2009-08-05
+	- Sugestao do tipo comparator: Modificado ge e le para gte e lte, respectivamente.
+	
 2009-07-30
 	- Ordem dos atributos segundo atribuido em NCLStructure, inclusive sugestao.
 	
