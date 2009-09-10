@@ -1,28 +1,4 @@
 /******************************************************************************
-Este arquivo é parte da implementação do ambiente de autoria em Nested Context
-Language - NCL Eclipse.
-
-Direitos Autorais Reservados (c) 2007-2008 UFMA/LAWS (Laboratório de Sistemas Avançados da Web) 
-
-Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob 
-os termos da Licença Pública Geral GNU versão 2 conforme publicada pela Free 
-Software Foundation.
-
-Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral do 
-GNU versão 2 para mais detalhes. 
-
-Você deve ter recebido uma cópia da Licença Pública Geral do GNU versão 2 junto 
-com este programa; se não, escreva para a Free Software Foundation, Inc., no 
-endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA. 
-
-Para maiores informações:
-ncleclipse@laws.deinf.ufma.br
-http://www.laws.deinf.ufma.br/ncleclipse
-http://www.laws.deinf.ufma.br
-
-******************************************************************************
 This file is part of the authoring environment in Nested Context Language -
 NCL Eclipse.
 
@@ -55,8 +31,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
+import br.deinf.ufma.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
-import br.ufma.deinf.laws.ncleditor.editor.contentassist.NCLSourceDocument;
 
 
 public class NCLDocumentProvider extends FileDocumentProvider {

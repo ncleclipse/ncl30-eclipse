@@ -1,6 +1,0 @@
-Passo a passo de como adicionar um editorAction:
-
-Ver a classe br.ufma.deinf.labmint.ncleclipse.NCLActionContributor.java
-
-
-

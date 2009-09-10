@@ -29,22 +29,22 @@
 		<link>
 			<name>nc30-helper</name>
 			<type>2</type>
-			<location>/home/roberto/workspace/ncl30-helper/src</location>
+			<location>C:/Users/admin/workspace/ncl30-helper/src</location>
 		</link>
 		<link>
 			<name>ncl30-common</name>
 			<type>2</type>
-			<location>/home/roberto/workspace/ncl30-common/src</location>
+			<location>C:/Users/admin/workspace/ncl30-common/src</location>
 		</link>
 		<link>
 			<name>ncl30-eclipse-layout</name>
 			<type>2</type>
-			<location>/home/roberto/workspace/ncl30-eclipse-layout/src</location>
+			<location>C:/Users/admin/workspace/ncl30-eclipse-layout/src</location>
 		</link>
 		<link>
 			<name>ncl30-validator</name>
 			<type>2</type>
-			<location>/home/roberto/workspace/ncl30-validator/src</location>
+			<location>C:/Users/admin/workspace/ncl30-validator/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>

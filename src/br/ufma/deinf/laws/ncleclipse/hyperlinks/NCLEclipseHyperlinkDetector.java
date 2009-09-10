@@ -11,9 +11,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import br.deinf.ufma.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncl.NCLStructure;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
-import br.ufma.deinf.laws.ncleditor.editor.contentassist.NCLSourceDocument;
 
 public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 	ITextViewer textViewer = null;

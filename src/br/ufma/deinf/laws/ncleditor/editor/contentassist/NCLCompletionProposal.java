@@ -51,7 +51,6 @@ http://www.laws.deinf.ufma.br
 package br.ufma.deinf.laws.ncleditor.editor.contentassist;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -80,6 +79,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
+import br.deinf.ufma.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
