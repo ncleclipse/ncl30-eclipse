@@ -1,53 +1,25 @@
-/******************************************************************************
-Este arquivo eh parte da implementacao do ambiente de autoria em Nested Context
-Language - NCL Eclipse.
-
-Direitos Autorais Reservados (c) 2007-2008 UFMA/LAWS (Laboratorio de Sistemas Avancados da Web) 
-
-Este programa eh software livre; voce pode redistribui-lo e/ou modifica-lo sob 
-os termos da Licenca Publica Geral GNU versão 2 conforme publicada pela Free 
-Software Foundation.
-
-Este programa eh distribui�do na expectativa de que seja util, porem, SEM 
-NENHUMA GARANTIA; nem mesmo a garantia implicita de COMERCIABILIDADE OU 
-ADEQUACAO A UMA FINALIDADE ESPECIFICA. Consulte a Licenca Publica Geral do 
-GNU versao 2 para mais detalhes. 
-
-Voce deve ter recebido uma copia da Licenca Publica Geral do GNU versao 2 junto 
-com este programa; se nao, escreva para a Free Software Foundation, Inc., no 
-endereco 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA. 
-
-Para maiores informacoes:
-ncleclipse@laws.deinf.ufma.br
-http://www.laws.deinf.ufma.br/ncleclipse
-http://www.laws.deinf.ufma.br
-
-******************************************************************************
-This file is part of the authoring environment in Nested Context Language -
-NCL Eclipse.
-
-Copyright: 2007-2008 UFMA/LAWS (Laboratory of Advanced Web Systems), All Rights Reserved.
-
-This program is free software; you can redistribute it and/or modify it under 
-the terms of the GNU General Public License version 2 as published by
-the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY 
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
-PARTICULAR PURPOSE.  See the GNU General Public License version 2 for more 
-details.
-
-You should have received a copy of the GNU General Public License version 2
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-
-For further information contact:
-ncleclipse@laws.deinf.ufma.br
-http://www.laws.deinf.ufma.br/ncleclipse
-http://www.laws.deinf.ufma.br
-
-*******************************************************************************/
-
+/*******************************************************************************
+ * This file is part of the authoring environment in Nested Context Language -
+ * NCL Eclipse.
+ * 
+ * Copyright: 2007-2009 UFMA/LAWS (Laboratory of Advanced Web Systems), All Rights Reserved.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under 
+ * the terms of the GNU General Public License version 2 as published by
+ * the Free Software Foundation.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY 
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ * PARTICULAR PURPOSE.  See the GNU General Public License version 2 for more 
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License version 2
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * For further information contact:
+ * 		ncleclipse@laws.deinf.ufma.br
+ * 		http://www.laws.deinf.ufma.br/ncleclipse
+ * 		http://www.laws.deinf.ufma.br
+ ********************************************************************************/
 package br.deinf.ufma.laws.ncleclipse.document;
 
 import java.util.ArrayList;
@@ -67,16 +39,17 @@ import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.XMLPartitioner;
 
-public class NCLSourceDocument extends Document{
+public class NCLSourceDocument extends Document {
 	private XMLTagScanner scanner;
-	
+
 	public NCLSourceDocument() {
 		super();
 	}
-	public NCLSourceDocument(IDocument doc){
+
+	public NCLSourceDocument(IDocument doc) {
 		super(doc.get());
-		//System.out.println("TESTE"+ doc.get());
 	}
+
 	/**
 	 * Computa o offset do pai
 	 * 
@@ -87,8 +60,8 @@ public class NCLSourceDocument extends Document{
 	public int getFatherPartitionOffset(int documentOffset) {
 		try {
 			ITypedRegion region = getPartition(documentOffset); // região
-			String text;																// q eu
-																			// estou
+			String text; // q eu
+			// estou
 			int partitionOffset = region.getOffset();
 			// resolve o problema do usuário começar digitando <, ignora a
 			// partição atual
@@ -118,21 +91,22 @@ public class NCLSourceDocument extends Document{
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Returns the father partition. The atual partition is a XML_END_TAG.
 	 */
-	public int getFatherPartitionOffsetFromEndTag(int documentOffset){
+	public int getFatherPartitionOffsetFromEndTag(int documentOffset) {
 		try {
 			ITypedRegion region = getPartition(documentOffset); // região
-			String text;										// q eu
-																// estou
+			String text; // q eu
+			// estou
 			int partitionOffset = region.getOffset();
 			Stack<Integer> pilha = new Stack<Integer>();
-			//ignora a partição atual (já se sabe que a atual é uma XML_END_TAG)
-			
+			// ignora a partição atual (já se sabe que a atual é uma
+			// XML_END_TAG)
+
 			text = get(region.getOffset(), region.getLength());
-			region = getPartition(region.getOffset()-1);
+			region = getPartition(region.getOffset() - 1);
 			System.out.println(text);
 			do { // procura a tag pai
 				text = get(region.getOffset(), region.getLength());
@@ -157,7 +131,7 @@ public class NCLSourceDocument extends Document{
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Computa a tagname pai da atual
 	 * 
@@ -166,7 +140,7 @@ public class NCLSourceDocument extends Document{
 	public String getFatherTagName(int documentOffset) {
 		return getCurrentTagname(getFatherPartitionOffset(documentOffset));
 	}
-	
+
 	/**
 	 * Retorna a partição anterior
 	 * 
@@ -226,7 +200,7 @@ public class NCLSourceDocument extends Document{
 		}
 		return partition;
 	}
-	
+
 	public String getCurrentTagname(int documentOffset) {
 		try {
 			ITypedRegion region = getPartition(documentOffset);
@@ -254,10 +228,13 @@ public class NCLSourceDocument extends Document{
 		return "";
 	}
 
-	//Guarda o tamanho do último atributo buscado em getAttributeFromCurrentTagName incluindo o seu valor
-	//id='123' tam = 8
+	// Guarda o tamanho do último atributo buscado em
+	// getAttributeFromCurrentTagName incluindo o seu valor
+	// id='123' tam = 8
 	private int tamAttr = 0;
-	public String getAttributeValueFromCurrentTagName(int offset, String attribute) {
+
+	public String getAttributeValueFromCurrentTagName(int offset,
+			String attribute) {
 		try {
 			ITypedRegion region = getPartition(offset);
 			int partitionOffset = region.getOffset();
@@ -265,7 +242,8 @@ public class NCLSourceDocument extends Document{
 
 			String text = get(partitionOffset, readLength);
 			int p = text.indexOf(attribute);
-			if(p == -1) return null;
+			if (p == -1)
+				return null;
 			int pInicial = p;
 			p += attribute.length();
 			String value = "";
@@ -279,7 +257,7 @@ public class NCLSourceDocument extends Document{
 						firstQuote = true;
 						continue;
 					} else {
-						tamAttr = p-pInicial+1;
+						tamAttr = p - pInicial + 1;
 						return value;
 					}
 				if (firstQuote)
@@ -290,26 +268,28 @@ public class NCLSourceDocument extends Document{
 		}
 		return "";
 	}
-	
+
 	/**
-	 * obs: Isto precisa ser melhorado 
+	 * obs: Isto precisa ser melhorado
+	 * 
 	 * @param offset
 	 * @param attr
 	 * @return
 	 */
-	private int getAttributeSize(int offset, String attr){
+	private int getAttributeSize(int offset, String attr) {
 		getAttributeValueFromCurrentTagName(offset, attr);
 		return tamAttr;
 	}
-	
+
 	public String getCurrentAttribute(int offset) {
 		if (isAttributeValue(offset))
 			return currentAttribute;
 		return "";
 	}
-	
+
 	String currentAttribute;
 	private int startAttributeValueOffset = -1;
+
 	public boolean isAttributeValue(int offset) {
 		ITypedRegion region;
 		startAttributeValueOffset = -1;
@@ -318,8 +298,9 @@ public class NCLSourceDocument extends Document{
 			if (region.getType() == XMLPartitionScanner.XML_START_TAG) {
 				int partitionOffset = region.getOffset();
 				currentAttribute = "";
-				//System.out
-				//		.println("Verificando se está digitando o valor de um atributo");
+				// System.out
+				// .println(
+				// "Verificando se está digitando o valor de um atributo");
 				boolean firstQuote = true;
 				boolean findingAttributeName = false;
 				int beginAttributeName = -1, endAttributeName = -1;
@@ -334,8 +315,8 @@ public class NCLSourceDocument extends Document{
 						}
 						if (Character.isWhitespace(ch)
 								&& endAttributeName != -1) {
-							currentAttribute = get(offset + 2,
-									endAttributeName - (offset));
+							currentAttribute = get(offset + 2, endAttributeName
+									- (offset));
 							return true;
 						}
 						if (Character.isWhitespace(ch))
@@ -344,7 +325,7 @@ public class NCLSourceDocument extends Document{
 					}
 					if (ch == '\'' || ch == '\"') {
 						if (firstQuote) {
-							startAttributeValueOffset = offset+1;
+							startAttributeValueOffset = offset + 1;
 							firstQuote = false;
 							continue;
 						}
@@ -359,18 +340,19 @@ public class NCLSourceDocument extends Document{
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param offset
 	 * @return
 	 */
-	public int getStartAttributeValueOffset(int offset){
-		if(isAttributeValue(offset)){
+	public int getStartAttributeValueOffset(int offset) {
+		if (isAttributeValue(offset)) {
 			return startAttributeValueOffset;
 		}
 		return -1;
 	}
+
 	/**
 	 * Utilizado para determinar se a palavra corrente que está sendo digitada
 	 * é um atributo. Irá retornar verdadeiro se encontrar o padrão no
@@ -389,7 +371,7 @@ public class NCLSourceDocument extends Document{
 			return false;
 		}
 	}
-	
+
 	public boolean isTagname(int documentOffset) {
 		boolean isTagname = false;
 		try {
@@ -424,18 +406,18 @@ public class NCLSourceDocument extends Document{
 			return false;
 		}
 	}
-	
+
 	public ITypedRegion getNextTagPartition(int offset)
-		throws BadLocationException {
+			throws BadLocationException {
 		ITypedRegion partition = getPartition(offset);
-			if (partition == null
-						|| partition.getType()
-							.equals(XMLPartitionScanner.XML_START_TAG)) {
-					return partition;
-			}
-			return getNextTagPartition(partition);
+		if (partition == null
+				|| partition.getType()
+						.equals(XMLPartitionScanner.XML_START_TAG)) {
+			return partition;
+		}
+		return getNextTagPartition(partition);
 	}
-	
+
 	/***************************************************************************
 	 * Gets the next partition of type BEGIN_TAG or END_TAG.
 	 * 
@@ -455,7 +437,7 @@ public class NCLSourceDocument extends Document{
 		}
 		return partition;
 	}
-	
+
 	/**
 	 * Retorna a partição anterior
 	 * 
@@ -470,71 +452,80 @@ public class NCLSourceDocument extends Document{
 			return null;
 		ITypedRegion pr = null;
 		try {
-			pr = getPartition(r.getLength()+r.getOffset() + 1);
+			pr = getPartition(r.getLength() + r.getOffset() + 1);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 		return pr;
 	}
+
 	/**
 	 * Set the attribute of the first element with id.
+	 * 
 	 * @param id
 	 * @param attr
 	 * @param value
 	 * @return
 	 */
-	public boolean setAttribute(String id, String attr, String value){
+	public boolean setAttribute(String id, String attr, String value) {
 		return setAttribute(id, attr, value, 1);
 	}
+
 	/**
-	 * Set the attribute from next element with id 
+	 * Set the attribute from next element with id
+	 * 
 	 * @param id
 	 * @param attr
 	 * @param value
 	 * @param offset
 	 * @return
 	 */
-	public boolean setAttribute(String id, String attr, String value, int offset){
+	public boolean setAttribute(String id, String attr, String value, int offset) {
 		try {
 			ITypedRegion region = getNextTagPartition(offset);
-			if(region == null) throw new BadLocationException();
+			if (region == null)
+				throw new BadLocationException();
 			String startTag = get(region.getOffset(), region.getLength());
-			String currentId = getAttributeValueFromCurrentTagName(region.getOffset(), "id");
-			if(currentId != null){ 
-				if(currentId.equals(id)){
-					String attrAtual = getAttributeValueFromCurrentTagName(region.getOffset(), attr);
+			String currentId = getAttributeValueFromCurrentTagName(region
+					.getOffset(), "id");
+			if (currentId != null) {
+				if (currentId.equals(id)) {
+					String attrAtual = getAttributeValueFromCurrentTagName(
+							region.getOffset(), attr);
 					int begin = 0;
-					String newValue = attr+"=\""+value+"\"";
-					if(attrAtual == null){
-						begin = region.getOffset()+region.getLength()-2;						
-						if(startTag.endsWith("/>")) begin--;
-						if(!get(begin-1, 1).equals(" "))
+					String newValue = attr + "=\"" + value + "\"";
+					if (attrAtual == null) {
+						begin = region.getOffset() + region.getLength() - 2;
+						if (startTag.endsWith("/>"))
+							begin--;
+						if (!get(begin - 1, 1).equals(" "))
 							newValue = " " + newValue;
-						
+
 						replace(begin, 0, newValue);
-					}
-					else {
-						String text = get(region.getOffset(), region.getLength());
+					} else {
+						String text = get(region.getOffset(), region
+								.getLength());
 						int attrOffset = text.indexOf(attr);
 						int attrSizeAtual = getAttributeSize(offset, attr);
-						begin = region.getOffset()+attrOffset;
-						newValue = attr+"=\""+value+"\""; 
-						if(!get(begin-1, 1).equals(" "))
-							newValue = " "+newValue;
-						if(!get(begin+attrSizeAtual, 1).equals(" "))
-							newValue = newValue+" ";  
+						begin = region.getOffset() + attrOffset;
+						newValue = attr + "=\"" + value + "\"";
+						if (!get(begin - 1, 1).equals(" "))
+							newValue = " " + newValue;
+						if (!get(begin + attrSizeAtual, 1).equals(" "))
+							newValue = newValue + " ";
 						replace(begin, attrSizeAtual, newValue);
 					}
 					return true;
 				}
 			}
-			setAttribute(id, attr, value, region.getOffset()+region.getLength()+1);
+			setAttribute(id, attr, value, region.getOffset()
+					+ region.getLength() + 1);
 		} catch (BadLocationException e) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	public List<String> getAttributesTyped(int offset) {
 		List list = new ArrayList<String>();
 		try {
@@ -544,7 +535,7 @@ public class NCLSourceDocument extends Document{
 						.getLength());
 				Pattern p = Pattern.compile("\\s[a-zA-Z]+");
 				Matcher m = p.matcher(currentPartition); // get a matcher
-															// object
+				// object
 				while (m.find()) {
 					list
 							.add(currentPartition.substring(m.start() + 1, m
@@ -557,51 +548,58 @@ public class NCLSourceDocument extends Document{
 		}
 		return list;
 	}
-	
-	public void removeElement(String id){
-		removeElement(id,0);
+
+	public void removeElement(String id) {
+		removeElement(id, 0);
 	}
-	
-	public boolean removeElement(String id, int offset){
-		try{
+
+	public boolean removeElement(String id, int offset) {
+		try {
 			int elementOffset = getElementOffset(id, offset);
-			ITypedRegion region = getPartition(offset); 
+			ITypedRegion region = getPartition(offset);
 			replace(region.getOffset(), region.getLength(), "");
-			//faltando tratar o caso de ser aninhado!
+			// faltando tratar o caso de ser aninhado!
 			return true;
+		} catch (BadLocationException e) {
+			return true; // or false?
 		}
-		catch (BadLocationException e) {
-			return true; //or false?
-		}
-		
+
 	}
+
 	/**
 	 * Return the offset of the element with identificator equals to id
+	 * 
 	 * @param id
 	 * @param offset
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public int getElementOffset(String id, int offset) throws BadLocationException{
+	public int getElementOffset(String id, int offset)
+			throws BadLocationException {
 		ITypedRegion region = getNextTagPartition(offset);
-		if(region == null) throw new BadLocationException();
+		if (region == null)
+			throw new BadLocationException();
 		String startTag = get(region.getOffset(), region.getLength());
-		String currentId = getAttributeValueFromCurrentTagName(region.getOffset(), "id");
-		if(currentId != null)
-			if(currentId.equals(id))
+		String currentId = getAttributeValueFromCurrentTagName(region
+				.getOffset(), "id");
+		if (currentId != null)
+			if (currentId.equals(id))
 				return offset;
-		return getElementOffset(id, region.getOffset()+region.getLength()+1);
+		return getElementOffset(id, region.getOffset() + region.getLength() + 1);
 	}
-	
+
 	/**
-	 * Create a new SourceDocument from a IDocument object.
-	 * The changes in the SourceDocument will not be made in the original IDocument.
-	 * Use this function just to read the content. 
+	 * Create a new SourceDocument from a IDocument object. The changes in the
+	 * SourceDocument will not be made in the original IDocument. Use this
+	 * function just to read the content.
+	 * 
 	 * @param doc
 	 * @return
 	 */
-	public static NCLSourceDocument createNCLSourceDocumentFromIDocument(IDocument doc){
-		if(doc instanceof NCLSourceDocument) return (NCLSourceDocument)doc;
+	public static NCLSourceDocument createNCLSourceDocumentFromIDocument(
+			IDocument doc) {
+		if (doc instanceof NCLSourceDocument)
+			return (NCLSourceDocument) doc;
 		NCLSourceDocument document = new NCLSourceDocument();
 		document.set(doc.get());
 		IDocumentPartitioner partitioner = new XMLPartitioner(

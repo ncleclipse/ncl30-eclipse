@@ -1,53 +1,25 @@
-﻿/******************************************************************************
-Este arquivo é parte da implementação do ambiente de autoria em Nested Context
-Language - NCL Eclipse.
-
-Direitos Autorais Reservados (c) 2007-2008 UFMA/LAWS (Laboratório de Sistemas Avançados da Web) 
-
-Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob 
-os termos da Licença Pública Geral GNU versão 2 conforme publicada pela Free 
-Software Foundation.
-
-Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral do 
-GNU versão 2 para mais detalhes. 
-
-Você deve ter recebido uma cópia da Licença Pública Geral do GNU versão 2 junto 
-com este programa; se não, escreva para a Free Software Foundation, Inc., no 
-endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA. 
-
-Para maiores informações:
-ncleclipse@laws.deinf.ufma.br
-http://www.laws.deinf.ufma.br/ncleclipse
-http://www.laws.deinf.ufma.br
-
- ******************************************************************************
-This file is part of the authoring environment in Nested Context Language -
-NCL Eclipse.
-
-Copyright: 2007-2008 UFMA/LAWS (Laboratory of Advanced Web Systems), All Rights Reserved.
-
-This program is free software; you can redistribute it and/or modify it under 
-the terms of the GNU General Public License version 2 as published by
-the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY 
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
-PARTICULAR PURPOSE.  See the GNU General Public License version 2 for more 
-details.
-
-You should have received a copy of the GNU General Public License version 2
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-
-For further information contact:
-ncleclipse@laws.deinf.ufma.br
-http://www.laws.deinf.ufma.br/ncleclipse
-http://www.laws.deinf.ufma.br
-
- *******************************************************************************/
-
+﻿/*******************************************************************************
+ * This file is part of the authoring environment in Nested Context Language -
+ * NCL Eclipse.
+ * 
+ * Copyright: 2007-2009 UFMA/LAWS (Laboratory of Advanced Web Systems), All Rights Reserved.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under 
+ * the terms of the GNU General Public License version 2 as published by
+ * the Free Software Foundation.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY 
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ * PARTICULAR PURPOSE.  See the GNU General Public License version 2 for more 
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License version 2
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * For further information contact:
+ * 		ncleclipse@laws.deinf.ufma.br
+ * 		http://www.laws.deinf.ufma.br/ncleclipse
+ * 		http://www.laws.deinf.ufma.br
+ ********************************************************************************/
 package br.ufma.deinf.laws.ncleditor.editor.contentassist;
 
 import java.io.File;
@@ -91,10 +63,9 @@ import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 
 /**
- * Implementa o ContentAssist
  * 
- * @author roberto
- * 
+ * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
+ *
  */
 public class NCLCompletionProposal implements IContentAssistProcessor {
 	private XMLTagScanner scanner;
@@ -122,8 +93,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		try {
 			if (editor.getEditorInput() instanceof IFileEditorInput) {
-				currentFile = new File(((IFileEditorInput) editor.getEditorInput())
-						.getFile().getLocationURI());
+				currentFile = new File(((IFileEditorInput) editor
+						.getEditorInput()).getFile().getLocationURI());
 			} else {
 				currentFile = new File(((IURIEditorInput) editor
 						.getEditorInput()).getURI());
@@ -137,7 +108,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		IDocument doc = viewer.getDocument();
 		text = doc.get();
 
-		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+		NCLSourceDocument nclDoc = NCLSourceDocument
+				.createNCLSourceDocumentFromIDocument(doc);
 
 		isAttributeValue = nclDoc.isAttributeValue(offset);
 		isAttribute = nclDoc.isAttribute(offset);
@@ -168,7 +140,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			List propList) {
 		int qlen = qualifier.length();
 
-		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+		NCLSourceDocument nclDoc = NCLSourceDocument
+				.createNCLSourceDocumentFromIDocument(doc);
 
 		int fatherOffset = nclDoc.getFatherPartitionOffsetFromEndTag(offset);
 		String tagname = nclDoc.getCurrentTagname(fatherOffset);
@@ -199,7 +172,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		String indent = getIndentLine(doc, offset);
 
-		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+		NCLSourceDocument nclDoc = NCLSourceDocument
+				.createNCLSourceDocumentFromIDocument(doc);
 
 		// fazer um filtro para buscar apenas as tags filhas da getFatherTagname
 		System.out.println("## Log: Pai da tag onde estou digitando : "
@@ -319,7 +293,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		int qlen = qualifier.length();
 		// Verificar se existe valor pré-definido
 
-		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+		NCLSourceDocument nclDoc = NCLSourceDocument
+				.createNCLSourceDocumentFromIDocument(doc);
 
 		String tagname = nclDoc.getCurrentTagname(offset);
 		String attribute = nclDoc.getCurrentAttribute(offset);
@@ -327,7 +302,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		Vector<String> prop = AttributeValues.getValues(nclStructure
 				.getDataType(tagname, attribute));
-		
+
 		if (prop.size() > 0) {
 			for (int i = 0; i < prop.size(); i++) {
 				if (prop.get(i).startsWith(qualifier)) {
@@ -355,8 +330,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		NCLParser parser = new NCLParser();
 		parser.setContentHandler(nclContentHandler);
 		parser.doParse(nclText);
-		
-		boolean hasContextId = false; //Usado quando verificar se o contexto tem id (em especial no caso do body, onde o id é opcional)
+
+		boolean hasContextId = false; // Usado quando verificar se o contexto
+										// tem id (em especial no caso do body,
+										// onde o id é opcional)
 
 		// Referencias que precisam de contexto
 		String perspective = null;
@@ -366,7 +343,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						.equals("constituent"))
 				|| (tagname.equals("defaultComponent") && attribute
 						.equals("component"))) {
-			
+
 			String fatherTagName = nclDoc.getFatherTagName(offset);
 
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
@@ -406,11 +383,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			String grandFatherTagName = nclDoc.getFatherTagName(nclDoc
 					.getFatherPartitionOffset(offset));
-			
-				perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
-						.getFatherPartitionOffset(nclDoc
-								.getFatherPartitionOffset(offset)), "id");
-			if(perspective == null){
+
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
+					.getFatherPartitionOffset(nclDoc
+							.getFatherPartitionOffset(offset)), "id");
+			if (perspective == null) {
 				if (grandFatherTagName.equals("body")) {
 					perspective = nclDoc
 							.getAttributeValueFromCurrentTagName(
@@ -421,7 +398,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 									"id");
 					hasContextId = false;
 				}
-			} else hasContextId = true;
+			} else
+				hasContextId = true;
 		}
 
 		if (tagname.equals("bind") && attribute.equals("role")
@@ -512,36 +490,22 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 			File file = null;
 			file = new File(currentFile.toURI());
-			/** Nao sugerindo temporariamente
-			try {
-				URIProposer fs = new URIProposer(currentFile.getParent());
-				Vector<String> v = fs.getDirectories(qualifier);
-				for (int i = 0; i < v.size(); i++) {
-					if (v.get(i).startsWith(qualifier)) {
-						cursor = v.get(i).length();
-						CompletionProposal proposal = new CompletionProposal(v
-								.get(i), offset - qlen, qlen, cursor, null, v
-								.get(i), null, null);
-						propList.add(proposal);
-					}
-				}
-				fs = new URIProposer(currentFile.getParent().toString());
-				v = fs.getFiles(qualifier);
-				for (int i = 0; i < v.size(); i++) {
-					if (v.get(i).startsWith(qualifier)) {
-						cursor = v.get(i).length();
-						CompletionProposal proposal = new CompletionProposal(v
-								.get(i), offset - qlen, qlen, cursor, null, v
-								.get(i), null, null);
-						propList.add(proposal);
-					}
-				}
-				return;
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
+			/**
+			 * Nao sugerindo temporariamente try { URIProposer fs = new
+			 * URIProposer(currentFile.getParent()); Vector<String> v =
+			 * fs.getDirectories(qualifier); for (int i = 0; i < v.size(); i++)
+			 * { if (v.get(i).startsWith(qualifier)) { cursor =
+			 * v.get(i).length(); CompletionProposal proposal = new
+			 * CompletionProposal(v .get(i), offset - qlen, qlen, cursor, null,
+			 * v .get(i), null, null); propList.add(proposal); } } fs = new
+			 * URIProposer(currentFile.getParent().toString()); v =
+			 * fs.getFiles(qualifier); for (int i = 0; i < v.size(); i++) { if
+			 * (v.get(i).startsWith(qualifier)) { cursor = v.get(i).length();
+			 * CompletionProposal proposal = new CompletionProposal(v .get(i),
+			 * offset - qlen, qlen, cursor, null, v .get(i), null, null);
+			 * propList.add(proposal); } } return; } catch (URISyntaxException
+			 * e) { // TODO Auto-generated catch block e.printStackTrace(); }
+			 */
 		}
 
 		System.out.println("perspective = " + perspective);
@@ -549,50 +513,53 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				attribute);
 		if (nclReference == null)
 			return;
-		
+
 		CompletionProposal proposal = null;
 		Iterator it = null;
-		
-		if(perspective != null){
-			//Pode sugerir o id do context ou body (desde que id do body exista)
-			if(hasContextId && !attribute.equals("refer")){
-					cursor = perspective.length();
-					proposal = new CompletionProposal(perspective,
-							offset - qlen, qlen, cursor, null, perspective, null, null);
-	
-					propList.add(proposal);
+
+		if (perspective != null) {
+			// Pode sugerir o id do context ou body (desde que id do body
+			// exista)
+			if (hasContextId && !attribute.equals("refer")) {
+				cursor = perspective.length();
+				proposal = new CompletionProposal(perspective, offset - qlen,
+						qlen, cursor, null, perspective, null, null);
+
+				propList.add(proposal);
 			}
-	
+
 			it = nclReference.iterator();
 			while (it.hasNext()) {
 				NCLReference nclRefAtual = (NCLReference) it.next();
-	
+
 				Collection elements = nclDocument.getElementsFromPerspective(
 						nclRefAtual.getRefTagname(), perspective);
 				if (elements == null)
 					continue;
 				Iterator it2 = elements.iterator();
 				while (it2.hasNext()) {
-					text = ((NCLElement) it2.next()).getAttributeValue(nclRefAtual
-							.getRefAttribute());
+					text = ((NCLElement) it2.next())
+							.getAttributeValue(nclRefAtual.getRefAttribute());
 					if (text == null)
 						continue;
-	
+
 					// refer não pode sugerir a própria media, switch, etc.
 					if (attribute.equals("refer")) {
 						String idAtual = nclDoc
-								.getAttributeValueFromCurrentTagName(offset, "id");
+								.getAttributeValueFromCurrentTagName(offset,
+										"id");
 						if (idAtual != null)
 							if (text.equals(idAtual))
 								continue;
 					}
-	
+
 					if (text.startsWith(qualifier)) {
 						cursor = text.length();
-						System.out.println("Attribute Value Proposal = " + text);
-						proposal = new CompletionProposal(text,
-								offset - qlen, qlen, cursor, null, text, null, null);
-	
+						System.out
+								.println("Attribute Value Proposal = " + text);
+						proposal = new CompletionProposal(text, offset - qlen,
+								qlen, cursor, null, text, null, null);
+
 						propList.add(proposal);
 					}
 				}
@@ -627,9 +594,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						cursor = text.length();
 						System.out
 								.println("Attribute Value Proposal = " + text);
-						proposal = new CompletionProposal(
-								text, offset - qlen, qlen, cursor, null, text,
-								null, null);
+						proposal = new CompletionProposal(text, offset - qlen,
+								qlen, cursor, null, text, null, null);
 
 						propList.add(proposal);
 					}
@@ -650,7 +616,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			int offset, List propList) {
 		int qlen = qualifier.length();
 
-		NCLSourceDocument nclDoc = NCLSourceDocument.createNCLSourceDocumentFromIDocument(doc);
+		NCLSourceDocument nclDoc = NCLSourceDocument
+				.createNCLSourceDocumentFromIDocument(doc);
 
 		System.out.println("Computing Attributes proposals...");
 		String currentTagname = nclDoc.getCurrentTagname(offset);
