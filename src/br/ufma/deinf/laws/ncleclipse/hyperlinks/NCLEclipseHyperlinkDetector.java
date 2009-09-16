@@ -24,6 +24,7 @@ package br.ufma.deinf.laws.ncleclipse.hyperlinks;
 
 import java.util.Collection;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -36,16 +37,18 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import br.deinf.ufma.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncl.NCLStructure;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
+
 /**
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
- *
+ * 
  */
 public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 	ITextViewer textViewer = null;
 	ITextEditor textEditor = null;
 
-	public NCLEclipseHyperlinkDetector(ITextViewer textViewer, ITextEditor textEditor) {
+	public NCLEclipseHyperlinkDetector(ITextViewer textViewer,
+			ITextEditor textEditor) {
 		this.textViewer = textViewer;
 		this.textEditor = textEditor;
 	}
@@ -53,19 +56,19 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
 
-		//get the region offset
+		// get the region offset
 		int offset = region.getOffset();
 		NCLSourceDocument doc = (NCLSourceDocument) textViewer.getDocument();
 		ITypedRegion typedRegion;
-		
 		boolean tmp = false;
-		if (!tmp) {
+		if (!tmp) { //test
 			try {
 				typedRegion = doc.getPartition(region.getOffset());
-				
+
 				// Return null if partition is different to XML_START_TAG
 				if (typedRegion.getType() != XMLPartitionScanner.XML_START_TAG)
 					return null;
+
 
 				// get the current tagname
 				String tagname = doc.getCurrentTagname(offset);
@@ -115,10 +118,10 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 		String text = line.substring(begin + 1, end);
 		IRegion region1 = new Region(lineInfo.getOffset() + begin + 1, text
 				.length() - 1);
-		
-		//Return new Hiperlink
-		return new IHyperlink[] { new NCLEclipseHyperlink(textViewer, this.textEditor, region1,
-				text) };
+
+		// Return new Hiperlink
+		return new IHyperlink[] { new NCLEclipseHyperlink(textViewer,
+				this.textEditor, region1, text) };
 	}
 
 }

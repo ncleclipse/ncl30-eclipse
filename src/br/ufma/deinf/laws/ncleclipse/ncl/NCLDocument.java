@@ -154,4 +154,23 @@ public class NCLDocument{
 		}
 		return null;
 	}
+	
+	public NCLElement getElementByAlias(String alias){
+		Set keySet = getElements().keySet();
+		if (elements == null) return null;
+		Iterator it = keySet.iterator();
+		while(it.hasNext()){
+			Collection elements = getElements().get((String)it.next());
+			if (elements == null) return null;
+			Iterator it2 = elements.iterator();
+			while(it2.hasNext()){
+				NCLElement nclElement = (NCLElement)it2.next();
+				String aliasElement = nclElement.getAttributes().get("alias");
+				if( aliasElement != null && aliasElement.equals(alias)){
+					return nclElement;
+				}
+			}
+		}
+		return null;
+	}
 }
