@@ -29,15 +29,19 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 
+import br.ufma.deinf.laws.ncleclipse.NCLEditor;
+import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
+
 /**
- * This class implements an action responsible to open an editor for a 
- * file (external on external).
+ * This class implements an action responsible to open an editor for a file
+ * (external on external).
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
  * 
@@ -45,16 +49,61 @@ import org.eclipse.ui.part.FileEditorInput;
 public class OpenEditorAction extends Action {
 	private IFile fFile;
 	private IWorkbenchPage fPage;
-	private String fExternalFile;
+	private String fInternalFile = null;
+	private String fExternalFile = null;
+	private String fElementId = null;
 
+	/**
+	 * set the external file (to workspace) must be open when the run method is
+	 * called
+	 * 
+	 * @param externalFile
+	 */
 	public void setExternalFile(String externalFile) {
 		fExternalFile = externalFile;
-	}
-	
-	public void setInternalFile(String externalFile) {
-		fExternalFile = externalFile;
+		fInternalFile = null;
 	}
 
+	/**
+	 * set the external file (to workspace) must be open when the run method is
+	 * called and the element id must be focused
+	 * 
+	 * @param externalFile
+	 * @param elementId
+	 */
+	public void setExternalFile(String externalFile, String elementId) {
+		fExternalFile = externalFile;
+		fElementId = elementId;
+		fInternalFile = null;
+	}
+
+	/**
+	 * set the internal file (to workspace) must be open when the run method is
+	 * called
+	 * 
+	 * @param externalFile
+	 */
+	public void setInternalFile(String externalFile) {
+		fInternalFile = externalFile;
+		fExternalFile = null;
+	}
+
+	/**
+	 * set the internal file (to workspace) must be open when the run method is
+	 * called and the element id must be focused
+	 * 
+	 * @param externalFile
+	 * @param elementId
+	 */
+	public void setInternalFile(String internalFile, String elementId) {
+		fInternalFile = internalFile;
+		fElementId = elementId;
+		fExternalFile = null;
+	}
+
+	/**
+	 * Run the action to open the internal or external file
+	 */
 	public void run() {
 		// open external file
 		if (fExternalFile != null && !fExternalFile.equals("")) {
@@ -66,15 +115,19 @@ public class OpenEditorAction extends Action {
 						.getActiveWorkbenchWindow().getActivePage();
 
 				try {
-					IDE.openEditorOnFileStore(page, fileStore);
+					NCLEditor nclEditor = ((NCLMultiPageEditor) IDE
+							.openEditorOnFileStore(page, fileStore))
+							.getNCLEditor();
+					if (fElementId != null)
+						nclEditor.setFocusToElementId(fElementId);
 				} catch (PartInitException e1) {
 					// Put your exception handler here if you wish to
 				}
 			} else {
 				// Do something if the file does not exist
 			}
-		} 
-		//Open internal file
+		}
+		// Open internal file
 		else {
 			// get the Active Workbench Page
 			fPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -82,7 +135,8 @@ public class OpenEditorAction extends Action {
 			IEditorDescriptor desc = PlatformUI.getWorkbench()
 					.getEditorRegistry().getDefaultEditor(fFile.getName());
 			try {
-				fPage.openEditor(new FileEditorInput(fFile), desc.getId());
+				IEditorPart nclEditor = fPage.openEditor(new FileEditorInput(
+						fFile), desc.getId());
 			} catch (PartInitException e) {
 
 			}

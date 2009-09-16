@@ -24,7 +24,6 @@ package br.ufma.deinf.laws.ncleclipse.hyperlinks;
 
 import java.util.Collection;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -32,7 +31,6 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.ui.texteditor.ITextEditor;
 
 import br.deinf.ufma.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncl.NCLStructure;
@@ -45,12 +43,9 @@ import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
  */
 public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 	ITextViewer textViewer = null;
-	ITextEditor textEditor = null;
 
-	public NCLEclipseHyperlinkDetector(ITextViewer textViewer,
-			ITextEditor textEditor) {
+	public NCLEclipseHyperlinkDetector(ITextViewer textViewer) {
 		this.textViewer = textViewer;
-		this.textEditor = textEditor;
 	}
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
@@ -61,14 +56,13 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 		NCLSourceDocument doc = (NCLSourceDocument) textViewer.getDocument();
 		ITypedRegion typedRegion;
 		boolean tmp = false;
-		if (!tmp) { //test
+		if (!tmp) { // test
 			try {
 				typedRegion = doc.getPartition(region.getOffset());
 
 				// Return null if partition is different to XML_START_TAG
 				if (typedRegion.getType() != XMLPartitionScanner.XML_START_TAG)
 					return null;
-
 
 				// get the current tagname
 				String tagname = doc.getCurrentTagname(offset);
@@ -92,7 +86,7 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 									attrValue.length());
 
 							return new IHyperlink[] { new NCLEclipseHyperlink(
-									textViewer, textEditor, region1, attrValue) };
+									textViewer, region1, attrValue) };
 						}
 
 					}
@@ -120,8 +114,8 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 				.length() - 1);
 
 		// Return new Hiperlink
-		return new IHyperlink[] { new NCLEclipseHyperlink(textViewer,
-				this.textEditor, region1, text) };
+		return new IHyperlink[] { new NCLEclipseHyperlink(textViewer, region1,
+				text) };
 	}
 
 }

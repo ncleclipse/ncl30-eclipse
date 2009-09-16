@@ -228,7 +228,7 @@ public class NCLSourceDocument extends Document {
 		return "";
 	}
 
-	// Guarda o tamanho do último atributo buscado em
+	// Guarda o tamanho do ultimo atributo buscado em
 	// getAttributeFromCurrentTagName incluindo o seu valor
 	// id='123' tam = 8
 	private int tamAttr = 0;
