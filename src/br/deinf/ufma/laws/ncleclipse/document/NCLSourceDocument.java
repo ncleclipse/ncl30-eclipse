@@ -39,6 +39,11 @@ import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.XMLPartitioner;
 
+/**
+ * 
+ * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
+ *
+ */
 public class NCLSourceDocument extends Document {
 	private XMLTagScanner scanner;
 

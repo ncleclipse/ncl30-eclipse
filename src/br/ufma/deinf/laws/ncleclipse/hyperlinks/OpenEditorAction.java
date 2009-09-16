@@ -29,7 +29,6 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -135,8 +134,10 @@ public class OpenEditorAction extends Action {
 			IEditorDescriptor desc = PlatformUI.getWorkbench()
 					.getEditorRegistry().getDefaultEditor(fFile.getName());
 			try {
-				IEditorPart nclEditor = fPage.openEditor(new FileEditorInput(
-						fFile), desc.getId());
+				NCLEditor nclEditor = ((NCLMultiPageEditor) fPage.openEditor(
+						new FileEditorInput(fFile), desc.getId())).getNCLEditor();
+				if (fElementId != null)
+					nclEditor.setFocusToElementId(fElementId);
 			} catch (PartInitException e) {
 
 			}

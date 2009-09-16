@@ -66,6 +66,10 @@ Características a implementar:
 				<area id="teste"/>
 			</media>
 Versao 1.4
+2009-09-16
+	- Hiperlinks funcionando para mesmo arquivos e arquivos referenciados.
+	- TODO: Ainda falta fazer para casos especiais (onde o escopo importa)
+	
 2009-08-07
 	- Removido "Run As->NCL Presentation" ateh que tenha uma versao do Ginga para windows.
 Versao 1.3.5.3
@@ -78,7 +82,7 @@ Versao 1.3.5.3
 Versão 1.3.5.1
 2009-07-15
 	- Possibilidade de abrir arquivos externos adicionada.
-	- Ainda falta marcação de erros!
+	- TODO: Ainda falta marcacao de erros!
 	
 Versão 1.3.4
 2009-07-10
@@ -87,7 +91,8 @@ Versão 1.3.4
 	
 Versão 1.3.3
 2009-03-11
-	- Consertado posição do cursor quando se inseria uma endtag pela sugestão.
+	- Consertado posicao do cursor quando se inseria uma endtag pela sugestao.
+		OK!
 		
 	- Codificação de mensagens de erro com acento.
 		OK!
