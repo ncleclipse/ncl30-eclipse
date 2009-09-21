@@ -8,7 +8,7 @@ Características a implementar:
 	- Sincronizacao com % ainda nao funciona.
 	- Adicionar novas regiões, faltando refletir no código
 	- Bug no MultiPageActionContributor
-		- As ações do Gef funcionam perfeitamente mas não vão embora quando as
+		- As acoes do Gef funcionam perfeitamente mas nao vao embora quando as
 		ações de texto devem aparecer
 		
 	- Estudar o Web Standard Tool e verificar a possibilidade de incluí-lo no NCL Eclipse.
