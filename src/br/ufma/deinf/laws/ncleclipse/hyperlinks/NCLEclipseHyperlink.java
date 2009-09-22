@@ -31,7 +31,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditor;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
@@ -39,6 +38,7 @@ import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
+import br.ufma.deinf.laws.util.DocumentUtil;
 
 /**
  * This class is responsible for open a hyperlink.
@@ -78,7 +78,7 @@ public class NCLEclipseHyperlink implements IHyperlink {
 						.getNCLEditor();
 
 				if (indexOfPound == -1) { // not alias. So, set focus to
-											// elementId
+					// elementId
 					editor.setFocusToElementId(text);
 				}
 				// the hiperlink text has alias so open the editor
@@ -99,10 +99,13 @@ public class NCLEclipseHyperlink implements IHyperlink {
 							.substring(0, indexOfPound));
 					String file = el.getAttributeValue("documentURI");
 					if (file != null) {
-						// open as a external file
+						String fileAbsolutePath = DocumentUtil
+								.getAbsoluteFileName(editor.getCurrentFile()
+										.getAbsolutePath(), file);
+						// open as an external file
 						OpenEditorAction openEditorAction = new OpenEditorAction();
-						openEditorAction.setExternalFile(file, text.substring(
-								indexOfPound + 1, text.length()));
+						openEditorAction.setExternalFile(fileAbsolutePath, text
+								.substring(indexOfPound + 1, text.length()));
 						openEditorAction.run();
 					}
 				}

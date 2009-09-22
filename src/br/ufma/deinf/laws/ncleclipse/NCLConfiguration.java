@@ -48,7 +48,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
-import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHover;
+import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHoverExtension2;
 import br.ufma.deinf.laws.ncleclipse.hyperlinks.NCLEclipseHyperlinkDetector;
 import br.ufma.deinf.laws.ncleclipse.scanners.CDataScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
@@ -235,7 +235,7 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	 * (non-Javadoc) Method declared on SourceViewerConfiguration
 	 */
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
-		return new NCLTextHover(sourceViewer);
+		return new NCLTextHoverExtension2(sourceViewer);
 	}
 
 }

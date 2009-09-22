@@ -370,9 +370,8 @@ public class NCLEditor extends TextEditor {
 	
 	public File getCurrentFile(){
 		File currentFile = null;
-		if (this.getEditorInput() instanceof IFileEditorInput) {
-			currentFile = ((IFileEditorInput) this.getEditorInput()).getFile()
-					.getFullPath().toFile();
+		if (getEditorInput() instanceof IFileEditorInput) {
+			currentFile = new File(((IFileEditorInput) getEditorInput()).getFile().getLocationURI());
 		} else {
 			currentFile = new File(((IURIEditorInput) this.getEditorInput())
 					.getURI());
