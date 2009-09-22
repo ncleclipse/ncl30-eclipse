@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -16,8 +17,8 @@ import javax.swing.JFrame;
 
 public class ImageTest extends JComponent {
 	private Image img;
-	private final int WIDTH = 100;
-	private final int HEIGHT = 100;
+	private int WIDTH;
+	private int HEIGHT;
 	private JFrame j;
 	private boolean valido;
 
@@ -27,6 +28,20 @@ public class ImageTest extends JComponent {
 			j = new JFrame();
 			j.addMouseMotionListener(new Mouseout());
 			valido = true;
+			double proporcao;
+			int height = img.getHeight(null);
+			int width = img.getWidth(null);
+			if (height > width){
+				proporcao = (double)width/height;
+				HEIGHT = 300;
+				WIDTH = (int) Math.floor(HEIGHT * proporcao);
+			}
+			else{
+				proporcao = height/width;
+				WIDTH = 300;
+				HEIGHT = (int) Math.floor(WIDTH * proporcao);
+			}
+			
 		} catch (IOException e) {
 			valido = false;
 
@@ -65,7 +80,7 @@ public class ImageTest extends JComponent {
 		j.add(this);
 		j.setUndecorated(true);
 		j.setSize(WIDTH, HEIGHT);
-		java.awt.Point p = MouseInfo.getPointerInfo().getLocation();
+		Point p = MouseInfo.getPointerInfo().getLocation();
 		j.setLocation(p.x - 5, p.y - 5);
 		j.setVisible(true);
 
