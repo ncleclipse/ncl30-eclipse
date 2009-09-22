@@ -37,7 +37,7 @@ public class ImageTest extends JComponent {
 				WIDTH = (int) Math.floor(HEIGHT * proporcao);
 			}
 			else{
-				proporcao = height/width;
+				proporcao = (double)height/width;
 				WIDTH = 300;
 				HEIGHT = (int) Math.floor(WIDTH * proporcao);
 			}
