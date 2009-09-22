@@ -1,54 +1,103 @@
-/*******************************************************************************
- * This file is part of the authoring environment in Nested Context Language -
- * NCL Eclipse.
- * 
- * Copyright: 2007-2009 UFMA/LAWS (Laboratory of Advanced Web Systems), All Rights Reserved.
- * 
- * This program is free software; you can redistribute it and/or modify it under 
- * the terms of the GNU General Public License version 2 as published by
- * the Free Software Foundation.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
- * PARTICULAR PURPOSE.  See the GNU General Public License version 2 for more 
- * details.
- * 
- * You should have received a copy of the GNU General Public License version 2
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
- * For further information contact:
- * 		ncleclipse@laws.deinf.ufma.br
- * 		http://www.laws.deinf.ufma.br/ncleclipse
- * 		http://www.laws.deinf.ufma.br
- ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.hover;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultTextHover;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.graphics.Point;
-/**
- * 
- * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
- *
- */
-public class NCLTextHover extends DefaultTextHover {
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+
+import br.deinf.ufma.laws.ncleclipse.document.NCLSourceDocument;
+import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
+ 
+public class NCLTextHover extends DefaultTextHover{
+
+	NCLSourceDocument doc = null;
+	String result = "";
+	File currentFile = null;
+	
 	public NCLTextHover(ISourceViewer sourceViewer) {
 		super(sourceViewer);
 	}
 
-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		if (hoverRegion != null) {
-			return null;
+
+	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
+		TypedRegion typedRegion;
+		
+		IWorkbench wb = PlatformUI.getWorkbench();
+		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+		IWorkbenchPage page = win.getActivePage();
+		IEditorPart editor = page.getActiveEditor();
+		if (editor.getEditorInput() instanceof IFileEditorInput) {
+			currentFile = ((IFileEditorInput) editor.getEditorInput())
+					.getFile().getFullPath().toFile();
+		} else {
+			currentFile = new File(((IURIEditorInput) editor
+					.getEditorInput()).getURI());
+		}
+		
+		
+		try {
+			doc = (NCLSourceDocument) textViewer.getDocument();
+			typedRegion = (TypedRegion) doc.getPartition(offset);
+
+			if (typedRegion.getType() != XMLPartitionScanner.XML_START_TAG)
+				return null;
+			if (doc.getCurrentAttribute(offset).equals ("src") && doc.getCurrentTagname(offset).equals("media")){
+				if (doc.getAttributeValueFromCurrentTagName(offset, "type").equals("text/plain")){
+					System.out.println("sim");
+					//Descobrir o pq não consigo pegar o diretório do arquivo
+			    	String nomeArquivo =  "/media/Dados/runtime-New_configuration" + currentFile.getParent() + "/" + doc.getAttributeValueFromCurrentTagName(offset, "src");
+			    	File arquivo = new File (nomeArquivo);
+			        if (arquivo.isFile()){
+			        	System.out.println (currentFile.getParentFile().toString());
+			        	FileReader in = null;
+			        	try {
+							in = new FileReader (arquivo);	
+							BufferedReader leitor = new BufferedReader (in);
+							String tmp;
+							while((tmp = leitor.readLine()) != null)
+								result += tmp + "\n";
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			        } 
+				}
+			}
+			else result = "false";
+			
+			Point selection = textViewer.getSelectedRange();
+				if (selection.x <= offset && offset < selection.x + selection.y)
+					return new Region(selection.x, selection.y);
+			return new Region(offset, 0);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
-		Point selection = textViewer.getSelectedRange();
-		if (selection.x <= offset && offset < selection.x + selection.y)
-			return new Region(selection.x, selection.y);
-		return new Region(offset, 0);
+	@Override
+	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+		// TODO Auto-generated method stub
+		return result;
 	}
+
+	
+
 }
