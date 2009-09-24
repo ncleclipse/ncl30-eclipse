@@ -64,8 +64,8 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	private NCLDoubleClickStrategy doubleClickStrategy;
 	private XMLTagScanner tagScanner;
 	private XMLScanner scanner;
-	private XMLTextScanner textScanner;
 	private CDataScanner cdataScanner;
+	private XMLTextScanner textScanner;
 	private ColorManager colorManager;
 	private NCLEditor editor;
 
@@ -83,7 +83,7 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	}
 
 	public ITextDoubleClickStrategy getDoubleClickStrategy(
-			ISourceViewer sourceViewer, String contentType) {
+		ISourceViewer sourceViewer, String contentType) {
 		if (doubleClickStrategy == null)
 			doubleClickStrategy = new NCLDoubleClickStrategy();
 		return doubleClickStrategy;
