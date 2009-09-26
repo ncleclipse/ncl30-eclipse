@@ -27,12 +27,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.apache.xerces.xni.parser.XMLInputSource;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -74,7 +81,7 @@ import br.ufma.deinf.laws.ncleclipse.util.NCLDocumentProvider;
 import br.ufma.deinf.laws.ncleclipse.util.NCLTextDocumentProvider;
 import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
 
-public class NCLEditor extends TextEditor {
+public class NCLEditor extends TextEditor implements IDocumentListener {
 	public static String CONTENT_ASSIST_ACTION = "br.ufma.deinf.laws.ncleclipse.actions.CONTENT_ASSIST";
 	public static String FORMAT_ACTION = "br.ufma.deinf.laws.ncleclipse.actions.format";
 
@@ -126,6 +133,7 @@ public class NCLEditor extends TextEditor {
 			outlinePage.setInput(input); // update content outline
 
 		validateAndMark();
+		getInputDocument().addDocumentListener(this);
 	}
 
 	private IDocumentProvider createDocumentProvider(IEditorInput input2) {
@@ -162,7 +170,7 @@ public class NCLEditor extends TextEditor {
 				markingErrorHandler.setDocumentLocator(new LocatorImpl());
 				markingErrorHandler.removeExistingMarkers();
 
-				// Validação Xerces
+				// Validacao Xerces
 				XMLParser parser = new XMLParser();
 				parser.setErrorHandler(markingErrorHandler);
 				parser.doParse(text);
@@ -183,7 +191,7 @@ public class NCLEditor extends TextEditor {
 					NclParseErrorHandler p = new NclParseErrorHandler();
 					p.setFile(docFile.getAbsolutePath());
 					parserExtend.setErrorHandler(p);
-					parserExtend.parse(file.getLocationURI().getPath());
+					parserExtend.parseString(text);
 
 					doc = parserExtend.getDocument();
 
@@ -319,7 +327,7 @@ public class NCLEditor extends TextEditor {
 	/** END FOLDING **/
 
 	/**
-	 * Responsavel por carregar as informações que serão mostradas no help
+	 * Responsavel por carregar as informacoes que serao mostradas no help
 	 * contextual
 	 */
 	protected void loadHelp() {
@@ -328,9 +336,6 @@ public class NCLEditor extends TextEditor {
 			nclHelper.setHelpFileName(NCLEditorPlugin.getResourcesLocation()
 					.getPath()
 					+ "resources/help.txt");
-			// FIXME: Verificar uma forma de fazer sem o ncl_eclipse_1.0.0
-			//System.out.println(NCLEditorPlugin.getResourcesLocation().getPath(
-			// )+"resources/help.txt");
 			nclHelper.buildHelp();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -341,6 +346,8 @@ public class NCLEditor extends TextEditor {
 		File currentFile = getCurrentFile();
 		
 		ISourceViewer viewer = this.getSourceViewer();
+		int previousOffset = viewer.getSelectedRange().x;
+		
 		String nclText = viewer.getDocument().get();
 		NCLContentHandler nclContentHandler = new NCLContentHandler();
 		NCLDocument nclDocument = new NCLDocument();
@@ -367,15 +374,70 @@ public class NCLEditor extends TextEditor {
 			e.printStackTrace();
 		}
 	}
-	
-	public File getCurrentFile(){
+
+	public File getCurrentFile() {
 		File currentFile = null;
 		if (getEditorInput() instanceof IFileEditorInput) {
-			currentFile = new File(((IFileEditorInput) getEditorInput()).getFile().getLocationURI());
+			currentFile = new File(((IFileEditorInput) getEditorInput())
+					.getFile().getLocationURI());
 		} else {
 			currentFile = new File(((IURIEditorInput) this.getEditorInput())
 					.getURI());
 		}
 		return currentFile;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org
+	 * .eclipse.jface.text.DocumentEvent)
+	 */
+	@Override
+	public void documentAboutToBeChanged(DocumentEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * This job will be running in background and will update the markers.
+	 */
+	private Job updateMarkers = new Job("NCL Eclipse Update Markers") {
+		protected IStatus run(IProgressMonitor monitor) {
+			validateAndMark();
+			return Status.OK_STATUS;
+		}
+	};
+
+	/**
+	 * This job will be running in background and will update the outlineView.
+	 */
+	private Job updateOutlineView = new Job("NCL Eclipse Update OutlineView") {
+		protected IStatus run(IProgressMonitor monitor) {
+			if (outlinePage != null)
+				outlinePage.update(); // update content outline
+			return Status.OK_STATUS;
+		}
+	};
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.
+	 * jface.text.DocumentEvent)
+	 */
+	@Override
+	public void documentChanged(DocumentEvent event) {
+		//UpdateMarkers
+		updateMarkers.cancel();
+		updateMarkers.setPriority(Job.SHORT);
+		updateMarkers.schedule();
+		
+		//TODO: Update Outline View
+		// updateOutlineView.cancel();
+		// updateOutlineView.setPriority(Job.SHORT);
+		// updateOutlineView.schedule();
 	}
 }

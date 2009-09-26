@@ -1,48 +1,34 @@
-Características a implementar:
-	- Ao renomear arquivo perguntar para o usuario se ele deseja renomear o identificador do arquivo tambem.
+TODO:
+
+* Geral
+	- Ao renomear arquivo perguntar para o usuario se ele deseja renomear o identificador do NCL tambem.
 	- Launch Configuration Type
 		- Ginga Emulator Launch Configuration
 		- Ginga VM Launch Emulator
-	
+
+* Text Editor	
 	- Problema com um atributo encostado em />
+	- Comentarios sobre a licenca em todos os arquivos.
+	- Sugestao do atributo src de media (Quase pronto).
+	- Drag and Drop to add media.
+
+* Layout View
 	- Sincronizacao com % ainda nao funciona.
-	- Adicionar novas regiões, faltando refletir no código
+	- Adicionar novas regioes, faltando refletir no codigo
+
+* Bugs
 	- Bug no MultiPageActionContributor
 		- As acoes do Gef funcionam perfeitamente mas nao vao embora quando as
-		ações de texto devem aparecer
-		
+		acoes de texto devem aparecer
+
+* Estudar		
 	- Estudar o Web Standard Tool e verificar a possibilidade de incluí-lo no NCL Eclipse.
-	- Ctrl+Shift+F: Não atualiza os Markers.
-	- Comentários sobre a licença em todos os arquivos.
-	- Sugestão do atributo src de media (Quase pronto).
-	- Drag and Drop to add media.
 	- Adicionar atalhos de teclados para inserir medias, contexto, etc. Tamb�m acess�vel atrav�s de clique com o bot�o esquerdo+source+New (media, context, etc.)
 	- importedDocumentBase
 	- importNCL
 	- bindRule
-	- Linha e coluna do Erro. (Quase Ok)
-	- A lógica para os três profiles (EDTV, BDTV e CausalConnector) não está
-			sendo feita. A l�gica seria:
-		
-			Se atributo xmlns do <ncl> � http://www.ncl.org.br/NCL3.0/EDTVProfile ent�o
-			faz como est� sendo feito;
-			
-			Se atributo xmlns do <ncl> � http://www.ncl.org.br/NCL3.0/BDTVProfile ent�o
-			n�o aceita APENAS <meta>, <metadata> e <transactionBase> (o que vai excluir
-			<transaction>) no <head>;
-			
-			Se atributo xmlns do <ncl> �
-			http://www.ncl.org.br/NCL3.0/CausalConnectorProfile ent�o s� aceita a
-			estrutura:
-			<ncl>
-			 <head>
-			   <connectorBase>
-			     <causalConnector/>
-			   </connectorBase>
-			 </head>
-			</ncl>
 
-	- Id�ia MUITO BOA!!!) Acho que isso foi resolvido pelo Crtl+Shift+F
+	- Ideia MUITO BOA!!!) Acho que isso foi resolvido pelo Crtl+Shift+F
 	O Luiz sugere que num caso como abaixo:
 			<media id="">
 			</media>
@@ -55,17 +41,23 @@ Características a implementar:
 			O plugin sumiria com o </media>:
 			<media id=""/>
 			
-			Note que isso � para ser feito apenas se o <media> tiver o content vazio. No
-			caso abaixo, N�O � para fazer isso:
+			Note que isso eh para ser feito apenas se o <media> tiver o content vazio. No
+			caso abaixo, Nao eh para fazer isso:
 			<media id="">
 			 <area id="teste"/>
 			</media>
 			
-			Ficaria ERRADO MESMO mas o usu�rio n�o perde o que fez:
+			Ficaria ERRADO MESMO mas o usuario nao perde o que fez:
 			<media id=""/>
 				<area id="teste"/>
 			</media>
+
 Versao 1.4
+1009-09-24
+	- Validacao feita em background, idependente do usuario salvar o documento.
+		OK!
+		Resolvido BUG ()
+	
 2009-09-16
 	- Hiperlinks funcionando para mesmo arquivos e arquivos referenciados (Absolutos ou nao).
 	- TODO: Ainda falta fazer para casos especiais (onde o escopo importa)
@@ -80,17 +72,17 @@ Versao 1.3.5.3
 2009-07-30
 	- Ordem dos atributos segundo atribuido em NCLStructure, inclusive sugestao.
 	
-Versão 1.3.5.1
+Versao 1.3.5.1
 2009-07-15
 	- Possibilidade de abrir arquivos externos adicionada.
 	- TODO: Ainda falta marcacao de erros!
 	
-Versão 1.3.4
+Versao 1.3.4
 2009-07-10
 	- Adicionado clip, beginOffset e endOffset ao elemento <area/>.
-	- Comentado o código que validava se um papel nao estava definido no conector (isso por causa do pegadali).
+	- Comentado o codigo que validava se um papel nao estava definido no conector (isso por causa do pegadali).
 	
-Versão 1.3.3
+Versao 1.3.3
 2009-03-11
 	- Consertado posicao do cursor quando se inseria uma endtag pela sugestao.
 		OK!
@@ -109,15 +101,15 @@ Versão 1.3.2
 	
 Versão 1.1.0
 2009-01-07
-	- Sugestão de XML_END_TAG quando o usuário digita </
+	- Sugestão de XML_END_TAG quando o usuario digita </
 	
 2008-11-07
-	- Adicionada páginas de Preferencia:
+	- Adicionada paginas de Preferencia:
 		- View Preferences
 		- SSH Preferences
 
 2008-11-06
-	- Editor com duas páginas
+	- Editor com duas paginas
 		- Textual
 		- Layout
 		
@@ -135,9 +127,9 @@ Versão 1.1.0
 			<media id="m2" refer="m1">
 				<area id="a21"/>
 			</media>
-		Só está sugerindo a11 e a12. Deve sugerir a21 também!
+		So esta sugerindo a11 e a12. Deve sugerir a21 tambem!
 		  
-	- Enter depois do fecha elemento (</>). Antes dava um tab. Agora não!
+	- Enter depois do fecha elemento (</>). Antes dava um tab. Agora nao!
 		Ok!
 		
 2008-08-26
@@ -208,12 +200,12 @@ Vers�o 1.0.0
 		(Aprender como executa um editorAction)
 
 2008-02-27
-	Wizard para criar um documento ncl básico + Connector Base.
+	Wizard para criar um documento ncl basico + Connector Base.
 		Ok
 	
 2008-02-16
-	B�sico do AutoComplete.
+	Basico do AutoComplete.
 	
 2008-02-10
-	Colora��o das tags.
+	Coloracao das tags.
 		(Sem problemas)
