@@ -23,8 +23,11 @@
 package br.ufma.deinf.laws.ncleclipse;
 
 import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
+import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.TextAttribute;
@@ -41,13 +44,17 @@ import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.Token;
+import org.eclipse.jface.text.source.DefaultAnnotationHover;
+import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
+import br.ufma.deinf.laws.ncleclipse.hover.NCLHoverInformationControl;
 import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHoverExtension2;
 import br.ufma.deinf.laws.ncleclipse.hyperlinks.NCLEclipseHyperlinkDetector;
 import br.ufma.deinf.laws.ncleclipse.scanners.CDataScanner;
@@ -83,7 +90,7 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	}
 
 	public ITextDoubleClickStrategy getDoubleClickStrategy(
-		ISourceViewer sourceViewer, String contentType) {
+			ISourceViewer sourceViewer, String contentType) {
 		if (doubleClickStrategy == null)
 			doubleClickStrategy = new NCLDoubleClickStrategy();
 		return doubleClickStrategy;
@@ -234,8 +241,26 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	/*
 	 * (non-Javadoc) Method declared on SourceViewerConfiguration
 	 */
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
+	public ITextHover getTextHover(ISourceViewer sourceViewer,
+			String contentType) {
 		return new NCLTextHoverExtension2(sourceViewer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jface.text.source.SourceViewerConfiguration#
+	 * getInformationControlCreator(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	/**
+	 * TODO: This function must be reimplemented to return a
+	 * NCLHoverInformationControl
+	 */
+	/**
+	 * public IInformationControlCreator getInformationControlCreator(
+	 * ISourceViewer sourceViewer) { return new IInformationControlCreator() {
+	 * public IInformationControl createInformationControl(Shell parent) {
+	 * //return new DefaultInformationControl(parent); return new
+	 * NCLHoverInformationControl(parent); } }; }
+	 */
 }

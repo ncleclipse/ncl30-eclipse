@@ -176,7 +176,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 				parser.doParse(text);
 
 				// Validação ncl30-validator
-				File docFile = file.getFullPath().toFile();
+				File docFile = getCurrentFile();
 				Document doc = null;
 				MessageList.clear();
 
@@ -194,6 +194,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 					parserExtend.parseString(text);
 
 					doc = parserExtend.getDocument();
+					doc.setDocumentURI(docFile.toURI().toString());
 
 					Vector<NclValidatorDocument> documents = new Vector<NclValidatorDocument>();
 					// NclDocumentManager.resetDocumentManager();
