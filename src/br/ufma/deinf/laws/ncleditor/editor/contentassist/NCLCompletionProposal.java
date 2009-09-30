@@ -51,11 +51,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
-import br.deinf.ufma.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
+import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
