@@ -20,7 +20,7 @@
  * 		http://www.laws.deinf.ufma.br/ncleclipse
  * 		http://www.laws.deinf.ufma.br
  ********************************************************************************/
-package br.deinf.ufma.laws.ncleclipse.document;
+package br.ufma.deinf.laws.ncleclipse.document;
 
 import java.util.ArrayList;
 import java.util.List;
