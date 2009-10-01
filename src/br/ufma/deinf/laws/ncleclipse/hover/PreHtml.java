@@ -95,7 +95,7 @@ public class PreHtml {
 		shell.setMenuBar (bar);
 		final MenuItem fileItem = new MenuItem (bar, SWT.CASCADE);
 		if(pageNum == 0){
-			fileItem.setText("HTML");
+			fileItem.setText("View");
 		}else{
 			fileItem.setText("Source");
 		}
@@ -153,16 +153,3 @@ public class PreHtml {
 			
 	}
 }
-	
-	
-	
-	
-
-
-	
-	
-		
-
-	
-
-

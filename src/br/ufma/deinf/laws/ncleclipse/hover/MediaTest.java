@@ -31,6 +31,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.program.Program;
 import org.eclipse.ui.PlatformUI;
 
@@ -40,8 +42,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class MediaTest extends JComponent{
 	private Image img;
-	private final int WIDTH=108;
-	private final int HEIGHT=108;
+	private final int WIDTH=62;
+	private final int HEIGHT=62;
 	private JFrame j;
 	JButton jbutton;
 	String string;
@@ -53,18 +55,16 @@ public class MediaTest extends JComponent{
 	public MediaTest (String file,String type) {
 		
 		this.string = file;
-		 this.type = type;
+		this.type = type;
 		this.file = new File(file);
 		this.p = Program.findProgram(type);
 		
-		
-		/*j = new JFrame();*/
-		/*j.addMouseListener(new Mouseout());*/
-		
-		
+				
 		j = new JFrame();
 		
-		jbutton =new JButton (new ImageIcon (this.getClass().getResource("play.png")));
+		jbutton = new JButton (new ImageIcon (this.getClass().getResource("../play.png")));
+
+
 		jbutton.addMouseListener(new Mouseout());
 		
 		
@@ -74,11 +74,7 @@ public class MediaTest extends JComponent{
 		java.awt.Point p = MouseInfo.getPointerInfo().getLocation();
 		j.setLocation(p.x - 5, p.y - 5);
 		j.setVisible(true);
-			
-		
-		
-		
-		
+	
 	
 	}
 	public class Mouseout implements java.awt.event.MouseListener{
@@ -142,13 +138,9 @@ public class MediaTest extends JComponent{
 		@Override
 		public void mouseReleased(java.awt.event.MouseEvent e) {
 			
-		}
-
-			
-
-			
+		}		
 		
-		}
+	}
 	
 	
 

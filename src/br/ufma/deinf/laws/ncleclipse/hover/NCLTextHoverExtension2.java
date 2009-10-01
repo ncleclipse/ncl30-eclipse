@@ -40,44 +40,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 		super(sourceViewer);
 	}
 
-	public Vector<RegionValues> getRegionChildrenTree(int offset) {
-		Vector<RegionValues> tree = new Vector<RegionValues>();
-		System.out.println(doc.getCurrentTagname(offset));
-		try {
-			offset = doc.getLineInformationOfOffset(offset).getOffset();
-			offset += doc.getLineInformationOfOffset(offset).getLength() + 1;
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		while (!doc.getCurrentTagname(offset).equals("regionBase")) {
-			System.out.println(doc.getCurrentTagname(offset));
-			RegionValues values = new RegionValues();
-			if (doc.getAttributeValueFromCurrentTagName(offset, "top") != null) {
-				values.setTop(doc.getAttributeValueFromCurrentTagName(offset,
-						"top"));
-			}
-			if (doc.getAttributeValueFromCurrentTagName(offset, "left") != null) {
-				values.setLeft(doc.getAttributeValueFromCurrentTagName(offset,
-						"left"));
-			}
-			if (doc.getAttributeValueFromCurrentTagName(offset, "width") != null) {
-				values.setWidth(doc.getAttributeValueFromCurrentTagName(offset,
-						"width"));
-			}
-			if (doc.getAttributeValueFromCurrentTagName(offset, "height") != null) {
-				values.setHeight(doc.getAttributeValueFromCurrentTagName(
-						offset, "height"));
-			}
-			tree.add(values);
-
-			offset++;
-		}
-
-		return tree;
-	}
-
+	
 	public Vector<RegionValues> getRegionFatherTree(int offset) {
 		Vector<RegionValues> tree = new Vector<RegionValues>();
 
@@ -171,6 +134,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 					File arquivo = new File(nomeArquivo);
 					if (arquivo.isFile()) {
 						result = new MediaTest(nomeArquivo, sbstr);
+						
 					} else {
 						nomeArquivo = ResourcesPlugin.getWorkspace().getRoot()
 								.getLocation()
@@ -203,7 +167,6 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 								String tmp, aux = "";
 								while ((tmp = leitor.readLine()) != null)
 									aux += tmp + "\n";
-
 								PreHtml pre = new PreHtml(300, 300, aux,
 										nomeArquivo);
 							} catch (IOException e) {
@@ -218,50 +181,28 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 									+ File.separatorChar
 									+ doc.getAttributeValueFromCurrentTagName(
 											offset, "src");
-							FileReader in = null;
-							try {
-								in = new FileReader(arquivo);
-								BufferedReader leitor = new BufferedReader(in);
-								String tmp, aux = "";
-								while ((tmp = leitor.readLine()) != null)
-									aux += tmp + "\n";
-
-								PreHtml pre = new PreHtml(300, 300, aux,
-										nomeArquivo);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							arquivo = new File (nomeArquivo);
+							if (arquivo.isFile()){
+								FileReader in = null;
+								try {
+									in = new FileReader(arquivo);
+									BufferedReader leitor = new BufferedReader(in);
+									String tmp, aux = "";
+									while ((tmp = leitor.readLine()) != null)
+										aux += tmp + "\n";
+	
+									PreHtml pre = new PreHtml(300, 300, aux,
+											nomeArquivo);
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							}
-
 						}
-
-						return null;
 					}
-
-					File arquivo = new File(nomeArquivo);
-					// Caso o caminho do arquivo seja um caminho completo
-					if (arquivo.isFile()) {
-						FileReader in = null;
-						try {
-							in = new FileReader(arquivo);
-							BufferedReader leitor = new BufferedReader(in);
-							String tmp, aux = "";
-							while ((tmp = leitor.readLine()) != null)
-								aux += tmp + "\n";
-							result = aux;
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					} else {
-						// Caso o caminho do arquivo seja um caminho relativo
-						nomeArquivo = ResourcesPlugin.getWorkspace().getRoot()
-								.getLocation()
-								+ currentFile.getParent()
-								+ File.separatorChar
-								+ doc.getAttributeValueFromCurrentTagName(
-										offset, "src");
-						arquivo = new File(nomeArquivo);
+					else{
+						File arquivo = new File(nomeArquivo);
+						// Caso o caminho do arquivo seja um caminho completo
 						if (arquivo.isFile()) {
 							FileReader in = null;
 							try {
@@ -275,9 +216,31 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
+						} else {
+							// Caso o caminho do arquivo seja um caminho relativo
+							nomeArquivo = ResourcesPlugin.getWorkspace().getRoot()
+									.getLocation()
+									+ currentFile.getParent()
+									+ File.separatorChar
+									+ doc.getAttributeValueFromCurrentTagName(
+											offset, "src");
+							arquivo = new File(nomeArquivo);
+							if (arquivo.isFile()) {
+								FileReader in = null;
+								try {
+									in = new FileReader(arquivo);
+									BufferedReader leitor = new BufferedReader(in);
+									String tmp, aux = "";
+									while ((tmp = leitor.readLine()) != null)
+										aux += tmp + "\n";
+									result = aux;
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
 						}
 					}
-
 				} else if (image.contains(sbstr)) {
 					String nomeArquivo = doc
 							.getAttributeValueFromCurrentTagName(offset, "src");
@@ -301,11 +264,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 					&& doc.getCurrentTagname(offset).equals("region")) {
 				RegionTest t = new RegionTest(getRegionFatherTree(offset));
 				result = t;
-			} else if (doc.getCurrentTagname(offset).equals("regionBase")) {
-
-				getRegionChildrenTree(offset);
-
-			} else if (doc.getCurrentTagname(offset).equals("descriptor")
+			}  else if (doc.getCurrentTagname(offset).equals("descriptor")
 					&& doc.getCurrentAttribute(offset).equals("region")) {
 
 				String teste = doc.getAttributeValueFromCurrentTagName(offset,
