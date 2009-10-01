@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Vector;
+
+import javax.swing.JOptionPane;
 
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -153,6 +156,27 @@ public class NCLDocument{
 			}
 		}
 		return null;
+	}
+	
+	public Vector<NCLElement> getElements(String tag, String attribute){
+		Set keySet = getElements().keySet();
+		if (elements == null) return null;
+		Iterator it = keySet.iterator();
+		Vector <NCLElement> r = new Vector <NCLElement> ();
+		while(it.hasNext()){
+			Collection elements = getElements().get((String)it.next());
+			if (elements == null) return null;
+			Iterator it2 = elements.iterator();
+			while(it2.hasNext()){
+				NCLElement nclElement = (NCLElement)it2.next();
+				String idElement = nclElement.getAttributes().get(tag);
+				if( idElement != null && idElement.equals(attribute)){
+						r.add (nclElement);
+				}
+			}
+		}
+		
+		return r.size() == 0 ? null : r;
 	}
 	
 	public NCLElement getElementByAlias(String alias){

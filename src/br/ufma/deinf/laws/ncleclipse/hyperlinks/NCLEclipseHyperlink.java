@@ -53,14 +53,23 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	private String text;
 	private IRegion region;
 
-	ITextViewer textViewer;
+	private ITextViewer textViewer;
+	private NCLElement nclElement;
 
 	public NCLEclipseHyperlink(ITextViewer textViewer, IRegion region,
 			String text) {
 		this.region = region;
 		this.text = text;
-
 		this.textViewer = textViewer;
+		this.nclElement = null;
+	}
+	
+	public NCLEclipseHyperlink(ITextViewer textViewer, IRegion region,
+			String text, NCLElement nclElement) {
+		this.region = region;
+		this.text = text;
+		this.textViewer = textViewer;
+		this.nclElement = nclElement;
 	}
 
 	public IRegion getHyperlinkRegion() {
@@ -76,10 +85,10 @@ public class NCLEclipseHyperlink implements IHyperlink {
 				IWorkbenchPage page = win.getActivePage();
 				NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
 						.getNCLEditor();
-
 				if (indexOfPound == -1) { // not alias. So, set focus to
 					// elementId
 					editor.setFocusToElementId(text);
+
 				}
 				// the hiperlink text has alias so open the editor
 				else {
@@ -116,11 +125,12 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	}
 
 	public String getTypeLabel() {
+		
 		return null;
 	}
 
 	public String getHyperlinkText() {
-		return null;
+		return "<" + nclElement.getTagName() + " id=\"" + nclElement.getAttributeValue("id") + "\"  ...\\>";
 	}
 
 }

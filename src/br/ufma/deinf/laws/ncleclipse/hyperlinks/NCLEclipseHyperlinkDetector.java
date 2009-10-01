@@ -22,7 +22,9 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.hyperlinks;
 
+import java.io.File;
 import java.util.Collection;
+import java.util.Vector;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
@@ -31,9 +33,22 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 import br.ufma.deinf.laws.ncl.NCLStructure;
+import br.ufma.deinf.laws.ncleclipse.NCLEditor;
+import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
 import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
+import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
+import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
+import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
+import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 
 /**
@@ -80,11 +95,44 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 						NCLStructure nclStructure = NCLStructure.getInstance();
 						Collection nclReference = nclStructure.getNCLReference(
 								tagname, currentAttr);
+						if (nclReference.size() == 0){
+							Collection c = nclStructure.getNCLReverseReference(tagname
+									, currentAttr);
+							
+							IWorkbench wb = PlatformUI.getWorkbench();
+							IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+							IWorkbenchPage page = win.getActivePage();
+							NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
+									.getNCLEditor();
+							String nclText = editor.getInputDocument().get();
+							NCLContentHandler nclContentHandler = new NCLContentHandler();
+							NCLDocument nclDocument = new NCLDocument();
+							File currentFile = editor.getCurrentFile();
+							nclDocument.setParentURI(currentFile.getParentFile()
+									.toURI());
+							nclContentHandler.setNclDocument(nclDocument);
+							NCLParser parser = new NCLParser();
+							parser.setContentHandler(nclContentHandler);
+							parser.doParse(nclText);
+							
+							Vector<NCLElement> v = nclDocument.getElements(tagname, attrValue);
+							IHyperlink[] values = new NCLEclipseHyperlink [v.size()];
+							
+							if (nclReference != null && c.size() != 0){ 
+								IRegion region1 = new Region(startAttributeValue,
+										attrValue.length());
+
+								for (int i = 0; i < v.size(); i ++)
+									values [i] = new NCLEclipseHyperlink (textViewer, region1, 
+											v.get(i).getAttributeValue("id"), v.get(i));
+
+								return values;
+							}
+						}
 
 						if (nclReference != null && nclReference.size() != 0) {
 							IRegion region1 = new Region(startAttributeValue,
 									attrValue.length());
-
 							return new IHyperlink[] { new NCLEclipseHyperlink(
 									textViewer, region1, attrValue) };
 						}
