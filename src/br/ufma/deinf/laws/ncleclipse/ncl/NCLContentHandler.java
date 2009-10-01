@@ -24,6 +24,9 @@ package br.ufma.deinf.laws.ncleclipse.ncl;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Stack;
 
 import org.xml.sax.Attributes;
@@ -32,6 +35,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
+import br.ufma.deinf.laws.util.MultiHashMap;
 /**
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
@@ -119,7 +123,7 @@ public class NCLContentHandler implements ContentHandler{
 		if(perspective.size() > 0 ) strPerspective = perspective.lastElement(); 
 		
 		// Carrega o NCLDocument
-		System.out.println("Adicionando no NCLContentHandler " + qName + " id = "+ atts.getValue("id") + " - perspective = " + strPerspective);
+		System.out.println("Adicionando no NCLContentHandler " + qName + " id = "+ atts.getValue("id") + " - perspective = " + strPerspective + "LineNumber = " + (locator.getLineNumber()-1));
 		
 		NCLElement nclElement = new NCLElement(localName, strPerspective, locator.getLineNumber()-1);
 		for(int i = 0; i < atts.getLength(); i++){
@@ -161,10 +165,11 @@ public class NCLContentHandler implements ContentHandler{
 			System.out.println("importando documento... alias: " + atts.getValue("alias") + " src:" + atts.getValue("documentURI"));
 			if(alias != null && !alias.equals("")) alias += atts.getValue("alias");
 			else alias = atts.getValue("alias");
-			nclDocument.setAlias(alias);
-			
+			nclDocument.alias = alias;
 			XMLParser parser = new XMLParser();
-			parser.setContentHandler(this);
+			NCLContentHandler contentHandlerTmp = new NCLContentHandler();
+			contentHandlerTmp.getNclDocument().setAlias(alias);
+			parser.setContentHandler(contentHandlerTmp);
 			try {
 				if(atts.getValue("documentURI") != null && !atts.getValue("documentURI").equals("")){
 				URI uri = new URI(atts.getValue("documentURI"));
@@ -175,7 +180,22 @@ public class NCLContentHandler implements ContentHandler{
 						parser.doParse(new File(new URI(nclDocument.getParentURI().toString()+"/"+atts.getValue("documentURI"))));
 				}
 			} catch (Exception e) {
-				System.out.println("N�o foi poss�vel fazer o parse do documento " + atts.getValue("documentURI"));
+				System.out.println("Nao foi possivel fazer o parse do documento " + atts.getValue("documentURI"));
+			}
+			//TODO: Melhorar isto aqui... problemas de performance
+			MultiHashMap currentElements = nclDocument.getElements();
+			MultiHashMap importedElements = contentHandlerTmp.getNclDocument().getElements();
+			Set keySet = importedElements.keySet();
+			Iterator it = keySet.iterator();
+			while(it.hasNext()){
+				Collection elements = importedElements.get((String)it.next());
+				if (elements == null) continue;
+				Iterator it2 = elements.iterator();
+				while(it2.hasNext()){
+					NCLElement importedNclElement = (NCLElement)it2.next();
+					String aliasElement = importedNclElement.getAttributes().get("alias");
+					nclDocument.addElement(importedNclElement, importedNclElement.getAttributes().get("id"));
+				}
 			}
 			nclDocument.setAlias(alias_ant);
 		}
@@ -189,6 +209,8 @@ public class NCLContentHandler implements ContentHandler{
 	}
 
 	public NCLDocument getNclDocument() {
+		if(nclDocument == null)
+			nclDocument = new NCLDocument();
 		return nclDocument;
 	}
 
