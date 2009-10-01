@@ -29,8 +29,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
-
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
 
