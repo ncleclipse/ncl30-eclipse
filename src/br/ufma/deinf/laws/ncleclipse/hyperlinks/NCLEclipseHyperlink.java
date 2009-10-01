@@ -60,6 +60,7 @@ public class NCLEclipseHyperlink implements IHyperlink {
 			String text) {
 		this.region = region;
 		this.text = text;
+
 		this.textViewer = textViewer;
 		this.nclElement = null;
 	}
@@ -85,10 +86,10 @@ public class NCLEclipseHyperlink implements IHyperlink {
 				IWorkbenchPage page = win.getActivePage();
 				NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
 						.getNCLEditor();
+
 				if (indexOfPound == -1) { // not alias. So, set focus to
 					// elementId
 					editor.setFocusToElementId(text);
-
 				}
 				// the hiperlink text has alias so open the editor
 				else {
@@ -125,7 +126,6 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	}
 
 	public String getTypeLabel() {
-		
 		return null;
 	}
 
