@@ -28,10 +28,11 @@ public class RegionTest extends JComponent{
 	private final int Y = MouseInfo.getPointerInfo().getLocation().y-5;
 	private Vector<RegionValues> values;
 	private Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+	boolean hasFather;
 	
-	
-	public RegionTest (Vector<RegionValues> values){
-		 
+	public RegionTest (Vector<RegionValues> values,boolean hasfather){
+		 System.out.println(hasfather);
+		 this.hasFather=hasfather;
 		 j = new JFrame();
 		 this.values = values;
 		 j.addMouseListener(new Mouseout());
@@ -47,6 +48,11 @@ public class RegionTest extends JComponent{
 			 HEIGHT = 300;
 			 WIDTH = (int) Math.floor(proporcao*HEIGHT);
 		 } 
+		 RegionValues total = new RegionValues();
+		 total.setHeight(String.valueOf(HEIGHT));
+		 total.setWidth(String.valueOf(WIDTH));
+		 this.values.add(total);
+		 
 	}
 	private class Mouseout implements MouseListener{
 
@@ -137,6 +143,8 @@ public class RegionTest extends JComponent{
 		int bgwidth;
 		int bgheight;
 		int w, h;
+		
+		
 		if (ispercent (values.get(values.size()-1).getWidth())){
 			w = (int) Math.ceil(percentToint (values.get (values.size()-1).getWidth())/100 * d.width);
 		}
@@ -147,9 +155,19 @@ public class RegionTest extends JComponent{
 			h = (int) Math.ceil (percentToint (values.get (values.size()-1).getHeight())/100 * d.height);
 		else
 			h = (int) Math.ceil (percentToint (values.get (values.size()-1).getHeight()));
-		
+		System.out.println(values.get(0).getWidth().equals("-1"));
 		if (w == -1) w = d.width;
 		if (h == -1) h = d.height;
+		if((hasFather && values.get(0).getWidth().equals("-1"))&& w!=-1){
+			//values.get(0).setWidth(values.get(1).getWidth());
+			values.get(0).setWidth(String.valueOf(w));
+			
+		}if((hasFather && values.get(0).getHeight().equals("-1"))&& h!=-1){
+			//values.get(0).setHeight(values.get(1).getHeight());
+			values.get(0).setHeight(String.valueOf(h));
+		
+		}
+		
 		
 		double proporcao;
 		System.out.println ("H: " + h + " W: " + w);

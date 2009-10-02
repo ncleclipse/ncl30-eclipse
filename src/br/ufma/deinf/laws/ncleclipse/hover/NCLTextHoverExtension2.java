@@ -35,7 +35,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 	NCLSourceDocument doc = null;
 	Object result = null;
 	File currentFile = null;
-
+	boolean hasfather=true;
 	public NCLTextHoverExtension2(ISourceViewer sourceViewer) {
 		super(sourceViewer);
 	}
@@ -66,7 +66,18 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 
 			offset = doc.getFatherPartitionOffset(offset);
 		}
-
+		/*for(int i =0 ; i < tree.size();i++){
+			System.out.println(tree.size());
+			System.out.println(tree.get(i).getHeight());
+			System.out.println(tree.get(i).getTop());
+			System.out.println(tree.get(i).getWidth());
+			System.out.println(tree.get(i).getLeft());
+		}*/
+		if(tree.size()==2){
+			hasfather=true;
+		}else if(tree.size()==1){
+			hasfather=false;
+		}
 		return tree;
 	}
 
@@ -262,7 +273,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 				}
 			} else if (doc.getCurrentAttribute(offset).equals("id")
 					&& doc.getCurrentTagname(offset).equals("region")) {
-				RegionTest t = new RegionTest(getRegionFatherTree(offset));
+				RegionTest t = new RegionTest(getRegionFatherTree(offset),hasfather);
 				result = t;
 			}  else if (doc.getCurrentTagname(offset).equals("descriptor")
 					&& doc.getCurrentAttribute(offset).equals("region")) {
@@ -277,7 +288,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 					offset--;
 
 				}
-				RegionTest t = new RegionTest(getRegionFatherTree(offset));
+				RegionTest t = new RegionTest(getRegionFatherTree(offset),hasfather);
 				result = t;
 			} else
 				result = "";
