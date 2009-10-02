@@ -61,8 +61,8 @@ public class MediaTest extends JComponent{
 		
 				
 		j = new JFrame();
-		
-		jbutton = new JButton (new ImageIcon (this.getClass().getResource("../play.png")));
+
+		jbutton = new JButton (new ImageIcon (this.getClass().getResource("../../../../../../../icons/play.png")));
 
 
 		jbutton.addMouseListener(new Mouseout());
