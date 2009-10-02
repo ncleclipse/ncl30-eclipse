@@ -6,10 +6,10 @@ public class RegionValues {
 	private String width;
 	private String height;
 		public RegionValues(){
-			this.top="0%";
-			this.left="0%";
-			this.width="0%";
-			this.height="0%";
+			this.top="-1";
+			this.left="-1";
+			this.width="-1";
+			this.height="-1";
 		}
 		
 		public String getTop(){

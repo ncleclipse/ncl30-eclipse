@@ -137,19 +137,22 @@ public class RegionTest extends JComponent{
 		int bgwidth;
 		int bgheight;
 		int w, h;
-		
-		if (ispercent (values.get(values.size()-1).getWidth()))
-			w = (int) percentToint (values.get (values.size()-1).getWidth())/100 * d.width;
+		if (ispercent (values.get(values.size()-1).getWidth())){
+			w = (int) Math.ceil(percentToint (values.get (values.size()-1).getWidth())/100 * d.width);
+		}
 		else
-			w = (int) percentToint (values.get (values.size()-1).getWidth());
+			w = (int) Math.ceil (percentToint (values.get (values.size()-1).getWidth()));
 		
 		if (ispercent (values.get(values.size()-1).getHeight()))
-			h = (int) percentToint (values.get (values.size()-1).getHeight())/100 * d.height;
+			h = (int) Math.ceil (percentToint (values.get (values.size()-1).getHeight())/100 * d.height);
 		else
-			h = (int) percentToint (values.get (values.size()-1).getHeight());
+			h = (int) Math.ceil (percentToint (values.get (values.size()-1).getHeight()));
 		
-
+		if (w == -1) w = d.width;
+		if (h == -1) h = d.height;
+		
 		double proporcao;
+		System.out.println ("H: " + h + " W: " + w);
 		
 
 		if (w > h){
@@ -163,7 +166,7 @@ public class RegionTest extends JComponent{
 			 bgwidth = (int) Math.floor (bgheight * proporcao);
 		}
 		
-		
+		//System.out.println (bgwidth + " "  + bgheight);
 		j.setSize (bgwidth, bgheight);
 		
 		g2.drawRect(0, 0, bgwidth, bgheight);
@@ -175,24 +178,28 @@ public class RegionTest extends JComponent{
 			if (ispercent(values.get(i).getTop()))
 				top = (int) (percentToint(values.get(i).getTop())/100*bgheight);
 			else 
-				top = (int) Math.floor((percentToint(values.get(i).getTop())/h)*bgheight);
+				top = (int) Math.ceil((percentToint(values.get(i).getTop())/h)*bgheight);
 			
 			if (ispercent(values.get(i).getLeft()))
 				left = (int) (percentToint(values.get(i).getLeft())/100*bgwidth);
 			else
-				left = (int) Math.floor((percentToint(values.get(i).getLeft())/w)*bgwidth);
-				
+				left = (int) Math.ceil((percentToint(values.get(i).getLeft())/w)*bgwidth);	
 			
 			if (ispercent(values.get(i).getWidth()))
 				width = (int) (percentToint(values.get(i).getWidth())/100*bgwidth);
 			else
-				width = (int) Math.floor((percentToint(values.get(i).getWidth())/w)*bgwidth);
+				width = (int) Math.ceil((percentToint(values.get(i).getWidth())/w)*bgwidth);
 			
 			if (ispercent(values.get(i).getHeight()))
 				heght = (int) (percentToint(values.get(i).getHeight())/100*bgheight);
 			else
-				heght = (int) Math.floor((percentToint(values.get(i).getHeight())/h)*bgheight);
-				
+				heght = (int) Math.ceil((percentToint(values.get(i).getHeight())/h)*bgheight);
+			
+			if (top == -1) top = 0;
+			if (left == -1) left = 0;
+			if (width == -1) width = bgwidth;
+			if (heght == -1) heght = bgheight;
+			System.out.println (left + " " + top + " " + width + " " + heght);
 			
 			g2.drawRect(left,top,width,heght);
 			g2.fillRect(left,top,width,heght);
