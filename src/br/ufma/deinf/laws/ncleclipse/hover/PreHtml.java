@@ -128,7 +128,7 @@ public class PreHtml {
 				
 				layout.topControl = pageNum == 0 ? page0 : page1;
 				if(pageNum == 0){
-					fileItem.setText("HTML");
+					fileItem.setText("View");
 				}else{
 					fileItem.setText("Source");
 				}
