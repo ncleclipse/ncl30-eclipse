@@ -309,8 +309,16 @@ public class RegionTest extends JComponent {
 				left = paiwidth - width - rigth;
 			}
 			
+			if (heght + top >= paiheight)
+				heght = paiheight - top;  
+			
+			if (width + left >= paiwidth)
+				width = paiwidth - left;
+			
 			top += paitop;
 			left += paileft;
+			
+			
 
 			g2.drawRect(left, top, width, heght);
 			g2.fillRect(left, top, width, heght);
