@@ -6,6 +6,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
 
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultTextHover;
@@ -24,6 +29,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.w3c.dom.Document;
 
 import br.ufma.deinf.laws.ncleclipse.NCLConfiguration;
 import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
@@ -43,36 +49,64 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 	
 	public Vector<RegionValues> getRegionFatherTree(int offset) {
 		Vector<RegionValues> tree = new Vector<RegionValues>();
-
-		while (doc.getCurrentTagname(offset).equals("region") == true) {
-			RegionValues values = new RegionValues();
-			if (doc.getAttributeValueFromCurrentTagName(offset, "top") != null) {
-				values.setTop(doc.getAttributeValueFromCurrentTagName(offset,
-						"top"));
-			}
-			if (doc.getAttributeValueFromCurrentTagName(offset, "left") != null) {
-				values.setLeft(doc.getAttributeValueFromCurrentTagName(offset,
-						"left"));
-			}
-			if (doc.getAttributeValueFromCurrentTagName(offset, "width") != null) {
-				values.setWidth(doc.getAttributeValueFromCurrentTagName(offset,
-						"width"));
-			}
-			if (doc.getAttributeValueFromCurrentTagName(offset, "height") != null) {
-				values.setHeight(doc.getAttributeValueFromCurrentTagName(
-						offset, "height"));
-			}
-			tree.add(values);
-
+		Vector <Integer> offsets = new Vector<Integer> (); 
+		RegionValues old = new RegionValues();
+		
+		old.setHeight("100%");
+		old.setWidth("100%");
+		old.setBottom("-1");
+		old.setLeft("-1");
+		old.setRigth("-1");
+		old.setTop("-1");
+		
+		while (doc.getCurrentTagname(offset).equals("region") == true){
+			offsets.add(offset);
 			offset = doc.getFatherPartitionOffset(offset);
 		}
-		/*for(int i =0 ; i < tree.size();i++){
-			System.out.println(tree.size());
-			System.out.println(tree.get(i).getHeight());
-			System.out.println(tree.get(i).getTop());
-			System.out.println(tree.get(i).getWidth());
-			System.out.println(tree.get(i).getLeft());
-		}*/
+		
+		for (int i = offsets.size() - 1; i >= 0; i--){
+			RegionValues values = new RegionValues ();
+			if (doc.getAttributeValueFromCurrentTagName(offsets.get(i), "top") != null) {
+				values.setTop(doc.getAttributeValueFromCurrentTagName(offsets.get(i),
+						"top"));
+			}
+			if (doc.getAttributeValueFromCurrentTagName(offsets.get(i), "left") != null) {
+				values.setLeft(doc.getAttributeValueFromCurrentTagName(offsets.get(i),
+						"left"));
+			}
+			if (doc.getAttributeValueFromCurrentTagName(offsets.get(i), "width") != null) {
+				values.setWidth(doc.getAttributeValueFromCurrentTagName(offsets.get(i),
+						"width"));
+			}
+			if (doc.getAttributeValueFromCurrentTagName(offsets.get(i), "height") != null) {
+				values.setHeight(doc.getAttributeValueFromCurrentTagName(offsets.get(i), 
+						"height"));
+			}
+			if (doc.getAttributeValueFromCurrentTagName(offsets.get(i), "bottom") != null) {
+				values.setBottom(doc.getAttributeValueFromCurrentTagName(offsets.get(i),
+						"bottom"));
+			}
+			if (doc.getAttributeValueFromCurrentTagName(offsets.get(i), "right") != null) {
+				values.setRigth(doc.getAttributeValueFromCurrentTagName(offsets.get(i),
+						"right"));
+			}
+			
+
+			if (values.getWidth().equals("-1")) values.setWidth ( old.getWidth() );
+			if (values.getHeight().equals("-1")) values.setHeight ( old.getHeight() );
+			
+			/*System.out.println (values.getLeft() + " " 
+					+ values.getTop() + " " 
+					+ values.getWidth() + " " 
+					+ values.getHeight() + " " 
+					+ values.getRigth () + " " 
+					+ values.getBottom() );*/
+			
+			tree.add(values);
+			old.clone(values);
+			
+		}
+		
 		if(tree.size()==2){
 			hasfather=true;
 		}else if(tree.size()==1){
@@ -270,7 +304,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 					}
 					//Image image = new Image(NCLConfiguration.getInformationControlCreator().getShell(), nomeArquivo);
 					result = img;
-				}
+				}	
 			} else if (doc.getCurrentAttribute(offset).equals("id")
 					&& doc.getCurrentTagname(offset).equals("region")) {
 				RegionTest t = new RegionTest(getRegionFatherTree(offset),hasfather);
@@ -300,7 +334,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		return null;
 	}
 
