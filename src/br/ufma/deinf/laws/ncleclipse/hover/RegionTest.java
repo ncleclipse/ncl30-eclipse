@@ -334,6 +334,7 @@ public class RegionTest extends JComponent {
 	}
 
 	public String toString() {
+		if (values.size() == 1) return "";
 		j.add(this);
 		j.setUndecorated(true);
 		j.setLocation(X, Y);
