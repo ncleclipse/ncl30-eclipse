@@ -225,12 +225,18 @@ public class RegionTest extends JComponent {
 		left *= WIDTH;
 		rigth *= WIDTH;
 
-		if (top == 0 && bottom != 0)
-			top = bgheight - bottom - heght;
-
-		if (left == 0 && rigth != 0)
-			left = bgwidth - rigth - width;
-
+		if (top == 0 ) 
+			if ( bottom > 0)
+				top = bgheight - bottom - heght;
+			else if (bottom == 0 && !values.get(0).getRigth().equals("-1"))
+				top = bgheight;
+				
+		if (left == 0)
+			if ( rigth > 0)
+				left = bgwidth - rigth - width;
+			else if (rigth == 0 && !values.get(0).getRigth().equals("-1"))
+				left = bgwidth;
+		
 		j.setSize(bgwidth, bgheight);
 
 		g2.drawRect(0, 0, bgwidth, bgheight);
@@ -243,8 +249,7 @@ public class RegionTest extends JComponent {
 
 		
 		for (int i = 1; i < values.size(); i++) {
-			/*System.out.println (values.get(i));
-			System.out.println ("bgwidth: " + paiwidth + "  bgheight: " + paiheight);*/
+
 
 			if (ispercent(values.get(i).getTop()))
 				top = (int) Math.ceil(percentToint(values.get(i).getTop())
@@ -301,13 +306,16 @@ public class RegionTest extends JComponent {
 			if (heght == 0)
 				heght = paiheight;
 			
-			if (top == paitop && bottom != 0) {
-				top = paiheight - heght - bottom;
-			}
+			if (top == paitop)
+				if ( bottom > 0) 
+					top = paiheight - heght - bottom;
+				else if (bottom == 0 && !values.get(i).getBottom().equals("-1")) top = paiheight - heght;
+			
 
-			if (left == paileft && rigth != 0) {
-				left = paiwidth - width - rigth;
-			}
+			if (left == paileft)
+				if (rigth > 0) 
+					left = paiwidth - width - rigth;
+				else if (rigth == 0 && !values.get(i).getRigth().equals("-1")) left = paiwidth - width;			
 			
 			if (heght + top >= paiheight)
 				heght = paiheight - top;  
