@@ -1,5 +1,4 @@
 TODO:
-
 * Geral
 	- Ao renomear arquivo perguntar para o usuario se ele deseja renomear o identificador do NCL tambem.
 	- Launch Configuration Type
@@ -7,14 +6,15 @@ TODO:
 		- Ginga VM Launch Emulator
 
 * Text Editor	
-	- Problema com um atributo encostado em />
-	- Comentarios sobre a licenca em todos os arquivos.
+	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar antes de disponibilizar).
 	- Sugestao do atributo src de media (Quase pronto).
-	- Drag and Drop to add media.
+	- Drag and Drop para adicionar mídia.
+	- Preview em tooltip contextual (Deixar de usar JComponent).
 
 * Layout View
+	- Problema com um atributo encostado em />
 	- Sincronizacao com % ainda nao funciona.
-	- Adicionar novas regioes, faltando refletir no codigo
+	- Adicionar novas regioes, faltando refletir no codigo-fonte.
 
 * Bugs
 	- Bug no MultiPageActionContributor
@@ -22,8 +22,8 @@ TODO:
 		acoes de texto devem aparecer
 
 * Estudar		
-	- Estudar o Web Standard Tool e verificar a possibilidade de incluÃ­-lo no NCL Eclipse.
-	- Adicionar atalhos de teclados para inserir medias, contexto, etc. Tambï¿½m acessï¿½vel atravï¿½s de clique com o botï¿½o esquerdo+source+New (media, context, etc.)
+	- Estudar o Web Standard Tool e verificar a possibilidade de inclui-lo no NCL Eclipse.
+	- Adicionar atalhos de teclados para inserir medias, contexto, etc. Tambem acessivel atraves de clique com o botao esquerdo+source+New (media, context, etc.)
 	- importedDocumentBase
 	- importNCL
 	- bindRule
@@ -53,7 +53,13 @@ TODO:
 			</media>
 
 Versao 1.4
-1009-09-24
+2009-09-30
+	- Pré-visualização de imagens em JComponent (OK)
+	- Pré-visualização de Vídeo usando player do sistema
+	- Hiperlinks inversos (OK)
+	- 
+	
+2009-09-24
 	- Validacao feita em background, idependente do usuario salvar o documento.
 		OK!
 		Resolvido BUG ()
@@ -94,14 +100,14 @@ Versao 1.3.3
 	- Refer de contexto pode referenciar um id de um body, context ou ncl.
 	- PENDENTE: Provavelmente nÃ£o pode referenciar um contexto que seja seu pai (Verificar com o Luiz) 
 	
-VersÃ£o 1.3.2
+Versao 1.3.2
 2009-02-14
 	- SugestÃ£o de descriptor no bindRule filho de descriptorSwitch funcionando
 	- SugestÃ£o dos ids dos descriptorSwitch's no atributo descriptor de media
 	
-VersÃ£o 1.1.0
+Versao 1.1.0
 2009-01-07
-	- SugestÃ£o de XML_END_TAG quando o usuario digita </
+	- Sugestao de XML_END_TAG quando o usuario digita </
 	
 2008-11-07
 	- Adicionada paginas de Preferencia:
@@ -136,13 +142,13 @@ VersÃ£o 1.1.0
 	- Tooltip do erro/warning aparecendo
 		Ok!
 		
-Versï¿½o 1.0.0
+Versao 1.0.0
 2008-07-23
 	- Mensagens do Emulador no console. 
 		Ok!
 	
 2008-07-17
-	- Ctrl+Shift+F - Nï¿½o funciona. Sï¿½ funciona no Menu Edit->Format.
+	- Ctrl+Shift+F - Nao funciona. Soh funciona no Menu Edit->Format.
 		Resolvido. Ver plugin.xml org.eclipse.ui.bindings
 		
 2008-07-05
@@ -158,22 +164,21 @@ Versï¿½o 1.0.0
 		Ok!
  
 2008-05-23
-	- attributteType ï¿½ opcional.
+	- attributteType eh opcional.
 		Ok! 
 	
-	- O arquivo de conectores nï¿½o tem extensï¿½o .conn, ï¿½ .ncl mesmo.
+	- O arquivo de conectores nao tem extensao .conn, soh .ncl mesmo.
 		OK!
 		
-	- Sugestï¿½o do atributo refer de <media>, <context> e <switch>. (BUG)
-		- Sugere a prï¿½pria media
-	Nï¿½o sugere Mais.
+	- Sugestao do atributo refer de <media>, <context> e <switch>. (BUG)
+		*Sugere a propria media (Nao sugere Mais)!
 		OK!
 		
 2008-05-13
-    - Sugestï¿½o dos atributos instance de <media>
+    - Sugestao dos atributos instance de <media>
       	Ok!
       
-	- Sugestï¿½o dos tipos MIME para a mï¿½dia.
+	- Sugestao dos tipos MIME para a midia.
 		Ok!
 		
 2008-05-02
@@ -181,22 +186,22 @@ Versï¿½o 1.0.0
 		Ok!
 		
 2008-04-24
-	- Nï¿½o sugerir um atributo que jï¿½ estï¿½ preenchido!
+	- Nao sugerir um atributo que jah estah preenchido!
 		Ok!
-	- Ajeitar o autocomplete para mostrar tags sem filhos
-	na forma <tagname at=''/>
+	- Ajeitar o autocomplete para mostrar tags sem filho na forma:
+		<tagname at=''/>
 		Ok!
 		
 2008-03-13
-	Auto identaï¿½ï¿½o.
-	Resolvido parcialmente - Implementar XMLAutoIdentStrategy
+	- Auto identacao. ok!
+	- Resolvido parcialmente - Implementar XMLAutoIdentStrategy ok!
 
 2008-03-13
 	ContentOutline implementado.
-	ï¿½ possï¿½vel navegar no documento atravï¿½s da ï¿½rvore.
+	Soh eh possivel navegar no documento atraves da arvore.
 	
 2008-03-10	
-	Formataï¿½ï¿½o automï¿½tica - Feito
+	Formatacao automatica - Feito
 		(Aprender como executa um editorAction)
 
 2008-02-27
@@ -207,5 +212,4 @@ Versï¿½o 1.0.0
 	Basico do AutoComplete.
 	
 2008-02-10
-	Coloracao das tags.
-		(Sem problemas)
+	Coloracao das tags. (Sem problemas)
