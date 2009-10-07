@@ -300,11 +300,12 @@ public class RegionTest extends JComponent {
 								* WIDTH);
 
 			
-			
-			if (width == 0)
+			if (values.get(i).getWidth().equals("-1")){
 				width = paiwidth;
-			if (heght == 0)
+			}
+			if (values.get(i).getHeight().equals("-1")){
 				heght = paiheight;
+			}
 			
 			if (top == paitop)
 				if ( bottom > 0) 

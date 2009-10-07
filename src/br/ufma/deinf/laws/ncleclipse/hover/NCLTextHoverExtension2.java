@@ -16,6 +16,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.program.Program;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IURIEditorInput;
@@ -88,17 +89,6 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 				values.setRigth(doc.getAttributeValueFromCurrentTagName(offsets
 						.get(i), "right"));
 			}
-
-			if (values.getWidth().equals("-1"))
-				values.setWidth(old.getWidth());
-			if (values.getHeight().equals("-1"))
-				values.setHeight(old.getHeight());
-
-			/*
-			 * System.out.println (values.getLeft() + " " + values.getTop() +
-			 * " " + values.getWidth() + " " + values.getHeight() + " " +
-			 * values.getRigth () + " " + values.getBottom() );
-			 */
 
 			tree.add(values);
 			old.clone(values);
