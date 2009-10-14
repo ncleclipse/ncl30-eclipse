@@ -55,6 +55,7 @@ import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
+import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
@@ -330,15 +331,15 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		nclContentHandler.setNclDocument(nclDocument);
 		NCLParser parser = new NCLParser();
 		parser.setContentHandler(nclContentHandler);
-		
+
 		try {
 			parser.doParse(nclText);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			MessageDialog.openError(Workbench.getInstance()
-					.getActiveWorkbenchWindow().getShell(), "Error",
-					"Your source code is not a well-formed XML.");
-			return;
+					.getActiveWorkbenchWindow().getShell(), NCLEditorMessages
+					.getString("ContentAssist.Error.Title"), NCLEditorMessages
+					.getString("ContentAssist.Error.XMLParserError"));
 		}
 
 		boolean hasContextId = false; // Usado quando verificar se o contexto
@@ -369,8 +370,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 										Workbench.getInstance()
 												.getActiveWorkbenchWindow()
 												.getShell(),
-										"Erro",
-										"Elemento <ncl> ou <body> deve possuir um id para o funcionamento correto do Autocomplete!");
+										NCLEditorMessages
+												.getString("ContentAssist.Error.Title"),
+										NCLEditorMessages
+												.getString("ContentAssist.Error.BodyAndNCLWithoutId"));
 						return;
 					}
 				} else {
@@ -379,7 +382,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 									Workbench.getInstance()
 											.getActiveWorkbenchWindow()
 											.getShell(),
-									"Erro",
+									NCLEditorMessages
+											.getString("ContentAssist.Error.Title"),
 									"Elemento <"
 											+ fatherTagName
 											+ "> deve possuir um id para o funcionamento correto do Autocomplete!");

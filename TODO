@@ -52,12 +52,18 @@ TODO:
 				<area id="teste"/>
 			</media>
 
-Versao 1.4
+Versao 1.4.1
+2009-10-14
+	- Autocomplete em XML que nao estah bem formado. 
+	Antes gerava uma mensagem de erro a partir da Excecao! Agora gera uma mensagem de erro e
+	mesmo assim autocompleta (com o que foi possivel fazer o parser).
+	OK!
+	
+Versao 1.4.0 (beta)
 2009-09-30
 	- Pré-visualização de imagens em JComponent (OK)
 	- Pré-visualização de Vídeo usando player do sistema
 	- Hiperlinks inversos (OK)
-	- 
 	
 2009-09-24
 	- Validacao feita em background, idependente do usuario salvar o documento.
