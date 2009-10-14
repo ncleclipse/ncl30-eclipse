@@ -65,7 +65,7 @@ import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 /**
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
- *
+ * 
  */
 public class NCLCompletionProposal implements IContentAssistProcessor {
 	private XMLTagScanner scanner;
@@ -321,6 +321,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 			return;
 		}
+
 		// Propõe elementos que referenciam tipos simples
 		String nclText = doc.get();
 		NCLContentHandler nclContentHandler = new NCLContentHandler();
@@ -329,11 +330,20 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		nclContentHandler.setNclDocument(nclDocument);
 		NCLParser parser = new NCLParser();
 		parser.setContentHandler(nclContentHandler);
-		parser.doParse(nclText);
+		
+		try {
+			parser.doParse(nclText);
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			MessageDialog.openError(Workbench.getInstance()
+					.getActiveWorkbenchWindow().getShell(), "Error",
+					"Your source code is not a well-formed XML.");
+			return;
+		}
 
 		boolean hasContextId = false; // Usado quando verificar se o contexto
-										// tem id (em especial no caso do body,
-										// onde o id é opcional)
+		// tem id (em especial no caso do body,
+		// onde o id é opcional)
 
 		// Referencias que precisam de contexto
 		String perspective = null;
