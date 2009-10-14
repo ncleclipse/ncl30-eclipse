@@ -377,6 +377,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						return;
 					}
 				} else {
+					Vector<String> tmp = new Vector<String>();
+					tmp.add(fatherTagName);
 					MessageDialog
 							.openError(
 									Workbench.getInstance()
@@ -384,9 +386,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 											.getShell(),
 									NCLEditorMessages
 											.getString("ContentAssist.Error.Title"),
-									"Elemento <"
-											+ fatherTagName
-											+ "> deve possuir um id para o funcionamento correto do Autocomplete!");
+									NCLEditorMessages
+											.getString(
+													"ContentAssist.Error.FatherTagNameWithoutId",
+													tmp));
 				}
 			}
 		}
@@ -420,6 +423,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				|| (tagname.equals("linkParam") && (attribute.equals("name")))) {
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
 					.getFatherPartitionOffset(offset), "xconnector");
+			if (perspective == null || perspective.equals("")) return;
 		}
 
 		if (tagname.equals("bindParam") && attribute.equals("name")) {
@@ -434,6 +438,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			NCLElement element;
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(offset,
 					"component");
+			if (perspective == null || perspective.equals("")) return;
 			element = nclDocument.getElementById(perspective);
 			while (element != null
 					&& element.getAttributes().get("refer") != null) {

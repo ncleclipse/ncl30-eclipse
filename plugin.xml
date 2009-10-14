@@ -130,7 +130,7 @@ extension point="org.eclipse.debug.ui.launchShortcuts">
          id="br.ufma.deinf.laws.ncleclipse.preferences.NCLEclipseViewsPreferencePage"
          name="NCL Eclipse Views Preferences">
    </page>
-   <page
+   <!--page
          category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
          class="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
          id="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
@@ -141,7 +141,7 @@ extension point="org.eclipse.debug.ui.launchShortcuts">
          class="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
          id="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
          name="Run Ginga-NCL">
-   </page>
+   </page -->
    <page
          category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
          class="br.ufma.deinf.laws.ncleclipse.preferences.Language"

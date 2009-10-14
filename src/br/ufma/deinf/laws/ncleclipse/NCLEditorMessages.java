@@ -24,12 +24,14 @@ package br.ufma.deinf.laws.ncleclipse;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 public class NCLEditorMessages {
 
-	private static final String RESOURCE_BUNDLE= "br.ufma.deinf.laws.ncleclipse.NCLEditorMessages";//$NON-NLS-1$
+	private static final String RESOURCE_BUNDLE = "br.ufma.deinf.laws.ncleclipse.NCLEditorMessages";//$NON-NLS-1$
 
-	private static ResourceBundle fgResourceBundle= ResourceBundle.getBundle(RESOURCE_BUNDLE);
+	private static ResourceBundle fgResourceBundle = ResourceBundle
+			.getBundle(RESOURCE_BUNDLE);
 
 	private NCLEditorMessages() {
 	}
@@ -41,7 +43,19 @@ public class NCLEditorMessages {
 			return "!" + key + "!";//$NON-NLS-2$ //$NON-NLS-1$
 		}
 	}
-	
+
+	public static String getString(String key, Vector<String> vet) {
+		String ret = fgResourceBundle.getString(key);
+		for (int i = 0; i < vet.size(); i++) {
+			ret = ret.replaceFirst("%s", vet.get(i));
+		}
+		try {
+			return ret;
+		} catch (MissingResourceException e) {
+			return "!" + key + "!";//$NON-NLS-2$ //$NON-NLS-1$
+		}
+	}
+
 	public static ResourceBundle getResourceBundle() {
 		ResourceBundle b = fgResourceBundle;
 		return fgResourceBundle;
