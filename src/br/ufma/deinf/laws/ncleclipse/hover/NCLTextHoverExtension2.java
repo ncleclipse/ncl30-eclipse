@@ -43,14 +43,8 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 	public Vector<RegionValues> getRegionFatherTree(int offset) {
 		Vector<RegionValues> tree = new Vector<RegionValues>();
 		Vector<Integer> offsets = new Vector<Integer>();
-		RegionValues old = new RegionValues();
 
-		old.setHeight("100%");
-		old.setWidth("100%");
-		old.setBottom("-1");
-		old.setLeft("-1");
-		old.setRigth("-1");
-		old.setTop("-1");
+
 
 		while (doc.getCurrentTagname(offset).equals("region") == true) {
 			offsets.add(offset);
@@ -91,15 +85,9 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 			}
 
 			tree.add(values);
-			old.clone(values);
 
 		}
 
-		if (tree.size() == 2) {
-			hasfather = true;
-		} else if (tree.size() == 1) {
-			hasfather = false;
-		}
 		return tree;
 	}
 
@@ -130,6 +118,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 			Vector<String> text = new Vector<String>();
 			Vector<String> audio = new Vector<String>();
 			Vector<String> video = new Vector<String>();
+			
 			image.add("bmp");
 			image.add("png");
 			image.add("gif");
@@ -149,22 +138,33 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 
 			video.add("mpeg");
 			video.add("mpg");
-			video.add("avi");
-
-			if (!doc.getCurrentAttribute(offset).equals("descriptor")
-					&& doc.getCurrentTagname(offset).equals("media")) {
+			
+			String CurrentAttribute = doc.getCurrentAttribute(offset);
+			String CurrentTagname = doc.getCurrentTagname(offset);
+			
+			
+			if ((!CurrentAttribute.equals("descriptor") && CurrentTagname.equals("media") ) || 
+					( CurrentTagname.equals("descriptor") && ( CurrentAttribute.equals("focusSelSrc") || 
+									CurrentAttribute.equals("focusSrc") ) ) ) {
 				String mime = doc.getAttributeValueFromCurrentTagName(offset,
 						"src");
-
+				if (mime == null){
+					mime = doc.getAttributeValueFromCurrentTagName(offset, "focusSelSrc");
+					if (mime == null)
+						mime = doc.getAttributeValueFromCurrentTagName(offset, "focusSrc");
+				}
+				
+			
+				
 				String values[] = mime.split("\\.");
 				String sbstr = "";
 				if (values.length > 1)
 					sbstr = values[values.length - 1];
-
+				
 				if (audio.contains(sbstr) || video.contains(sbstr)) {
 
-					String nomeArquivo = doc
-							.getAttributeValueFromCurrentTagName(offset, "src");
+					String nomeArquivo = mime;
+
 					File arquivo = new File(nomeArquivo);
 					if (arquivo.isFile()) {
 						result = new MediaTest(nomeArquivo, sbstr);
@@ -174,8 +174,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 								.getLocation()
 								+ currentFile.getParent()
 								+ File.separatorChar
-								+ doc.getAttributeValueFromCurrentTagName(
-										offset, "src");
+								+ mime;
 						arquivo = new File(nomeArquivo);
 						if (arquivo.isFile())
 
@@ -186,8 +185,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 				}
 				if (text.contains(sbstr)) {
 					result = "";
-					String nomeArquivo = doc
-							.getAttributeValueFromCurrentTagName(offset, "src");
+					String nomeArquivo = mime;
 					if (sbstr.equals("html") || sbstr.equals("xml")
 							|| sbstr.equals("htm")) {
 
@@ -213,8 +211,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 									.getRoot().getLocation()
 									+ currentFile.getParent()
 									+ File.separatorChar
-									+ doc.getAttributeValueFromCurrentTagName(
-											offset, "src");
+									+ mime;
 							arquivo = new File(nomeArquivo);
 							if (arquivo.isFile()) {
 								FileReader in = null;
@@ -258,8 +255,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 									.getRoot().getLocation()
 									+ currentFile.getParent()
 									+ File.separatorChar
-									+ doc.getAttributeValueFromCurrentTagName(
-											offset, "src");
+									+ mime;
 							arquivo = new File(nomeArquivo);
 							if (arquivo.isFile()) {
 								FileReader in = null;
@@ -279,8 +275,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 						}
 					}
 				} else if (image.contains(sbstr)) {
-					String nomeArquivo = doc
-							.getAttributeValueFromCurrentTagName(offset, "src");
+					String nomeArquivo = mime;
 					ImageTest img = null;
 					if (new File(nomeArquivo).isFile())
 						img = new ImageTest(nomeArquivo);
@@ -289,8 +284,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 								.getLocation()
 								+ currentFile.getParent()
 								+ File.separatorChar
-								+ doc.getAttributeValueFromCurrentTagName(
-										offset, "src");
+								+ mime;
 						if (new File(nomeArquivo).isFile())
 							img = new ImageTest(nomeArquivo);
 					}
@@ -301,11 +295,10 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 				}
 			} else if (doc.getCurrentAttribute(offset).equals("id")
 					&& doc.getCurrentTagname(offset).equals("region")) {
-				RegionTest t = new RegionTest(getRegionFatherTree(offset),
-						hasfather);
+				RegionTest t = new RegionTest(getRegionFatherTree(offset));
 				result = t;
-			} else if (doc.getCurrentTagname(offset).equals("descriptor")
-					&& doc.getCurrentAttribute(offset).equals("region")) {
+			} else if (doc.getCurrentTagname(offset).equals("descriptor") &&
+					doc.getCurrentAttribute(offset).equals("region")) {
 
 				String teste = doc.getAttributeValueFromCurrentTagName(offset,
 						"region");
@@ -317,10 +310,10 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 					offset--;
 
 				}
-				RegionTest t = new RegionTest(getRegionFatherTree(offset),
-						hasfather);
+				RegionTest t = new RegionTest(getRegionFatherTree(offset));
 				result = t;
-			} else
+			} 
+			else
 				result = "";
 
 			Point selection = textViewer.getSelectedRange();

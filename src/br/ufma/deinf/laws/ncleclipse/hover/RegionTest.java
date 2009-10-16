@@ -24,10 +24,8 @@ public class RegionTest extends JComponent {
 	private final int Y = MouseInfo.getPointerInfo().getLocation().y - 5;
 	private Vector<RegionValues> values;
 	private Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-	boolean hasFather;
 
-	public RegionTest(Vector<RegionValues> values, boolean hasfather) {
-		this.hasFather = hasfather;
+	public RegionTest(Vector<RegionValues> values) {
 		j = new JFrame();
 		this.values = values;
 		j.addMouseListener(new Mouseout());
@@ -124,6 +122,10 @@ public class RegionTest extends JComponent {
 	public double percentToint(String value) {
 
 		String[] vector = null;
+		if (value.endsWith("px")){
+			String tmp [] = value.split("px");
+			return Double.parseDouble(tmp[0]);
+		}
 		if (value != null) {
 			vector = value.split(Pattern.quote("%"));
 		}
@@ -249,8 +251,7 @@ public class RegionTest extends JComponent {
 
 		
 		for (int i = 1; i < values.size(); i++) {
-
-
+			
 			if (ispercent(values.get(i).getTop()))
 				top = (int) Math.ceil(percentToint(values.get(i).getTop())
 						/ 100 * paiheight);
@@ -298,7 +299,8 @@ public class RegionTest extends JComponent {
 				rigth = (int) Math
 						.ceil((percentToint(values.get(i).getRigth()) / h)
 								* WIDTH);
-
+			
+			
 			
 			if (values.get(i).getWidth().equals("-1")){
 				width = paiwidth;
@@ -307,27 +309,40 @@ public class RegionTest extends JComponent {
 				heght = paiheight;
 			}
 			
-			if (top == paitop)
-				if ( bottom > 0) 
+			if (top == 0 && values.get(i).getTop().equals("-1"))
+				if ( bottom > 0)
 					top = paiheight - heght - bottom;
 				else if (bottom == 0 && !values.get(i).getBottom().equals("-1")) top = paiheight - heght;
 			
-
-			if (left == paileft)
-				if (rigth > 0) 
+			if (left == 0 && values.get(i).getLeft().equals("-1"))
+				if (rigth > 0)
 					left = paiwidth - width - rigth;
-				else if (rigth == 0 && !values.get(i).getRigth().equals("-1")) left = paiwidth - width;			
+				else if (rigth == 0 && !values.get(i).getRigth().equals("-1")) left = paiwidth - width;
 			
+		
 			if (heght + top >= paiheight)
-				heght = paiheight - top;  
+				heght = paiheight - top; 
 			
 			if (width + left >= paiwidth)
 				width = paiwidth - left;
 			
+			
+			if (top < 0){
+				heght += top;
+				if (heght < 0) heght = 0;
+				top = 0;
+			}
+			
+			if (left < 0){
+				width += left;
+				if (width < 0) width = 0;
+				left = 0;
+			}
+			
+
+			
 			top += paitop;
 			left += paileft;
-			
-			
 
 			g2.drawRect(left, top, width, heght);
 			g2.fillRect(left, top, width, heght);
