@@ -68,6 +68,7 @@ import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
  * 
  */
+
 public class NCLCompletionProposal implements IContentAssistProcessor {
 	private XMLTagScanner scanner;
 	private File currentFile;
@@ -79,7 +80,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private boolean isEndTagName;
 
 	/**
-	 * Responsável por computar os valores que aparecerão na lista de sugestões.
+	 * Responsavel por computar os valores que aparecerao na lista de sugestoes.
 	 * Retorna uma lista de ICompletionProposal
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
@@ -157,7 +158,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	}
 
 	/**
-	 * Computa as tags que serão propostas para o usuário
+	 * Computa as tags que serao propostas para o usuario
 	 * 
 	 * @param qualifier
 	 * @param offset
@@ -231,7 +232,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		}
 
 		/*
-		 * N�o faz sentido computar tudo nunca! //Caso contrário computa tudo
+		 * Nao faz sentido computar tudo nunca! 
+		 * 
+		 * //Caso contrário computa tudo
 		 * Map<String, Map<String, Boolean>> atts =
 		 * nclStructure.getAttributes(); Iterator it =
 		 * atts.entrySet().iterator(); while(it.hasNext()){ Map.Entry<String,
@@ -248,8 +251,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	}
 
 	/**
-	 * Computa a estrutura da Tag Valores Defaults, atributos obrigatórios,
-	 * coloca tudo de uma vez quando o usuário quer inserir a tag.
+	 * Computa a estrutura da Tag Valores Defaults, atributos obrigatorios,
+	 * coloca tudo de uma vez quando o usuario quer inserir a tag.
 	 * 
 	 * @param tagname
 	 * @return
@@ -283,7 +286,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	}
 
 	/**
-	 * Computa os valores dos atributos que serão proposto pro usuário
+	 * Computa os valores dos atributos que serao proposto pro usuario
 	 * 
 	 * @param qualifier
 	 * @param offset
@@ -292,7 +295,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private void computeAttributesValuesProposals(IDocument doc,
 			String qualifier, int offset, List propList) {
 		int qlen = qualifier.length();
-		// Verificar se existe valor pré-definido
+		// Verificar se existe valor pre-definido
 
 		NCLSourceDocument nclDoc = NCLSourceDocument
 				.createNCLSourceDocumentFromIDocument(doc);
@@ -323,7 +326,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			return;
 		}
 
-		// Propõe elementos que referenciam tipos simples
+		// Propoe elementos que referenciam tipos simples
 		String nclText = doc.get();
 		NCLContentHandler nclContentHandler = new NCLContentHandler();
 		NCLDocument nclDocument = new NCLDocument();
@@ -348,7 +351,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		// Referencias que precisam de contexto
 		String perspective = null;
-		// Contexto é o pai
+		// Contexto eh o pai
 		if ((tagname.equals("port") && attribute.equals("component"))
 				|| (tagname.equals("bindRule") && attribute
 						.equals("constituent"))
@@ -394,7 +397,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 
-		// Contexto é o pai do pai
+		// Contexto eh o pai do pai
 		if ((tagname.equals("bind") && attribute.equals("component"))
 				|| (tagname.equals("mapping") && attribute.equals("component"))) {
 
@@ -423,7 +426,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				|| (tagname.equals("linkParam") && (attribute.equals("name")))) {
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
 					.getFatherPartitionOffset(offset), "xconnector");
-			if (perspective == null || perspective.equals("")) return;
+			if (perspective == null || perspective.equals(""))
+				return;
 		}
 
 		if (tagname.equals("bindParam") && attribute.equals("name")) {
@@ -438,7 +442,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			NCLElement element;
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(offset,
 					"component");
-			if (perspective == null || perspective.equals("")) return;
+			if (perspective == null || perspective.equals(""))
+				return;
 			element = nclDocument.getElementById(perspective);
 			while (element != null
 					&& element.getAttributes().get("refer") != null) {
@@ -446,8 +451,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						attribute);
 				// Computa os valores de atributos dos elementos filhos do refer
 
-				// Refatorar este código... Isto está repetindo o que está sendo
-				// feito lá embaixo
+				// Refatorar este codigo... Isto estah repetindo o que estah sendo
+				// feito lah embaixo
 				String perspectivetmp = element.getAttributeValue("refer");
 				element = nclDocument.getElementById(perspectivetmp);
 				if (nclReference == null)
@@ -468,7 +473,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						if (text == null)
 							continue;
 
-						// refer n�o pode sugerir a pr�pria media, switch, etc.
+						// refer nao pode sugerir a propria media, switch, etc.
 						if (attribute.equals("refer")) {
 							String idAtual = nclDoc
 									.getAttributeValueFromCurrentTagName(
@@ -562,7 +567,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					if (text == null)
 						continue;
 
-					// refer não pode sugerir a própria media, switch, etc.
+					// refer nao pode sugerir a propria media, switch, etc.
 					if (attribute.equals("refer")) {
 						String idAtual = nclDoc
 								.getAttributeValueFromCurrentTagName(offset,
@@ -600,7 +605,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					text = ((NCLElement) it2.next())
 							.getAttributeValue(nclRefAtual.getRefAttribute());
 					System.out.println(text);
-					// refer n�o pode sugerir a pr�pria media, switch, etc.
+					// refer nao pode sugerir a propria media, switch, etc.
 					if (attribute.equals("refer")) {
 						String idAtual = nclDoc
 								.getAttributeValueFromCurrentTagName(offset,
