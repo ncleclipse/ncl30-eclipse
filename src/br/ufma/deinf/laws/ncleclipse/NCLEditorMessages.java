@@ -28,10 +28,9 @@ import java.util.Vector;
 
 public class NCLEditorMessages {
 
-	private static final String RESOURCE_BUNDLE = "br.ufma.deinf.laws.ncleclipse.NCLEditorMessages";//$NON-NLS-1$
+	private static String RESOURCE_BUNDLE = "br.ufma.deinf.laws.ncleclipse.NCLEditorMessages";//$NON-NLS-1$
 
-	private static ResourceBundle fgResourceBundle = ResourceBundle
-			.getBundle(RESOURCE_BUNDLE);
+	private static ResourceBundle fgResourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
 
 	private NCLEditorMessages() {
 	}
@@ -59,5 +58,5 @@ public class NCLEditorMessages {
 	public static ResourceBundle getResourceBundle() {
 		ResourceBundle b = fgResourceBundle;
 		return fgResourceBundle;
-	}
+	}	
 }

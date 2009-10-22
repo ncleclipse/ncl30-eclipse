@@ -42,7 +42,7 @@ import br.ufma.deinf.laws.ncleclipse.util.XMLPartitioner;
 /**
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
- *
+ * 
  */
 public class NCLSourceDocument extends Document {
 	private XMLTagScanner scanner;
@@ -359,10 +359,10 @@ public class NCLSourceDocument extends Document {
 	}
 
 	/**
-	 * Utilizado para determinar se a palavra corrente que está sendo digitada
-	 * é um atributo. Irá retornar verdadeiro se encontrar o padrão no
-	 * âmbito da atual partição Tem que melhorar ainda. Falta verificar se é
-	 * o valor de um atributo.
+	 * Utilizado para determinar se a palavra corrente que está sendo digitada é
+	 * um atributo. Irá retornar verdadeiro se encontrar o padrão no âmbito da
+	 * atual partição Tem que melhorar ainda. Falta verificar se é o valor de um
+	 * atributo.
 	 */
 	public boolean isAttribute(int documentOffset) {
 		ITypedRegion region;
@@ -400,6 +400,11 @@ public class NCLSourceDocument extends Document {
 		}
 	}
 
+	/**
+	 * 
+	 * @param documentOffset
+	 * @return
+	 */
 	public boolean isEndTagName(int documentOffset) {
 		ITypedRegion region;
 		try {
@@ -412,6 +417,12 @@ public class NCLSourceDocument extends Document {
 		}
 	}
 
+	/**
+	 * 
+	 * @param offset
+	 * @return
+	 * @throws BadLocationException
+	 */
 	public ITypedRegion getNextTagPartition(int offset)
 			throws BadLocationException {
 		ITypedRegion partition = getPartition(offset);
@@ -423,7 +434,32 @@ public class NCLSourceDocument extends Document {
 		return getNextTagPartition(partition);
 	}
 
-	/***************************************************************************
+	/**
+	 * Returns the next XML_START_TAG partition with tagname after offset.
+	 * 
+	 * @param tagname
+	 *            the tagname that must be searched
+	 * @param offset
+	 *            the initial offset
+	 * @return the next partition with tagname
+	 * @throws BadLocationException
+	 */
+	public ITypedRegion getNextTagPartition(String tagname, int offset)
+			throws BadLocationException {
+		ITypedRegion partition = getPartition(offset);
+		while (partition != null) {
+			if (partition.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+				if (getCurrentTagname(partition.getOffset()).equals(tagname))
+					return partition;
+			}
+			partition = getNextTagPartition(partition);
+
+		}
+		return null;
+
+	}
+
+	/**
 	 * Gets the next partition of type BEGIN_TAG or END_TAG.
 	 * 
 	 * @param d
@@ -442,9 +478,66 @@ public class NCLSourceDocument extends Document {
 		}
 		return partition;
 	}
+	
+	public String getCurrentEndTagName(int documentOffset){
+		try {
+			ITypedRegion region = getPartition(documentOffset);
+			if(!region.getType().equals(XMLPartitionScanner.XML_END_TAG)) return null;
+			int partitionOffset = region.getOffset();
+			int readLength = region.getLength();
+			
+			String text = get(partitionOffset+1, readLength);
+			int p = 0;
+			char ch;
+			String tagname = "";
+			ch = text.charAt(0);
+			while (true) {
+				if (p + 1 >= text.length()
+					|| !Character.isJavaIdentifierPart(text.charAt(p + 1)))
+					break;
+				ch = text.charAt(++p);
+				tagname += ch;
+			}
+			return tagname;
+			
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public ITypedRegion getNextEndTagPartition(String tagname, int offset) {
+		ITypedRegion partition;
+		try {
+			partition = getPartition(offset);
+			while (partition != null){
+				if(partition.getType().equals(XMLPartitionScanner.XML_END_TAG)) {
+					if(getCurrentEndTagName(partition.getOffset()).equals(tagname)) return partition;
+				}
+				partition = getNextPartition(partition);
+			}
+		} catch (Exception e) {
+			return null;
+		}
+		return null;
+	}
 
 	/**
-	 * Retorna a partição anterior
+	 * 
+	 * @param r
+	 * @return
+	 */
+	public ITypedRegion getNextEndTagPartition(ITypedRegion r) {
+		ITypedRegion partition = getNextPartition(r);
+		while (partition != null
+				&& !partition.getType().equals(XMLPartitionScanner.XML_END_TAG)) {
+			partition = getNextPartition(partition);
+		}
+		return partition;
+	}
+
+	/**
+	 * Returns the previous partition
 	 * 
 	 * @param d
 	 * @param r
@@ -500,7 +593,7 @@ public class NCLSourceDocument extends Document {
 					int begin = 0;
 					String newValue = attr + "=\"" + value + "\"";
 					if (attrAtual == null) {
-						begin = region.getOffset() + region.getLength() - 2;
+						begin = region.getOffset() + region.getLength() - 1;
 						if (startTag.endsWith("/>"))
 							begin--;
 						if (!get(begin - 1, 1).equals(" "))
@@ -568,7 +661,110 @@ public class NCLSourceDocument extends Document {
 		} catch (BadLocationException e) {
 			return true; // or false?
 		}
+	}
 
+	/**
+	 * 
+	 * @param tagname
+	 * @param offset
+	 * @return
+	 */
+	public boolean addElement(String tagname, int offset) {
+		try {
+			replace(offset, 1, "<" + tagname + ">\n</" + tagname + ">\n");
+		} catch (BadLocationException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean addElement(String tagname, String id, int offset) {
+		try {
+			replace(offset, 1, "<" + tagname + " id=\""+id+"\" >\n</" + tagname + ">\n");
+		} catch (BadLocationException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * This method return true if the document has at least one element with
+	 * identifier equal to id.
+	 * 
+	 * @param id
+	 *            the id that must be searched
+	 * @return true if has at least one element with identifier id
+	 */
+	public boolean hasElementWithId(String id) {
+		return hasElementWithId(id, 1);
+	}
+
+	/**
+	 * This method returns true if the document has at least one element with
+	 * identifier equal to id after the position offset.
+	 * 
+	 * @param id
+	 * @param offset
+	 *            the initial offset where the searches begins
+	 * @return
+	 */
+	public boolean hasElementWithId(String id, int offset) {
+		return hasElementWithAttribute("id", id, offset);
+	}
+
+	/**
+	 * This method returns true if the document has at least one element with
+	 * identifier equal to id after the position offset.
+	 * 
+	 * @param attr
+	 * @param value
+	 * @param offset
+	 * @return
+	 */
+	public boolean hasElementWithAttribute(String attr, String value, int offset) {
+		return getElementOffset(attr, value, offset) != -1;
+	}
+
+	/**
+	 * This method return the position of the first element that has the
+	 * attribute attr with value = value starting from offset
+	 * 
+	 * @param attr
+	 * @param value
+	 * @param offset
+	 * @return
+	 */
+	public int getElementOffset(String attr, String value, int offset) {
+		try {
+			ITypedRegion region = getNextTagPartition(offset);
+			if (region == null)
+				throw new BadLocationException();
+			String startTag = get(region.getOffset(), region.getLength());
+			String currentAttr = getAttributeValueFromCurrentTagName(region
+					.getOffset(), attr);
+			if (currentAttr != null) {
+				if (currentAttr.equals(value)) {
+					return region.getOffset();
+				}
+			}
+			return getElementOffset(attr, value, region.getOffset()
+					+ region.getLength() + 1);
+		} catch (BadLocationException e) {
+			return -1;
+		}
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public int getElementOffset(String id) {
+		try {
+			return getElementOffset(id, 1);
+		} catch (BadLocationException e) {
+			return -1;
+		}
 	}
 
 	/**
@@ -620,4 +816,5 @@ public class NCLSourceDocument extends Document {
 		document.setDocumentPartitioner(partitioner);
 		return document;
 	}
+
 }

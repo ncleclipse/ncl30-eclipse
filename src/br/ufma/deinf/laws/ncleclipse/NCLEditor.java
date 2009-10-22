@@ -181,8 +181,8 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 				MessageList.clear();
 
 				// getting the description error file
-				NCLValidatorErrorMessages prop = new NCLValidatorErrorMessages();
-				MessageHandler.setProperties(prop);
+				//NCLEclipseValidatorErrorMessages prop = new NCLEclipseValidatorErrorMessages();
+				//MessageHandler.setPropertyMessage(prop);
 
 				MessageList.setLanguage(MessageList.PORTUGUESE);
 				try {
