@@ -141,19 +141,16 @@ extension point="org.eclipse.debug.ui.launchShortcuts">
          class="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
          id="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
          name="Run Ginga-NCL">
-   </page -->
+   </page>
    <page
          category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
          class="br.ufma.deinf.laws.ncleclipse.preferences.Language"
          id="br.ufma.deinf.laws.ncleclipse.preferences.Language"
          name="NCL Language">
-   </page>
+   </page-->
 </extension>
 <extension
       point="org.eclipse.core.runtime.preferences">
-   <initializer
-         class="br.ufma.deinf.laws.ncleclipse.preferences.PreferenceInitializer">
-   </initializer>
    <initializer
          class="br.ufma.deinf.laws.ncleclipse.preferences.PreferenceInitializer">
    </initializer>

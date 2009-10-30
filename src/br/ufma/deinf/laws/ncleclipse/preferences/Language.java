@@ -32,7 +32,7 @@ import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 /**
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
- *
+ * @deprecated The Language is loaded from system now. The users must load eclipse with -nl parameter.
  */
 public class Language
 	extends FieldEditorPreferencePage
@@ -56,6 +56,9 @@ public class Language
 							},
 							{"English", 
 							 "messagesEn"
+							},
+							{"Spanish", 
+							 "messagesEs"
 							}
 						},
 						getFieldEditorParent(),
