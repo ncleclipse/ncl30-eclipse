@@ -256,11 +256,11 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	 * TODO: This function must be reimplemented to return a
 	 * NCLHoverInformationControl
 	 */
-	/**
-	 * public IInformationControlCreator getInformationControlCreator(
-	 * ISourceViewer sourceViewer) { return new IInformationControlCreator() {
-	 * public IInformationControl createInformationControl(Shell parent) {
-	 * //return new DefaultInformationControl(parent); return new
-	 * NCLHoverInformationControl(parent); } }; }
-	 */
+	
+	 public IInformationControlCreator getInformationControlCreator(
+	 ISourceViewer sourceViewer) { return new IInformationControlCreator() {
+	 public IInformationControl createInformationControl(Shell parent) {
+	 //return new DefaultInformationControl(parent); return new
+	 return new NCLHoverInformationControl(parent); } }; }
+	 
 }
