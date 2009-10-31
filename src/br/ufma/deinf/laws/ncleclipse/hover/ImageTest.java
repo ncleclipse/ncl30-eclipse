@@ -20,14 +20,11 @@ public class ImageTest extends JComponent {
 	private Image img;
 	private int WIDTH;
 	private int HEIGHT;
-	private JFrame j;
 	private boolean valido;
 
 	public ImageTest(String filename) {
 		try {
 			img = ImageIO.read(new File(filename));
-			j = new JFrame();
-			j.addMouseListener(new Mouseout());
 			valido = true;
 			double proporcao;
 			int height = img.getHeight(null);
@@ -53,73 +50,4 @@ public class ImageTest extends JComponent {
 		return valido;
 	}
 
-	private class Mouseout implements MouseListener {
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-			j.dispose ();
-		}
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-	
-	}
-
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.drawImage(img, 0, 0, WIDTH, HEIGHT, null);
-	}
-
-	public String toString() {
-
-		j.add(this);
-		j.setUndecorated(true);
-		j.setSize(WIDTH, HEIGHT);
-		Point p = MouseInfo.getPointerInfo().getLocation();
-		j.setLocation(p.x - 5, p.y - 5);
-		j.setVisible(true);
-
-		return "";
-	}
 }

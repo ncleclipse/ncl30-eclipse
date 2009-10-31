@@ -27,14 +27,20 @@ package br.ufma.deinf.laws.ncleclipse.hover;
  *
  */
 
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.DefaultInformationControl;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import org.eclipse.jface.text.AbstractInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.MessageBox;
@@ -46,7 +52,7 @@ import org.eclipse.swt.widgets.Shell;
  * <p>
  * Displays HTML in a {@link org.eclipse.swt.browser.Browser} widget.
  */
-public class NCLHoverInformationControl extends DefaultInformationControl
+public class NCLHoverInformationControl extends AbstractInformationControl
 		implements IInformationControlExtension2 {
 
 	/**
@@ -69,18 +75,37 @@ public class NCLHoverInformationControl extends DefaultInformationControl
 	}
 
 	private Browser fBrowser;
-	private 
 	boolean fIsURL;
 	boolean fShowInDefaultInformationControl;
+	private Color fBackgroundColor;
+	private Object result;
+	private Composite composite;
+	private Shell shell;
+	private String image;
+
+	/**
+	 * The width size constraint.
+	 * 
+	 * @since 3.2
+	 */
+	private int fMaxWidth = SWT.DEFAULT;
+
+	/**
+	 * The height size constraint.
+	 * 
+	 * @since 3.2
+	 */
+	private int fMaxHeight = SWT.DEFAULT;
 
 	/**
 	 * Creates a JavaHoverInformationControl with the given shell as parent.
 	 * 
 	 * @param parent
 	 *            the parent shell
+	 * @param b 
 	 */
 	public NCLHoverInformationControl(Shell parent) {
-		super(parent, (String) null);
+		super(parent, false);
 		create();
 	}
 
@@ -89,54 +114,77 @@ public class NCLHoverInformationControl extends DefaultInformationControl
 	 * org.eclipse.jface.text.AbstractInformationControl#createContent(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
-	protected void createContent(Composite parent) {
-			super.createContent(parent);
-			try {
-				Shell s = getShell();
-				fBrowser = new Browser(getShell(), SWT.NONE);
-				fBrowser.setForeground(parent.getForeground());
-				fBrowser.setBackground(parent.getBackground());
-				fBrowser.setFont(JFaceResources.getDialogFont());
-			} catch (SWTError e) {
-				MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
-						| SWT.OK);
-				messageBox.setMessage("Browser cannot be initialized."); //$NON-NLS-1$
-				messageBox.setText("Error"); //$NON-NLS-1$
-				messageBox.open();
-			}
+	protected void createContent(Composite parent) { // 1
+		// super.createContent(parent);
+		try {
+			composite = getShell();
+			initializeColors();
+			composite.setForeground(composite.getDisplay().getSystemColor(
+					SWT.COLOR_INFO_FOREGROUND));
+			composite.setBackground(fBackgroundColor);
+			shell = (Shell) composite;
+
+			fBrowser = new Browser(parent, SWT.BORDER);
+			fBrowser.setBackground(fBackgroundColor);
+			fBrowser.setForeground(composite.getDisplay().getSystemColor(
+					SWT.COLOR_INFO_FOREGROUND));
+
+		} catch (SWTError e) {
+			e.printStackTrace();
+			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
+					| SWT.OK);
+			messageBox.setMessage("Browser cannot be initialized."); //$NON-NLS-1$
+			messageBox.setText("Error"); //$NON-NLS-1$
+			messageBox.open();
+		}
+
+	}
+
+	private void initializeColors() {
+		fBackgroundColor = getShell().getDisplay().getSystemColor(
+				SWT.COLOR_INFO_BACKGROUND);
 	}
 
 	/*
 	 * @see IInformationControl#setInformation(String)
 	 */
-	public void setInformation(String content) {
-		if(fShowInDefaultInformationControl) super.setInformation(content);
-		else{
-			fBrowser.setBounds(getShell().getClientArea());
-			if (fIsURL) {
-				fBrowser.setUrl(content);
-			} else {
-				fBrowser.setText(content);
-			}
+	public void setInformation(String content) { // 3
+		String tmp [] = content.split ("'");
+		image = tmp[9];
+		fBrowser.setBounds(getShell().getClientArea());
+
+		if (fIsURL) {
+			fBrowser.setUrl(content);
+		} else {
+			fBrowser.setText(content);
 		}
 	}
 
 	/*
 	 * @see IInformationControl#computeSizeHint()
 	 */
-	public Point computeSizeHint() {
-		if(fShowInDefaultInformationControl) return super.computeSizeHint();
-		else {
-			final int widthHint = 350;
-			return getShell().computeSize(widthHint, SWT.DEFAULT, true);
+	public Point computeSizeHint() { // 4
+
+		Image img = null;
+		try {
+			img = ImageIO.read((new File (image)));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		int x = 20, y = 20;
+		if (result instanceof RegionTest){
+			x += 20;
+			y += 20;
+		}
+		return new Point (img.getWidth(null) + 20, img.getHeight(null) + 20);
+
 	}
 
 	/*
 	 * @see IInformationControlExtension#hasContents()
 	 */
 	public boolean hasContents() {
-		if(fShowInDefaultInformationControl) return super.hasContents();
 		return fBrowser.getText().length() > 0;
 	}
 
@@ -147,7 +195,6 @@ public class NCLHoverInformationControl extends DefaultInformationControl
 	 * @since 3.4
 	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if(fShowInDefaultInformationControl) return super.getInformationPresenterControlCreator();
 		return new IInformationControlCreator() {
 			/*
 			 * @seeorg.eclipse.jface.text.IInformationControlCreator#
@@ -166,27 +213,38 @@ public class NCLHoverInformationControl extends DefaultInformationControl
 	 * 
 	 * @since 3.4
 	 */
-	public void setInput(Object input) {
+	public void setInput(Object input) { // 2
 		// Assume that the input is marked-up text, not a URL
 		fIsURL = false;
-		fShowInDefaultInformationControl = false;
 		final String inputString;
-
+		result = input;
 		if (input instanceof IHTMLHoverInfo) {
-			// Get the input string, then see whether it's a URL
 			IHTMLHoverInfo inputInfo = (IHTMLHoverInfo) input;
 			inputString = inputInfo.getHTMLString();
 			fIsURL = inputInfo.isURL();
 		} else if (input instanceof String) {
-			// Treat the String as marked-up text to be displayed.
-			fShowInDefaultInformationControl = true;
-			inputString = (String) input;
-		} else {
-			// For any other kind of object, just use its string
-			// representation as text to be displayed.
+			String tmp = (String) input;
+			inputString = "<html><body bgcolor='fffacd' border='0' top ='0' style='font-size:12; font-face=Courier New;'>"
+					+ tmp.replace("\n", "<br/>") + "</body>";
+			
+		} else
 			inputString = input.toString();
-		}
+
 		setInformation(inputString);
+
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.AbstractInformationControl#dispose()
+	 */
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		super.dispose();
+		File tmp = new File (this.getClass().getProtectionDomain().getCodeSource()
+				.getLocation().toString().substring(5)
+				+ "icons" + File.separatorChar + "tmp.png");
+		if (tmp.isFile()) tmp.delete();
 	}
 
 }

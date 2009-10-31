@@ -3,32 +3,27 @@ package br.ufma.deinf.laws.ncleclipse.hover;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-
-public class RegionTest extends JComponent {
-	private JFrame j;
+public class RegionTest{
+	// private JFrame j;
 	private int WIDTH = 300;
 	private int HEIGHT = 300;
-	private final int X = MouseInfo.getPointerInfo().getLocation().x - 5;
-	private final int Y = MouseInfo.getPointerInfo().getLocation().y - 5;
 	private Vector<RegionValues> values;
 	private Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+	public int bgwidth;
+	public int bgheight;
 
 	public RegionTest(Vector<RegionValues> values) {
-		j = new JFrame();
+		// j = new JFrame();
 		this.values = values;
-		j.addMouseListener(new Mouseout());
+		// j.addMouseListener(new Mouseout());
 
 		double proporcao;
 		if (d.width > d.height) {
@@ -45,71 +40,7 @@ public class RegionTest extends JComponent {
 		v.setWidth("100%");
 		v.setHeight("100%");
 		this.values.add(0, v);
-
-	}
-
-	private class Mouseout implements MouseListener {
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			j.dispose();
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
+		// j.add(this);
 	}
 
 	public boolean ispercent(String value) {
@@ -122,8 +53,8 @@ public class RegionTest extends JComponent {
 	public double percentToint(String value) {
 
 		String[] vector = null;
-		if (value.endsWith("px")){
-			String tmp [] = value.split("px");
+		if (value.endsWith("px")) {
+			String tmp[] = value.split("px");
 			return Double.parseDouble(tmp[0]);
 		}
 		if (value != null) {
@@ -135,26 +66,19 @@ public class RegionTest extends JComponent {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 */
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
+	public BufferedImage paintregions() {
+		
 		int top = 0;
 		int left = 0;
 		int width = 0;
 		int heght = 0;
 		int rigth = 0;
 		int bottom = 0;
-
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		float alpha = .3f;
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-				alpha));
-		g2.setColor(Color.blue);
 
 		int bgwidth;
 		int bgheight;
@@ -237,10 +161,21 @@ public class RegionTest extends JComponent {
 			if ( rigth > 0)
 				left = bgwidth - rigth - width;
 			else if (rigth == 0 && !values.get(0).getRigth().equals("-1"))
-				left = bgwidth;
-		
-		j.setSize(bgwidth, bgheight);
+				left = bgwidth;		
 
+		BufferedImage img = new BufferedImage(bgwidth, bgheight,
+				BufferedImage.TYPE_3BYTE_BGR);
+		img.createGraphics();
+		
+
+		Graphics2D g2 = (Graphics2D) img.getGraphics();
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		float alpha = .3f;
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+				alpha));
+		g2.setColor(Color.blue);
+		
 		g2.drawRect(0, 0, bgwidth, bgheight);
 		g2.fillRect(0, 0, bgwidth, bgheight);
 		
@@ -301,13 +236,14 @@ public class RegionTest extends JComponent {
 								* WIDTH);
 			
 			
-			
 			if (values.get(i).getWidth().equals("-1")){
 				width = paiwidth;
 			}
 			if (values.get(i).getHeight().equals("-1")){
 				heght = paiheight;
 			}
+			
+			System.out.println (values.get(i).getRigth());
 			
 			if (top == 0 && values.get(i).getTop().equals("-1"))
 				if ( bottom > 0)
@@ -339,8 +275,6 @@ public class RegionTest extends JComponent {
 				left = 0;
 			}
 			
-
-			
 			top += paitop;
 			left += paileft;
 
@@ -354,16 +288,16 @@ public class RegionTest extends JComponent {
 		
 
 		}
+		
+		return img;
 
 	}
 
 	public String toString() {
-		if (values.size() == 1) return "";
-		j.add(this);
-		j.setUndecorated(true);
-		j.setLocation(X, Y);
-		j.setVisible(true);
-
-		return "";
+		String path = this.getClass().getProtectionDomain().getCodeSource()
+				.getLocation().toString().substring(5)
+				+ "icons" + File.separatorChar + "tmp.png";
+		return path;
 	}
+
 }
