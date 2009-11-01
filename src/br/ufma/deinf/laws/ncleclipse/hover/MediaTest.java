@@ -59,21 +59,15 @@ public class MediaTest extends JComponent{
 		this.file = new File(file);
 		this.p = Program.findProgram(type);
 		
-				
-		j = new JFrame();
+		
 
 		jbutton = new JButton (new ImageIcon (this.getClass().getResource("../../../../../../../icons/play.png")));
 
 
-		jbutton.addMouseListener(new Mouseout());
 		
 		
-		j.add(jbutton);
-		j.setUndecorated(true);
-		j.setSize(WIDTH, HEIGHT);
-		java.awt.Point p = MouseInfo.getPointerInfo().getLocation();
-		j.setLocation(p.x - 5, p.y - 5);
-		j.setVisible(true);
+		
+		
 	
 	
 	}
@@ -146,9 +140,13 @@ public class MediaTest extends JComponent{
 
 	public String toString (){
 		
-		j.add(this);
 		
 		
-		return "";
+		
+		return this.string;
+	}
+	public String getType(){
+		
+		return this.type;
 	}
 }

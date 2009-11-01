@@ -71,19 +71,24 @@ import sun.security.action.GetBooleanAction;
  */
 public class PreHtml {
 	static int pageNum = 1;
-	IWorkbench wb = PlatformUI.getWorkbench();
-	private Display display = wb.getDisplay();;
-	private Shell shell=new Shell(display,SWT.CLOSE) ;
+	//IWorkbench wb = PlatformUI.getWorkbench();
+	//private Display display = wb.getDisplay();;
+	//private Shell shell=new Shell(display,SWT.CLOSE) ;
 	private Browser browser;
 	private StyledText styletext;
 	
-	private final int X = MouseInfo.getPointerInfo().getLocation().x;
-	private final int Y = MouseInfo.getPointerInfo().getLocation().y;
-	
-	
-	
-	public PreHtml(int width,int height,final String result,final String url){
-		
+	//private final int X = MouseInfo.getPointerInfo().getLocation().x;
+//	private final int Y = MouseInfo.getPointerInfo().getLocation().y;
+	//*/
+	private String result;
+	private String url;
+	//public PreHtml(int width,int height,final String result,final String url){
+		public PreHtml(final String result,final String url){
+		this.result=result;
+		this.url=url;
+		//System.out.println(this.result);
+		//System.out.println(this.url);
+		/*
 		shell.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		shell.setSize(width,height);
@@ -135,7 +140,7 @@ public class PreHtml {
 				contentPanel.layout ();
 			}
 		});
-		shell.open();
+		//shell.open();
 		browser.addListener(SWT.MouseMove, new Listener(){
 			
 
@@ -147,9 +152,12 @@ public class PreHtml {
 				
 			}
 			
-		});
+		});*/
 		
 		
 			
+	}
+			public String toString(){
+		return this.result;
 	}
 }

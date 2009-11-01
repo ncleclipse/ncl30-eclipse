@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * This file is part of the authoring environment in Nested Context Language -
  * NCL Eclipse.
@@ -48,9 +49,9 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Browser-based implementation of
- * {@link org.eclipse.jface.text.IInformationControl}.
+ * {@@link org.eclipse.jface.text.IInformationControl}.
  * <p>
- * Displays HTML in a {@link org.eclipse.swt.browser.Browser} widget.
+ * Displays HTML in a {@@link org.eclipse.swt.browser.Browser} widget.
  */
 public class NCLHoverInformationControl extends AbstractInformationControl
 		implements IInformationControlExtension2 {
@@ -61,14 +62,14 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 	 */
 	public interface IHTMLHoverInfo {
 		/**
-		 * @return true if the String returned by getHTMLString() represents a
+		 * @@return true if the String returned by getHTMLString() represents a
 		 *         URL; false if the String contains marked-up text.
 		 */
 
 		public boolean isURL();
 
 		/**
-		 * @return The input string to be displayed in the Browser widget
+		 * @@return The input string to be displayed in the Browser widget
 		 *         (either as marked-up text, or as a URL.)
 		 */
 		public String getHTMLString();
@@ -82,41 +83,45 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 	private Composite composite;
 	private Shell shell;
 	private String image;
+	private Image img;
 
 	/**
 	 * The width size constraint.
 	 * 
-	 * @since 3.2
+	 * @@since 3.2
 	 */
 	private int fMaxWidth = SWT.DEFAULT;
 
 	/**
 	 * The height size constraint.
 	 * 
-	 * @since 3.2
+	 * @@since 3.2
 	 */
 	private int fMaxHeight = SWT.DEFAULT;
 
 	/**
 	 * Creates a JavaHoverInformationControl with the given shell as parent.
 	 * 
-	 * @param parent
+	 * @@param parent
 	 *            the parent shell
-	 * @param b 
+	 * @@param b 
 	 */
 	public NCLHoverInformationControl(Shell parent) {
+		
 		super(parent, false);
+
 		create();
 	}
 
 	/*
-	 * @see
+	 * @@see
 	 * org.eclipse.jface.text.AbstractInformationControl#createContent(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
 	protected void createContent(Composite parent) { // 1
 		// super.createContent(parent);
 		try {
+			
 			composite = getShell();
 			initializeColors();
 			composite.setForeground(composite.getDisplay().getSystemColor(
@@ -144,11 +149,26 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 		fBackgroundColor = getShell().getDisplay().getSystemColor(
 				SWT.COLOR_INFO_BACKGROUND);
 	}
-
+	
+	public void setVisible(boolean visible) {
+		if (visible) {
+			
+				//Point currentSize= getShell().getSize();
+				getShell().pack(true);
+				Point newSize=computeSizeHint();
+				//if (newSize.x > currentSize.x || newSize.y > currentSize.y)
+					setSize(newSize.x, newSize.y); 
+					// restore previous size
+			
+		}
+		
+		super.setVisible(visible);
+	}
 	/*
-	 * @see IInformationControl#setInformation(String)
+	 * @@see IInformationControl#setInformation(String)
 	 */
 	public void setInformation(String content) { // 3
+		
 		String tmp [] = content.split ("'");
 		image = tmp[9];
 		fBrowser.setBounds(getShell().getClientArea());
@@ -156,18 +176,22 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 		if (fIsURL) {
 			fBrowser.setUrl(content);
 		} else {
+			
+			
 			fBrowser.setText(content);
 		}
 	}
 
 	/*
-	 * @see IInformationControl#computeSizeHint()
+	 * @@see IInformationControl#computeSizeHint()
 	 */
+	
 	public Point computeSizeHint() { // 4
 
 		Image img = null;
 		try {
 			img = ImageIO.read((new File (image)));
+			this.img=img;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -177,27 +201,27 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 			x += 20;
 			y += 20;
 		}
-		return new Point (img.getWidth(null) + 20, img.getHeight(null) + 20);
+		return new Point (img.getWidth(null)+20, img.getHeight(null)+20);
 
 	}
 
 	/*
-	 * @see IInformationControlExtension#hasContents()
+	 * @@see IInformationControlExtension#hasContents()
 	 */
 	public boolean hasContents() {
 		return fBrowser.getText().length() > 0;
 	}
 
 	/*
-	 * @seeorg.eclipse.jface.text.IInformationControlExtension5#
+	 * @@seeorg.eclipse.jface.text.IInformationControlExtension5#
 	 * getInformationPresenterControlCreator()
 	 * 
-	 * @since 3.4
+	 * @@since 3.4
 	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		return new IInformationControlCreator() {
 			/*
-			 * @seeorg.eclipse.jface.text.IInformationControlCreator#
+			 * @@seeorg.eclipse.jface.text.IInformationControlCreator#
 			 * createInformationControl(org.eclipse.swt.widgets.Shell)
 			 */
 			public IInformationControl createInformationControl(Shell parent) {
@@ -207,11 +231,11 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 	}
 
 	/*
-	 * @see org.eclipse.jface.text#setInput() The input object may be a String,
+	 * @@see org.eclipse.jface.text#setInput() The input object may be a String,
 	 * an instance of IHTMLHoverInfo, or any object that returns a displayable
 	 * String from its toString() implementation.
 	 * 
-	 * @since 3.4
+	 * @@since 3.4
 	 */
 	public void setInput(Object input) { // 2
 		// Assume that the input is marked-up text, not a URL
@@ -235,7 +259,7 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.AbstractInformationControl#dispose()
+	 * @@see org.eclipse.jface.text.AbstractInformationControl#dispose()
 	 */
 	@Override
 	public void dispose() {
@@ -248,3 +272,5 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 	}
 
 }
+
+

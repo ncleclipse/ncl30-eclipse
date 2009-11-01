@@ -225,8 +225,9 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 								while ((tmp = leitor.readLine()) != null)
 									aux += tmp + "\n";
 
-								PreHtml pre = new PreHtml(300, 300, aux,
+								PreHtml pre = new PreHtml(aux,
 										nomeArquivo);
+								result=pre;
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -250,18 +251,19 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 									while ((tmp = leitor.readLine()) != null)
 										aux += tmp + "\n";
 
-									PreHtml pre = new PreHtml(300, 300, aux,
+									PreHtml pre = new PreHtml( aux,
 											nomeArquivo);
+									result=pre;
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 
 						}
-
-						return null;
+						
+						//return null;
 					}
-
+					if (sbstr.equals("css") || sbstr.equals("txt")){
 					File arquivo = new File(nomeArquivo);
 					// Caso o caminho do arquivo seja um caminho completo
 					if (arquivo.isFile()) {
@@ -301,14 +303,15 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 							}
 						}
 					}
+					}
 
 				} else if (image.contains(sbstr)) {
 					String nomeArquivo = doc
 							.getAttributeValueFromCurrentTagName(offset, "src");
 					ImageTest img = null;
 					if (new File(nomeArquivo).isFile())
-						result = "<img src='" + nomeArquivo + "'/>";
-						//result = new ImageTest (nomeArquivo);
+						//result = "<img src='" + nomeArquivo + "'/>";
+						result = new ImageTest (nomeArquivo);
 					else {
 						nomeArquivo = ResourcesPlugin.getWorkspace().getRoot()
 								.getLocation()
@@ -317,23 +320,18 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 								+ doc.getAttributeValueFromCurrentTagName(
 										offset, "src");
 						if (new File (nomeArquivo).isFile())
-							result = "<img src='" + nomeArquivo + "'/>";
-							//result = new ImageTest (nomeArquivo);
+							//result = "<img src='" + nomeArquivo + "'/>";
+							result = new ImageTest (nomeArquivo);
 					}
 					
 				}
 			} else if (doc.getCurrentAttribute(offset).equals("id")
 					&& doc.getCurrentTagname(offset).equals("region")) {
 				RegionTest t = new RegionTest(getRegionFatherTree(offset));
-				BufferedImage buffer = t.paintregions();
-				try {
-					ImageIO.write(buffer, "PNG", new File (t.toString()));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				result = "<img src='" + t.toString() + "'/>";
-				//result = t;
+				//BufferedImage buffer = t.paintregions();
+				
+				//result = "<img src='" + t.toString() + "'/>";
+				result = t;
 			}  else if (doc.getCurrentTagname(offset).equals("descriptor")
 					&& doc.getCurrentAttribute(offset).equals("region")) {
 
@@ -348,15 +346,10 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 
 				}
 				RegionTest t = new RegionTest(getRegionFatherTree(offset));
-				BufferedImage buffer = t.paintregions();	
-				try {
-					ImageIO.write(buffer, "PNG", new File (t.toString()));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				result = "<img src='" + t.toString() + "'/>";
-				//result = t;
+				//BufferedImage buffer = t.paintregions();	
+				
+				//result = "<img src='" + t.toString() + "'/>";
+				result = t;
 			} else
 				result = "";
 			
@@ -379,14 +372,19 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 		result = null;
 		return aux;
 	}
-
-	public IInformationControlCreator getInformationControlCreator(
+	public boolean fisString(){
+		if(this.result instanceof String)
+			return true;
+		return false;
+	}
+	/*public IInformationControlCreator getInformationControlCreator(
 			ISourceViewer sourceViewer) {
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
 				// return new DefaultInformationControl(parent);
-				return new NCLHoverInformationControl(parent);
+				
+				return new NCLIformationControl2(parent,false);
 			}
 		};
-	}
+	}*/
 }

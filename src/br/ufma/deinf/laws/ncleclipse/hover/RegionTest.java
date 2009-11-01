@@ -1,7 +1,7 @@
 package br.ufma.deinf.laws.ncleclipse.hover;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -10,6 +10,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Vector;
 import java.util.regex.Pattern;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Composite;
 
 public class RegionTest{
 	// private JFrame j;
@@ -21,9 +27,9 @@ public class RegionTest{
 	public int bgheight;
 
 	public RegionTest(Vector<RegionValues> values) {
-		// j = new JFrame();
+		
 		this.values = values;
-		// j.addMouseListener(new Mouseout());
+		
 
 		double proporcao;
 		if (d.width > d.height) {
@@ -40,7 +46,7 @@ public class RegionTest{
 		v.setWidth("100%");
 		v.setHeight("100%");
 		this.values.add(0, v);
-		// j.add(this);
+		
 	}
 
 	public boolean ispercent(String value) {
@@ -66,12 +72,9 @@ public class RegionTest{
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-	 */
-	public BufferedImage paintregions() {
+	
+	
+	public void paintregions(final Composite parent) {
 		
 		int top = 0;
 		int left = 0;
@@ -163,21 +166,26 @@ public class RegionTest{
 			else if (rigth == 0 && !values.get(0).getRigth().equals("-1"))
 				left = bgwidth;		
 
-		BufferedImage img = new BufferedImage(bgwidth, bgheight,
-				BufferedImage.TYPE_3BYTE_BGR);
-		img.createGraphics();
-		
+	
+		final int bgw=bgwidth;
+		final int bgh=bgheight;
+		parent.addPaintListener(new PaintListener(){
 
-		Graphics2D g2 = (Graphics2D) img.getGraphics();
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		float alpha = .3f;
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-				alpha));
-		g2.setColor(Color.blue);
+			@Override
+			public void paintControl(PaintEvent e) {
+				Color blue = new Color(e.display, 0, 0, 255);
+
+				e.gc.setBackground(blue);
+				
+				e.gc.setAlpha(100);
+				e.gc.drawRectangle(0, 0, bgw, bgh);
+				e.gc.fillRectangle(0, 0, bgw, bgh);
+				
+				
+			}
+			
+		});
 		
-		g2.drawRect(0, 0, bgwidth, bgheight);
-		g2.fillRect(0, 0, bgwidth, bgheight);
 		
 		int paiheight = bgheight;
 		int paiwidth = bgwidth;
@@ -278,8 +286,26 @@ public class RegionTest{
 			top += paitop;
 			left += paileft;
 
-			g2.drawRect(left, top, width, heght);
-			g2.fillRect(left, top, width, heght);
+		//	g2.drawRect(left, top, width, heght);
+			//g2.fillRect(left, top, width, heght);
+			final int l=left;
+			final int t=top;
+			final int w1=width;
+			final int h1=heght;
+			parent.addPaintListener(new PaintListener(){
+
+				@Override
+				public void paintControl(PaintEvent e) {
+					Color blue = new Color(e.display, 0, 0, 255);
+
+					e.gc.setBackground(blue);
+					e.gc.setAlpha(30);
+					e.gc.drawRectangle(l, t, w1, h1);
+					e.gc.fillRectangle(l, t, w1, h1);
+					
+				}
+				
+			});
 
 			paiheight = heght;
 			paiwidth = width;
@@ -289,15 +315,28 @@ public class RegionTest{
 
 		}
 		
-		return img;
+		//return img;
 
 	}
 
 	public String toString() {
-		String path = this.getClass().getProtectionDomain().getCodeSource()
-				.getLocation().toString().substring(5)
-				+ "icons" + File.separatorChar + "tmp.png";
-		return path;
+	
+		return "";
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

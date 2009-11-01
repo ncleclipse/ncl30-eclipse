@@ -21,8 +21,10 @@ public class ImageTest extends JComponent {
 	private int WIDTH;
 	private int HEIGHT;
 	private boolean valido;
+	private String file;
 
 	public ImageTest(String filename) {
+		this.file=filename;
 		try {
 			img = ImageIO.read(new File(filename));
 			valido = true;
@@ -48,6 +50,9 @@ public class ImageTest extends JComponent {
 
 	public boolean arquivoValido() {
 		return valido;
+	}
+	public String toString(){
+		return this.file;
 	}
 
 }
