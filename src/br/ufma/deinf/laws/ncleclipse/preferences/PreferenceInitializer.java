@@ -47,6 +47,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 			"telemidia");
 		
 		store.setDefault(PreferenceConstants.P_LANGUAGE, "messagesPt.properties");
+		store.setDefault(PreferenceConstants.P_PREVIEW, false);
 	}
 
 }

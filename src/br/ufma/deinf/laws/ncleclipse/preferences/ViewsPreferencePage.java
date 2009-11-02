@@ -63,6 +63,12 @@ public class ViewsPreferencePage
 				PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE,
 				"&Open Layout View Editor",
 				getFieldEditorParent()));
+		
+		addField(
+				new BooleanFieldEditor(
+					PreferenceConstants.P_PREVIEW,
+					"&Open PreView when mouse over",
+					getFieldEditorParent()));
 
 	}
 
