@@ -8,7 +8,7 @@ TODO:
 * Text Editor	
 	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar antes de disponibilizar).
 	- Sugestao do atributo src de media (Quase pronto).
-	- Drag and Drop para adicionar mídia.
+	- Drag and Drop para adicionar mï¿½dia.
 	- Preview em tooltip contextual (Deixar de usar JComponent).
 
 * Layout View
@@ -51,7 +51,18 @@ TODO:
 			<media id=""/>
 				<area id="teste"/>
 			</media>
-
+Versao 1.4.3
+2009-10-31
+	- ValidaÃ§Ã£o de source de arquivos, ainda com bugs quando em espaÃ§o!
+2009-11-01
+	- Preferencia pra habilitar ou nao as previsualizaÃ§Ãµes!
+	
+Versao 1.4.2
+2009-10-30
+	- Desabilitado as pre-views temporariamente, pq tava abrindo infinitas janelas novas.
+		Problemas por causa do JComponent. 
+		
+	
 Versao 1.4.1
 2009-10-14
 	- Autocomplete em XML que nao estah bem formado. 
@@ -61,8 +72,8 @@ Versao 1.4.1
 	
 Versao 1.4.0 (beta)
 2009-09-30
-	- Pré-visualização de imagens em JComponent (OK)
-	- Pré-visualização de Vídeo usando player do sistema
+	- Pre-visualizacao de imagens em JComponent (OK)
+	- Pre-visualizacao de Video usando player do sistema
 	- Hiperlinks inversos (OK)
 	
 2009-09-24

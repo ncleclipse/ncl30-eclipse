@@ -58,7 +58,7 @@ import br.ufma.deinf.laws.ncleclipse.hover.NCLHoverInformationControl.IHTMLHover
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
  *
  */
-public class NCLIformationControl2 extends AbstractInformationControl
+public class NCLHoverInformationControl2 extends AbstractInformationControl
 implements IInformationControlExtension2 {
 	public interface IHTMLHoverInfo {
 		/**
@@ -101,7 +101,7 @@ implements IInformationControlExtension2 {
 	 * @param parentShell
 	 * @param isResizable
 	 */
-	public NCLIformationControl2(Shell parentShell, boolean isResizable) {
+	public NCLHoverInformationControl2(Shell parentShell, boolean isResizable) {
 		super(parentShell, isResizable);
 		create();
 		
