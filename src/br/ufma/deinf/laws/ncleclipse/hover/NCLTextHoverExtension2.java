@@ -320,15 +320,15 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 
 				String teste = doc.getAttributeValueFromCurrentTagName(offset,
 						"region");
-
-				while (((doc.getCurrentTagname(offset).equals("region") == false) || (doc
-						.getAttributeValueFromCurrentTagName(offset, "id")
+				int aux=offset;
+				while (((doc.getCurrentTagname(aux).equals("region") == false) || (doc
+						.getAttributeValueFromCurrentTagName(aux, "id")
 						.equals(teste) == false))
-						&& (offset > 0)) {
-					offset--;
+						&& (aux > 0)) {
+					aux--;
 
 				}
-				RegionTest t = new RegionTest(getRegionFatherTree(offset));
+				RegionTest t = new RegionTest(getRegionFatherTree(aux));
 			
 				result = t;
 			} 
