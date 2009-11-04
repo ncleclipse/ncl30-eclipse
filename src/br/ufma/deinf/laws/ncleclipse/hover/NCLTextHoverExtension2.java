@@ -160,13 +160,12 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 				System.out.println(mime.substring(0, 4));
 				
 				//if()
-				if(mime.substring(0, 4).equals("http")){
-					URL url = new URL(mime);
-					if(url!=null){
-						System.out.println(url.getProtocol());
-						result= new PreHtml(300,300," ",url.toString());
+				if(mime.length()>7){
+					if(mime.substring(0, 7).equals("http://")){
+						result = new PreHtml(300,300,"",mime);
 					}
 				}
+				
 				
 				String values[] = mime.split("\\.");
 				String sbstr = "";
@@ -342,9 +341,6 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("pau");
 		} 
 		return null;
 	}

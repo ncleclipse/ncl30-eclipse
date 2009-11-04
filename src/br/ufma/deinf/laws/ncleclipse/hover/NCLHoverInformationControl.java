@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * This file is part of the authoring environment in Nested Context Language -
  * NCL Eclipse.
@@ -28,32 +27,35 @@ package br.ufma.deinf.laws.ncleclipse.hover;
  *
  */
 
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
+import java.net.URL;
 
-import javax.imageio.ImageIO;
-
-import org.eclipse.jface.text.AbstractInformationControl;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * Browser-based implementation of
- * {@@link org.eclipse.jface.text.IInformationControl}.
+ * {@link org.eclipse.jface.text.IInformationControl}.
  * <p>
- * Displays HTML in a {@@link org.eclipse.swt.browser.Browser} widget.
+ * Displays HTML in a {@link org.eclipse.swt.browser.Browser} widget.
  */
-public class NCLHoverInformationControl extends AbstractInformationControl
+public class NCLHoverInformationControl extends DefaultInformationControl
 		implements IInformationControlExtension2 {
 
 	/**
@@ -62,166 +64,136 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 	 */
 	public interface IHTMLHoverInfo {
 		/**
-		 * @@return true if the String returned by getHTMLString() represents a
+		 * @return true if the String returned by getHTMLString() represents a
 		 *         URL; false if the String contains marked-up text.
 		 */
 
 		public boolean isURL();
 
 		/**
-		 * @@return The input string to be displayed in the Browser widget
+		 * @return The input string to be displayed in the Browser widget
 		 *         (either as marked-up text, or as a URL.)
 		 */
 		public String getHTMLString();
 	}
 
 	private Browser fBrowser;
-	boolean fIsURL;
+	private Composite comp;
+	private boolean fIsURL;
+	private boolean isImage;
+	private boolean isRegion;
+	private boolean isMedia;
+	private boolean isString;
 	boolean fShowInDefaultInformationControl;
-	private Color fBackgroundColor;
-	private Object result;
-	private Composite composite;
-	private Shell shell;
-	private String image;
-	private Image img;
-
-	/**
-	 * The width size constraint.
-	 * 
-	 * @@since 3.2
-	 */
-	private int fMaxWidth = SWT.DEFAULT;
-
-	/**
-	 * The height size constraint.
-	 * 
-	 * @@since 3.2
-	 */
-	private int fMaxHeight = SWT.DEFAULT;
-
+	private Canvas canvas;
 	/**
 	 * Creates a JavaHoverInformationControl with the given shell as parent.
 	 * 
-	 * @@param parent
+	 * @param parent
 	 *            the parent shell
-	 * @@param b 
 	 */
 	public NCLHoverInformationControl(Shell parent) {
-		
-		super(parent, false);
-
+		super(parent, (String) null);
+		getShell().setLayout(new FillLayout());
 		create();
 	}
 
 	/*
-	 * @@see
+	 * @see
 	 * org.eclipse.jface.text.AbstractInformationControl#createContent(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
-	protected void createContent(Composite parent) { // 1
-		// super.createContent(parent);
-		try {
+	protected void createContent(Composite parent) {
+			super.createContent(parent);
 			
-			composite = getShell();
-			initializeColors();
-			composite.setForeground(composite.getDisplay().getSystemColor(
-					SWT.COLOR_INFO_FOREGROUND));
-			composite.setBackground(fBackgroundColor);
-			shell = (Shell) composite;
-
-			fBrowser = new Browser(parent, SWT.BORDER);
-			fBrowser.setBackground(fBackgroundColor);
-			fBrowser.setForeground(composite.getDisplay().getSystemColor(
-					SWT.COLOR_INFO_FOREGROUND));
-
-		} catch (SWTError e) {
-			e.printStackTrace();
-			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
-					| SWT.OK);
-			messageBox.setMessage("Browser cannot be initialized."); //$NON-NLS-1$
-			messageBox.setText("Error"); //$NON-NLS-1$
-			messageBox.open();
-		}
-
+			try {
+				
+				//canvas = new Canvas(getShell(),SWT.NONE);
+				//comp = new Composite(getShell(),SWT.NONE);
+				//comp.setForeground(parent.getForeground());
+				//comp.setBackground(parent.getBackground());
+				//comp.setFont(JFaceResources.getDialogFont());
+				/*fBrowser = new Browser(getShell(), SWT.NONE);
+				fBrowser.setForeground(parent.getForeground());
+				fBrowser.setBackground(parent.getBackground());
+				fBrowser.setFont(JFaceResources.getDialogFont());*/
+			} catch (SWTError e) {
+				MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
+						| SWT.OK);
+				messageBox.setMessage("Browser cannot be initialized."); //$NON-NLS-1$
+				messageBox.setText("Error"); //$NON-NLS-1$
+				messageBox.open();
+			}
 	}
 
-	private void initializeColors() {
-		fBackgroundColor = getShell().getDisplay().getSystemColor(
-				SWT.COLOR_INFO_BACKGROUND);
-	}
-	
-	public void setVisible(boolean visible) {
-		if (visible) {
+	/*
+	 * @see IInformationControl#setInformation(String)
+	 */
+	public void setInformation(String content) {
+		
+		if(isMedia){
 			
-				//Point currentSize= getShell().getSize();
-				getShell().pack(true);
-				Point newSize=computeSizeHint();
-				//if (newSize.x > currentSize.x || newSize.y > currentSize.y)
-					setSize(newSize.x, newSize.y); 
-					// restore previous size
+		}else if(isImage){
+			/*comp.setLayout(new FillLayout(SWT.NO));*/
+			System.out.println("isimage");
+			//System.out.println(getShell().getChildren());
+			//getShell().setFullScreen(true);
+			//getShell().setLayout(new FillLayout());
+			//fBrowser.setBounds(getShell().getClientArea());
+			final Image image = new Image(getShell().getDisplay(),"/home/thiago/Imagens/ken_1440x900.jpg");
 			
+		getShell().getParent().addPaintListener(new PaintListener(){
+
+				@Override
+				public void paintControl(PaintEvent arg0) {
+					arg0.gc.drawImage(image,0,0,image.getBounds().width,image.getBounds().height,5,5,300,300);
+					
+					
+				}
+				
+			});
+			
+			
+		}else if(isRegion){
+			
+		}else if(fIsURL){
+			
+		}else if(isString){
+			super.setInformation(content);
 		}
 		
-		super.setVisible(visible);
 	}
+
 	/*
-	 * @@see IInformationControl#setInformation(String)
+	 * @see IInformationControl#computeSizeHint()
 	 */
-	public void setInformation(String content) { // 3
-		
-		String tmp [] = content.split ("'");
-		image = tmp[9];
-		fBrowser.setBounds(getShell().getClientArea());
-
-		if (fIsURL) {
-			fBrowser.setUrl(content);
-		} else {
+	public Point computeSizeHint() {
+		if(fShowInDefaultInformationControl) return super.computeSizeHint();
+		else {
 			
-			
-			fBrowser.setText(content);
+			return getShell().computeSize(1000, 1000,true);
 		}
 	}
 
 	/*
-	 * @@see IInformationControl#computeSizeHint()
-	 */
-	
-	public Point computeSizeHint() { // 4
-
-		Image img = null;
-		try {
-			img = ImageIO.read((new File (image)));
-			this.img=img;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		int x = 20, y = 20;
-		if (result instanceof RegionTest){
-			x += 20;
-			y += 20;
-		}
-		return new Point (img.getWidth(null)+20, img.getHeight(null)+20);
-
-	}
-
-	/*
-	 * @@see IInformationControlExtension#hasContents()
+	 * @see IInformationControlExtension#hasContents()
 	 */
 	public boolean hasContents() {
-		return fBrowser.getText().length() > 0;
+		if(fShowInDefaultInformationControl) return super.hasContents();
+		return true;
 	}
 
 	/*
-	 * @@seeorg.eclipse.jface.text.IInformationControlExtension5#
+	 * @seeorg.eclipse.jface.text.IInformationControlExtension5#
 	 * getInformationPresenterControlCreator()
 	 * 
-	 * @@since 3.4
+	 * @since 3.4
 	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
+		if(fShowInDefaultInformationControl) return super.getInformationPresenterControlCreator();
 		return new IInformationControlCreator() {
 			/*
-			 * @@seeorg.eclipse.jface.text.IInformationControlCreator#
+			 * @seeorg.eclipse.jface.text.IInformationControlCreator#
 			 * createInformationControl(org.eclipse.swt.widgets.Shell)
 			 */
 			public IInformationControl createInformationControl(Shell parent) {
@@ -231,46 +203,46 @@ public class NCLHoverInformationControl extends AbstractInformationControl
 	}
 
 	/*
-	 * @@see org.eclipse.jface.text#setInput() The input object may be a String,
+	 * @see org.eclipse.jface.text#setInput() The input object may be a String,
 	 * an instance of IHTMLHoverInfo, or any object that returns a displayable
 	 * String from its toString() implementation.
 	 * 
-	 * @@since 3.4
+	 * @since 3.4
 	 */
-	public void setInput(Object input) { // 2
+	public void setInput(Object input) {
 		// Assume that the input is marked-up text, not a URL
 		fIsURL = false;
-		final String inputString;
-		result = input;
+		isImage=false;
+		isRegion=false;
+		isMedia=false;
+		isString=false;
+		
+		String inputString=null;
+
 		if (input instanceof IHTMLHoverInfo) {
+			// Get the input string, then see whether it's a URL
 			IHTMLHoverInfo inputInfo = (IHTMLHoverInfo) input;
 			inputString = inputInfo.getHTMLString();
 			fIsURL = inputInfo.isURL();
 		} else if (input instanceof String) {
-			String tmp = (String) input;
-			inputString = "<html><body bgcolor='fffacd' border='0' top ='0' style='font-size:12; font-face=Courier New;'>"
-					+ tmp.replace("\n", "<br/>") + "</body>";
-			
-		} else
+			// Treat the String as marked-up text to be displayed.
+			isString = true;
+			inputString = (String) input;
+		}else if(input instanceof ImageTest){
+			System.out.println("isimage1");
+			ImageTest test= (ImageTest)input;
+			isImage=true;
 			inputString = input.toString();
-
+		}else if(input instanceof RegionTest) {
+			System.out.println("isregion");
+			RegionTest regontest= (RegionTest)input;
+			inputString = input.toString();
+		}else if(input instanceof MediaTest){
+			System.out.println("ismedia");
+			RegionTest regontest= (RegionTest)input;
+			inputString = input.toString();
+		}
 		setInformation(inputString);
-
-	}
-	
-	/* (non-Javadoc)
-	 * @@see org.eclipse.jface.text.AbstractInformationControl#dispose()
-	 */
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		super.dispose();
-		File tmp = new File (this.getClass().getProtectionDomain().getCodeSource()
-				.getLocation().toString().substring(5)
-				+ "icons" + File.separatorChar + "tmp.png");
-		if (tmp.isFile()) tmp.delete();
 	}
 
 }
-
-

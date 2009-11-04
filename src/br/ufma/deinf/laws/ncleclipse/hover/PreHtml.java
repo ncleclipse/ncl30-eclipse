@@ -70,26 +70,41 @@ import sun.security.action.GetBooleanAction;
  *
  */
 public class PreHtml {
-	static int pageNum = 1;
-	//IWorkbench wb = PlatformUI.getWorkbench();
-	//private Display display = wb.getDisplay();;
-	//private Shell shell=new Shell(display,SWT.CLOSE) ;
+/*	static int pageNum = 1;
+	IWorkbench wb = PlatformUI.getWorkbench();
+	private Display display = wb.getDisplay();;
+	private Shell shell=new Shell(display,SWT.CLOSE) ;
 	private Browser browser;
 	private StyledText styletext;
 	
-	//private final int X = MouseInfo.getPointerInfo().getLocation().x;
-//	private final int Y = MouseInfo.getPointerInfo().getLocation().y;
-	//*/
-	private String result;
+	private final int X = MouseInfo.getPointerInfo().getLocation().x;
+	private final int Y = MouseInfo.getPointerInfo().getLocation().y;*/
+	private String str;
+	/**
+	 * @return the str
+	 */
+	public String getStr() {
+		return str;
+	}
+
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+
 	private String url;
-	//public PreHtml(int width,int height,final String result,final String url){
-		public PreHtml(final String result,final String url){
-		this.result=result;
-		this.url=url;
-		//System.out.println(this.result);
-		//System.out.println(this.url);
-		/*
-		shell.setLayout(new FillLayout(SWT.VERTICAL));
+	
+	
+	public PreHtml(int width,int height,final String result,final String url){
+		str = result;
+		this.url = url;
+		System.out.println(this.url);
+		System.out.println();
+		/*shell.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		shell.setSize(width,height);
 		
@@ -103,10 +118,10 @@ public class PreHtml {
 			fileItem.setText("View");
 		}else{
 			fileItem.setText("Source");
-		}
+		}*/
 		
 		
-		final Composite contentPanel = new Composite (shell, SWT.BORDER);
+		/*final Composite contentPanel = new Composite (shell, SWT.BORDER);
 		final StackLayout layout = new StackLayout ();
 		contentPanel.setLayout (layout);
 		
@@ -123,41 +138,8 @@ public class PreHtml {
 		browser = new Browser(page1,SWT.H_SCROLL);
 		browser.setUrl(url);
 		browser.pack ();
-		layout.topControl = pageNum == 0 ? page0 : page1;
-		
-		
-
-		fileItem.addListener (SWT.Selection, new Listener () {
-			public void handleEvent (Event event) {
-				pageNum = ++pageNum % 2;
-				
-				layout.topControl = pageNum == 0 ? page0 : page1;
-				if(pageNum == 0){
-					fileItem.setText("View");
-				}else{
-					fileItem.setText("Source");
-				}
-				contentPanel.layout ();
-			}
-		});
-		//shell.open();
-		browser.addListener(SWT.MouseMove, new Listener(){
-			
-
-			@Override
-			public void handleEvent(Event event) {
-				if(shell.getBounds().contains(event.x,event.y)){
-					System.out.println("sdaas");
-				}
-				
-			}
-			
-		});*/
-		
+		layout.topControl = pageNum == 0 ? page0 : page1;*/
 		
 			
-	}
-			public String toString(){
-		return this.result;
 	}
 }

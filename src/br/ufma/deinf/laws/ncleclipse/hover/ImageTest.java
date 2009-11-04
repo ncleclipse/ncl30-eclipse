@@ -20,39 +20,26 @@ public class ImageTest extends JComponent {
 	private Image img;
 	private int WIDTH;
 	private int HEIGHT;
+	private JFrame j;
 	private boolean valido;
-	private String file;
-
+	private String path;
 	public ImageTest(String filename) {
-		this.file=filename;
-		try {
-			img = ImageIO.read(new File(filename));
-			valido = true;
-			double proporcao;
-			int height = img.getHeight(null);
-			int width = img.getWidth(null);
-			if (height > width){
-				proporcao = (double)width/height;
-				HEIGHT = 300;
-				WIDTH = (int) Math.floor(HEIGHT * proporcao);
-			}
-			else{
-				proporcao = (double)height/width;
-				WIDTH = 300;
-				HEIGHT = (int) Math.floor(WIDTH * proporcao);
-			}
-			
-		} catch (IOException e) {
-			valido = false;
+		this.path=filename;
+		
 
-		}
+		
 	}
 
-	public boolean arquivoValido() {
-		return valido;
-	}
-	public String toString(){
-		return this.file;
-	}
+	
 
+	
+	
+	
+
+
+	public String toString() {
+
+		
+		return this.path;
+	}
 }

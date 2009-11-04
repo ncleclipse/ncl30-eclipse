@@ -56,12 +56,12 @@ public class MediaTest extends JComponent{
 		
 		this.string = file;
 		this.type = type;
-		this.file = new File(file);
-		this.p = Program.findProgram(type);
+		//this.file = new File(file);
+		//this.p = Program.findProgram(type);
 		
 		
 
-		jbutton = new JButton (new ImageIcon (this.getClass().getResource("../../../../../../../icons/play.png")));
+	//	jbutton = new JButton (new ImageIcon (this.getClass().getResource("../../../../../../../icons/play.png")));
 
 
 		
@@ -71,72 +71,6 @@ public class MediaTest extends JComponent{
 	
 	
 	}
-	public class Mouseout implements java.awt.event.MouseListener{
-		/*Program p = Program.findProgram(type);*/
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseClicked(java.awt.event.MouseEvent e) {
-			
-			PlatformUI.getWorkbench().getDisplay().syncExec(
-		    	      new Runnable() {
-		    	        public void run(){
-		    	        	//Program.launch(string) ;
-		    	        	p = Program.findProgram(type);
-		    	        	if(p!=null){
-		    	    				try{
-		    	    					p.execute(string);
-		    	    				}catch (Exception ev) {
-		    	    					ev.printStackTrace();
-		    	    				}
-		    	    		}
-		    	        }
-		    	      });
-
-
-			j.dispose();
-			
-			
-		}
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseEntered(java.awt.event.MouseEvent e) {
-			
-			
-		}
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseExited(java.awt.event.MouseEvent e) {
-			j.dispose();
-		}
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mousePressed(java.awt.event.MouseEvent e) {
-			
-			
-		}
-
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseReleased(java.awt.event.MouseEvent e) {
-			
-		}		
-		
-	}
-	
-	
 
 	public String toString (){
 		

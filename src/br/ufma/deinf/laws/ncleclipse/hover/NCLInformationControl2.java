@@ -373,7 +373,7 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 		
 		if (fisHtml) return new Point (230, 180);
 
-		return getShell().computeSize(100, 100, true);
+		return getShell().computeSize(300, 180, true);
 	}
 
 	public IInformationControlCreator getInformationPresenterControlCreator() {
@@ -384,7 +384,7 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 			 * createInformationControl(org.eclipse.swt.widgets.Shell)
 			 */
 			public IInformationControl createInformationControl(Shell parent) {
-				return new NCLInformationControl2(parent, false);
+				return new NCLInformationControl2(parent, true);
 			}
 		};
 	}

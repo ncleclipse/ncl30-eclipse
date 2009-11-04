@@ -15,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 public class RegionTest{
@@ -74,7 +75,7 @@ public class RegionTest{
 
 	
 	
-	public void paintregions(final Composite parent) {
+	public Point paintRegions(final Composite parent) {
 		
 		int top = 0;
 		int left = 0;
@@ -177,7 +178,7 @@ public class RegionTest{
 
 				e.gc.setBackground(blue);
 				
-				e.gc.setAlpha(100);
+				e.gc.setAlpha(80);
 				e.gc.drawRectangle(0, 0, bgw, bgh);
 				e.gc.fillRectangle(0, 0, bgw, bgh);
 				
@@ -251,7 +252,6 @@ public class RegionTest{
 				heght = paiheight;
 			}
 			
-			System.out.println (values.get(i).getRigth());
 			
 			if (top == 0 && values.get(i).getTop().equals("-1"))
 				if ( bottom > 0)
@@ -299,7 +299,7 @@ public class RegionTest{
 					Color blue = new Color(e.display, 0, 0, 255);
 
 					e.gc.setBackground(blue);
-					e.gc.setAlpha(30);
+					e.gc.setAlpha(40);
 					e.gc.drawRectangle(l, t, w1, h1);
 					e.gc.fillRectangle(l, t, w1, h1);
 					
@@ -315,7 +315,7 @@ public class RegionTest{
 
 		}
 		
-		//return img;
+		return new Point (bgw, bgh);
 
 	}
 
@@ -325,18 +325,3 @@ public class RegionTest{
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
