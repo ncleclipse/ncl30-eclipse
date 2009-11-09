@@ -24,16 +24,11 @@ package br.ufma.deinf.laws.ncleclipse.hover;
 
 import java.io.File;
 
-import javax.jws.soap.SOAPBinding.Style;
-
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.AbstractInformationControl;
-import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IInformationControlExtension2;
-import org.eclipse.jface.util.Geometry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StackLayout;
@@ -45,15 +40,12 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-
-import br.ufma.deinf.laws.ncleclipse.hover.NCLHoverInformationControl.IHTMLHoverInfo;
 
 
 public class NCLInformationControl2 extends AbstractInformationControl implements
@@ -201,7 +193,6 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 			this.fisImage = true;
 
 			ImageTest imaget = (ImageTest) input;
-			System.out.println(imaget.toString());
 			final Image img = new Image(getShell().getDisplay(), imaget
 					.toString());
 			
@@ -254,7 +245,6 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 			fBrowser1.setBackground(internalComposite.getBackground());
 			fBrowser1.setFont(JFaceResources.getDialogFont());
 				
-			System.out.println(html.getUrl());
 			fBrowser1.setUrl (html.getUrl());
 			
 			layout.topControl = page11;
@@ -323,7 +313,6 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 			//fBrowser.setText((String) input);
 			//super.setInformation((String) input);
 			
-			System.out.println((String) input);
 		}
 
 	}
@@ -335,7 +324,6 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 	 */
 	@Override
 	public boolean hasContents() {
-		System.out.println("hascontent");
 		return true;
 	}
 
@@ -344,7 +332,6 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 	 * internalComposite.computeTrim(0, 0, 0, 0)); }
 	 */
 	public void setVisible(boolean visible) {
-		System.out.println("setvisible");
 		if (visible) {
 
 			// Point currentSize= getShell().getSize();
@@ -360,7 +347,6 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 	}
 
 	public Point computeSizeHint() {
-		System.out.println("computesizeint");
 		// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=117602
 		if (fisImage) {
 			return new Point (widthImage, heightImage);
@@ -377,7 +363,6 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 	}
 
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		System.out.println("geinform");
 		return new IInformationControlCreator() {
 			/*
 			 * @seeorg.eclipse.jface.text.IInformationControlCreator#
@@ -391,7 +376,7 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 
 	public void dispose() {
 		// TODO Auto-generated method stub
-		System.out.println("dispose");
+
 		super.dispose();
 
 	}
