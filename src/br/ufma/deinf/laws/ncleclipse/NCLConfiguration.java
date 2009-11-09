@@ -55,6 +55,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
 import br.ufma.deinf.laws.ncleclipse.hover.NCLHoverInformationControl;
+import br.ufma.deinf.laws.ncleclipse.hover.NCLInformationControl2;
 import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHoverExtension2;
 import br.ufma.deinf.laws.ncleclipse.hyperlinks.NCLEclipseHyperlinkDetector;
 import br.ufma.deinf.laws.ncleclipse.scanners.CDataScanner;
@@ -261,6 +262,6 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	 ISourceViewer sourceViewer) { return new IInformationControlCreator() {
 	 public IInformationControl createInformationControl(Shell parent) {
 	 //return new DefaultInformationControl(parent); return new
-	 return new NCLHoverInformationControl(parent); } }; }
+				return new NCLInformationControl2(parent, false); } }; }
 	 
 }
