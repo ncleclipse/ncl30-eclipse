@@ -8,7 +8,7 @@ TODO:
 * Text Editor	
 	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar antes de disponibilizar).
 	- Sugestao do atributo src de media (Quase pronto).
-	- Drag and Drop para adicionar m�dia.
+	- Drag and Drop para adicionar midia.
 	- Preview em tooltip contextual (Deixar de usar JComponent).
 
 * Layout View
