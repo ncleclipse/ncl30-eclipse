@@ -23,7 +23,6 @@
 package br.ufma.deinf.laws.ncleclipse;
 
 import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
-import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
@@ -44,8 +43,6 @@ import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.Token;
-import org.eclipse.jface.text.source.DefaultAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -54,10 +51,10 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
-import br.ufma.deinf.laws.ncleclipse.hover.NCLHoverInformationControl;
-import br.ufma.deinf.laws.ncleclipse.hover.NCLInformationControl2;
+import br.ufma.deinf.laws.ncleclipse.hover.NCLHoverInformationControl2;
 import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHoverExtension2;
 import br.ufma.deinf.laws.ncleclipse.hyperlinks.NCLEclipseHyperlinkDetector;
+import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.scanners.CDataScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLScanner;
@@ -244,7 +241,12 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	 */
 	public ITextHover getTextHover(ISourceViewer sourceViewer,
 			String contentType) {
-		return new NCLTextHoverExtension2(sourceViewer);
+		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_PREVIEW)) {
+			return new NCLTextHoverExtension2(sourceViewer);
+		} else {
+			return super.getTextHover(sourceViewer, contentType);
+		}
 	}
 
 	/*
@@ -257,11 +259,20 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	 * TODO: This function must be reimplemented to return a
 	 * NCLHoverInformationControl
 	 */
-	
-	 public IInformationControlCreator getInformationControlCreator(
-	 ISourceViewer sourceViewer) { return new IInformationControlCreator() {
-	 public IInformationControl createInformationControl(Shell parent) {
-	 //return new DefaultInformationControl(parent); return new
-				return new NCLInformationControl2(parent, false); } }; }
-	 
+
+	public IInformationControlCreator getInformationControlCreator(
+			ISourceViewer sourceViewer) {
+		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_PREVIEW)) {
+			return new IInformationControlCreator() {
+				public IInformationControl createInformationControl(Shell parent) {
+					// return new DefaultInformationControl(parent); return new
+					return new NCLHoverInformationControl2(parent, false);
+				}
+			};
+		} else {
+			return super.getInformationControlCreator(sourceViewer);
+		}
+	}
+
 }
