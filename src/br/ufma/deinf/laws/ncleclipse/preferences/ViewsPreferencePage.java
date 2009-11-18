@@ -61,7 +61,7 @@ public class ViewsPreferencePage
 		addField(
 			new BooleanFieldEditor(
 				PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE,
-				"&Open Layout View Editor",
+				"&Open Layout View Editor (Experimental - be carefull)",
 				getFieldEditorParent()));
 		
 		addField(

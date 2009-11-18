@@ -65,6 +65,10 @@ Versao 1.4.2
 	
 Versao 1.4.1
 2009-10-14
+	- Mensagem de erro quando pedia para formatar (Ctrl+Shift+F).
+	Antes estava no codigo, agora foi movida para o NCLEditorMessages.properties 
+	Ok!
+	
 	- Autocomplete em XML que nao estah bem formado. 
 	Antes gerava uma mensagem de erro a partir da Excecao! Agora gera uma mensagem de erro e
 	mesmo assim autocompleta (com o que foi possivel fazer o parser).

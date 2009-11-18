@@ -38,6 +38,8 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
+
 public class NCLDocumentFormattingStrategy extends ContextBasedFormattingStrategy {
 	 
 	/** Documents to be formatted by this strategy */
@@ -76,8 +78,8 @@ public class NCLDocumentFormattingStrategy extends ContextBasedFormattingStrateg
 				e.printStackTrace();
 				MessageDialog.openInformation(
 						null,
-						"XML Format",
-						"The XML Formatter can only format valid XML. Please correct the errors first.");
+						NCLEditorMessages.getString("ContentFormat.Error.Title"),
+						NCLEditorMessages.getString("ContentFormat.Error.XMLParserError"));
 			}
 		}
 	}
