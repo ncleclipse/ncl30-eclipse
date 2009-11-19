@@ -4,7 +4,8 @@ TODO:
 	- Launch Configuration Type
 		- Ginga Emulator Launch Configuration
 		- Ginga VM Launch Emulator
-
+	- Textos das licenças no feature.
+	
 * Text Editor	
 	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar antes de disponibilizar).
 	- Sugestao do atributo src de media (Quase pronto).
@@ -51,9 +52,15 @@ TODO:
 			<media id=""/>
 				<area id="teste"/>
 			</media>
+			
+Versao 1.4.6
+2009-11-18
+	- Correcao da sugestao do refer
+	
 Versao 1.4.3
 2009-10-31
 	- Validação de source de arquivos, ainda com bugs quando em espaço!
+	
 2009-11-01
 	- Preferencia pra habilitar ou nao as previsualizações!
 	
@@ -61,7 +68,6 @@ Versao 1.4.2
 2009-10-30
 	- Desabilitado as pre-views temporariamente, pq tava abrindo infinitas janelas novas.
 		Problemas por causa do JComponent. 
-		
 	
 Versao 1.4.1
 2009-10-14

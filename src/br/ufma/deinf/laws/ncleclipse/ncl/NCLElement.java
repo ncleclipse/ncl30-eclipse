@@ -40,9 +40,11 @@ public class NCLElement
 
 	private String tagName;
 	private String perspective;
+	private String completePerspective;
 	
 	private NCLElement parent;
 	private Position position; // ver utilidade depois
+	
 	public int getLineNumber() {
 		return lineNumber;
 	}
@@ -133,6 +135,14 @@ public class NCLElement
 
 	public void setPerspective(String perspective) {
 		this.perspective = perspective;
+	}
+	
+	public void setCompletePerspective(String completePerspective) {
+		this.completePerspective = completePerspective;
+	}
+	
+	public String getCompletePerspective() {
+		return this.completePerspective;
 	}
 
 	public void clear()

@@ -46,6 +46,7 @@ public class NCLContentHandler implements ContentHandler {
 	private NCLDocument nclDocument = null;
 	private Stack<String> perspective;
 	private String perspectiveSemId = "0";
+	private String completePerspective = "";
 	private Locator locator;
 
 	@Override
@@ -119,6 +120,12 @@ public class NCLContentHandler implements ContentHandler {
 		String strPerspective = "";
 		if (perspective.size() > 0)
 			strPerspective = perspective.lastElement();
+		
+		completePerspective = "";
+		Iterator itStack = perspective.iterator();
+		while(itStack.hasNext()){
+			completePerspective += "/"+itStack.next();
+		}
 
 		// Carrega o NCLDocument
 		System.out.println("Adicionando no NCLContentHandler " + qName
@@ -132,6 +139,9 @@ public class NCLContentHandler implements ContentHandler {
 			nclElement
 					.setAttributeValue(atts.getLocalName(i), atts.getValue(i));
 		}
+		
+		nclElement.setCompletePerspective(completePerspective);
+		//System.out.println("completeperspective = " + completePerspective);
 		nclDocument.addElement(nclElement, atts.getValue("id"));
 
 		// Verifica se o elemento atual define uma perspectiva
@@ -204,6 +214,7 @@ public class NCLContentHandler implements ContentHandler {
 					NCLElement importedNclElement = (NCLElement) it2.next();
 					String aliasElement = importedNclElement.getAttributes()
 							.get("alias");
+					importedNclElement.setCompletePerspective(completePerspective+importedNclElement.getCompletePerspective());
 					nclDocument.addElement(importedNclElement,
 							importedNclElement.getAttributes().get("id"));
 				}

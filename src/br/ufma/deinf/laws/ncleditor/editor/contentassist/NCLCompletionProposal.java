@@ -232,11 +232,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		}
 
 		/*
-		 * Nao faz sentido computar tudo nunca! 
+		 * Nao faz sentido computar tudo nunca!
 		 * 
-		 * //Caso contrário computa tudo
-		 * Map<String, Map<String, Boolean>> atts =
-		 * nclStructure.getAttributes(); Iterator it =
+		 * //Caso contrário computa tudo Map<String, Map<String, Boolean>> atts
+		 * = nclStructure.getAttributes(); Iterator it =
 		 * atts.entrySet().iterator(); while(it.hasNext()){ Map.Entry<String,
 		 * Map<String, Boolean>> entry = (Entry<String, Map<String, Boolean>>)
 		 * it.next(); String tagname = entry.getKey(); String tagname2 =
@@ -451,7 +450,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						attribute);
 				// Computa os valores de atributos dos elementos filhos do refer
 
-				// Refatorar este codigo... Isto estah repetindo o que estah sendo
+				// Refatorar este codigo... Isto estah repetindo o que estah
+				// sendo
 				// feito lah embaixo
 				String perspectivetmp = element.getAttributeValue("refer");
 				element = nclDocument.getElementById(perspectivetmp);
@@ -592,8 +592,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		// Referencias Globais (ou seja, não precisa de contexto)
 		it = nclReference.iterator();
+
 		if (perspective == null) {
+			NCLElement element;
+			String atualId = nclDoc
+					.getAttributeValueFromCurrentTagName(offset, "id");
+			if(atualId == null || atualId.equals("")) return;
+			element = nclDocument.getElementById(atualId);
+			
+			String atualCompletePerspective = element.getCompletePerspective();
 			it = nclReference.iterator();
+			
 			while (it.hasNext()) {
 				NCLReference nclRefAtual = (NCLReference) it.next();
 				Collection elements = nclDocument.getElements().get(
@@ -602,9 +611,19 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					continue;
 				Iterator it2 = elements.iterator();
 				while (it2.hasNext()) {
-					text = ((NCLElement) it2.next())
-							.getAttributeValue(nclRefAtual.getRefAttribute());
-					System.out.println(text);
+					NCLElement refElement = ((NCLElement) it2.next()); 
+					text = refElement.getAttributeValue(nclRefAtual.getRefAttribute());
+					if (text == null || text.endsWith("#null"))
+						continue; // null
+
+					// can not refer the own parent or his childrens
+					String refCompletePerspective = refElement.getCompletePerspective();
+					if(!refCompletePerspective.equals(atualCompletePerspective)){
+						if(refCompletePerspective.length() > atualCompletePerspective.length()){
+							if(refCompletePerspective.contains(atualCompletePerspective)) continue;
+						} else if(atualCompletePerspective.contains(refCompletePerspective)) continue;
+					}
+
 					// refer nao pode sugerir a propria media, switch, etc.
 					if (attribute.equals("refer")) {
 						String idAtual = nclDoc
@@ -614,6 +633,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							if (text.equals(idAtual))
 								continue;
 					}
+
 					if (text.startsWith(qualifier)) {
 						cursor = text.length();
 						System.out

@@ -92,9 +92,8 @@ public class NCLSourceDocument extends Document {
 			} while (true);
 			return partitionOffset;
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			return -1;
 		}
-		return -1;
 	}
 
 	/**
@@ -269,9 +268,8 @@ public class NCLSourceDocument extends Document {
 					value += text.charAt(p);
 			}
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			return "";
 		}
-		return "";
 	}
 
 	/**
@@ -816,5 +814,24 @@ public class NCLSourceDocument extends Document {
 		document.setDocumentPartitioner(partitioner);
 		return document;
 	}
+	
+	/**
+	 * Return the list of parents, grandparents, etc. of the element
+	 * in the offset.
+	 * 
+	 * @param offset
+	 * @return
+	 */
+	public List <String> getParentList(int offset){
+		List <String> parents = new ArrayList<String>();
+		while(true){
+			int parentOffset = getFatherPartitionOffset(offset);
+			if(parentOffset < 0) break;
+			parents.add(getAttributeValueFromCurrentTagName(parentOffset, "id"));
+			offset = parentOffset;
+		}
+		return parents;
+	} 
+	
 
 }
