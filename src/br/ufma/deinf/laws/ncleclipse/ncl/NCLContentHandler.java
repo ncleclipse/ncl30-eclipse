@@ -178,10 +178,10 @@ public class NCLContentHandler implements ContentHandler {
 				alias += atts.getValue("alias");
 			else
 				alias = atts.getValue("alias");
-			nclDocument.alias = alias;
+			//nclDocument.alias = alias;
 			XMLParser parser = new XMLParser();
 			NCLContentHandler contentHandlerTmp = new NCLContentHandler();
-			contentHandlerTmp.getNclDocument().setAlias("");
+			contentHandlerTmp.getNclDocument().setAlias(alias);
 			parser.setContentHandler(contentHandlerTmp);
 			try {
 				if (atts.getValue("documentURI") != null
@@ -215,11 +215,12 @@ public class NCLContentHandler implements ContentHandler {
 					String aliasElement = importedNclElement.getAttributes()
 							.get("alias");
 					importedNclElement.setCompletePerspective(completePerspective+importedNclElement.getCompletePerspective());
+					//System.out.println("importedNclElement.id = "+importedNclElement.getAttributes().get("id"));
 					nclDocument.addElement(importedNclElement,
 							importedNclElement.getAttributes().get("id"));
 				}
 			}
-			nclDocument.setAlias(alias_ant);
+			//nclDocument.setAlias(alias_ant);
 		}
 	}
 

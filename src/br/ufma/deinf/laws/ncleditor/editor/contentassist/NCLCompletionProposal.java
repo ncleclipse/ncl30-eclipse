@@ -532,7 +532,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			 */
 		}
 
-		System.out.println("perspective = " + perspective);
+		//System.out.println("perspective = " + perspective);
 		Collection nclReference = nclStructure.getNCLReference(tagname,
 				attribute);
 		if (nclReference == null)
@@ -597,10 +597,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			NCLElement element;
 			String atualId = nclDoc
 					.getAttributeValueFromCurrentTagName(offset, "id");
-			if(atualId == null || atualId.equals("")) return;
-			element = nclDocument.getElementById(atualId);
+			//if(atualId == null || atualId.equals("")) return;
+			//element = nclDocument.getElementById(atualId);
 			
-			String atualCompletePerspective = element.getCompletePerspective();
+			//String atualCompletePerspective = element.getCompletePerspective();
 			it = nclReference.iterator();
 			
 			while (it.hasNext()) {
@@ -616,13 +616,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					if (text == null || text.endsWith("#null"))
 						continue; // null
 
-					// can not refer the own parent or his childrens
-					String refCompletePerspective = refElement.getCompletePerspective();
+					//TODO: the refer attribute can not refer the own parent or his childrens
+					/*String refCompletePerspective = refElement.getCompletePerspective();
 					if(!refCompletePerspective.equals(atualCompletePerspective)){
 						if(refCompletePerspective.length() > atualCompletePerspective.length()){
 							if(refCompletePerspective.contains(atualCompletePerspective)) continue;
 						} else if(atualCompletePerspective.contains(refCompletePerspective)) continue;
-					}
+					}*/
 
 					// refer nao pode sugerir a propria media, switch, etc.
 					if (attribute.equals("refer")) {

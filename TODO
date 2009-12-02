@@ -52,10 +52,14 @@ TODO:
 			<media id=""/>
 				<area id="teste"/>
 			</media>
-			
+
+Versao 1.4.7
+	- Alguma mudança causou problemas na sugestao de conteudo que estava em
+	outro arquivo! Problema resolvido!
+	
 Versao 1.4.6
 2009-11-18
-	- Correcao da sugestao do refer
+	- Correcao da sugestao do refer (Incompleta)
 	
 Versao 1.4.3
 2009-10-31
