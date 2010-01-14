@@ -26,6 +26,7 @@ import java.io.File;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.AbstractInformationControl;
+
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IInformationControlExtension2;
@@ -47,9 +48,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-
-public class NCLInformationControl2 extends AbstractInformationControl implements
-		IInformationControlExtension2 {
+public class NCLInformationControl2 extends AbstractInformationControl
+		implements IInformationControlExtension2 {
 	public interface IHTMLHoverInfo {
 		/**
 		 * @@return true if the String returned by getHTMLString() represents a
@@ -91,23 +91,14 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 	private int heightImage;
 	private boolean fisHtml;
 
-	/**
-	 * @param parentShell
-	 * @param isResizable
-	 */
+
 	public NCLInformationControl2(Shell parentShell, boolean isResizable) {
 		super(parentShell, isResizable);
 		create();
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.text.AbstractInformationControl#createContent(org.eclipse
-	 * .swt.widgets.Composite)
-	 */
+	
 	@Override
 	protected void createContent(Composite parent) {
 		internalComposite = new Composite(parent, SWT.BORDER);
@@ -122,25 +113,18 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 
 		pageImage = new Composite(this.internalComposite, SWT.NONE);
 		pageImage.setLayout(new FillLayout());
-		
+
 		pageRegion = new Composite(this.internalComposite, SWT.NONE);
 		pageRegion.setLayout(new FillLayout());
-		
+
 		pageText = new Composite(this.internalComposite, SWT.NONE);
 		pageText.setLayout(new FillLayout());
-		text = new StyledText (pageText, SWT.V_SCROLL | SWT.H_SCROLL);
+		text = new StyledText(pageText, SWT.V_SCROLL | SWT.H_SCROLL);
 		text.setForeground(parent.getForeground());
 		text.setBackground(parent.getBackground());
 		text.setFont(JFaceResources.getDialogFont());
-		
-		
-		/*page1 = new Composite(this.internalComposite, SWT.NONE);
-		page1.setLayout(new FillLayout());*/
-		/*fBrowser = new Browser(page1, SWT.NONE);
-		fBrowser.setForeground(internalComposite.getForeground());
-		fBrowser.setBackground(internalComposite.getBackground());
-		internalComposite.setFont(JFaceResources.getDialogFont());*/
-		//fBrowser.pack();
+
+	
 
 		pageButton = new Composite(this.internalComposite, SWT.NONE);
 		pageButton.setLayout(new FillLayout());
@@ -153,72 +137,45 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 		image.dispose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.text.IInformationControlExtension2#setInput(java.lang
-	 * .Object)
-	 */
-	/*
-	 * private class PaintR implements PaintListener{
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events
-	 * .PaintEvent)
-	 * 
-	 * @Override public void paintControl(PaintEvent e) { Drawiamge(e);
-	 * 
-	 * }
-	 * 
-	 * } public void Drawiamge(PaintEvent e){
-	 * 
-	 * }
-	 */
 	@Override
 	public void setInput(Object input) {
 
-		// System.out.println("setinput");
 		this.fisImage = false;
 		this.TinyImage = false;
 		this.fisMedia = false;
 		this.fisRegion = false;
 		this.fisHtml = false;
-		// System.out.println(input.getClass());
 
-		if (input instanceof ImageTest) {
+		if (input instanceof PreViewImage) {
 			layout.topControl = pageImage;
 			this.fisImage = true;
 
-			ImageTest imaget = (ImageTest) input;
+			PreViewImage imaget = (PreViewImage) input;
 			final Image img = new Image(getShell().getDisplay(), imaget
 					.toString());
-			
+
 			widthImage = img.getBounds().width;
 			heightImage = img.getBounds().height;
-			
-			if (widthImage > 300 || heightImage > 300){
+
+			if (widthImage > 300 || heightImage > 300) {
 				double proporcao;
-				if (heightImage > widthImage){
-					proporcao = (double)widthImage/heightImage;
+				if (heightImage > widthImage) {
+					proporcao = (double) widthImage / heightImage;
 					heightImage = 300;
 					widthImage = (int) Math.floor(heightImage * proporcao);
-				}
-				else{
-					proporcao = (double)heightImage/widthImage;
+				} else {
+					proporcao = (double) heightImage / widthImage;
 					widthImage = 300;
 					heightImage = (int) Math.floor(widthImage * proporcao);
 				}
 			}
-			
+
 			pageImage.addPaintListener(new PaintListener() {
 
 				@Override
 				public void paintControl(PaintEvent e) {
-					for(int i=0;i<100;i++){
-					e.gc.fillRectangle(0, 0, widthImage, heightImage);
+					for (int i = 0; i < 100; i++) {
+						e.gc.fillRectangle(0, 0, widthImage, heightImage);
 					}
 				}
 
@@ -235,23 +192,25 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 
 			});
 
-		} else if (input instanceof PreHtml) {
+		} else if (input instanceof PreViewXML) {
 			fisHtml = true;
-			PreHtml html = (PreHtml) input;
+			PreViewXML html = (PreViewXML) input;
 			Composite page11 = new Composite(this.internalComposite, SWT.NONE);
+			
 			page11.setLayout(new FillLayout());
 			Browser fBrowser1 = new Browser(page11, SWT.NONE);
+		
 			fBrowser1.setForeground(internalComposite.getForeground());
 			fBrowser1.setBackground(internalComposite.getBackground());
 			fBrowser1.setFont(JFaceResources.getDialogFont());
-				
-			fBrowser1.setUrl (html.getUrl());
-			
+
+			fBrowser1.setUrl(html.getUrl());
+
 			layout.topControl = page11;
-		} else if (input instanceof RegionTest) {
+		} else if (input instanceof PreViewRegion) {
 			this.fisRegion = true;
 			layout.topControl = pageRegion;
-			RegionTest region = (RegionTest) input;
+			PreViewRegion region = (PreViewRegion) input;
 			this.cb = pageRegion.getBackground();
 			this.cf = pageRegion.getForeground();
 			pageRegion.addPaintListener(new PaintListener() {
@@ -267,10 +226,10 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 
 			});
 			regionSize = region.paintRegions(pageRegion);
-		} else if (input instanceof MediaTest) {
+		} else if (input instanceof PreViewMedia) {
 			this.fisMedia = true;
 			layout.topControl = pageButton;
-			final MediaTest med = (MediaTest) input;
+			final PreViewMedia med = (PreViewMedia) input;
 
 			this.button.addMouseListener(new MouseListener() {
 
@@ -279,7 +238,7 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 					PlatformUI.getWorkbench().getDisplay().syncExec(
 							new Runnable() {
 								public void run() {
-									// Program.launch(string) ;
+
 									p = Program.findProgram(med.getType());
 									if (p != null) {
 										try {
@@ -295,51 +254,36 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 
 				@Override
 				public void mouseDown(MouseEvent e) {
-					// TODO Auto-generated method stub
 
 				}
 
 				@Override
 				public void mouseUp(MouseEvent e) {
-					// TODO Auto-generated method stub
 
 				}
 			});
 
 		} else if (input instanceof String) {
 			text.setText((String) input);
-			
+
 			layout.topControl = pageText;
-			//fBrowser.setText((String) input);
-			//super.setInformation((String) input);
-			
+
 		}
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.IInformationControlExtension#hasContents()
-	 */
 	@Override
 	public boolean hasContents() {
 		return true;
 	}
 
-	/*
-	 * public Rectangle computeTrim() { return Geometry.add(super.computeTrim(),
-	 * internalComposite.computeTrim(0, 0, 0, 0)); }
-	 */
 	public void setVisible(boolean visible) {
 		if (visible) {
 
-			// Point currentSize= getShell().getSize();
 			getShell().pack(true);
 			Point newSize = computeSizeHint();
-			// if (newSize.x > currentSize.x || newSize.y > currentSize.y)
+
 			setSize(newSize.x, newSize.y);
-			// restore previous size
 
 		}
 
@@ -347,27 +291,25 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 	}
 
 	public Point computeSizeHint() {
-		// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=117602
+
 		if (fisImage) {
-			return new Point (widthImage, heightImage);
+			return new Point(widthImage, heightImage);
 		}
 		if (fisMedia) {
 			return getShell().computeSize(80, 80);
 		}
 		if (fisRegion)
 			return regionSize;
-		
-		if (fisHtml) return new Point (230, 180);
+
+		if (fisHtml)
+			return new Point(230, 180);
 
 		return getShell().computeSize(300, 180, true);
 	}
 
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		return new IInformationControlCreator() {
-			/*
-			 * @seeorg.eclipse.jface.text.IInformationControlCreator#
-			 * createInformationControl(org.eclipse.swt.widgets.Shell)
-			 */
+
 			public IInformationControl createInformationControl(Shell parent) {
 				return new NCLInformationControl2(parent, true);
 			}
@@ -375,18 +317,9 @@ public class NCLInformationControl2 extends AbstractInformationControl implement
 	}
 
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 		super.dispose();
 
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events
-	 * .PaintEvent)
-	 */
 
 }

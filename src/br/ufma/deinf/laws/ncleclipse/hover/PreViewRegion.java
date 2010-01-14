@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
-public class RegionTest{
+public class PreViewRegion{
 	// private JFrame j;
 	private int WIDTH = 300;
 	private int HEIGHT = 300;
@@ -27,7 +27,7 @@ public class RegionTest{
 	public int bgwidth;
 	public int bgheight;
 
-	public RegionTest(Vector<RegionValues> values) {
+	public PreViewRegion(Vector<RegionValues> values) {
 		
 		this.values = values;
 		

@@ -22,65 +22,36 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.hover;
 
-import java.awt.Image;
-import java.awt.MouseInfo;
-import java.io.File;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.swt.program.Program;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
- *
+ * 
  */
-public class MediaTest extends JComponent{
-	private Image img;
-	private final int WIDTH=62;
-	private final int HEIGHT=62;
-	private JFrame j;
-	JButton jbutton;
+public class PreViewMedia extends JComponent {
+
 	String string;
 	String type;
-	File file;
-	Program p;
-	
-	
-	public MediaTest (String file,String type) {
-		
+
+	public PreViewMedia(String file, String type) {
+
 		this.string = file;
 		this.type = type;
-		//this.file = new File(file);
-		//this.p = Program.findProgram(type);
-		
-		
+		// this.file = new File(file);
+		// this.p = Program.findProgram(type);
 
-	//	jbutton = new JButton (new ImageIcon (this.getClass().getResource("../../../../../../../icons/play.png")));
+		// jbutton = new JButton (new ImageIcon
+		// (this.getClass().getResource("../../../../../../../icons/play.png")));
 
-
-		
-		
-		
-		
-	
-	
 	}
 
-	public String toString (){
-		
-		
-		
-		
+	public String toString() {
+
 		return this.string;
 	}
-	public String getType(){
-		
+
+	public String getType() {
+
 		return this.type;
 	}
 }

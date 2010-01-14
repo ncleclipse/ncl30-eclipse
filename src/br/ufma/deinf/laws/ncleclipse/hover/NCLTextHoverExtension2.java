@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+
 import java.util.Vector;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -18,7 +17,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.program.Program;
+
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IURIEditorInput;
@@ -148,21 +147,20 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 			if ((!CurrentAttribute.equals("descriptor") && CurrentTagname.equals("media") ) || 
 					( CurrentTagname.equals("descriptor") && ( CurrentAttribute.equals("focusSelSrc") || 
 									CurrentAttribute.equals("focusSrc") ) ) ) {
+				
 				String mime = doc.getAttributeValueFromCurrentTagName(offset,
 						"src");
-				if (mime == null){
+				
+				if (mime == null){ //significa que a tag em questão é focusSelSrc ou focusSrc
 					mime = doc.getAttributeValueFromCurrentTagName(offset, "focusSelSrc");
 					if (mime == null)
 						mime = doc.getAttributeValueFromCurrentTagName(offset, "focusSrc");
 				}
 				
 			
-				System.out.println(mime.substring(0, 4));
-				
-				//if()
 				if(mime.length()>7){
 					if(mime.substring(0, 7).equals("http://")){
-						result = new PreHtml(300,300,"",mime);
+						result = new PreViewXML(300,300,"",mime);
 					}
 				}
 				
@@ -178,7 +176,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 
 					File arquivo = new File(nomeArquivo);
 					if (arquivo.isFile()) {
-						result = new MediaTest(nomeArquivo, sbstr);
+						result = new PreViewMedia(nomeArquivo, sbstr);
 
 					} else {
 						nomeArquivo = ResourcesPlugin.getWorkspace().getRoot()
@@ -189,7 +187,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 						arquivo = new File(nomeArquivo);
 						if (arquivo.isFile())
 
-							result = new MediaTest(nomeArquivo, sbstr);
+							result = new PreViewMedia(nomeArquivo, sbstr);
 
 					}
 
@@ -213,7 +211,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 								String tmp, aux = "";
 								while ((tmp = leitor.readLine()) != null)
 									aux += tmp + "\n";
-								PreHtml pre = new PreHtml(300, 300, aux,
+								PreViewXML pre = new PreViewXML(300, 300, aux,
 										nomeArquivo);
 								result = pre;
 							} catch (IOException e) {
@@ -238,7 +236,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 									while ((tmp = leitor.readLine()) != null)
 										aux += tmp + "\n";
 
-									PreHtml pre = new PreHtml(300, 300, aux,
+									PreViewXML pre = new PreViewXML(300, 300, aux,
 											nomeArquivo);
 									result = pre;
 								} catch (IOException e) {
@@ -292,9 +290,9 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 					}
 				} else if (image.contains(sbstr)) {
 					String nomeArquivo = mime;
-					ImageTest img = null;
+					PreViewImage img = null;
 					if (new File(nomeArquivo).isFile())
-						img = new ImageTest(nomeArquivo);
+						img = new PreViewImage(nomeArquivo);
 					else {
 						nomeArquivo = ResourcesPlugin.getWorkspace().getRoot()
 								.getLocation()
@@ -302,7 +300,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 								+ File.separatorChar
 								+ mime;
 						if (new File(nomeArquivo).isFile())
-							img = new ImageTest(nomeArquivo);
+							img = new PreViewImage(nomeArquivo);
 					}
 					// Image image = new
 					// Image(NCLConfiguration.getInformationControlCreator().getShell(),
@@ -312,7 +310,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 				}
 			} else if (doc.getCurrentAttribute(offset).equals("id")
 					&& doc.getCurrentTagname(offset).equals("region")) {
-				RegionTest t = new RegionTest(getRegionFatherTree(offset));
+				PreViewRegion t = new PreViewRegion(getRegionFatherTree(offset));
 				result = t;
 			} else if (doc.getCurrentTagname(offset).equals("descriptor") &&
 					doc.getCurrentAttribute(offset).equals("region")) {
@@ -327,7 +325,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 					aux--;
 
 				}
-				RegionTest t = new RegionTest(getRegionFatherTree(aux));
+				PreViewRegion t = new PreViewRegion(getRegionFatherTree(aux));
 			
 				result = t;
 			} 
