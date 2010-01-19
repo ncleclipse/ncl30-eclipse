@@ -55,6 +55,10 @@ TODO:
 				<area id="teste"/>
 			</media>
 
+Versao 1.4.10
+	- Correção do problema de ter que abrir de novo o editor para funcionar
+	a edição de preferência das Preview's
+
 Versao 1.4.7
 	- Alguma mudança causou problemas na sugestao de conteudo que estava em
 	outro arquivo! Problema resolvido!
