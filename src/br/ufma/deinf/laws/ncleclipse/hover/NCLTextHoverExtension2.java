@@ -26,7 +26,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
+import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 
 public class NCLTextHoverExtension2 extends DefaultTextHover implements
@@ -44,8 +46,6 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 	public Vector<RegionValues> getRegionFatherTree(int offset) {
 		Vector<RegionValues> tree = new Vector<RegionValues>();
 		Vector<Integer> offsets = new Vector<Integer>();
-
-
 
 		while (doc.getCurrentTagname(offset).equals("region") == true) {
 			offsets.add(offset);
@@ -107,125 +107,103 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 			currentFile = new File(((IURIEditorInput) editor.getEditorInput())
 					.getURI());
 		}
+		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_PREVIEW)) {
 
-		try {
-			doc = (NCLSourceDocument) textViewer.getDocument();
-			typedRegion = (TypedRegion) doc.getPartition(offset);
+			try {
+				doc = (NCLSourceDocument) textViewer.getDocument();
+				typedRegion = (TypedRegion) doc.getPartition(offset);
 
-			if (typedRegion.getType() != XMLPartitionScanner.XML_START_TAG)
-				return null;
+				if (typedRegion.getType() != XMLPartitionScanner.XML_START_TAG)
+					return null;
 
-			Vector<String> image = new Vector<String>();
-			Vector<String> text = new Vector<String>();
-			Vector<String> audio = new Vector<String>();
-			Vector<String> video = new Vector<String>();
-			
-			image.add("bmp");
-			image.add("png");
-			image.add("gif");
-			image.add("jpg");
+				Vector<String> image = new Vector<String>();
+				Vector<String> text = new Vector<String>();
+				Vector<String> audio = new Vector<String>();
+				Vector<String> video = new Vector<String>();
 
-			text.add("html");
-			text.add("htm");
-			text.add("css");
-			text.add("xml");
-			text.add("txt");
+				image.add("bmp");
+				image.add("png");
+				image.add("gif");
+				image.add("jpg");
 
-			audio.add("wav");
-			audio.add("mp3");
-			audio.add("mp2");
-			audio.add("mp4");
-			audio.add("mpg4");
+				text.add("html");
+				text.add("htm");
+				text.add("css");
+				text.add("xml");
+				text.add("txt");
 
-			video.add("mpeg");
-			video.add("mpg");
-			
-			String CurrentAttribute = doc.getCurrentAttribute(offset);
-			String CurrentTagname = doc.getCurrentTagname(offset);
-			
-			
-			if ((!CurrentAttribute.equals("descriptor") && CurrentTagname.equals("media") ) || 
-					( CurrentTagname.equals("descriptor") && ( CurrentAttribute.equals("focusSelSrc") || 
-									CurrentAttribute.equals("focusSrc") ) ) ) {
-				
-				String mime = doc.getAttributeValueFromCurrentTagName(offset,
-						"src");
-				
-				if (mime == null){ //significa que a tag em questão é focusSelSrc ou focusSrc
-					mime = doc.getAttributeValueFromCurrentTagName(offset, "focusSelSrc");
-					if (mime == null)
-						mime = doc.getAttributeValueFromCurrentTagName(offset, "focusSrc");
-				}
-				
-			
-				if(mime.length()>7){
-					if(mime.substring(0, 7).equals("http://")){
-						result = new PreViewXML(300,300,"",mime);
-					}
-				}
-				
-				
-				String values[] = mime.split("\\.");
-				String sbstr = "";
-				if (values.length > 1)
-					sbstr = values[values.length - 1];
-				
-				if (audio.contains(sbstr) || video.contains(sbstr)) {
+				audio.add("wav");
+				audio.add("mp3");
+				audio.add("mp2");
+				audio.add("mp4");
+				audio.add("mpg4");
 
-					String nomeArquivo = mime;
+				video.add("mpeg");
+				video.add("mpg");
 
-					File arquivo = new File(nomeArquivo);
-					if (arquivo.isFile()) {
-						result = new PreViewMedia(nomeArquivo, sbstr);
+				String CurrentAttribute = doc.getCurrentAttribute(offset);
+				String CurrentTagname = doc.getCurrentTagname(offset);
 
-					} else {
-						nomeArquivo = ResourcesPlugin.getWorkspace().getRoot()
-								.getLocation()
-								+ currentFile.getParent()
-								+ File.separatorChar
-								+ mime;
-						arquivo = new File(nomeArquivo);
-						if (arquivo.isFile())
+				if ((!CurrentAttribute.equals("descriptor") && CurrentTagname
+						.equals("media"))
+						|| (CurrentTagname.equals("descriptor") && (CurrentAttribute
+								.equals("focusSelSrc") || CurrentAttribute
+								.equals("focusSrc")))) {
 
-							result = new PreViewMedia(nomeArquivo, sbstr);
+					String mime = doc.getAttributeValueFromCurrentTagName(
+							offset, "src");
 
+					if (mime == null) { // significa que a tag em questão é
+										// focusSelSrc ou focusSrc
+						mime = doc.getAttributeValueFromCurrentTagName(offset,
+								"focusSelSrc");
+						if (mime == null)
+							mime = doc.getAttributeValueFromCurrentTagName(
+									offset, "focusSrc");
 					}
 
-				}
-				if (text.contains(sbstr)) {
-					result = "";
-					String nomeArquivo = mime;
-					
-					
-					if (sbstr.equals("html") || sbstr.equals("xml")
-							|| sbstr.equals("htm")) {
-						
-						
+					if (mime.length() > 7) {
+						if (mime.substring(0, 7).equals("http://")) {
+							result = new PreViewXML(300, 300, "", mime);
+						}
+					}
+
+					String values[] = mime.split("\\.");
+					String sbstr = "";
+					if (values.length > 1)
+						sbstr = values[values.length - 1];
+
+					if (audio.contains(sbstr) || video.contains(sbstr)) {
+
+						String nomeArquivo = mime;
+
 						File arquivo = new File(nomeArquivo);
-
 						if (arquivo.isFile()) {
-							FileReader in = null;
-							try {
-								in = new FileReader(arquivo);
-								BufferedReader leitor = new BufferedReader(in);
-								String tmp, aux = "";
-								while ((tmp = leitor.readLine()) != null)
-									aux += tmp + "\n";
-								PreViewXML pre = new PreViewXML(300, 300, aux,
-										nomeArquivo);
-								result = pre;
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							result = new PreViewMedia(nomeArquivo, sbstr);
 
 						} else {
 							nomeArquivo = ResourcesPlugin.getWorkspace()
 									.getRoot().getLocation()
 									+ currentFile.getParent()
-									+ File.separatorChar
-									+ mime;
+									+ File.separatorChar + mime;
 							arquivo = new File(nomeArquivo);
+							if (arquivo.isFile())
+
+								result = new PreViewMedia(nomeArquivo, sbstr);
+
+						}
+
+					}
+					if (text.contains(sbstr)) {
+						result = "";
+						String nomeArquivo = mime;
+
+						if (sbstr.equals("html") || sbstr.equals("xml")
+								|| sbstr.equals("htm")) {
+
+							File arquivo = new File(nomeArquivo);
+
 							if (arquivo.isFile()) {
 								FileReader in = null;
 								try {
@@ -235,42 +213,43 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 									String tmp, aux = "";
 									while ((tmp = leitor.readLine()) != null)
 										aux += tmp + "\n";
-
-									PreViewXML pre = new PreViewXML(300, 300, aux,
-											nomeArquivo);
+									PreViewXML pre = new PreViewXML(300, 300,
+											aux, nomeArquivo);
 									result = pre;
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
+
+							} else {
+								nomeArquivo = ResourcesPlugin.getWorkspace()
+										.getRoot().getLocation()
+										+ currentFile.getParent()
+										+ File.separatorChar + mime;
+								arquivo = new File(nomeArquivo);
+								if (arquivo.isFile()) {
+									FileReader in = null;
+									try {
+										in = new FileReader(arquivo);
+										BufferedReader leitor = new BufferedReader(
+												in);
+										String tmp, aux = "";
+										while ((tmp = leitor.readLine()) != null)
+											aux += tmp + "\n";
+
+										PreViewXML pre = new PreViewXML(300,
+												300, aux, nomeArquivo);
+										result = pre;
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
 							}
-						}
-					} else if (sbstr.equals("txt") || sbstr.equals("css")){
-						File arquivo = new File(nomeArquivo);
-						// Caso o caminho do arquivo seja um caminho
-						// completo
-						if (arquivo.isFile()) {
-							FileReader in = null;
-							try {
-								in = new FileReader(arquivo);
-								BufferedReader leitor = new BufferedReader(in);
-								String tmp, aux = "";
-								while ((tmp = leitor.readLine()) != null)
-									aux += tmp + "\n";
-								result = aux;
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						} else {
+						} else if (sbstr.equals("txt") || sbstr.equals("css")) {
+							File arquivo = new File(nomeArquivo);
 							// Caso o caminho do arquivo seja um caminho
-							// relativo
-							nomeArquivo = ResourcesPlugin.getWorkspace()
-									.getRoot().getLocation()
-									+ currentFile.getParent()
-									+ File.separatorChar
-									+ mime;
-							arquivo = new File(nomeArquivo);
+							// completo
 							if (arquivo.isFile()) {
 								FileReader in = null;
 								try {
@@ -285,61 +264,86 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
+							} else {
+								// Caso o caminho do arquivo seja um caminho
+								// relativo
+								nomeArquivo = ResourcesPlugin.getWorkspace()
+										.getRoot().getLocation()
+										+ currentFile.getParent()
+										+ File.separatorChar + mime;
+								arquivo = new File(nomeArquivo);
+								if (arquivo.isFile()) {
+									FileReader in = null;
+									try {
+										in = new FileReader(arquivo);
+										BufferedReader leitor = new BufferedReader(
+												in);
+										String tmp, aux = "";
+										while ((tmp = leitor.readLine()) != null)
+											aux += tmp + "\n";
+										result = aux;
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
 							}
 						}
-					}
-				} else if (image.contains(sbstr)) {
-					String nomeArquivo = mime;
-					PreViewImage img = null;
-					if (new File(nomeArquivo).isFile())
-						img = new PreViewImage(nomeArquivo);
-					else {
-						nomeArquivo = ResourcesPlugin.getWorkspace().getRoot()
-								.getLocation()
-								+ currentFile.getParent()
-								+ File.separatorChar
-								+ mime;
+					} else if (image.contains(sbstr)) {
+						String nomeArquivo = mime;
+						PreViewImage img = null;
 						if (new File(nomeArquivo).isFile())
 							img = new PreViewImage(nomeArquivo);
+						else {
+							nomeArquivo = ResourcesPlugin.getWorkspace()
+									.getRoot().getLocation()
+									+ currentFile.getParent()
+									+ File.separatorChar + mime;
+							if (new File(nomeArquivo).isFile())
+								img = new PreViewImage(nomeArquivo);
+						}
+						// Image image = new
+						// Image(NCLConfiguration.getInformationControlCreator().getShell(),
+						// nomeArquivo);
+						// result = img;
+						result = img;
 					}
-					// Image image = new
-					// Image(NCLConfiguration.getInformationControlCreator().getShell(),
-					// nomeArquivo);
-					//result = img;
-					result=img;
-				}
-			} else if (doc.getCurrentAttribute(offset).equals("id")
-					&& doc.getCurrentTagname(offset).equals("region")) {
-				PreViewRegion t = new PreViewRegion(getRegionFatherTree(offset));
-				result = t;
-			} else if (doc.getCurrentTagname(offset).equals("descriptor") &&
-					doc.getCurrentAttribute(offset).equals("region")) {
+				} else if (doc.getCurrentAttribute(offset).equals("id")
+						&& doc.getCurrentTagname(offset).equals("region")) {
+					PreViewRegion t = new PreViewRegion(
+							getRegionFatherTree(offset));
+					result = t;
+				} else if (doc.getCurrentTagname(offset).equals("descriptor")
+						&& doc.getCurrentAttribute(offset).equals("region")) {
 
-				String teste = doc.getAttributeValueFromCurrentTagName(offset,
-						"region");
-				int aux=offset;
-				while (((doc.getCurrentTagname(aux).equals("region") == false) || (doc
-						.getAttributeValueFromCurrentTagName(aux, "id")
-						.equals(teste) == false))
-						&& (aux > 0)) {
-					aux--;
+					String teste = doc.getAttributeValueFromCurrentTagName(
+							offset, "region");
+					int aux = offset;
+					while (((doc.getCurrentTagname(aux).equals("region") == false) || (doc
+							.getAttributeValueFromCurrentTagName(aux, "id")
+							.equals(teste) == false))
+							&& (aux > 0)) {
+						aux--;
 
-				}
-				PreViewRegion t = new PreViewRegion(getRegionFatherTree(aux));
+					}
+					PreViewRegion t = new PreViewRegion(
+							getRegionFatherTree(aux));
+
+					result = t;
+				} else
+					result = "";
+
+				Point selection = textViewer.getSelectedRange();
+				if (selection.x <= offset && offset < selection.x + selection.y)
+					return new Region(selection.x, selection.y);
+				return new Region(offset, 0);
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-				result = t;
-			} 
-			else
-				result = "";
-
-			Point selection = textViewer.getSelectedRange();
-			if (selection.x <= offset && offset < selection.x + selection.y)
-				return new Region(selection.x, selection.y);
-			return new Region(offset, 0);
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} 
+		
 		return null;
 	}
 

@@ -48,7 +48,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
+import org.eclipse.ui.part.IDropActionDelegate;
 
+import br.ufma.deinf.laws.ncleclipse.drop.NCLDrop;
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
 
@@ -263,17 +265,15 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 
 	public IInformationControlCreator getInformationControlCreator(
 			ISourceViewer sourceViewer) {
-		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-				PreferenceConstants.P_PREVIEW)) {
+		
 			return new IInformationControlCreator() {
 				public IInformationControl createInformationControl(Shell parent) {
 					// return new DefaultInformationControl(parent); return new
 					return new NCLInformationControl2(parent, true);
 				}
 			};
-		} else {
-			return super.getInformationControlCreator(sourceViewer);
-		}
+		
 	}
-
+	
+	
 }
