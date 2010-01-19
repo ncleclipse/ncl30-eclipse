@@ -58,6 +58,7 @@ TODO:
 Versao 1.4.10
 	- Correção do problema de ter que abrir de novo o editor para funcionar
 	a edição de preferência das Preview's
+	- Sugestão dos atributos default do elemento property
 
 Versao 1.4.7
 	- Alguma mudança causou problemas na sugestao de conteudo que estava em
