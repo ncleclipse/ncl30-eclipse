@@ -24,18 +24,27 @@ package br.ufma.deinf.laws.ncleclipse.hover;
 
 import java.io.File;
 
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.AbstractInformationControl;
 
+import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IInformationControlExtension2;
+import org.eclipse.jface.text.DefaultInformationControl.IInformationPresenter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -45,6 +54,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -64,8 +75,8 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		 */
 		public String getHTMLString();
 	}
-
-	static int pageNum = 1;
+	private final IInformationPresenter fPresenter;
+	private static int pageNum = 1;
 	private Shell internalShell;
 	private Composite internalComposite;
 	private Browser fBrowser;
@@ -90,18 +101,48 @@ public class NCLInformationControl2 extends AbstractInformationControl
 	private int widthImage;
 	private int heightImage;
 	private boolean fisHtml;
-
+	private final int fAdditionalTextStyles;
+	private Object input;
 
 	public NCLInformationControl2(Shell parentShell, boolean isResizable) {
 		super(parentShell, isResizable);
+		fAdditionalTextStyles = isResizable ? SWT.V_SCROLL | SWT.H_SCROLL
+				: SWT.NONE;
+		fPresenter = new HTMLTextPresenter(!isResizable);
 		create();
 
 	}
-
+	
+	public NCLInformationControl2 (Shell parent, String statusFieldText,
+			IInformationPresenter presenter) {
+		super(parent, statusFieldText);
+		fAdditionalTextStyles = SWT.NONE;
+		fPresenter = presenter;
+		create();
+	}
+	
+	public NCLInformationControl2(Shell parent,
+			ToolBarManager toolBarManager, IInformationPresenter presenter) {
+		super(parent, toolBarManager);
+		fAdditionalTextStyles = SWT.V_SCROLL | SWT.H_SCROLL;
+		fPresenter = presenter;
+		create();
+	}
+	
+	
+	public NCLInformationControl2 (Shell parent, int textStyles,
+			IInformationPresenter presenter, String statusFieldText) {
+		super(parent, statusFieldText);
+		fAdditionalTextStyles = textStyles;
+		fPresenter = presenter;
+		create();
+	}
 	
 	@Override
 	protected void createContent(Composite parent) {
 		internalComposite = new Composite(parent, SWT.BORDER);
+		
+		
 		internalComposite.setForeground(parent.getForeground());
 		internalComposite.setBackground(parent.getBackground());
 		internalComposite.setFont(JFaceResources.getDialogFont());
@@ -119,12 +160,13 @@ public class NCLInformationControl2 extends AbstractInformationControl
 
 		pageText = new Composite(this.internalComposite, SWT.NONE);
 		pageText.setLayout(new FillLayout());
-		text = new StyledText(pageText, SWT.MULTI | SWT.READ_ONLY);
+		
+		text = new StyledText(pageText, SWT.READ_ONLY);
 		text.setForeground(parent.getForeground());
 		text.setBackground(parent.getBackground());
 		text.setFont(JFaceResources.getDialogFont());
 
-	
+		
 
 		pageButton = new Composite(this.internalComposite, SWT.NONE);
 		pageButton.setLayout(new FillLayout());
@@ -139,7 +181,8 @@ public class NCLInformationControl2 extends AbstractInformationControl
 
 	@Override
 	public void setInput(Object input) {
-
+		
+		this.input = input;
 		this.fisImage = false;
 		this.TinyImage = false;
 		this.fisMedia = false;
@@ -317,6 +360,9 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		return new IInformationControlCreator() {
 
 			public IInformationControl createInformationControl(Shell parent) {
+				if (input instanceof String)
+					return new DefaultInformationControl (parent,
+							(ToolBarManager) null, fPresenter);
 				return new NCLInformationControl2(parent, true);
 			}
 		};
@@ -327,5 +373,6 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		super.dispose();
 
 	}
-
+	
+	
 }
