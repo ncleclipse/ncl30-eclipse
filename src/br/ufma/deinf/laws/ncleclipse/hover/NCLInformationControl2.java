@@ -119,7 +119,7 @@ public class NCLInformationControl2 extends AbstractInformationControl
 
 		pageText = new Composite(this.internalComposite, SWT.NONE);
 		pageText.setLayout(new FillLayout());
-		text = new StyledText(pageText, SWT.V_SCROLL | SWT.H_SCROLL);
+		text = new StyledText(pageText, SWT.MULTI | SWT.READ_ONLY);
 		text.setForeground(parent.getForeground());
 		text.setBackground(parent.getBackground());
 		text.setFont(JFaceResources.getDialogFont());
@@ -303,8 +303,14 @@ public class NCLInformationControl2 extends AbstractInformationControl
 
 		if (fisHtml)
 			return new Point(230, 180);
+		
+		int widthHint= SWT.DEFAULT;
+		Point constraints= getSizeConstraints();
+		if (constraints != null && text.getWordWrap())
+			widthHint= constraints.x;
 
-		return getShell().computeSize(300, 180, true);
+		return getShell().computeSize(widthHint, SWT.DEFAULT, true);
+
 	}
 
 	public IInformationControlCreator getInformationPresenterControlCreator() {
