@@ -332,7 +332,16 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		if (constraints != null && text.getWordWrap())
 			widthHint= constraints.x;
 		
-				return getShell().computeSize(widthHint, SWT.DEFAULT, true);
+		String toShow = (String) input;
+		
+		int heigthHint = 1;
+		
+		for (int i=0; i < toShow.length(); i++) if (toShow.charAt(i) == '\n') heigthHint++;
+			
+		
+		
+		
+		return getShell().computeSize(widthHint, heigthHint * 18, true);
 
 	}
 

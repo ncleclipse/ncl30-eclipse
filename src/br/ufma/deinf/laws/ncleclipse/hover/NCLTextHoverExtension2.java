@@ -11,6 +11,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultTextHover;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextHoverExtension2;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
@@ -32,7 +33,7 @@ import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 
 public class NCLTextHoverExtension2 extends DefaultTextHover implements
-		ITextHoverExtension2 {
+		ITextHoverExtension2, ITextHover {
 
 	NCLSourceDocument doc = null;
 	Object result = null;
@@ -41,6 +42,10 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 
 	public NCLTextHoverExtension2(ISourceViewer sourceViewer) {
 		super(sourceViewer);
+	}
+	
+	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion){
+		return "testin";
 	}
 
 	public Vector<RegionValues> getRegionFatherTree(int offset) {
@@ -91,7 +96,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 
 		return tree;
 	}
-
+	@Override
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
 		TypedRegion typedRegion;
 
@@ -259,6 +264,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 									String tmp, aux = "";
 									while ((tmp = leitor.readLine()) != null)
 										aux += tmp + "\n";
+									aux = aux.substring(0, aux.length() - 1);
 									result = aux;
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
@@ -281,6 +287,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 										String tmp, aux = "";
 										while ((tmp = leitor.readLine()) != null)
 											aux += tmp + "\n";
+										aux = aux.substring(0, aux.length() - 1);
 										result = aux;
 									} catch (IOException e) {
 										// TODO Auto-generated catch block
@@ -347,11 +354,14 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 		return null;
 	}
 
+	
+	
 	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		// TODO Auto-generated method stub
 		Object aux = result;
 		result = null;
+		
 		return aux;
 	}
 }

@@ -59,6 +59,7 @@ Versao 1.4.10
 	- Correção do problema de ter que abrir de novo o editor para funcionar
 	a edição de preferência das Preview's
 	- Sugestão dos atributos default do elemento property
+	- Correção do tamanho do tooltip de texto
 	- Opcao de validacao on time
 
 Versao 1.4.7
