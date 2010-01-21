@@ -76,6 +76,7 @@ import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
 import br.ufma.deinf.laws.ncleclipse.outline.EditorContentOutlinePage;
+import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.NCLDocumentProvider;
 import br.ufma.deinf.laws.ncleclipse.util.NCLTextDocumentProvider;
@@ -432,9 +433,12 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 	@Override
 	public void documentChanged(DocumentEvent event) {
 		//UpdateMarkers
+		if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_VALIDATION)){
 		updateMarkers.cancel();
 		updateMarkers.setPriority(Job.SHORT);
 		updateMarkers.schedule();
+		}
 		
 		//TODO: Update Outline View
 		// updateOutlineView.cancel();
