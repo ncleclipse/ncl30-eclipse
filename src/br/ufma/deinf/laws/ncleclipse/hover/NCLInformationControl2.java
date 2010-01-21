@@ -28,7 +28,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.AbstractInformationControl;
-
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
@@ -38,13 +37,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -54,8 +48,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -161,7 +153,7 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		pageText = new Composite(this.internalComposite, SWT.NONE);
 		pageText.setLayout(new FillLayout());
 		
-		text = new StyledText(pageText, SWT.READ_ONLY);
+		text = new StyledText(pageText, SWT.READ_ONLY | fAdditionalTextStyles);
 		text.setForeground(parent.getForeground());
 		text.setBackground(parent.getBackground());
 		text.setFont(JFaceResources.getDialogFont());
@@ -320,18 +312,6 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		return true;
 	}
 
-	public void setVisible(boolean visible) {
-		if (visible) {
-
-			getShell().pack(true);
-			Point newSize = computeSizeHint();
-
-			setSize(newSize.x, newSize.y);
-
-		}
-
-		super.setVisible(visible);
-	}
 
 	public Point computeSizeHint() {
 
@@ -351,8 +331,8 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		Point constraints= getSizeConstraints();
 		if (constraints != null && text.getWordWrap())
 			widthHint= constraints.x;
-
-		return getShell().computeSize(widthHint, SWT.DEFAULT, true);
+		
+				return getShell().computeSize(widthHint, SWT.DEFAULT, true);
 
 	}
 
@@ -360,9 +340,6 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		return new IInformationControlCreator() {
 
 			public IInformationControl createInformationControl(Shell parent) {
-				if (input instanceof String)
-					return new DefaultInformationControl (parent,
-							(ToolBarManager) null, fPresenter);
 				return new NCLInformationControl2(parent, true);
 			}
 		};

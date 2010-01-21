@@ -48,12 +48,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
-import org.eclipse.ui.part.IDropActionDelegate;
-
 
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
-
 import br.ufma.deinf.laws.ncleclipse.hover.NCLInformationControl2;
 import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHoverExtension2;
 import br.ufma.deinf.laws.ncleclipse.hyperlinks.NCLEclipseHyperlinkDetector;
@@ -269,7 +266,7 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 			return new IInformationControlCreator() {
 				public IInformationControl createInformationControl(Shell parent) {
 					// return new DefaultInformationControl(parent); return new
-					return new NCLInformationControl2(parent, true);
+					return new NCLInformationControl2(parent, false);
 				}
 			};
 		
