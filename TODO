@@ -11,7 +11,7 @@ TODO:
 	- Sugestao do atributo src de media (Quase pronto).
 	- Drag and Drop para adicionar midia.
 	- ALT+LEFT para voltar do hiperlink soh funciona para abrir em outros arquivos
-	- Resolver o problema do tooltip para texto de Erros e Warnings
+	- Resolver o problema do tooltip para texto de Erros e Warnings (OK)
 	- Preview em tooltip contextual (Deixar de usar JComponent). (OK)
 
 * Layout View
