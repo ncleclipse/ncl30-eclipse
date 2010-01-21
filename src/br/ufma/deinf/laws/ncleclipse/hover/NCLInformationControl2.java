@@ -25,10 +25,8 @@ package br.ufma.deinf.laws.ncleclipse.hover;
 import java.io.File;
 
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.AbstractInformationControl;
-import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IInformationControlExtension2;
@@ -53,46 +51,25 @@ import org.eclipse.ui.PlatformUI;
 
 public class NCLInformationControl2 extends AbstractInformationControl
 		implements IInformationControlExtension2 {
-	public interface IHTMLHoverInfo {
-		/**
-		 * @@return true if the String returned by getHTMLString() represents a
-		 *          URL; false if the String contains marked-up text.
-		 */
-
-		public boolean isURL();
-
-		/**
-		 * @@return The input string to be displayed in the Browser widget
-		 *          (either as marked-up text, or as a URL.)
-		 */
-		public String getHTMLString();
-	}
-	private final IInformationPresenter fPresenter;
-	private static int pageNum = 1;
-	private Shell internalShell;
+	
 	private Composite internalComposite;
-	private Browser fBrowser;
 	private StyledText text;
-	boolean fisImage;
-	private static Image image;
+	private boolean isImage;
 	private StackLayout layout;
 	private Composite pageImage;
-	private Composite page1;
 	private Composite pageButton;
 	private Composite pageRegion;
 	private Composite pageText;
-	private boolean TinyImage;
-	private boolean fisMedia;
+	private boolean isMedia;
 	private Button button;
-	private File file;
 	private Program p;
 	private Point regionSize;
-	private boolean fisRegion;
+	private boolean isRegion;
 	private Color cb;
 	private Color cf;
 	private int widthImage;
 	private int heightImage;
-	private boolean fisHtml;
+	private boolean isHtml;
 	private final int fAdditionalTextStyles;
 	private Object input;
 
@@ -100,7 +77,6 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		super(parentShell, isResizable);
 		fAdditionalTextStyles = isResizable ? SWT.V_SCROLL | SWT.H_SCROLL
 				: SWT.NONE;
-		fPresenter = new HTMLTextPresenter(!isResizable);
 		create();
 
 	}
@@ -109,7 +85,6 @@ public class NCLInformationControl2 extends AbstractInformationControl
 			IInformationPresenter presenter) {
 		super(parent, statusFieldText);
 		fAdditionalTextStyles = SWT.NONE;
-		fPresenter = presenter;
 		create();
 	}
 	
@@ -117,7 +92,6 @@ public class NCLInformationControl2 extends AbstractInformationControl
 			ToolBarManager toolBarManager, IInformationPresenter presenter) {
 		super(parent, toolBarManager);
 		fAdditionalTextStyles = SWT.V_SCROLL | SWT.H_SCROLL;
-		fPresenter = presenter;
 		create();
 	}
 	
@@ -126,7 +100,6 @@ public class NCLInformationControl2 extends AbstractInformationControl
 			IInformationPresenter presenter, String statusFieldText) {
 		super(parent, statusFieldText);
 		fAdditionalTextStyles = textStyles;
-		fPresenter = presenter;
 		create();
 	}
 	
@@ -139,7 +112,6 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		internalComposite.setBackground(parent.getBackground());
 		internalComposite.setFont(JFaceResources.getDialogFont());
 
-		// System.out.println("createcontent");
 
 		layout = new StackLayout();
 		this.internalComposite.setLayout(layout);
@@ -175,15 +147,14 @@ public class NCLInformationControl2 extends AbstractInformationControl
 	public void setInput(Object input) {
 		
 		this.input = input;
-		this.fisImage = false;
-		this.TinyImage = false;
-		this.fisMedia = false;
-		this.fisRegion = false;
-		this.fisHtml = false;
+		this.isImage = false;
+		this.isMedia = false;
+		this.isRegion = false;
+		this.isHtml = false;
 
 		if (input instanceof PreViewImage) {
 			layout.topControl = pageImage;
-			this.fisImage = true;
+			this.isImage = true;
 
 			PreViewImage imaget = (PreViewImage) input;
 			final Image img = new Image(getShell().getDisplay(), imaget
@@ -228,7 +199,7 @@ public class NCLInformationControl2 extends AbstractInformationControl
 			});
 
 		} else if (input instanceof PreViewXML) {
-			fisHtml = true;
+			isHtml = true;
 			PreViewXML html = (PreViewXML) input;
 			Composite page11 = new Composite(this.internalComposite, SWT.NONE);
 			
@@ -243,7 +214,7 @@ public class NCLInformationControl2 extends AbstractInformationControl
 
 			layout.topControl = page11;
 		} else if (input instanceof PreViewRegion) {
-			this.fisRegion = true;
+			this.isRegion = true;
 			layout.topControl = pageRegion;
 			PreViewRegion region = (PreViewRegion) input;
 			this.cb = pageRegion.getBackground();
@@ -262,7 +233,7 @@ public class NCLInformationControl2 extends AbstractInformationControl
 			});
 			regionSize = region.paintRegions(pageRegion);
 		} else if (input instanceof PreViewMedia) {
-			this.fisMedia = true;
+			this.isMedia = true;
 			layout.topControl = pageButton;
 			final PreViewMedia med = (PreViewMedia) input;
 
@@ -315,16 +286,16 @@ public class NCLInformationControl2 extends AbstractInformationControl
 
 	public Point computeSizeHint() {
 
-		if (fisImage) {
+		if (isImage) {
 			return new Point(widthImage, heightImage);
 		}
-		if (fisMedia) {
+		if (isMedia) {
 			return getShell().computeSize(80, 80);
 		}
-		if (fisRegion)
+		if (isRegion)
 			return regionSize;
 
-		if (fisHtml)
+		if (isHtml)
 			return new Point(230, 180);
 		
 		int widthHint= SWT.DEFAULT;
