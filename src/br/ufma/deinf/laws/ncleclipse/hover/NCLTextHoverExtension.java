@@ -32,7 +32,7 @@ import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 
-public class NCLTextHoverExtension2 extends DefaultTextHover implements
+public class NCLTextHoverExtension extends DefaultTextHover implements
 		ITextHoverExtension2, ITextHover {
 
 	NCLSourceDocument doc = null;
@@ -40,7 +40,7 @@ public class NCLTextHoverExtension2 extends DefaultTextHover implements
 	File currentFile = null;
 	boolean hasfather = true;
 
-	public NCLTextHoverExtension2(ISourceViewer sourceViewer) {
+	public NCLTextHoverExtension(ISourceViewer sourceViewer) {
 		super(sourceViewer);
 	}
 	

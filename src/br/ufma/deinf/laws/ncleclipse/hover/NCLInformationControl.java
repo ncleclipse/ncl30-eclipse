@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-public class NCLInformationControl2 extends AbstractInformationControl
+public class NCLInformationControl extends AbstractInformationControl
 		implements IInformationControlExtension2 {
 	
 	private Composite internalComposite;
@@ -73,7 +73,7 @@ public class NCLInformationControl2 extends AbstractInformationControl
 	private final int fAdditionalTextStyles;
 	private Object input;
 
-	public NCLInformationControl2(Shell parentShell, boolean isResizable) {
+	public NCLInformationControl(Shell parentShell, boolean isResizable) {
 		super(parentShell, isResizable);
 		fAdditionalTextStyles = isResizable ? SWT.V_SCROLL | SWT.H_SCROLL
 				: SWT.NONE;
@@ -81,14 +81,14 @@ public class NCLInformationControl2 extends AbstractInformationControl
 
 	}
 	
-	public NCLInformationControl2 (Shell parent, String statusFieldText,
+	public NCLInformationControl (Shell parent, String statusFieldText,
 			IInformationPresenter presenter) {
 		super(parent, statusFieldText);
 		fAdditionalTextStyles = SWT.NONE;
 		create();
 	}
 	
-	public NCLInformationControl2(Shell parent,
+	public NCLInformationControl(Shell parent,
 			ToolBarManager toolBarManager, IInformationPresenter presenter) {
 		super(parent, toolBarManager);
 		fAdditionalTextStyles = SWT.V_SCROLL | SWT.H_SCROLL;
@@ -96,7 +96,7 @@ public class NCLInformationControl2 extends AbstractInformationControl
 	}
 	
 	
-	public NCLInformationControl2 (Shell parent, int textStyles,
+	public NCLInformationControl (Shell parent, int textStyles,
 			IInformationPresenter presenter, String statusFieldText) {
 		super(parent, statusFieldText);
 		fAdditionalTextStyles = textStyles;
@@ -320,7 +320,7 @@ public class NCLInformationControl2 extends AbstractInformationControl
 		return new IInformationControlCreator() {
 
 			public IInformationControl createInformationControl(Shell parent) {
-				return new NCLInformationControl2(parent, true);
+				return new NCLInformationControl(parent, true);
 			}
 		};
 	}
