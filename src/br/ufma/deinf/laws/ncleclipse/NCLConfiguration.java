@@ -51,8 +51,8 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import br.ufma.deinf.laws.ncleclipse.format.NCLDocumentFormattingStrategy;
 import br.ufma.deinf.laws.ncleclipse.format.XMLAutoIdentStrategy;
-import br.ufma.deinf.laws.ncleclipse.hover.NCLInformationControl2;
-import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHoverExtension2;
+import br.ufma.deinf.laws.ncleclipse.hover.NCLInformationControl;
+import br.ufma.deinf.laws.ncleclipse.hover.NCLTextHoverExtension;
 import br.ufma.deinf.laws.ncleclipse.hyperlinks.NCLEclipseHyperlinkDetector;
 import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.scanners.CDataScanner;
@@ -243,7 +243,7 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 			String contentType) {
 		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
 				PreferenceConstants.P_PREVIEW)) {
-			return new NCLTextHoverExtension2(sourceViewer);
+			return new NCLTextHoverExtension(sourceViewer);
 		} else {
 			return super.getTextHover(sourceViewer, contentType);
 		}
@@ -266,7 +266,7 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 			return new IInformationControlCreator() {
 				public IInformationControl createInformationControl(Shell parent) {
 					// return new DefaultInformationControl(parent); return new
-					return new NCLInformationControl2(parent, false);
+					return new NCLInformationControl(parent, false);
 				}
 			};
 		
