@@ -62,6 +62,10 @@ Versao 1.4.10
 	- Sugestão dos atributos default do elemento property
 	- Correção do tamanho do tooltip de texto
 	- Opcao de validacao on time
+	
+	- ncl30-validator
+		BUG: falso negativo para descriptorSwitch apontando para descriptor.
+			- Resolvido! 
 
 Versao 1.4.7
 	- Alguma mudança causou problemas na sugestao de conteudo que estava em
