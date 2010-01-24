@@ -6,12 +6,13 @@ TODO:
 		- Ginga VM Launch Emulator
 	- Textos das licenças no feature.
 	
-* Text Editor	
+* Text Editor
+	- Help contextual multilingue (atualmente só em português).	
 	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar antes de disponibilizar).
 	- Sugestao do atributo src de media (Quase pronto).
 	- Drag and Drop para adicionar midia.
 	- ALT+LEFT para voltar do hiperlink soh funciona para abrir em outros arquivos
-	- Resolver o problema do tooltip para texto de Erros e Warnings (OK)
+	- Resolver o problema do tooltip para texto de Erros e Warnings
 	- Preview em tooltip contextual (Deixar de usar JComponent). (OK)
 
 * Layout View
@@ -21,7 +22,7 @@ TODO:
 
 * Bugs
 	- Bug no MultiPageActionContributor
-		- As acoes do Gef funcionam perfeitamente mas nao vao embora quando as
+		- As acoes do GEF funcionam perfeitamente mas nao vao embora quando as
 		acoes de texto devem aparecer
 
 * Estudar		

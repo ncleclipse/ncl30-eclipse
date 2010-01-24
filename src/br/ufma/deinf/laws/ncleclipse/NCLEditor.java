@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.apache.xerces.xni.parser.XMLInputSource;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,7 +65,6 @@ import org.xml.sax.helpers.LocatorImpl;
 import br.ufma.deinf.gia.labmint.composer.NCLValidator;
 import br.ufma.deinf.gia.labmint.document.NclValidatorDocument;
 import br.ufma.deinf.gia.labmint.main.NclParseErrorHandler;
-import br.ufma.deinf.gia.labmint.message.MessageHandler;
 import br.ufma.deinf.gia.labmint.message.MessageList;
 import br.ufma.deinf.gia.labmint.xml.XMLParserExtend;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
@@ -337,7 +335,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 			NCLHelper nclHelper = NCLHelper.getNCLHelper();
 			nclHelper.setHelpFileName(NCLEditorPlugin.getResourcesLocation()
 					.getPath()
-					+ "resources/help.txt");
+					+ "help.txt");
 			nclHelper.buildHelp();
 		} catch (Exception e) {
 			e.printStackTrace();
