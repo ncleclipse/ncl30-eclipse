@@ -140,7 +140,7 @@ public class NCLInformationControl extends AbstractInformationControl
 				+ "icons" + File.separatorChar + "play.png");
 		button = new Button(pageButton, SWT.PUSH);
 		button.setImage(image);
-		image.dispose();
+		//image.dispose();
 	}
 
 	@Override
