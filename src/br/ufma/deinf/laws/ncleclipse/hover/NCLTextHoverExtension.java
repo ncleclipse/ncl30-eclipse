@@ -149,6 +149,7 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 
 				String CurrentAttribute = doc.getCurrentAttribute(offset);
 				String CurrentTagname = doc.getCurrentTagname(offset);
+				
 
 				if ((!CurrentAttribute.equals("descriptor") && CurrentTagname
 						.equals("media"))
@@ -167,6 +168,8 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 							mime = doc.getAttributeValueFromCurrentTagName(
 									offset, "focusSrc");
 					}
+					
+					mime = mime.toLowerCase();
 
 					if (mime.length() > 7) {
 						if (mime.substring(0, 7).equals("http://")) {
