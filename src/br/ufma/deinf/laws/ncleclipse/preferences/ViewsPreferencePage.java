@@ -63,6 +63,9 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 		
 		addField(new BooleanFieldEditor(PreferenceConstants.P_VALIDATION,
 				"&On Time Validation", getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(PreferenceConstants.P_POPUP_SUGESTION, 
+				"&Open pop up to suggest src attribute", getFieldEditorParent()));
 
 	}
 

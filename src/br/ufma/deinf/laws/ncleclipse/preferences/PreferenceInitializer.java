@@ -49,6 +49,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_LANGUAGE, "messagesPt.properties");
 		store.setDefault(PreferenceConstants.P_PREVIEW, false);
 		store.setDefault(PreferenceConstants.P_VALIDATION,true);
+		store.setDefault(PreferenceConstants.P_POPUP_SUGESTION, false);
 	}
 
 }

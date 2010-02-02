@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import javax.swing.JFileChooser;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -41,7 +43,10 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IURIEditorInput;
@@ -56,11 +61,13 @@ import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
+import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
+import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 
 /**
@@ -509,36 +516,51 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					System.out.println("Attribute Value Proposal = " + text);
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, text, null, null);
-					propList.add(proposal);
+					if (!(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_POPUP_SUGESTION)))
+						propList.add(proposal);
 				}
 			}
+
+			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+					PreferenceConstants.P_POPUP_SUGESTION)) {
+				FileDialog fileDialog = new FileDialog(new Shell (), SWT.OPEN);
+				fileDialog.setFilterPath(currentFile.getParent());
+				fileDialog.setText("OK");
+				String path = fileDialog.open();
+				String id = nclDoc.getAttributeValueFromCurrentTagName(
+							offset, "id");
+				if (path.startsWith(currentFile.getParent()))
+					path = path.substring(currentFile.getParent().length() + 1);
+				nclDoc.setAttribute(id, "src", path);
+				return;
+			}
+
 			File file = null;
 			file = new File(currentFile.toURI());
 
 			Vector<String> completions = new Vector<String>();
 			File parent;
 
-			
-			String temp [] = qualifier.split("\\" + File.separatorChar);
+			String temp[] = qualifier.split("\\" + File.separatorChar);
 			if (temp.length > 1)
 				qualifier = temp[temp.length - 1];
-			else 
-				if (qualifier.endsWith("" + File.separatorChar))
-					qualifier = "";
-			
+			else if (qualifier.endsWith("" + File.separatorChar))
+				qualifier = "";
+
 			String path = "";
-			
-			for (int i =0; i < temp.length; i++){
+
+			for (int i = 0; i < temp.length; i++) {
 				path += temp[i] + File.separatorChar;
 			}
-			
-			
-			path = (String) path.subSequence(0, path.length() - qualifier.length() - 1);
-			if (!path.equals("") && !path.endsWith("" + File.separatorChar)) path += File.separatorChar;
 
-			
+			path = (String) path.subSequence(0, path.length()
+					- qualifier.length() - 1);
+			if (!path.equals("") && !path.endsWith("" + File.separatorChar))
+				path += File.separatorChar;
+
 			parent = new File(file.getParent() + File.separatorChar + path);
-			if (!parent.isDirectory()){
+			if (!parent.isDirectory()) {
 				parent = new File(file.getParent() + File.separatorChar + path);
 			}
 
@@ -550,8 +572,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						+ list[i]).isDirectory())
 					list[i] += File.separatorChar;
 				if (list[i].startsWith(qualifier)) {
-					proposal = new CompletionProposal(path + list[i], offset - qlen,
-							qlen, cursor, null, path + list[i], null, null);
+					proposal = new CompletionProposal(path + list[i], offset
+							- qlen, qlen, cursor, null, path + list[i], null,
+							null);
 					propList.add(proposal);
 				}
 			}
