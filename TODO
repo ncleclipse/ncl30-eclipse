@@ -11,15 +11,16 @@ TODO:
 	
 * Text Editor
 	- Help contextual multilingue (atualmente só em português).	
+	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar antes de disponibilizar).
+	- Sugestao do atributo src de media (ok!).
 	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar 
 	antes de disponibilizar).
-	- Sugestao do atributo src de media (Quase pronto).
 	- Drag and Drop para adicionar midia.
 	- ALT+LEFT para voltar do hiperlink soh funciona para abrir em outros arquivos.
-	- Resolver o problema do tooltip para texto de Erros e Warnings.
+	- Resolver o problema do tooltip para texto de Erros e Warnings (OK).
 	- Preview em tooltip contextual (Deixar de usar JComponent). (OK)
 	- Ctrl+Espaço no src poderia abrir uma popup para inserir o arquivo.
-	- Ctrl+Shift+F: não reordenar os atributos!
+	- Ctrl+Shift+F: não reordenar os atributos! (Quase pronto)
 
 * Layout View
 	- Problema com um atributo encostado em />
