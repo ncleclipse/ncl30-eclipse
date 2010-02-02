@@ -521,15 +521,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						propList.add(proposal);
 				}
 			}
-
+			//TODO: sugestao do popup na tag importBase e implementar o ../
 			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
 					PreferenceConstants.P_POPUP_SUGESTION)) {
 				FileDialog fileDialog = new FileDialog(new Shell (), SWT.OPEN);
 				fileDialog.setFilterPath(currentFile.getParent());
 				fileDialog.setText("OK");
 				String path = fileDialog.open();
+				if (path == null) return;
 				String id = nclDoc.getAttributeValueFromCurrentTagName(
 							offset, "id");
+				
 				if (path.startsWith(currentFile.getParent()))
 					path = path.substring(currentFile.getParent().length() + 1);
 				nclDoc.setAttribute(id, "src", path);
@@ -572,6 +574,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						+ list[i]).isDirectory())
 					list[i] += File.separatorChar;
 				if (list[i].startsWith(qualifier)) {
+					cursor = (path + list[i]).length();
 					proposal = new CompletionProposal(path + list[i], offset
 							- qlen, qlen, cursor, null, path + list[i], null,
 							null);
