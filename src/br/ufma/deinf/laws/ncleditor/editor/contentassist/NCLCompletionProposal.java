@@ -514,6 +514,48 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 			File file = null;
 			file = new File(currentFile.toURI());
+
+			Vector<String> completions = new Vector<String>();
+			File parent;
+
+			
+			String temp [] = qualifier.split("\\" + File.separatorChar);
+			if (temp.length > 1)
+				qualifier = temp[temp.length - 1];
+			else 
+				if (qualifier.endsWith("" + File.separatorChar))
+					qualifier = "";
+			
+			String path = "";
+			
+			for (int i =0; i < temp.length; i++){
+				path += temp[i] + File.separatorChar;
+			}
+			
+			
+			path = (String) path.subSequence(0, path.length() - qualifier.length() - 1);
+			if (!path.equals("") && !path.endsWith("" + File.separatorChar)) path += File.separatorChar;
+
+			
+			parent = new File(file.getParent() + File.separatorChar + path);
+			if (!parent.isDirectory()){
+				parent = new File(file.getParent() + File.separatorChar + path);
+			}
+
+			String list[] = parent.list();
+			CompletionProposal proposal;
+
+			for (int i = 0; i < list.length; i++) {
+				if (new File(parent.getAbsolutePath() + File.separatorChar
+						+ list[i]).isDirectory())
+					list[i] += File.separatorChar;
+				if (list[i].startsWith(qualifier)) {
+					proposal = new CompletionProposal(path + list[i], offset - qlen,
+							qlen, cursor, null, path + list[i], null, null);
+					propList.add(proposal);
+				}
+			}
+
 			/**
 			 * Nao sugerindo temporariamente try { URIProposer fs = new
 			 * URIProposer(currentFile.getParent()); Vector<String> v =
@@ -532,7 +574,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			 */
 		}
 
-		//System.out.println("perspective = " + perspective);
+		// System.out.println("perspective = " + perspective);
 		Collection nclReference = nclStructure.getNCLReference(tagname,
 				attribute);
 		if (nclReference == null)
@@ -595,14 +637,15 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		if (perspective == null) {
 			NCLElement element;
-			String atualId = nclDoc
-					.getAttributeValueFromCurrentTagName(offset, "id");
-			//if(atualId == null || atualId.equals("")) return;
-			//element = nclDocument.getElementById(atualId);
-			
-			//String atualCompletePerspective = element.getCompletePerspective();
+			String atualId = nclDoc.getAttributeValueFromCurrentTagName(offset,
+					"id");
+			// if(atualId == null || atualId.equals("")) return;
+			// element = nclDocument.getElementById(atualId);
+
+			// String atualCompletePerspective =
+			// element.getCompletePerspective();
 			it = nclReference.iterator();
-			
+
 			while (it.hasNext()) {
 				NCLReference nclRefAtual = (NCLReference) it.next();
 				Collection elements = nclDocument.getElements().get(
@@ -611,18 +654,26 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					continue;
 				Iterator it2 = elements.iterator();
 				while (it2.hasNext()) {
-					NCLElement refElement = ((NCLElement) it2.next()); 
-					text = refElement.getAttributeValue(nclRefAtual.getRefAttribute());
+					NCLElement refElement = ((NCLElement) it2.next());
+					text = refElement.getAttributeValue(nclRefAtual
+							.getRefAttribute());
 					if (text == null || text.endsWith("#null"))
 						continue; // null
 
-					//TODO: the refer attribute can not refer the own parent or his childrens
-					/*String refCompletePerspective = refElement.getCompletePerspective();
-					if(!refCompletePerspective.equals(atualCompletePerspective)){
-						if(refCompletePerspective.length() > atualCompletePerspective.length()){
-							if(refCompletePerspective.contains(atualCompletePerspective)) continue;
-						} else if(atualCompletePerspective.contains(refCompletePerspective)) continue;
-					}*/
+					// TODO: the refer attribute can not refer the own parent or
+					// his childrens
+					/*
+					 * String refCompletePerspective =
+					 * refElement.getCompletePerspective();
+					 * if(!refCompletePerspective
+					 * .equals(atualCompletePerspective)){
+					 * if(refCompletePerspective.length() >
+					 * atualCompletePerspective.length()){
+					 * if(refCompletePerspective
+					 * .contains(atualCompletePerspective)) continue; } else
+					 * if(atualCompletePerspective
+					 * .contains(refCompletePerspective)) continue; }
+					 */
 
 					// refer nao pode sugerir a propria media, switch, etc.
 					if (attribute.equals("refer")) {
