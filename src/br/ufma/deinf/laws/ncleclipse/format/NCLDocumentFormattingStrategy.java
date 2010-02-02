@@ -73,7 +73,7 @@ public class NCLDocumentFormattingStrategy extends ContextBasedFormattingStrateg
 				});
 				org.w3c.dom.Document dom = documentBuilder.parse(new InputSource(new StringReader(text)));
 				XMLFormatter formatter = new XMLFormatter();
-				document.set(formatter.format(dom));
+				document.set(formatter.format(dom,text));
 			} catch (Exception e) {
 				e.printStackTrace();
 				MessageDialog.openInformation(

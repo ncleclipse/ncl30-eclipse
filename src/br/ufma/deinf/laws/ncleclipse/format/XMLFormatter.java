@@ -22,7 +22,14 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.format;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -36,13 +43,21 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.DefaultHandler2;
+import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
  *
  */
-public class XMLFormatter {
+public class XMLFormatter extends DefaultHandler2{
 	private String xmlVersion = "1.0";
 	private String encoding = "UTF-8";
 	/** The indent string (defaults to the tab character). */
@@ -55,7 +70,9 @@ public class XMLFormatter {
 	private int level = 0;
 	private StringBuffer output = new StringBuffer();
 
-	public String format(Document document) {
+	private LinkedList<Boolean> ischild = new LinkedList<Boolean>();
+	
+	public String format(Document document,String text) throws ParserConfigurationException, SAXException, IOException {
 		output.append("<?xml version=");
 		output.append(quote);
 		output.append(xmlVersion);
@@ -66,10 +83,73 @@ public class XMLFormatter {
 		output.append(quote);
 		output.append("?>");
 		output.append(lineEnd);
-		processChildNodes(document.getChildNodes());
+		//processChildNodes(document.getChildNodes());
+		document = null;
+		ischild.addFirst(false);
+		
+		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+		xmlReader.setContentHandler(this);
+		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes",true);
+		xmlReader.setProperty("http://xml.org/sax/properties/lexical-handler", this);
+
+		//SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+		xmlReader.parse(new InputSource(new StringReader(text)));
 		return output.toString();
 	}
+	
+	/** comeca um documento novo */
+	public void startDocument() {
+		
+	}
 
+	/** termina o documento */
+	public void endDocument() {
+		
+	}
+
+	/** comeca uma tag nova */
+	public void startElement(String uri,String localName,String tag,Attributes atributos){
+		if(ischild.element()){
+			output.append(">");
+			output.append(lineEnd);
+		}
+		addIndent();
+		output.append("<");
+		output.append(tag);
+		for(int i=0;i<atributos.getLength();i++){
+			output.append(" ");
+			output.append(atributos.getQName(i));
+			output.append("=");
+			output.append(quote);
+			output.append(atributos.getValue(i));
+			output.append(quote);
+		}
+		level++;
+		ischild.addFirst(true);
+	}
+
+	
+	public void endElement(String uri, String localName, String tag){
+		if(ischild.element()){
+			output.append("/>");
+			output.append(lineEnd);
+			level--;
+		}
+		else{
+			level--;
+			addIndent();
+			output.append("</");
+			output.append(tag);
+			output.append(">");
+			output.append(lineEnd);
+		}
+		ischild.remove();
+		ischild.addFirst(false);
+	}
+	
+	
+	
+	/*
 	private void processChildNodes(NodeList children) {
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);
@@ -101,9 +181,7 @@ public class XMLFormatter {
 		output.append(lineEnd);
 	}
 
-	/**
-	 * @param type
-	 */
+	
 	private void processDocumentType(DocumentType type) {
 		addIndent();
 		output.append("<!DOCTYPE ");
@@ -135,9 +213,6 @@ public class XMLFormatter {
 		output.append(lineEnd);
 	}
 
-	/**
-	 * @param entity
-	 */
 	private void processEntity(Entity entity) {
 		// NamedNodeMap attributes = entity.getAttributes();
 		addIndent();
@@ -159,9 +234,6 @@ public class XMLFormatter {
 		output.append(lineEnd);
 	}
 
-	/**
-	 * @param instruction
-	 */
 	private void processPI(ProcessingInstruction instruction) {
 		addIndent();
 		output.append("<?");
@@ -172,9 +244,6 @@ public class XMLFormatter {
 		output.append(lineEnd);
 	}
 
-	/**
-	 * @param comment
-	 */
 	private void processComment(Comment comment) {
 		addIndent();
 		output.append("<!--");
@@ -183,9 +252,6 @@ public class XMLFormatter {
 		output.append(lineEnd);
 	}
 
-	/**
-	 * @param text
-	 */
 	private void processText(Text text) {
 		String token = "";
 		StringTokenizer tokenizer = new StringTokenizer(text.getData(),
@@ -225,9 +291,6 @@ public class XMLFormatter {
 		}
 	}
 
-	/**
-	 * @param element
-	 */
 	private void processElement(Element element) {
 		NamedNodeMap attributes = element.getAttributes();
 		addIndent();
@@ -282,7 +345,8 @@ public class XMLFormatter {
 			output.append(lineEnd);
 		}
 	}
-
+	*/
+	
 	private void addIndent() {
 		for (int i = 0; i < level; i++) {
 			output.append(indent);
@@ -356,4 +420,19 @@ public class XMLFormatter {
 	public void setXmlVersion(String xmlVersion) {
 		this.xmlVersion = xmlVersion;
 	}
+
+	public void comment(char[] arg0, int arg1, int arg2) throws SAXException {
+		if(ischild.element()){
+			output.append(">");
+			ischild.remove();
+			ischild.addFirst(false);
+			output.append(lineEnd);
+		}
+		//addIndent();
+		output.append("<!--");
+		for(int i=0;i<arg2;i++)output.append(arg0[i+arg1]);
+		output.append("-->");
+		output.append(lineEnd);
+	}
+
 }
