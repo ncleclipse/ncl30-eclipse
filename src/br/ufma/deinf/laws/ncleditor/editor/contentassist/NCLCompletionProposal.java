@@ -523,9 +523,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 
 			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-					PreferenceConstants.P_POPUP_SUGESTION)
-					&& !nclDoc.getCurrentTagname(offset).equalsIgnoreCase(
-							"importBase")) {
+					PreferenceConstants.P_POPUP_SUGESTION)) {
 				FileDialog fileDialog = new FileDialog(new Shell(), SWT.OPEN);
 				fileDialog.setFilterPath(currentFile.getParent());
 				fileDialog.setText("OK");
@@ -538,13 +536,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				if (path.startsWith(currentFile.getParent()))
 					path = path.substring(currentFile.getParent().length() + 1);
-				nclDoc.setAttribute(id, "src", path);
+				if (id != null)
+					nclDoc.setAttribute(id, "src", path);
+				else
+					nclDoc.setAttributeFromTagname(tagname, "documentURI",
+							path, offset);
+
 				return;
 			}
 
 			File file = null;
 			file = new File(currentFile.toURI());
-
 
 			File parent;
 			String aux = qualifier;
@@ -555,12 +557,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (aux.endsWith("" + File.separatorChar))
 				qualifier = "";
 
-
 			String path = "";
 			for (int i = 0; i < temp.length; i++) {
 				path += temp[i] + File.separatorChar;
 			}
-			
+
 			path = (String) path.subSequence(0, path.length()
 					- qualifier.length() - 1);
 

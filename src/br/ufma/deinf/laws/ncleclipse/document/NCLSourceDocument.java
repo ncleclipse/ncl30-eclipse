@@ -622,6 +622,53 @@ public class NCLSourceDocument extends Document {
 		return true;
 	}
 
+	
+	public boolean setAttributeFromTagname (String tagname, String attr, String value, int offset) {
+		try {
+			ITypedRegion region = getNextTagPartition(offset);
+			if (region == null)
+				throw new BadLocationException();
+			String startTag = get(region.getOffset(), region.getLength());
+			String currentTagname = getCurrentTagname(region.getOffset());
+			if (currentTagname != null) {
+				if (currentTagname.equals(tagname)) {
+					String attrAtual = getAttributeValueFromCurrentTagName(
+							region.getOffset(), attr);
+					int begin = 0;
+					String newValue = attr + "=\"" + value + "\"";
+					if (attrAtual == null) {
+						begin = region.getOffset() + region.getLength() - 1;
+						if (startTag.endsWith("/>"))
+							begin--;
+						if (!get(begin - 1, 1).equals(" "))
+							newValue = " " + newValue;
+
+						replace(begin, 0, newValue);
+					} else {
+						String text = get(region.getOffset(), region
+								.getLength());
+						int attrOffset = text.indexOf(attr);
+						int attrSizeAtual = getAttributeSize(offset, attr);
+						begin = region.getOffset() + attrOffset;
+						newValue = attr + "=\"" + value + "\"";
+						if (!get(begin - 1, 1).equals(" "))
+							newValue = " " + newValue;
+						if (!get(begin + attrSizeAtual, 1).equals(" "))
+							newValue = newValue + " ";
+						replace(begin, attrSizeAtual, newValue);
+					}
+					return true;
+				}
+			}
+			setAttribute(tagname, attr, value, region.getOffset()
+					+ region.getLength() + 1);
+		} catch (BadLocationException e) {
+			return false;
+		}
+		return true;
+	}
+
+	
 	public List<String> getAttributesTyped(int offset) {
 		List list = new ArrayList<String>();
 		try {
