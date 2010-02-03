@@ -516,22 +516,26 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					System.out.println("Attribute Value Proposal = " + text);
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, text, null, null);
-					if (!(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-							PreferenceConstants.P_POPUP_SUGESTION)))
+					if (!(NCLEditorPlugin.getDefault().getPreferenceStore()
+							.getBoolean(PreferenceConstants.P_POPUP_SUGESTION)))
 						propList.add(proposal);
 				}
 			}
-			//TODO: sugestao do popup na tag importBase e implementar o ../
+
 			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-					PreferenceConstants.P_POPUP_SUGESTION)) {
-				FileDialog fileDialog = new FileDialog(new Shell (), SWT.OPEN);
+					PreferenceConstants.P_POPUP_SUGESTION)
+					&& !nclDoc.getCurrentTagname(offset).equalsIgnoreCase(
+							"importBase")) {
+				FileDialog fileDialog = new FileDialog(new Shell(), SWT.OPEN);
 				fileDialog.setFilterPath(currentFile.getParent());
 				fileDialog.setText("OK");
 				String path = fileDialog.open();
-				if (path == null) return;
-				String id = nclDoc.getAttributeValueFromCurrentTagName(
-							offset, "id");
-				
+				if (path == null)
+					return;
+
+				String id = nclDoc.getAttributeValueFromCurrentTagName(offset,
+						"id");
+
 				if (path.startsWith(currentFile.getParent()))
 					path = path.substring(currentFile.getParent().length() + 1);
 				nclDoc.setAttribute(id, "src", path);
@@ -541,23 +545,25 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			File file = null;
 			file = new File(currentFile.toURI());
 
-			Vector<String> completions = new Vector<String>();
+
 			File parent;
+			String aux = qualifier;
 
 			String temp[] = qualifier.split("\\" + File.separatorChar);
 			if (temp.length > 1)
 				qualifier = temp[temp.length - 1];
-			else if (qualifier.endsWith("" + File.separatorChar))
+			if (aux.endsWith("" + File.separatorChar))
 				qualifier = "";
 
-			String path = "";
 
+			String path = "";
 			for (int i = 0; i < temp.length; i++) {
 				path += temp[i] + File.separatorChar;
 			}
-
+			
 			path = (String) path.subSequence(0, path.length()
 					- qualifier.length() - 1);
+
 			if (!path.equals("") && !path.endsWith("" + File.separatorChar))
 				path += File.separatorChar;
 
