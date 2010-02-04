@@ -422,6 +422,7 @@ public class XMLFormatter extends DefaultHandler2{
 	}
 
 	public void comment(char[] arg0, int arg1, int arg2) throws SAXException {
+		addIndent();
 		if(ischild.element()){
 			output.append(">");
 			ischild.remove();
@@ -430,7 +431,7 @@ public class XMLFormatter extends DefaultHandler2{
 		}
 		//addIndent();
 		output.append("<!--");
-		for(int i=0;i<arg2;i++)output.append(arg0[i+arg1]);
+		for(int i=0;i<arg2;i++) output.append(arg0[i+arg1]);
 		output.append("-->");
 		output.append(lineEnd);
 	}
