@@ -549,24 +549,24 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			File file = null;
 			file = new File(currentFile.toURI());
-			boolean flag = true;
-			for (int i = 0; i < protocols.length && flag; i++)
-				if (qualifier.startsWith(protocols[i]))
-					flag = false;
+			/*
+			 * boolean flag = true; for (int i = 0; i < protocols.length &&
+			 * flag; i++) if (qualifier.startsWith(protocols[i])) flag = false;
+			 */
 			String pre = "";
-			
-			
-			if (!flag)
-				if (qualifier.startsWith(protocols[0])) {
-					pre = protocols[0].substring(0, protocols[0].length() - 1);
-					qualifier = File.separatorChar
-							+ qualifier.substring(pre.length()+1);
-					System.out.println (pre + " " + qualifier);
-				}
+
+			String currentPath = currentFile.getParent();
+			if (qualifier.startsWith("file://")) {
+				pre = "file://";
+				qualifier = qualifier.substring(pre.length());
+				if (qualifier.equals(""))
+					currentPath = System.getProperty("user.home");
+
+			}
 
 			try {
-				Vector<String> proposal = new URIProposer(currentFile
-						.getParent()).getSrcSuggest(qualifier);
+				Vector<String> proposal = new URIProposer(currentPath)
+						.getSrcSuggest(qualifier);
 				CompletionProposal completionProposal;
 				for (String str : proposal) {
 					str = pre + str;

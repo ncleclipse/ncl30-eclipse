@@ -84,34 +84,34 @@ public class URIProposer {
 		File parent;
 		String aux = qualifier;
 
-		String temp[] = qualifier.split("\\" + File.separatorChar);
+		String temp[] = qualifier.split("\\" + "/");
 		if (temp.length > 1)
 			qualifier = temp[temp.length - 1];
-		if (aux.endsWith("" + File.separatorChar))
+		if (aux.endsWith("" + "/"))
 			qualifier = "";
 
 		String path = "";
 		for (int i = 0; i < temp.length; i++) {
-			path += temp[i] + File.separatorChar;
+			path += temp[i] + "/";
 		}
 		if (!path.equals(""))
 			path = (String) path.subSequence(0, path.length()
 					- qualifier.length() - 1);
 		 
-		if (aux.startsWith("" + File.separatorChar)) {
-			if (!path.startsWith("" + File.separatorChar))
-				path = File.separatorChar + path;
+		if (aux.startsWith("" + "/")) {
+			if (!path.startsWith("" + "/"))
+				path = "/" + path;
 			parent = new File(path);
 		} else {
-			parent = new File(rootPath + File.separatorChar + path);
+			parent = new File(rootPath + "/" + path);
 
 			if (!parent.isDirectory()) {
 				parent = new File(path);
 			}
 		}
-		if (!path.endsWith("" + File.separatorChar))
-			path += File.separatorChar;
-		if (path.startsWith("" + File.separatorChar) && !aux.startsWith("" + File.separatorChar))
+		if (!path.endsWith("" + "/"))
+			path += "/";
+		if (path.startsWith("" + "/") && !aux.startsWith("" + "/"))
 			path = path.substring(1);
 		
 		if (!(parent.isFile() || parent.isDirectory()))
@@ -120,9 +120,9 @@ public class URIProposer {
 
 		Vector<String> completions = new Vector<String>();
 		for (int i = 0; i < list.length; i++) {
-			if (new File(parent.getAbsolutePath() + File.separatorChar
+			if (new File(parent.getAbsolutePath() + "/"
 					+ list[i]).isDirectory())
-				list[i] += File.separatorChar;
+				list[i] += "/";
 			if (list[i].startsWith(qualifier)) {
 				completions.add(path + list[i]);
 
