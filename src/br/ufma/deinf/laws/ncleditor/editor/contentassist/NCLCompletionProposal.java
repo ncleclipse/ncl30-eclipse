@@ -23,6 +23,7 @@
 package br.ufma.deinf.laws.ncleditor.editor.contentassist;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -501,6 +502,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							propList.add(proposal);
 						}
 					}
+
 				}
 			}
 		}
@@ -547,48 +549,35 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			File file = null;
 			file = new File(currentFile.toURI());
-
-			File parent;
-			String aux = qualifier;
-
-			String temp[] = qualifier.split("\\" + File.separatorChar);
-			if (temp.length > 1)
-				qualifier = temp[temp.length - 1];
-			if (aux.endsWith("" + File.separatorChar))
-				qualifier = "";
-
-			String path = "";
-			for (int i = 0; i < temp.length; i++) {
-				path += temp[i] + File.separatorChar;
-			}
-
-			path = (String) path.subSequence(0, path.length()
-					- qualifier.length() - 1);
-
-			if (!path.equals("") && !path.endsWith("" + File.separatorChar))
-				path += File.separatorChar;
-
-			parent = new File(file.getParent() + File.separatorChar + path);
-			if (!parent.isDirectory()) {
-				parent = new File(file.getParent() + File.separatorChar + path);
-			}
-
-			String list[] = parent.list();
-			CompletionProposal proposal;
-
-			for (int i = 0; i < list.length; i++) {
-				if (new File(parent.getAbsolutePath() + File.separatorChar
-						+ list[i]).isDirectory())
-					list[i] += File.separatorChar;
-				if (list[i].startsWith(qualifier)) {
-					cursor = (path + list[i]).length();
-					proposal = new CompletionProposal(path + list[i], offset
-							- qlen, qlen, cursor, null, path + list[i], null,
-							null);
-					propList.add(proposal);
+			boolean flag = true;
+			for (int i = 0; i < protocols.length && flag; i++)
+				if (qualifier.startsWith(protocols[i]))
+					flag = false;
+			String pre = "";
+			
+			
+			if (!flag)
+				if (qualifier.startsWith(protocols[0])) {
+					pre = protocols[0].substring(0, protocols[0].length() - 1);
+					qualifier = File.separatorChar
+							+ qualifier.substring(pre.length()+1);
+					System.out.println (pre + " " + qualifier);
 				}
-			}
 
+			try {
+				Vector<String> proposal = new URIProposer(currentFile
+						.getParent()).getSrcSuggest(qualifier);
+				CompletionProposal completionProposal;
+				for (String str : proposal) {
+					str = pre + str;
+					completionProposal = new CompletionProposal(str, offset
+							- qlen, qlen, str.length(), null, str, null, null);
+					propList.add(completionProposal);
+				}
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			/**
 			 * Nao sugerindo temporariamente try { URIProposer fs = new
 			 * URIProposer(currentFile.getParent()); Vector<String> v =

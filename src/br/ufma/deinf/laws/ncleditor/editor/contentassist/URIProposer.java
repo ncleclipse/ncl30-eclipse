@@ -26,6 +26,9 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Vector;
+
+import org.eclipse.jface.text.contentassist.CompletionProposal;
+
 import br.ufma.deinf.laws.util.UrlUtils;
 
 /**
@@ -51,7 +54,7 @@ public class URIProposer {
 
 	private File computeParentFile(String qualifier) throws URISyntaxException {
 		isRelative = !qualifier.startsWith("file://"); // true if qualifier is
-														// relative
+		// relative
 		File file; // file Path
 
 		if (isRelative) {
@@ -60,7 +63,7 @@ public class URIProposer {
 						+ qualifier.substring(0, qualifier.lastIndexOf("/")));
 				file = new File(uriRoot.getPath() + "/"
 						+ qualifier.substring(0, qualifier.lastIndexOf("/"))); // is
-																				// relative
+				// relative
 			} else
 				file = new File(uriRoot.getPath());
 		} else {
@@ -75,6 +78,57 @@ public class URIProposer {
 			file = new File(uriRoot); // not relative
 		}
 		return file;
+	}
+
+	public Vector<String> getSrcSuggest(String qualifier) {
+		File parent;
+		String aux = qualifier;
+
+		String temp[] = qualifier.split("\\" + File.separatorChar);
+		if (temp.length > 1)
+			qualifier = temp[temp.length - 1];
+		if (aux.endsWith("" + File.separatorChar))
+			qualifier = "";
+
+		String path = "";
+		for (int i = 0; i < temp.length; i++) {
+			path += temp[i] + File.separatorChar;
+		}
+		if (!path.equals(""))
+			path = (String) path.subSequence(0, path.length()
+					- qualifier.length() - 1);
+		 
+		if (aux.startsWith("" + File.separatorChar)) {
+			if (!path.startsWith("" + File.separatorChar))
+				path = File.separatorChar + path;
+			parent = new File(path);
+		} else {
+			parent = new File(rootPath + File.separatorChar + path);
+
+			if (!parent.isDirectory()) {
+				parent = new File(path);
+			}
+		}
+		if (!path.endsWith("" + File.separatorChar))
+			path += File.separatorChar;
+		if (path.startsWith("" + File.separatorChar) && !aux.startsWith("" + File.separatorChar))
+			path = path.substring(1);
+		
+		if (!(parent.isFile() || parent.isDirectory()))
+			return null;
+		String list[] = parent.list();
+
+		Vector<String> completions = new Vector<String>();
+		for (int i = 0; i < list.length; i++) {
+			if (new File(parent.getAbsolutePath() + File.separatorChar
+					+ list[i]).isDirectory())
+				list[i] += File.separatorChar;
+			if (list[i].startsWith(qualifier)) {
+				completions.add(path + list[i]);
+
+			}
+		}
+		return completions;
 	}
 
 	private Vector<String> getResource(String qualifier, boolean isFile) {

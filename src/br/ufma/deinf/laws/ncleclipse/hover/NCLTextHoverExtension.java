@@ -43,10 +43,7 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 	public NCLTextHoverExtension(ISourceViewer sourceViewer) {
 		super(sourceViewer);
 	}
-	
-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion){
-		return "testin";
-	}
+
 
 	public Vector<RegionValues> getRegionFatherTree(int offset) {
 		Vector<RegionValues> tree = new Vector<RegionValues>();
@@ -169,21 +166,22 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 									offset, "focusSrc");
 					}
 					
-					mime = mime.toLowerCase();
-
-					if (mime.length() > 7) {
-						if (mime.substring(0, 7).equals("http://")) {
+					String temp = mime;
+					temp = temp.toLowerCase();
+					if (temp.length() > 7) {
+						if (temp.substring(0, 7).equals("http://")) {
 							result = new PreViewXML(300, 300, "", mime);
 						}
 					}
 
-					String values[] = mime.split("\\.");
+					String values[] = temp.split("\\.");
 					String sbstr = "";
 					if (values.length > 1)
 						sbstr = values[values.length - 1];
 
+			
 					if (audio.contains(sbstr) || video.contains(sbstr)) {
-
+						
 						String nomeArquivo = mime;
 
 						File arquivo = new File(nomeArquivo);
