@@ -91,29 +91,15 @@ public class URIProposer {
 			qualifier = "";
 
 		String path = "";
-		for (int i = 0; i < temp.length; i++) {
-			path += temp[i] + "/";
-		}
-		if (!path.equals(""))
-			path = (String) path.subSequence(0, path.length()
-					- qualifier.length() - 1);
-		 
-		if (aux.startsWith("" + "/")) {
-			if (!path.startsWith("" + "/"))
-				path = "/" + path;
-			parent = new File(path);
-		} else {
+		path = aux.substring(0, aux.length()
+					- qualifier.length());
+		parent = new File(path);
+		if ((!(parent.isDirectory() || parent.isFile())) || aux.startsWith(".."))
 			parent = new File(rootPath + "/" + path);
-
 			if (!parent.isDirectory()) {
 				parent = new File(path);
 			}
-		}
-		if (!path.endsWith("" + "/"))
-			path += "/";
-		if (path.startsWith("" + "/") && !aux.startsWith("" + "/"))
-			path = path.substring(1);
-		
+
 		if (!(parent.isFile() || parent.isDirectory()))
 			return null;
 		String list[] = parent.list();

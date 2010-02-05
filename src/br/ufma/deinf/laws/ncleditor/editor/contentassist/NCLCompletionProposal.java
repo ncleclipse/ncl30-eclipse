@@ -563,7 +563,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					currentPath = System.getProperty("user.home");
 
 			}
-
 			try {
 				Vector<String> proposal = new URIProposer(currentPath)
 						.getSrcSuggest(qualifier);
