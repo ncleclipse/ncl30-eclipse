@@ -55,9 +55,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
 /**
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
- *
+ * 
  */
-public class XMLFormatter extends DefaultHandler2{
+public class XMLFormatter extends DefaultHandler2 {
 	private String xmlVersion = "1.0";
 	private String encoding = "UTF-8";
 	/** The indent string (defaults to the tab character). */
@@ -71,8 +71,9 @@ public class XMLFormatter extends DefaultHandler2{
 	private StringBuffer output = new StringBuffer();
 
 	private LinkedList<Boolean> ischild = new LinkedList<Boolean>();
-	
-	public String format(Document document,String text) throws ParserConfigurationException, SAXException, IOException {
+
+	public String format(Document document, String text)
+			throws ParserConfigurationException, SAXException, IOException {
 		output.append("<?xml version=");
 		output.append(quote);
 		output.append(xmlVersion);
@@ -83,40 +84,43 @@ public class XMLFormatter extends DefaultHandler2{
 		output.append(quote);
 		output.append("?>");
 		output.append(lineEnd);
-		//processChildNodes(document.getChildNodes());
+		// processChildNodes(document.getChildNodes());
 		document = null;
 		ischild.addFirst(false);
-		
+
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 		xmlReader.setContentHandler(this);
-		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes",true);
-		xmlReader.setProperty("http://xml.org/sax/properties/lexical-handler", this);
+		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes",
+				true);
+		xmlReader.setProperty("http://xml.org/sax/properties/lexical-handler",
+				this);
 
-		//SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+		// SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 		xmlReader.parse(new InputSource(new StringReader(text)));
 		return output.toString();
 	}
-	
+
 	/** comeca um documento novo */
 	public void startDocument() {
-		
+
 	}
 
 	/** termina o documento */
 	public void endDocument() {
-		
+
 	}
 
 	/** comeca uma tag nova */
-	public void startElement(String uri,String localName,String tag,Attributes atributos){
-		if(ischild.element()){
+	public void startElement(String uri, String localName, String tag,
+			Attributes atributos) {
+		if (ischild.element()) {
 			output.append(">");
 			output.append(lineEnd);
 		}
 		addIndent();
 		output.append("<");
 		output.append(tag);
-		for(int i=0;i<atributos.getLength();i++){
+		for (int i = 0; i < atributos.getLength(); i++) {
 			output.append(" ");
 			output.append(atributos.getQName(i));
 			output.append("=");
@@ -128,14 +132,12 @@ public class XMLFormatter extends DefaultHandler2{
 		ischild.addFirst(true);
 	}
 
-	
-	public void endElement(String uri, String localName, String tag){
-		if(ischild.element()){
+	public void endElement(String uri, String localName, String tag) {
+		if (ischild.element()) {
 			output.append("/>");
 			output.append(lineEnd);
 			level--;
-		}
-		else{
+		} else {
 			level--;
 			addIndent();
 			output.append("</");
@@ -146,207 +148,203 @@ public class XMLFormatter extends DefaultHandler2{
 		ischild.remove();
 		ischild.addFirst(false);
 	}
-	
-	
-	
+
 	/*
-	private void processChildNodes(NodeList children) {
-		for (int i = 0; i < children.getLength(); i++) {
-			Node node = children.item(i);
-			if (node instanceof Element) {
-				processElement((Element) node);
-			} else if (node instanceof ProcessingInstruction) {
-				processPI((ProcessingInstruction) node);
-			} else if (node instanceof Entity) {
-				processEntity((Entity) node);
-			} else if (node instanceof CDATASection) {
-				processCDATA((CDATASection) node);
-			} else if (node instanceof Text) {
-				processText((Text) node);
-			} else if (node instanceof Comment) {
-				processComment((Comment) node);
-			} else if (node instanceof DocumentType) {
-				processDocumentType((DocumentType) node);
-			} else {
-				System.out.println(node.getClass().toString());
+		private void processChildNodes(NodeList children) {
+			for (int i = 0; i < children.getLength(); i++) {
+				Node node = children.item(i);
+				if (node instanceof Element) {
+					processElement((Element) node);
+				} else if (node instanceof ProcessingInstruction) {
+					processPI((ProcessingInstruction) node);
+				} else if (node instanceof Entity) {
+					processEntity((Entity) node);
+				} else if (node instanceof CDATASection) {
+					processCDATA((CDATASection) node);
+				} else if (node instanceof Text) {
+					processText((Text) node);
+				} else if (node instanceof Comment) {
+					processComment((Comment) node);
+				} else if (node instanceof DocumentType) {
+					processDocumentType((DocumentType) node);
+				} else {
+					System.out.println(node.getClass().toString());
+				}
 			}
 		}
-	}
 
-	private void processCDATA(CDATASection section) {
-		addIndent();
-		output.append("<![CDATA[");
-		output.append(section.getNodeValue());
-		output.append("]]>");
-		output.append(lineEnd);
-	}
+		private void processCDATA(CDATASection section) {
+			addIndent();
+			output.append("<![CDATA[");
+			output.append(section.getNodeValue());
+			output.append("]]>");
+			output.append(lineEnd);
+		}
 
-	
-	private void processDocumentType(DocumentType type) {
-		addIndent();
-		output.append("<!DOCTYPE ");
-		output.append(type.getNodeName());
-		if (type.getPublicId() != null) {
-			output.append(" PUBLIC ");
-			output.append(quote);
-			output.append(type.getPublicId());
-			output.append(quote);
+		private void processDocumentType(DocumentType type) {
+			addIndent();
+			output.append("<!DOCTYPE ");
+			output.append(type.getNodeName());
+			if (type.getPublicId() != null) {
+				output.append(" PUBLIC ");
+				output.append(quote);
+				output.append(type.getPublicId());
+				output.append(quote);
+				output.append(" ");
+				output.append(quote);
+				output.append(type.getSystemId());
+				output.append(quote);
+			} else if (type.getSystemId() != null) {
+				output.append(" SYSTEM ");
+				output.append(quote);
+				output.append(type.getSystemId());
+				output.append(quote);
+			} // TODO; Format correctly
+			if (type.getInternalSubset() != null) {
+				output.append(" [");
+				output.append(lineEnd);
+				output.append(type.getInternalSubset());
+				addIndent();
+				output.append("]");
+			}
+			output.append(">");
+			output.append(lineEnd);
+		}
+
+		private void processEntity(Entity entity) { // NamedNodeMap attributes =
+			entity.getAttributes();
+			addIndent();
+			output.append("<!ENTITY ");
+			output.append(entity.getNodeName());
 			output.append(" ");
 			output.append(quote);
-			output.append(type.getSystemId());
+			String oldIndent = indent;
+			String oldLineEnd = lineEnd;
+			indent = "";
+			lineEnd = "";
+			swapQuote();
+			processChildNodes(entity.getChildNodes());
+			swapQuote();
+			indent = oldIndent;
+			lineEnd = oldLineEnd;
 			output.append(quote);
-		} else if (type.getSystemId() != null) {
-			output.append(" SYSTEM ");
-			output.append(quote);
-			output.append(type.getSystemId());
-			output.append(quote);
-		}
-		// TODO; Format correctly
-		if (type.getInternalSubset() != null) {
-			output.append(" [");
+			output.append(">");
 			output.append(lineEnd);
-			output.append(type.getInternalSubset());
+		}
+
+		private void processPI(ProcessingInstruction instruction) {
 			addIndent();
-			output.append("]");
+			output.append("<?");
+			output.append(instruction.getNodeName());
+			output.append(" ");
+			output.append(instruction.getData());
+			output.append("?>");
+			output.append(lineEnd);
 		}
-		output.append(">");
-		output.append(lineEnd);
-	}
 
-	private void processEntity(Entity entity) {
-		// NamedNodeMap attributes = entity.getAttributes();
-		addIndent();
-		output.append("<!ENTITY ");
-		output.append(entity.getNodeName());
-		output.append(" ");
-		output.append(quote);
-		String oldIndent = indent;
-		String oldLineEnd = lineEnd;
-		indent = "";
-		lineEnd = "";
-		swapQuote();
-		processChildNodes(entity.getChildNodes());
-		swapQuote();
-		indent = oldIndent;
-		lineEnd = oldLineEnd;
-		output.append(quote);
-		output.append(">");
-		output.append(lineEnd);
-	}
+		private void processComment(Comment comment) {
+			addIndent();
+			output.append("<!--");
+			output.append(comment.getData());
+			output.append("-->");
+			output.append(lineEnd);
+		}
 
-	private void processPI(ProcessingInstruction instruction) {
-		addIndent();
-		output.append("<?");
-		output.append(instruction.getNodeName());
-		output.append(" ");
-		output.append(instruction.getData());
-		output.append("?>");
-		output.append(lineEnd);
-	}
-
-	private void processComment(Comment comment) {
-		addIndent();
-		output.append("<!--");
-		output.append(comment.getData());
-		output.append("-->");
-		output.append(lineEnd);
-	}
-
-	private void processText(Text text) {
-		String token = "";
-		StringTokenizer tokenizer = new StringTokenizer(text.getData(),
-				"& \t\r\n\u00A0", true);
-		while (tokenizer.hasMoreTokens()) {
-			token = tokenizer.nextToken();
-			if (token.indexOf(' ') == -1 && token.indexOf('\t') == -1
-					&& token.indexOf('\r') == -1 && token.indexOf('\n') == -1) {
-				outputText(token);
-				break;
+		private void processText(Text text) {
+			String token = "";
+			StringTokenizer tokenizer = new StringTokenizer(text.getData(),
+					"& \t\r\n\u00A0", true);
+			while (tokenizer.hasMoreTokens()) {
+				token = tokenizer.nextToken();
+				if (token.indexOf(' ') == -1 && token.indexOf('\t') == -1
+						&& token.indexOf('\r') == -1 && token.indexOf('\n') == -1) {
+					outputText(token);
+					break;
+				}
+			}
+			while (tokenizer.hasMoreTokens()) {
+				token = tokenizer.nextToken();
+				if (token.indexOf(' ') != -1 || token.indexOf('\t') != -1
+						|| token.indexOf('\r') != -1 || token.indexOf('\n') != -1) {
+					if (tokenizer.hasMoreTokens()) {
+						output.append(" ");
+					}
+				} else {
+					outputText(token);
+				}
 			}
 		}
-		while (tokenizer.hasMoreTokens()) {
-			token = tokenizer.nextToken();
-			if (token.indexOf(' ') != -1 || token.indexOf('\t') != -1
-					|| token.indexOf('\r') != -1 || token.indexOf('\n') != -1) {
-				if (tokenizer.hasMoreTokens()) {
-					output.append(" ");
-				}
+
+		private void outputText(String token) {
+			if (token.equals("&")) {
+				output.append("&amp;");
+			} else if (token.equals(nbsp)) {
+				output.append("&160;");
+			} else if (token.equals("<")) {
+				output.append("&lt;");
+			} else if (token.equals(">")) {
+				output.append("&gt;");
 			} else {
-				outputText(token);
+				output.append(token);
 			}
 		}
-	}
 
-	private void outputText(String token) {
-		if (token.equals("&")) {
-			output.append("&amp;");
-		} else if (token.equals(nbsp)) {
-			output.append("&160;");
-		} else if (token.equals("<")) {
-			output.append("&lt;");
-		} else if (token.equals(">")) {
-			output.append("&gt;");
-		} else {
-			output.append(token);
-		}
-	}
-
-	private void processElement(Element element) {
-		NamedNodeMap attributes = element.getAttributes();
-		addIndent();
-		output.append("<");
-		output.append(element.getNodeName());
-		for (int i = 0; i < attributes.getLength(); i++) {
-			Node node = attributes.item(i);
-			if (node instanceof Attr) {
-				Attr attr = (Attr) node;
-				output.append(" ");
-				output.append(attr.getNodeName());
-				output.append("=");
-				output.append(quote);
-				output.append(attr.getValue());
-				output.append(quote);
-			}
-		}
-		if (element.hasChildNodes()) {
-			NodeList children = element.getChildNodes();
-			if (children.getLength() == 1
-					&& element.getFirstChild() instanceof Text) {
-				Text el = (Text)element.getFirstChild();
-				System.out.println("aqui eu " + el.getData());
-				if(el.getData().trim().equals("")){ // remove empty text element 
-					output.append("/>");
-					output.append(lineEnd);
+		private void processElement(Element element) {
+			NamedNodeMap attributes = element.getAttributes();
+			addIndent();
+			output.append("<");
+			output.append(element.getNodeName());
+			for (int i = 0; i < attributes.getLength(); i++) {
+				Node node = attributes.item(i);
+				if (node instanceof Attr) {
+					Attr attr = (Attr) node;
+					output.append(" ");
+					output.append(attr.getNodeName());
+					output.append("=");
+					output.append(quote);
+					output.append(attr.getValue());
+					output.append(quote);
 				}
-				else{
+			}
+			if (element.hasChildNodes()) {
+				NodeList children = element.getChildNodes();
+				if (children.getLength() == 1
+						&& element.getFirstChild() instanceof Text) {
+					Text el = (Text) element.getFirstChild();
+					System.out.println("aqui eu " + el.getData());
+					if (el.getData().trim().equals("")) { // remove empty text
+						// element
+						output.append("/>");
+						output.append(lineEnd);
+					} else {
+						output.append(">");
+						level++;
+						processChildNodes(children);
+						level--;
+						output.append("</");
+						output.append(element.getNodeName());
+						output.append(">");
+						output.append(lineEnd);
+					}
+				} else {
 					output.append(">");
+					output.append(lineEnd);
 					level++;
 					processChildNodes(children);
 					level--;
+					addIndent();
 					output.append("</");
 					output.append(element.getNodeName());
 					output.append(">");
 					output.append(lineEnd);
 				}
 			} else {
-				output.append(">");
-				output.append(lineEnd);
-				level++;
-				processChildNodes(children);
-				level--;
-				addIndent();
-				output.append("</");
-				output.append(element.getNodeName());
-				output.append(">");
+				output.append("/>");
 				output.append(lineEnd);
 			}
-		} else {
-			output.append("/>");
-			output.append(lineEnd);
 		}
-	}
 	*/
-	
+
 	private void addIndent() {
 		for (int i = 0; i < level; i++) {
 			output.append(indent);
@@ -422,16 +420,16 @@ public class XMLFormatter extends DefaultHandler2{
 	}
 
 	public void comment(char[] arg0, int arg1, int arg2) throws SAXException {
-		addIndent();
-		if(ischild.element()){
+		if (ischild.element()) {
 			output.append(">");
 			ischild.remove();
 			ischild.addFirst(false);
 			output.append(lineEnd);
 		}
-		//addIndent();
+		addIndent();
 		output.append("<!--");
-		for(int i=0;i<arg2;i++) output.append(arg0[i+arg1]);
+		for (int i = 0; i < arg2; i++)
+			output.append(arg0[i + arg1]);
 		output.append("-->");
 		output.append(lineEnd);
 	}
