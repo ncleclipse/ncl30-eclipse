@@ -83,7 +83,7 @@ public class URIProposer {
 	}
 
 	public Vector<String> getSrcSuggest(String qualifier) {
-		System.out.println ("qualifier: " + qualifier);
+		System.out.println("qualifier: " + qualifier);
 		File parent;
 		String aux = qualifier;
 
@@ -94,23 +94,32 @@ public class URIProposer {
 			qualifier = "";
 
 		String path = "";
-		path = aux.substring(0, aux.length()
-					- qualifier.length());
+		path = aux.substring(0, aux.length() - qualifier.length());
 		parent = new File(path);
 		Vector<String> completions = new Vector<String>();
+		
+		
+		if (aux.startsWith("..") && aux.endsWith("../")) {
+			
+			if (aux.split("\\/").length >= root.split("\\/").length)
+				return completions;
+
+		} 
 		if ((!(parent.isDirectory() || parent.isFile())) || aux.startsWith(".."))
 			parent = new File(root + "/" + path);
-			if (!parent.isDirectory()) {
-				return completions;
-			}
-		if (parent.isFile() == false && parent.isDirectory()==false)
+		if (!parent.isDirectory()) {
+			return completions;
+		}
+
+		if (parent.isFile() == false && parent.isDirectory() == false)
 			return null;
 		String list[] = parent.list();
-		
-		if (list == null) return completions;
+
+		if (list == null)
+			return completions;
 		for (int i = 0; i < list.length; i++) {
-			if (new File(parent.getAbsolutePath() + "/"
-					+ list[i]).isDirectory())
+			if (new File(parent.getAbsolutePath() + "/" + list[i])
+					.isDirectory())
 				list[i] += "/";
 			if (list[i].startsWith(qualifier)) {
 				completions.add(path + list[i]);
