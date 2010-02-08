@@ -44,12 +44,14 @@ import br.ufma.deinf.laws.util.UrlUtils;
 public class URIProposer {
 	String rootPath;
 	URI uriRoot;
+	String root;
 	boolean isRelative = false;
 
 	public URIProposer(String rootPath) throws URISyntaxException {
 		this.rootPath = UrlUtils.encodeURL(rootPath);
 		uriRoot = new URI(this.rootPath);
 		System.out.println(this.rootPath);
+		root = rootPath;
 	}
 
 	private File computeParentFile(String qualifier) throws URISyntaxException {
@@ -95,16 +97,15 @@ public class URIProposer {
 					- qualifier.length());
 		parent = new File(path);
 		if ((!(parent.isDirectory() || parent.isFile())) || aux.startsWith(".."))
-			parent = new File(rootPath + "/" + path);
+			parent = new File(root + "/" + path);
 			if (!parent.isDirectory()) {
 				parent = new File(path);
 			}
-
 		if (!(parent.isFile() || parent.isDirectory()))
 			return null;
 		String list[] = parent.list();
-
 		Vector<String> completions = new Vector<String>();
+		if (list == null) return completions;
 		for (int i = 0; i < list.length; i++) {
 			if (new File(parent.getAbsolutePath() + "/"
 					+ list[i]).isDirectory())
@@ -195,7 +196,7 @@ public class URIProposer {
 		}
 
 		System.out.println("## FILES ##");
-		v = fs.getFiles("file:///C:/Users/usuario/");
+		v = fs.getFiles("file:///Arquivos de Programas/");
 		for (int i = 0; i < v.size(); i++) {
 			System.out.println(v.get(i));
 		}
