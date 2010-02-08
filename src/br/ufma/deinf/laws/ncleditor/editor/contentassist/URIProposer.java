@@ -83,6 +83,7 @@ public class URIProposer {
 	}
 
 	public Vector<String> getSrcSuggest(String qualifier) {
+		System.out.println ("qualifier: " + qualifier);
 		File parent;
 		String aux = qualifier;
 
@@ -96,15 +97,16 @@ public class URIProposer {
 		path = aux.substring(0, aux.length()
 					- qualifier.length());
 		parent = new File(path);
+		Vector<String> completions = new Vector<String>();
 		if ((!(parent.isDirectory() || parent.isFile())) || aux.startsWith(".."))
 			parent = new File(root + "/" + path);
 			if (!parent.isDirectory()) {
-				parent = new File(path);
+				return completions;
 			}
-		if (!(parent.isFile() || parent.isDirectory()))
+		if (parent.isFile() == false && parent.isDirectory()==false)
 			return null;
 		String list[] = parent.list();
-		Vector<String> completions = new Vector<String>();
+		
 		if (list == null) return completions;
 		for (int i = 0; i < list.length; i++) {
 			if (new File(parent.getAbsolutePath() + "/"
