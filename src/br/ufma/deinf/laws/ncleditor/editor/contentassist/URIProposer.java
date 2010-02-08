@@ -98,7 +98,7 @@ public class URIProposer {
 		parent = new File(path);
 		Vector<String> completions = new Vector<String>();
 		
-		
+		if (aux.contains("//")) return completions;
 		if (aux.startsWith("..") && aux.endsWith("../")) {
 			
 			if (aux.split("\\/").length >= root.split("\\/").length)
