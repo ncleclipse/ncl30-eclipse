@@ -241,12 +241,9 @@ public class NCLConfiguration extends TextSourceViewerConfiguration {
 	 */
 	public ITextHover getTextHover(ISourceViewer sourceViewer,
 			String contentType) {
-		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-				PreferenceConstants.P_PREVIEW)) {
+		
 			return new NCLTextHoverExtension(sourceViewer);
-		} else {
-			return super.getTextHover(sourceViewer, contentType);
-		}
+		
 	}
 
 	/*
