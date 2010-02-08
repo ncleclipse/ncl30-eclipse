@@ -25,6 +25,8 @@ package br.ufma.deinf.laws.ncleclipse.preferences;
 import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
+
+import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 
 
@@ -50,7 +52,7 @@ public class NCLPreferencePage
 	public NCLPreferencePage() {
 		super(GRID);
 		setPreferenceStore(NCLEditorPlugin.getDefault().getPreferenceStore());
-		setDescription("Preferences related to NCL Eclipse.");
+		setDescription(NCLEditorMessages.getString("Preferences.Title"));
 	}
 	
 	/**
@@ -67,6 +69,7 @@ public class NCLPreferencePage
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
+		
 	}
 	
 }

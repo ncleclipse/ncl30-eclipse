@@ -25,6 +25,8 @@ package br.ufma.deinf.laws.ncleclipse.preferences;
 import org.eclipse.jface.preference.*;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
+
+import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 
 /**
@@ -44,7 +46,7 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 	public ViewsPreferencePage() {
 		super(GRID);
 		setPreferenceStore(NCLEditorPlugin.getDefault().getPreferenceStore());
-		setDescription("Preferences related to NCL Eclipse Views");
+		setDescription(NCLEditorMessages.getString("Preferences.Description"));
 	}
 
 	/**
@@ -55,17 +57,21 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 	public void createFieldEditors() {
 		addField(new BooleanFieldEditor(
 				PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE,
-				"&Open Layout View Editor (Experimental - be carefull)",
+				NCLEditorMessages.getString("Preferences.OpenLayoutEditor"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceConstants.P_PREVIEW,
-				"&Open PreView when mouse over", getFieldEditorParent()));
-		
+				NCLEditorMessages
+						.getString("Preferences.OpenPrevieOnMouseOver"),
+				getFieldEditorParent()));
+
 		addField(new BooleanFieldEditor(PreferenceConstants.P_VALIDATION,
-				"&On Time Validation", getFieldEditorParent()));
-		
-		addField(new BooleanFieldEditor(PreferenceConstants.P_POPUP_SUGESTION, 
-				"&Open pop up to suggest src attribute", getFieldEditorParent()));
+				NCLEditorMessages.getString("Preferences.OnTimeValidation"),
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(PreferenceConstants.P_POPUP_SUGESTION,
+				NCLEditorMessages.getString("Preferences.PopupSRC"),
+				getFieldEditorParent()));
 
 	}
 
