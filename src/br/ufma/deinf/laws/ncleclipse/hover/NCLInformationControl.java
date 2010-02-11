@@ -60,6 +60,7 @@ public class NCLInformationControl extends AbstractInformationControl
 	private Composite pageButton;
 	private Composite pageRegion;
 	private Composite pageText;
+	private Composite pageXml;
 	private boolean isMedia;
 	private Button button;
 	private Program p;
@@ -72,6 +73,7 @@ public class NCLInformationControl extends AbstractInformationControl
 	private boolean isHtml;
 	private final int fAdditionalTextStyles;
 	private Object input;
+	private Browser fBrowser;
 
 	public NCLInformationControl(Shell parentShell, boolean isResizable) {
 		super(parentShell, isResizable);
@@ -105,7 +107,7 @@ public class NCLInformationControl extends AbstractInformationControl
 	
 	@Override
 	protected void createContent(Composite parent) {
-		internalComposite = new Composite(parent, SWT.BORDER);
+		internalComposite = new Composite(parent, SWT.BORDER_DASH);
 		
 		
 		internalComposite.setForeground(parent.getForeground());
@@ -141,6 +143,16 @@ public class NCLInformationControl extends AbstractInformationControl
 		button = new Button(pageButton, SWT.PUSH);
 		button.setImage(image);
 		//image.dispose();
+		
+		pageXml = new Composite(this.internalComposite, SWT.NONE);
+		pageXml.setLayout(new FillLayout());
+		fBrowser = new Browser(pageXml, SWT.NONE);
+		fBrowser.setForeground(internalComposite.getForeground());
+		fBrowser.setBackground(internalComposite.getBackground());
+		fBrowser.setFont(JFaceResources.getDialogFont());
+		Browser.clearSessions();
+
+	
 	}
 
 	@Override
@@ -201,18 +213,10 @@ public class NCLInformationControl extends AbstractInformationControl
 		} else if (input instanceof PreViewXML) {
 			isHtml = true;
 			PreViewXML html = (PreViewXML) input;
-			Composite page11 = new Composite(this.internalComposite, SWT.NONE);
+			fBrowser.setUrl(html.getUrl());	
+			layout.topControl = pageXml;
 			
-			page11.setLayout(new FillLayout());
-			Browser fBrowser1 = new Browser(page11, SWT.NONE);
-		
-			fBrowser1.setForeground(internalComposite.getForeground());
-			fBrowser1.setBackground(internalComposite.getBackground());
-			fBrowser1.setFont(JFaceResources.getDialogFont());
-
-			fBrowser1.setUrl(html.getUrl());
-
-			layout.topControl = page11;
+			
 		} else if (input instanceof PreViewRegion) {
 			this.isRegion = true;
 			layout.topControl = pageRegion;
@@ -326,7 +330,6 @@ public class NCLInformationControl extends AbstractInformationControl
 	}
 
 	public void dispose() {
-
 		super.dispose();
 
 	}
