@@ -549,10 +549,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			File file = null;
 			file = new File(currentFile.toURI());
-			/*
-			 * boolean flag = true; for (int i = 0; i < protocols.length &&
-			 * flag; i++) if (qualifier.startsWith(protocols[i])) flag = false;
-			 */
+			
 			String pre = "";
 
 			String currentPath = currentFile.getParent();
@@ -561,7 +558,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				qualifier = qualifier.substring(pre.length());
 				if (qualifier.equals(""))
 					currentPath = System.getProperty("user.home");
-
 			}
 			try {
 				Vector<String> proposal = new URIProposer(currentPath)
