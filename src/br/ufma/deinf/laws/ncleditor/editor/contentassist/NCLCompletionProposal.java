@@ -58,6 +58,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
 import br.ufma.deinf.laws.ncl.AttributeValues;
+import br.ufma.deinf.laws.ncl.DataType;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
@@ -507,9 +508,67 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 
+		if (tagname.equals("descriptorParam")) {
+			if (attribute.equals("name")) {
+				String name[] = { "background", "balanceLevel", "bassLevel",
+						"bottom", "bounds", "fit", "fontColor", "fontFamily",
+						"fontSize", "fontVariant", "fontWeight", "height",
+						"left", "location", "playerLife", "reusePlayer",
+						"right", "scroll", "size", "soundLevel", "style",
+						"top", "transparency", "trebleLevel", "visible",
+						"width", "zIndex" };
+				
+				for (int i = 0; i < name.length; i++)
+					if (name[i].startsWith(qualifier)) {
+						propList.add(new CompletionProposal(name[i], offset
+								- qlen, qlen, name[i].length(), null, name[i],
+								null, null));
+					}
+				return;
+			} else if (attribute.equals("value")) {
+
+				String name = nclDoc.getAttributeValueFromCurrentTagName(
+						offset, "name");
+
+				if (name.equals("background"))
+					prop = AttributeValues.getValues(DataType.COLOR);
+
+				else if (name.equals("visible"))
+					prop = AttributeValues.getValues(DataType.BOOLEAN_VALUE);
+
+				else if (name.equals("fit"))
+					prop = AttributeValues.getValues(DataType.FIT_VALUE);
+
+				else if (name.equals("scroll"))
+					prop = AttributeValues.getValues(DataType.SCROLL);
+
+				else if (name.equals("fontColor"))
+					prop = AttributeValues.getValues(DataType.COLOR);
+
+				else if (name.equals("fontVariant"))
+					prop = AttributeValues.getValues(DataType.FONT_VARIANT);
+
+				else if (name.equals("fontWeight"))
+					prop = AttributeValues.getValues(DataType.FONT_WEIGHT);
+
+				else if (name.equals("playerLife"))
+					prop = AttributeValues.getValues(DataType.PLAYER_LIFE);
+
+				for (String str : prop)
+					if (str.startsWith(qualifier))
+						propList.add(new CompletionProposal(str, offset - qlen,
+								qlen, str.length(), null, str, null, null));
+				return;
+			}
+
+		}
+
 		if ((tagname.equals("media") && attribute.equals("src"))
 				|| (tagname.equals("importBase") && attribute
-						.equals("documentURI"))) {
+						.equals("documentURI"))
+				|| (tagname.equals("descriptor")
+						&& (attribute.equals("focusSrc")) || attribute
+						.equals("focusSelSrc"))) {
 			// suggest the protocols
 			for (int i = 0; i < protocols.length; i++) {
 				text = protocols[i];
@@ -549,7 +608,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			File file = null;
 			file = new File(currentFile.toURI());
-			
+
 			String pre = "";
 
 			String currentPath = currentFile.getParent();
