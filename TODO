@@ -73,7 +73,7 @@ TODO:
 				<area id="teste"/>
 			</media>
 Versao 1.4.19
-	
+	- Sugestão de valores para os atributos "name" e "value" da tag "descriptorParam"
 
 Versao 1.4.10
 	- Correção do problema de ter que abrir de novo o editor para funcionar
