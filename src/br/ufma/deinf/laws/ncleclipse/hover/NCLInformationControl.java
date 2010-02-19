@@ -229,7 +229,6 @@ public class NCLInformationControl extends AbstractInformationControl implements
 					for (int i = 0; i < 100; i++) {
 						e.gc.setBackground(cb);
 						e.gc.setForeground(cf);
-						e.gc.setAlpha(100);
 						e.gc.fillRectangle(0, 0, 300, 300);
 
 					}
@@ -321,13 +320,15 @@ public class NCLInformationControl extends AbstractInformationControl implements
 
 				@Override
 				public void paintControl(PaintEvent e) {
-
-					for (int i = 0; i < 100; i++) {
+					
+					for (int i = 0; i < 100; i++){
 						e.gc.setBackground(internalComposite.getBackground());
 						e.gc.setForeground(internalComposite.getForeground());
-						// e.gc.setAlpha(100);
 						e.gc.fillRectangle(0, 0, 1000, 500);
 					}
+					
+					if (actions.length == 0 || conditions.length == 0)
+						return;
 					int DEFAULT_WIDTH = 40;
 					int DEFAULT_HEIGHT = 40;
 					int desX = 0;
@@ -453,6 +454,8 @@ public class NCLInformationControl extends AbstractInformationControl implements
 
 		if (isconnector) {
 			PreViewConnector pre = (PreViewConnector) input;
+			if (pre.getActionRole().size() == 0 || pre.getConditionRole().size() == 0)
+				return getShell().computeSize(0, 0);
 			int x = 60, y;
 			if (!pre.getCompoundCondition().equals(""))
 				x += 130;

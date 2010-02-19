@@ -33,7 +33,6 @@ public class PreViewConnector {
 	private Vector <Attributes> actionRole;
 	private String compoundCondition;
 	private String compoundAction;
-	private boolean isAssessmentStatement;
 	
 
 	public PreViewConnector() {
@@ -41,13 +40,9 @@ public class PreViewConnector {
 		actionRole = new Vector<Attributes> ();
 		compoundAction = "";
 		compoundCondition = "";
-		isAssessmentStatement = false;
 	}
 	
-	public void setAssessmentStatement (){
-		isAssessmentStatement = true;
-	}
-	
+
 	public String getCompoundAction() {
 		return compoundAction;
 	}
@@ -78,6 +73,15 @@ public class PreViewConnector {
 	
 	public Vector <Attributes> getActionRole (){
 		return actionRole;
+	}
+	
+	public void reset (){
+		actionRole.clear();
+		actionRole = new Vector <Attributes> ();
+		compoundAction = "";
+		compoundCondition = "";
+		conditionRole.clear();
+		conditionRole = new Vector <Attributes> ();
 	}
 
 }
