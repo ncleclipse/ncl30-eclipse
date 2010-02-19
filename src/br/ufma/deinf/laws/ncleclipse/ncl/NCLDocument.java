@@ -161,6 +161,7 @@ public class NCLDocument{
 		if (elements == null) return null;
 		Iterator it = keySet.iterator();
 		Vector <NCLElement> r = new Vector <NCLElement> ();
+		if (tag.equals("causalConnector")) tag = "xconnector";
 		while(it.hasNext()){
 			Collection elements = getElements().get((String)it.next());
 			if (elements == null) return null;
@@ -168,6 +169,9 @@ public class NCLDocument{
 			while(it2.hasNext()){
 				NCLElement nclElement = (NCLElement)it2.next();
 				String idElement = nclElement.getAttributes().get(tag);
+				if (idElement == null && (tag.equals("media") || tag.equals("port") || tag.equals("area"))){
+					idElement = nclElement.getAttributes().get("component");
+				}
 				if( idElement != null && idElement.equals(attribute)){
 						r.add (nclElement);
 				}
