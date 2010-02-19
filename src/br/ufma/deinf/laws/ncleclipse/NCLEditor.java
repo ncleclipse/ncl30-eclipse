@@ -54,8 +54,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
+import org.eclipse.ui.internal.texteditor.GotoLastEditPositionAction;
 import org.eclipse.ui.texteditor.ContentAssistAction;
-import org.eclipse.ui.texteditor.GotoLastEditPositionAction;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
@@ -106,24 +106,26 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 	protected void createActions() {
 		super.createActions();
 		IAction action = new ContentAssistAction(NCLEditorMessages
-				.getResourceBundle(), "ContentAssistProposal.", this); //$NON-NLS-1$
+				.getInstance().getResourceBundle(),
+				"ContentAssistProposal.", this); //$NON-NLS-1$
 		action
 				.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(CONTENT_ASSIST_ACTION, action); //$NON-NLS-1$
 		markAsStateDependentAction(CONTENT_ASSIST_ACTION, true); //$NON-NLS-1$
 
-		action = new TextOperationAction(NCLEditorMessages.getResourceBundle(),
-				"ContentFormat.", this, ISourceViewer.FORMAT);
+		action = new TextOperationAction(NCLEditorMessages.getInstance()
+				.getResourceBundle(), "ContentFormat.", this,
+				ISourceViewer.FORMAT);
 		action.setActionDefinitionId(FORMAT_ACTION);
 		action.setAccelerator(SWT.CTRL | SWT.SHIFT | 'f');
 		setAction("ContentFormat", action);
-		
+
 		action = new GotoLastEditPositionAction();
-		action.setActionDefinitionId(ITextEditorActionDefinitionIds.GOTO_LAST_EDIT_POSITION);
+		action
+				.setActionDefinitionId(ITextEditorActionDefinitionIds.GOTO_LAST_EDIT_POSITION);
 		action.setAccelerator(SWT.CTRL | 'q');
 		setAction(GO_TO_LAST_EDIT_POSITION, action);
-		
-		
+
 	}
 
 	protected void editorContextMenuAboutToShow(IMenuManager menu) {
@@ -188,8 +190,9 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 				MessageList.clear();
 
 				// getting the description error file
-				//NCLEclipseValidatorErrorMessages prop = new NCLEclipseValidatorErrorMessages();
-				//MessageHandler.setPropertyMessage(prop);
+				// NCLEclipseValidatorErrorMessages prop = new
+				// NCLEclipseValidatorErrorMessages();
+				// MessageHandler.setPropertyMessage(prop);
 
 				MessageList.setLanguage(MessageList.PORTUGUESE);
 				try {
@@ -352,10 +355,10 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 
 	public void setFocusToElementId(String elementId) {
 		File currentFile = getCurrentFile();
-		
+
 		ISourceViewer viewer = this.getSourceViewer();
 		int previousOffset = viewer.getSelectedRange().x;
-		
+
 		String nclText = viewer.getDocument().get();
 		NCLContentHandler nclContentHandler = new NCLContentHandler();
 		NCLDocument nclDocument = new NCLDocument();
@@ -382,7 +385,6 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 			e.printStackTrace();
 		}
 	}
-	
 
 	/**
 	 * @param nclElement
@@ -460,15 +462,15 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 	 */
 	@Override
 	public void documentChanged(DocumentEvent event) {
-		//UpdateMarkers
-		if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-				PreferenceConstants.P_VALIDATION)){
-		updateMarkers.cancel();
-		updateMarkers.setPriority(Job.SHORT);
-		updateMarkers.schedule();
+		// UpdateMarkers
+		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_VALIDATION)) {
+			updateMarkers.cancel();
+			updateMarkers.setPriority(Job.SHORT);
+			updateMarkers.schedule();
 		}
-		
-		//TODO: Update Outline View
+
+		// TODO: Update Outline View
 		// updateOutlineView.cancel();
 		// updateOutlineView.setPriority(Job.SHORT);
 		// updateOutlineView.schedule();
