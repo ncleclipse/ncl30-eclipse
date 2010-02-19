@@ -78,8 +78,8 @@ public class NCLDocumentFormattingStrategy extends ContextBasedFormattingStrateg
 				e.printStackTrace();
 				MessageDialog.openInformation(
 						null,
-						NCLEditorMessages.getString("ContentFormat.Error.Title"),
-						NCLEditorMessages.getString("ContentFormat.Error.XMLParserError"));
+						NCLEditorMessages.getInstance().getString("ContentFormat.Error.Title"),
+						NCLEditorMessages.getInstance().getString("ContentFormat.Error.XMLParserError"));
 			}
 		}
 	}

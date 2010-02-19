@@ -25,31 +25,15 @@ package br.ufma.deinf.laws.ncleclipse.format;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedList;
-import java.util.StringTokenizer;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Element;
-import org.w3c.dom.Entity;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.ProcessingInstruction;
-import org.w3c.dom.Text;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DefaultHandler2;
-import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
@@ -110,6 +94,23 @@ public class XMLFormatter extends DefaultHandler2 {
 
 	}
 
+	/*
+	public void startCDATA() {
+
+	}
+
+	public void endCDATA() {
+
+	}
+
+	public void startDTD() {
+
+	}
+
+	public void endDTD() {
+
+	}
+	*/
 	/** comeca uma tag nova */
 	public void startElement(String uri, String localName, String tag,
 			Attributes atributos) {
