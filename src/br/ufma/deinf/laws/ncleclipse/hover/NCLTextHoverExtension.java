@@ -356,12 +356,19 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 							if (max == null)
 								max = "1";
 							att.setAttribute("max", max);
+
+							String min = doc
+									.getAttributeValueFromCurrentTagName(i,
+											"min");
+							if (min == null)
+								min = "1";
+							att.setAttribute("min", min);
+
 							String qualifier = doc
 									.getAttributeValueFromCurrentTagName(i,
 											"qualifier");
 							if (qualifier != null)
 								att.setAttribute("qualifier", qualifier);
-							
 							connectorRoleValues.setConditionRole(att);
 						} else if (tag.equals("simpleAction")) {
 							Attributes att = new Attributes();
@@ -375,11 +382,20 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 							if (max == null)
 								max = "1";
 							att.setAttribute("max", max);
+
+							String min = doc
+									.getAttributeValueFromCurrentTagName(i,
+											"min");
+							if (min == null)
+								min = "1";
+							att.setAttribute("min", min);
+							
 							String qualifier = doc
 									.getAttributeValueFromCurrentTagName(i,
 											"qualifier");
 							if (qualifier != null)
 								att.setAttribute("qualifier", qualifier);
+
 							connectorRoleValues.setActionRole(att);
 						} else if (tag.equals("compoundCondition"))
 							connectorRoleValues.setCompoundCondition(doc
@@ -389,7 +405,7 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 							connectorRoleValues.setCompoundAction(doc
 									.getAttributeValueFromCurrentTagName(i,
 											"operator"));
-						else if (tag.equals("attributeAssessment")){
+						else if (tag.equals("attributeAssessment")) {
 							Attributes att = new Attributes();
 							att.setAttribute("role", "test");
 							connectorRoleValues.setConditionRole(att);

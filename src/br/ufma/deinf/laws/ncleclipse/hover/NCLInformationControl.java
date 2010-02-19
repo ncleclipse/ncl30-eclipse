@@ -351,10 +351,16 @@ public class NCLInformationControl extends AbstractInformationControl implements
 								.getBounds().height, desX, i * desY + meio,
 								DEFAULT_WIDTH, DEFAULT_HEIGHT);
 						String max = conditionRole.get(i).getAttribute("max");
+						String min = conditionRole.get(i).getAttribute("min");
+						
+						String toShow = "";
+						if (!min.equals("") && !min.equals("1")) toShow += min + "-";
+						
 						if (!max.equals("") && !max.equals("1")) {
 							if (max.equals("unbounded"))
-								max = "N";
-							e.gc.drawText(max, desX + DEFAULT_WIDTH, i * desY
+								max = "n";
+							toShow += max;
+							e.gc.drawText(toShow, desX + DEFAULT_WIDTH, i * desY
 									+ meio, true);
 
 						}
@@ -362,7 +368,7 @@ public class NCLInformationControl extends AbstractInformationControl implements
 						y1 = i * desY + meio + DEFAULT_HEIGHT / 2;
 					}
 					int Pmeio = meio;
-					desX += 130;
+					desX += 100;
 					meio = Y / 2 - DEFAULT_HEIGHT / 2;
 
 					if (!compCondition.equals("")) {
@@ -381,18 +387,17 @@ public class NCLInformationControl extends AbstractInformationControl implements
 						}
 						x1 = desX + DEFAULT_WIDTH;
 						y1 = meio + DEFAULT_HEIGHT / 2;
-						desX += 130;
+						desX += 100;
 
 					}
 
 					int x = desX - 30;
-					e.gc.drawText("Conditions", x - 70, 0, true);
+					
 
 					for (int i = 0; i < Y; i += 20)
 						e.gc.drawLine(x, i, x, i + 10);
 
-					e.gc.drawText("Actions", x, Y - 20);
-
+				
 					if (!compAction.equals("")) {
 						e.gc.drawImage(tempAction, 0, 0,
 								tempAction.getBounds().width, tempAction
@@ -402,9 +407,9 @@ public class NCLInformationControl extends AbstractInformationControl implements
 								/ 2);
 						x1 = desX + DEFAULT_WIDTH;
 						y1 = meio + DEFAULT_HEIGHT / 2;
-						desX += 130;
+						desX += 100;
 					}
-
+	
 					desY = Y / (actions.length);
 					meio = desY / 2 - DEFAULT_HEIGHT / 2;
 					for (int i = 0; i < actions.length; i++) {
@@ -413,26 +418,20 @@ public class NCLInformationControl extends AbstractInformationControl implements
 								.getBounds().height, desX, i * desY + meio,
 								DEFAULT_WIDTH, DEFAULT_HEIGHT);
 						String max = actionRole.get(i).getAttribute("max");
+						String min = actionRole.get(i).getAttribute("min");
+						
+						String toShow = "";
+						if (!min.equals("") && !min.equals("1")) toShow += min + "-";
+						
+						
 						if (!max.equals("") && !max.equals("1")) {
 							if (max.equals("unbounded"))
-								max = "N";
-							e.gc.drawText(max, desX + DEFAULT_WIDTH, i * desY
+								max = "n";
+							toShow += max;
+							e.gc.drawText(toShow, desX + DEFAULT_WIDTH, i * desY
 									+ meio, true);
 
-							String qualifier = actionRole.get(i)
-									.getAttribute("qualifier");
-							if (!qualifier.equals("")) {
-								Image img1 = new Image(pageConnector
-										.getDisplay(), path + "op"
-										+ qualifier.toUpperCase() + ".png");
-								e.gc.drawImage(img1, 0, 0,
-										img1.getBounds().width, img1
-												.getBounds().height, desX + 80,
-										i * desY + meio, DEFAULT_WIDTH,
-										DEFAULT_HEIGHT);
-								e.gc.drawLine(desX + DEFAULT_WIDTH, i * desY + meio + DEFAULT_HEIGHT/2,
-										desX + 80, i * desY + meio + DEFAULT_HEIGHT/2);
-							}
+							
 						}
 						int x2 = desX;
 						int y2 = i * desY + meio + DEFAULT_HEIGHT / 2;
@@ -458,17 +457,11 @@ public class NCLInformationControl extends AbstractInformationControl implements
 				return getShell().computeSize(0, 0);
 			int x = 60, y;
 			if (!pre.getCompoundCondition().equals(""))
-				x += 130;
+				x += 100;
 			if (!pre.getCompoundAction().equals(""))
-				x += 130;
-			
-			for (Attributes att : pre.getActionRole())
-				if (!att.getAttribute("qualifier").equals("")) {
-					x+=100;
-					break;
-				}
+				x += 100;
 
-			x += 130;
+			x += 110;
 
 			y = 50 * (pre.getActionRole().size() > pre.getConditionRole()
 					.size() ? pre.getActionRole().size() : pre

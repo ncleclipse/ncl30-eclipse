@@ -35,6 +35,7 @@ public class Attributes {
 	public Attributes() {
 		attributes = new HashMap<String, String> ();
 		attributes.put("max", "");
+		attributes.put("min", "");
 		attributes.put("role", "");
 		attributes.put("qualifier", "");
 	}
