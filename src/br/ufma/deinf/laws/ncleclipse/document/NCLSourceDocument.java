@@ -25,6 +25,7 @@ package br.ufma.deinf.laws.ncleclipse.document;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -141,6 +142,37 @@ public class NCLSourceDocument extends Document {
 	 * 
 	 * @return
 	 */
+	
+	public Vector <Integer> getChildrenOffsets (int offset) {
+		
+		try {
+			Vector <Integer> offsets = new Vector <Integer> ();
+			ITypedRegion region = getPartition(offset);
+			String tagname = getCurrentTagname(offset);
+			if (tagname == null) return offsets;
+			String text = get (region.getOffset(), region.getLength());
+			if (text.endsWith("/>")) return offsets;
+			do {
+				region = getNextPartition(region);
+				offset = region.getOffset();
+				text = get (region.getOffset(), region.getLength());
+				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+					offsets.add(offset);
+				}
+				else if(region.getType().equals(XMLPartitionScanner.XML_END_TAG)){
+					if (text.equals("</" + tagname + ">"))
+						break;
+				}		
+			}while (true);
+			return offsets;
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 	public String getFatherTagName(int documentOffset) {
 		return getCurrentTagname(getFatherPartitionOffset(documentOffset));
 	}

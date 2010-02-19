@@ -22,7 +22,7 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.hover;
 
-import java.io.File;
+import java.util.Vector;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
@@ -49,9 +49,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-public class NCLInformationControl extends AbstractInformationControl
-		implements IInformationControlExtension2 {
-	
+public class NCLInformationControl extends AbstractInformationControl implements
+		IInformationControlExtension2 {
+
 	private Composite internalComposite;
 	private StyledText text;
 	private boolean isImage;
@@ -61,6 +61,7 @@ public class NCLInformationControl extends AbstractInformationControl
 	private Composite pageRegion;
 	private Composite pageText;
 	private Composite pageXml;
+	private Composite pageConnector;
 	private boolean isMedia;
 	private Button button;
 	private Program p;
@@ -74,46 +75,44 @@ public class NCLInformationControl extends AbstractInformationControl
 	private final int fAdditionalTextStyles;
 	private Object input;
 	private Browser fBrowser;
+	private boolean isconnector;
 
 	public NCLInformationControl(Shell parentShell, boolean isResizable) {
-		super(parentShell, isResizable);
+		super(parentShell, false);
 		fAdditionalTextStyles = isResizable ? SWT.V_SCROLL | SWT.H_SCROLL
 				: SWT.NONE;
 		create();
 
 	}
-	
-	public NCLInformationControl (Shell parent, String statusFieldText,
+
+	public NCLInformationControl(Shell parent, String statusFieldText,
 			IInformationPresenter presenter) {
 		super(parent, statusFieldText);
 		fAdditionalTextStyles = SWT.NONE;
 		create();
 	}
-	
-	public NCLInformationControl(Shell parent,
-			ToolBarManager toolBarManager, IInformationPresenter presenter) {
+
+	public NCLInformationControl(Shell parent, ToolBarManager toolBarManager,
+			IInformationPresenter presenter) {
 		super(parent, toolBarManager);
 		fAdditionalTextStyles = SWT.V_SCROLL | SWT.H_SCROLL;
 		create();
 	}
-	
-	
-	public NCLInformationControl (Shell parent, int textStyles,
+
+	public NCLInformationControl(Shell parent, int textStyles,
 			IInformationPresenter presenter, String statusFieldText) {
 		super(parent, statusFieldText);
 		fAdditionalTextStyles = textStyles;
 		create();
 	}
-	
+
 	@Override
 	protected void createContent(Composite parent) {
 		internalComposite = new Composite(parent, SWT.BORDER_DASH);
-		
-		
+
 		internalComposite.setForeground(parent.getForeground());
 		internalComposite.setBackground(parent.getBackground());
 		internalComposite.setFont(JFaceResources.getDialogFont());
-
 
 		layout = new StackLayout();
 		this.internalComposite.setLayout(layout);
@@ -126,24 +125,22 @@ public class NCLInformationControl extends AbstractInformationControl
 
 		pageText = new Composite(this.internalComposite, SWT.NONE);
 		pageText.setLayout(new FillLayout());
-		
+
 		text = new StyledText(pageText, SWT.READ_ONLY | fAdditionalTextStyles);
 		text.setForeground(parent.getForeground());
 		text.setBackground(parent.getBackground());
 		text.setFont(JFaceResources.getDialogFont());
-
-		
 
 		pageButton = new Composite(this.internalComposite, SWT.NONE);
 		pageButton.setLayout(new FillLayout());
 		Image image = new Image(pageButton.getDisplay(), this.getClass()
 				.getProtectionDomain().getCodeSource().getLocation().toString()
 				.substring(5)
-				+ "icons" + File.separatorChar + "play.png");
+				+ "icons" + "/" + "play.png");
 		button = new Button(pageButton, SWT.PUSH);
 		button.setImage(image);
-		//image.dispose();
-		
+		// image.dispose();
+
 		pageXml = new Composite(this.internalComposite, SWT.NONE);
 		pageXml.setLayout(new FillLayout());
 		fBrowser = new Browser(pageXml, SWT.NONE);
@@ -152,17 +149,22 @@ public class NCLInformationControl extends AbstractInformationControl
 		fBrowser.setFont(JFaceResources.getDialogFont());
 		Browser.clearSessions();
 
-	
+		pageConnector = new Composite(internalComposite, SWT.NONE);
+		pageConnector.setLayout(new FillLayout());
+		pageConnector.setBackground(parent.getBackground());
+		pageConnector.setForeground(parent.getForeground());
+
 	}
 
 	@Override
 	public void setInput(Object input) {
-		
+
 		this.input = input;
 		this.isImage = false;
 		this.isMedia = false;
 		this.isRegion = false;
 		this.isHtml = false;
+		this.isconnector = false;
 
 		if (input instanceof PreViewImage) {
 			layout.topControl = pageImage;
@@ -175,15 +177,15 @@ public class NCLInformationControl extends AbstractInformationControl
 			widthImage = img.getBounds().width;
 			heightImage = img.getBounds().height;
 
-			if (widthImage > 300 || heightImage > 300) {
+			if (widthImage > 200 || heightImage > 200) {
 				double proporcao;
 				if (heightImage > widthImage) {
 					proporcao = (double) widthImage / heightImage;
-					heightImage = 300;
+					heightImage = 200;
 					widthImage = (int) Math.floor(heightImage * proporcao);
 				} else {
 					proporcao = (double) heightImage / widthImage;
-					widthImage = 300;
+					widthImage = 200;
 					heightImage = (int) Math.floor(widthImage * proporcao);
 				}
 			}
@@ -213,10 +215,9 @@ public class NCLInformationControl extends AbstractInformationControl
 		} else if (input instanceof PreViewXML) {
 			isHtml = true;
 			PreViewXML html = (PreViewXML) input;
-			fBrowser.setUrl(html.getUrl());	
+			fBrowser.setUrl(html.getUrl());
 			layout.topControl = pageXml;
-			
-			
+
 		} else if (input instanceof PreViewRegion) {
 			this.isRegion = true;
 			layout.topControl = pageRegion;
@@ -278,6 +279,167 @@ public class NCLInformationControl extends AbstractInformationControl
 
 			layout.topControl = pageText;
 
+		} else if (input instanceof PreViewConnector) {
+
+			isconnector = true;
+			PreViewConnector preViewConnector = (PreViewConnector) input;
+
+			final Vector<Attributes> conditionRole = preViewConnector
+					.getConditionRole();
+			final Vector<Attributes> actionRole = preViewConnector
+					.getActionRole();
+			final Image conditions[] = new Image[conditionRole.size()];
+			final Image actions[] = new Image[actionRole.size()];
+			Image compoundCondition = null;
+			Image compoundAction = null;
+			final String path = this.getClass().getProtectionDomain()
+					.getCodeSource().getLocation().toString().substring(5)
+					+ "icons/icons/";
+			for (int i = 0; i < conditions.length; i++)
+				conditions[i] = new Image(pageConnector.getDisplay(), path
+						+ "cond" + conditionRole.get(i).getAttribute("role")
+						+ ".png");
+			for (int i = 0; i < actions.length; i++)
+				actions[i] = new Image(pageConnector.getDisplay(), path
+						+ "action" + actionRole.get(i).getAttribute("role")
+						+ ".png");
+			final String compCondition = preViewConnector
+					.getCompoundCondition();
+			final String compAction = preViewConnector.getCompoundAction();
+			if (!compCondition.equals("")) {
+				compoundCondition = new Image(pageConnector.getDisplay(), path
+						+ "op" + compCondition.toUpperCase() + ".png");
+			}
+			if (!compAction.equals("")) {
+				compoundAction = new Image(pageConnector.getDisplay(), path
+						+ "op" + compAction.toUpperCase() + ".png");
+			}
+
+			final Image tempCondition = compoundCondition;
+			final Image tempAction = compoundAction;
+			pageConnector.addPaintListener(new PaintListener() {
+
+				@Override
+				public void paintControl(PaintEvent e) {
+
+					for (int i = 0; i < 100; i++) {
+						e.gc.setBackground(internalComposite.getBackground());
+						e.gc.setForeground(internalComposite.getForeground());
+						// e.gc.setAlpha(100);
+						e.gc.fillRectangle(0, 0, 1000, 500);
+					}
+					int DEFAULT_WIDTH = 40;
+					int DEFAULT_HEIGHT = 40;
+					int desX = 0;
+					int off = 50;
+					int maior = (actions.length > conditions.length ? actions.length
+							: conditions.length);
+					int Y = off * maior;
+					Y += 10;
+					if (maior > 5) {
+						Y = 220;
+						DEFAULT_HEIGHT -= 10;
+						DEFAULT_WIDTH -= 10;
+					}
+					int desY = Y / (conditions.length);
+					int x1 = 0, y1 = 0;
+					int meio = desY / 2 - DEFAULT_HEIGHT / 2;
+					for (int i = 0; i < conditions.length; i++) {
+						final Image img = conditions[i];
+						e.gc.drawImage(img, 0, 0, img.getBounds().width, img
+								.getBounds().height, desX, i * desY + meio,
+								DEFAULT_WIDTH, DEFAULT_HEIGHT);
+						String max = conditionRole.get(i).getAttribute("max");
+						if (!max.equals("") && !max.equals("1")) {
+							if (max.equals("unbounded"))
+								max = "N";
+							e.gc.drawText(max, desX + DEFAULT_WIDTH, i * desY
+									+ meio, true);
+
+						}
+						x1 = DEFAULT_WIDTH;
+						y1 = i * desY + meio + DEFAULT_HEIGHT / 2;
+					}
+					int Pmeio = meio;
+					desX += 130;
+					meio = Y / 2 - DEFAULT_HEIGHT / 2;
+
+					if (!compCondition.equals("")) {
+
+						e.gc.drawImage(tempCondition, 0, 0, tempCondition
+								.getBounds().width,
+								tempCondition.getBounds().height, desX, meio,
+								DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
+						for (int i = 0; i < conditions.length; i++) {
+							x1 = DEFAULT_WIDTH;
+							y1 = i * desY + Pmeio + DEFAULT_HEIGHT / 2;
+							e.gc.drawLine(x1, y1, desX, meio
+									+ (int) DEFAULT_HEIGHT / 2);
+
+						}
+						x1 = desX + DEFAULT_WIDTH;
+						y1 = meio + DEFAULT_HEIGHT / 2;
+						desX += 130;
+
+					}
+
+					int x = desX - 30;
+					e.gc.drawText("Conditions", x - 70, 0, true);
+
+					for (int i = 0; i < Y; i += 20)
+						e.gc.drawLine(x, i, x, i + 10);
+
+					e.gc.drawText("Actions", x, Y - 20);
+
+					if (!compAction.equals("")) {
+						e.gc.drawImage(tempAction, 0, 0,
+								tempAction.getBounds().width, tempAction
+										.getBounds().height, desX, meio,
+								DEFAULT_WIDTH, DEFAULT_HEIGHT);
+						e.gc.drawLine(x1, y1, desX, meio + (int) DEFAULT_HEIGHT
+								/ 2);
+						x1 = desX + DEFAULT_WIDTH;
+						y1 = meio + DEFAULT_HEIGHT / 2;
+						desX += 130;
+					}
+
+					desY = Y / (actions.length);
+					meio = desY / 2 - DEFAULT_HEIGHT / 2;
+					for (int i = 0; i < actions.length; i++) {
+						final Image img = actions[i];
+						e.gc.drawImage(img, 0, 0, img.getBounds().width, img
+								.getBounds().height, desX, i * desY + meio,
+								DEFAULT_WIDTH, DEFAULT_HEIGHT);
+						String max = actionRole.get(i).getAttribute("max");
+						if (!max.equals("") && !max.equals("1")) {
+							if (max.equals("unbounded"))
+								max = "N";
+							e.gc.drawText(max, desX + DEFAULT_WIDTH, i * desY
+									+ meio, true);
+
+							String qualifier = actionRole.get(i)
+									.getAttribute("qualifier");
+							if (!qualifier.equals("")) {
+								Image img1 = new Image(pageConnector
+										.getDisplay(), path + "op"
+										+ qualifier.toUpperCase() + ".png");
+								e.gc.drawImage(img1, 0, 0,
+										img1.getBounds().width, img1
+												.getBounds().height, desX + 80,
+										i * desY + meio, DEFAULT_WIDTH,
+										DEFAULT_HEIGHT);
+								e.gc.drawLine(desX + DEFAULT_WIDTH, i * desY + meio + DEFAULT_HEIGHT/2,
+										desX + 80, i * desY + meio + DEFAULT_HEIGHT/2);
+							}
+						}
+						int x2 = desX;
+						int y2 = i * desY + meio + DEFAULT_HEIGHT / 2;
+						e.gc.drawLine(x1, y1, x2, y2);
+					}
+				}
+			});
+			layout.topControl = pageConnector;
 		}
 
 	}
@@ -287,8 +449,30 @@ public class NCLInformationControl extends AbstractInformationControl
 		return true;
 	}
 
-
 	public Point computeSizeHint() {
+
+		if (isconnector) {
+			PreViewConnector pre = (PreViewConnector) input;
+			int x = 60, y;
+			if (!pre.getCompoundCondition().equals(""))
+				x += 130;
+			if (!pre.getCompoundAction().equals(""))
+				x += 130;
+			
+			for (Attributes att : pre.getActionRole())
+				if (!att.getAttribute("qualifier").equals("")) {
+					x+=100;
+					break;
+				}
+
+			x += 130;
+
+			y = 50 * (pre.getActionRole().size() > pre.getConditionRole()
+					.size() ? pre.getActionRole().size() : pre
+					.getConditionRole().size());
+			y += 10;
+			return getShell().computeSize(x, y);
+		}
 
 		if (isImage) {
 			return new Point(widthImage, heightImage);
@@ -301,21 +485,20 @@ public class NCLInformationControl extends AbstractInformationControl
 
 		if (isHtml)
 			return new Point(230, 180);
-		
-		int widthHint= SWT.DEFAULT;
-		Point constraints= getSizeConstraints();
+
+		int widthHint = SWT.DEFAULT;
+		Point constraints = getSizeConstraints();
 		if (constraints != null && text.getWordWrap())
-			widthHint= constraints.x;
-		
+			widthHint = constraints.x;
+
 		String toShow = (String) input;
-		
+
 		int heigthHint = 1;
-		
-		for (int i=0; i < toShow.length(); i++) if (toShow.charAt(i) == '\n') heigthHint++;
-			
-		
-		
-		
+
+		for (int i = 0; i < toShow.length(); i++)
+			if (toShow.charAt(i) == '\n')
+				heigthHint++;
+
 		return getShell().computeSize(widthHint, heigthHint * 18, true);
 
 	}
@@ -333,6 +516,5 @@ public class NCLInformationControl extends AbstractInformationControl
 		super.dispose();
 
 	}
-	
-	
+
 }

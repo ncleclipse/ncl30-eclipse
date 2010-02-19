@@ -44,7 +44,6 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 		super(sourceViewer);
 	}
 
-
 	public Vector<RegionValues> getRegionFatherTree(int offset) {
 		Vector<RegionValues> tree = new Vector<RegionValues>();
 		Vector<Integer> offsets = new Vector<Integer>();
@@ -93,6 +92,7 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 
 		return tree;
 	}
+
 	@Override
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
 		TypedRegion typedRegion;
@@ -146,7 +146,6 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 
 				String CurrentAttribute = doc.getCurrentAttribute(offset);
 				String CurrentTagname = doc.getCurrentTagname(offset);
-				
 
 				if ((!CurrentAttribute.equals("descriptor") && CurrentTagname
 						.equals("media"))
@@ -158,14 +157,14 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 							offset, "src");
 
 					if (mime == null) { // significa que a tag em questão é
-										// focusSelSrc ou focusSrc
+						// focusSelSrc ou focusSrc
 						mime = doc.getAttributeValueFromCurrentTagName(offset,
 								"focusSelSrc");
 						if (mime == null)
 							mime = doc.getAttributeValueFromCurrentTagName(
 									offset, "focusSrc");
 					}
-					
+
 					String temp = mime;
 					temp = temp.toLowerCase();
 					if (temp.length() > 7) {
@@ -179,9 +178,8 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 					if (values.length > 1)
 						sbstr = values[values.length - 1];
 
-			
 					if (audio.contains(sbstr) || video.contains(sbstr)) {
-						
+
 						String nomeArquivo = mime;
 
 						File arquivo = new File(nomeArquivo);
@@ -288,7 +286,8 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 										String tmp, aux = "";
 										while ((tmp = leitor.readLine()) != null)
 											aux += tmp + "\n";
-										aux = aux.substring(0, aux.length() - 1);
+										aux = aux
+												.substring(0, aux.length() - 1);
 										result = aux;
 									} catch (IOException e) {
 										// TODO Auto-generated catch block
@@ -338,6 +337,65 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 							getRegionFatherTree(aux));
 
 					result = t;
+				} else if (doc.getCurrentTagname(offset).equals(
+						"causalConnector")) {
+
+					Vector<Integer> offsets = doc.getChildrenOffsets(offset);
+					PreViewConnector connectorRoleValues = new PreViewConnector();
+					for (int i : offsets) {
+						String tag = doc.getCurrentTagname(i);
+						if (tag.equals("simpleCondition")) {
+							Attributes att = new Attributes();
+							String role = doc
+									.getAttributeValueFromCurrentTagName(i,
+											"role");
+							att.setAttribute("role", role);
+							String max = doc
+									.getAttributeValueFromCurrentTagName(i,
+											"max");
+							if (max == null)
+								max = "1";
+							att.setAttribute("max", max);
+							String qualifier = doc
+									.getAttributeValueFromCurrentTagName(i,
+											"qualifier");
+							if (qualifier != null)
+								att.setAttribute("qualifier", qualifier);
+							
+							connectorRoleValues.setConditionRole(att);
+						} else if (tag.equals("simpleAction")) {
+							Attributes att = new Attributes();
+							String role = doc
+									.getAttributeValueFromCurrentTagName(i,
+											"role");
+							att.setAttribute("role", role);
+							String max = doc
+									.getAttributeValueFromCurrentTagName(i,
+											"max");
+							if (max == null)
+								max = "1";
+							att.setAttribute("max", max);
+							String qualifier = doc
+									.getAttributeValueFromCurrentTagName(i,
+											"qualifier");
+							if (qualifier != null)
+								att.setAttribute("qualifier", qualifier);
+							connectorRoleValues.setActionRole(att);
+						} else if (tag.equals("compoundCondition"))
+							connectorRoleValues.setCompoundCondition(doc
+									.getAttributeValueFromCurrentTagName(i,
+											"operator"));
+						else if (tag.equals("compoundAction"))
+							connectorRoleValues.setCompoundAction(doc
+									.getAttributeValueFromCurrentTagName(i,
+											"operator"));
+						else if (tag.equals("attributeAssessment")){
+							Attributes att = new Attributes();
+							att.setAttribute("role", "test");
+							connectorRoleValues.setConditionRole(att);
+						}
+					}
+					result = connectorRoleValues;
 				} else
 					result = "";
 
@@ -349,20 +407,18 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-		} 
-		
+
+		}
+
 		return null;
 	}
 
-	
-	
 	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		// TODO Auto-generated method stub
 		Object aux = result;
 		result = null;
-		
+
 		return aux;
 	}
 }

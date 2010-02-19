@@ -27,6 +27,7 @@ import java.io.File;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -64,7 +65,7 @@ public class NCLEclipseHyperlink implements IHyperlink {
 		this.textViewer = textViewer;
 		this.nclElement = null;
 	}
-	
+
 	public NCLEclipseHyperlink(ITextViewer textViewer, IRegion region,
 			String text, NCLElement nclElement) {
 		this.region = region;
@@ -78,15 +79,14 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	}
 
 	public void open() {
+		IWorkbench wb = PlatformUI.getWorkbench();
+		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+		IWorkbenchPage page = win.getActivePage();
+		NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
+				.getNCLEditor();
 		if (text != null) {
 			try {
 				int indexOfPound = text.indexOf("#");
-				IWorkbench wb = PlatformUI.getWorkbench();
-				IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-				IWorkbenchPage page = win.getActivePage();
-				NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
-						.getNCLEditor();
-
 				if (indexOfPound == -1) { // not alias. So, set focus to
 					// elementId
 					editor.setFocusToElementId(text);
@@ -122,7 +122,8 @@ public class NCLEclipseHyperlink implements IHyperlink {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		} else
+			editor.setFocusToElement(nclElement);
 	}
 
 	public String getTypeLabel() {
@@ -130,7 +131,11 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return "<" + nclElement.getTagName() + " id=\"" + nclElement.getAttributeValue("id") + "\"  ...\\>";
+		String toShow = "<" + nclElement.getTagName();
+		if (text != null)
+			toShow += " id=\"" + nclElement.getAttributeValue("id")	+ "\"";
+		toShow += "  ...\\>";
+		return toShow;
 	}
 
 }

@@ -35,6 +35,7 @@ public class NCLActionContributor extends TextEditorActionContributor {
 
 	protected RetargetTextEditorAction fContentAssistProposal;
 	protected RetargetTextEditorAction fContentFormat;
+	protected RetargetTextEditorAction fContentGotoLastEditPosition;
 	//protected RetargetTextEditorAction fContentAssistTip;
 	//protected TextEditorAction fTogglePresentation;
 
@@ -47,6 +48,8 @@ public class NCLActionContributor extends TextEditorActionContributor {
 		fContentAssistProposal.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		fContentFormat = new RetargetTextEditorAction(NCLEditorMessages.getResourceBundle(), "ContentFormat.");
 		fContentFormat.setActionDefinitionId(NCLEditor.FORMAT_ACTION);
+		fContentGotoLastEditPosition = new RetargetTextEditorAction(NCLEditorMessages.getResourceBundle(), "GotoLastEditPositio");
+		fContentGotoLastEditPosition.setActionDefinitionId(ITextEditorActionDefinitionIds.GOTO_LAST_EDIT_POSITION);
 		//fContentAssistTip= new RetargetTextEditorAction(NCLEditorMessages.getResourceBundle(), "ContentAssistTip."); //$NON-NLS-1$
 		//fContentAssistTip.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);
 		//fTogglePresentation= new PresentationAction();
@@ -64,6 +67,7 @@ public class NCLActionContributor extends TextEditorActionContributor {
 			editMenu.add(new Separator());
 			editMenu.add(fContentAssistProposal);
 			editMenu.add(fContentFormat);
+			editMenu.add(fContentGotoLastEditPosition);
 		}	
 		
 		IToolBarManager toolBarManager= bars.getToolBarManager();
@@ -83,6 +87,7 @@ public class NCLActionContributor extends TextEditorActionContributor {
 
 		fContentAssistProposal.setAction(getAction(editor, "ContentAssistProposal")); //$NON-NLS-1$
 		fContentFormat.setAction(getAction(editor, "ContentFormat"));
+		fContentGotoLastEditPosition.setAction(getAction(editor, "GoToLastEditPosition"));
 		//fContentAssistTip.setAction(getAction(editor, "ContentAssistTip")); //$NON-NLS-1$
 
 		//fTogglePresentation.setEditor(editor);

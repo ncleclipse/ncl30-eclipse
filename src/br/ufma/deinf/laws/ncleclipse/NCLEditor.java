@@ -55,6 +55,7 @@ import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.texteditor.ContentAssistAction;
+import org.eclipse.ui.texteditor.GotoLastEditPositionAction;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
@@ -83,6 +84,7 @@ import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
 public class NCLEditor extends TextEditor implements IDocumentListener {
 	public static String CONTENT_ASSIST_ACTION = "br.ufma.deinf.laws.ncleclipse.actions.CONTENT_ASSIST";
 	public static String FORMAT_ACTION = "br.ufma.deinf.laws.ncleclipse.actions.format";
+	public static String GO_TO_LAST_EDIT_POSITION = "br.ufma.deinf.laws.ncleclipse.actions.GO_TO_LAST_EDIT_POSITION";
 
 	private IEditorInput input;
 	private EditorContentOutlinePage outlinePage;
@@ -115,7 +117,13 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		action.setActionDefinitionId(FORMAT_ACTION);
 		action.setAccelerator(SWT.CTRL | SWT.SHIFT | 'f');
 		setAction("ContentFormat", action);
-
+		
+		action = new GotoLastEditPositionAction();
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.GOTO_LAST_EDIT_POSITION);
+		action.setAccelerator(SWT.CTRL | 'q');
+		setAction(GO_TO_LAST_EDIT_POSITION, action);
+		
+		
 	}
 
 	protected void editorContextMenuAboutToShow(IMenuManager menu) {
@@ -374,6 +382,28 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 			e.printStackTrace();
 		}
 	}
+	
+
+	/**
+	 * @param nclElement
+	 */
+	public void setFocusToElement(NCLElement nclElement) {
+		int line = nclElement.getLineNumber();
+		int lineOffset, lineLength;
+		ISourceViewer viewer = getSourceViewer();
+		try {
+			lineOffset = viewer.getDocument().getLineOffset(line);
+			lineLength = viewer.getDocument().getLineLength(line);
+
+			// Move cursor to new position
+			resetHighlightRange();
+			setHighlightRange(lineOffset, lineLength, true);
+			setFocus();
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public File getCurrentFile() {
 		File currentFile = null;
@@ -443,4 +473,5 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		// updateOutlineView.setPriority(Job.SHORT);
 		// updateOutlineView.schedule();
 	}
+
 }
