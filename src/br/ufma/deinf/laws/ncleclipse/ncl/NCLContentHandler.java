@@ -118,13 +118,14 @@ public class NCLContentHandler implements ContentHandler {
 	public void startElement(String URI, String localName, String qName,
 			Attributes atts) throws SAXException {
 		String strPerspective = "";
+
 		if (perspective.size() > 0)
 			strPerspective = perspective.lastElement();
-		
+
 		completePerspective = "";
 		Iterator itStack = perspective.iterator();
-		while(itStack.hasNext()){
-			completePerspective += "/"+itStack.next();
+		while (itStack.hasNext()) {
+			completePerspective += "/" + itStack.next();
 		}
 
 		// Carrega o NCLDocument
@@ -139,9 +140,9 @@ public class NCLContentHandler implements ContentHandler {
 			nclElement
 					.setAttributeValue(atts.getLocalName(i), atts.getValue(i));
 		}
-		
+
 		nclElement.setCompletePerspective(completePerspective);
-		//System.out.println("completeperspective = " + completePerspective);
+		// System.out.println("completeperspective = " + completePerspective);
 		nclDocument.addElement(nclElement, atts.getValue("id"));
 
 		// Verifica se o elemento atual define uma perspectiva
@@ -178,7 +179,7 @@ public class NCLContentHandler implements ContentHandler {
 				alias += atts.getValue("alias");
 			else
 				alias = atts.getValue("alias");
-			//nclDocument.alias = alias;
+			// nclDocument.alias = alias;
 			XMLParser parser = new XMLParser();
 			NCLContentHandler contentHandlerTmp = new NCLContentHandler();
 			contentHandlerTmp.getNclDocument().setAlias(alias);
@@ -214,13 +215,16 @@ public class NCLContentHandler implements ContentHandler {
 					NCLElement importedNclElement = (NCLElement) it2.next();
 					String aliasElement = importedNclElement.getAttributes()
 							.get("alias");
-					importedNclElement.setCompletePerspective(completePerspective+importedNclElement.getCompletePerspective());
-					//System.out.println("importedNclElement.id = "+importedNclElement.getAttributes().get("id"));
+					importedNclElement
+							.setCompletePerspective(completePerspective
+									+ importedNclElement
+											.getCompletePerspective());
+					// System.out.println("importedNclElement.id = "+importedNclElement.getAttributes().get("id"));
 					nclDocument.addElement(importedNclElement,
 							importedNclElement.getAttributes().get("id"));
 				}
 			}
-			//nclDocument.setAlias(alias_ant);
+			// nclDocument.setAlias(alias_ant);
 		}
 	}
 

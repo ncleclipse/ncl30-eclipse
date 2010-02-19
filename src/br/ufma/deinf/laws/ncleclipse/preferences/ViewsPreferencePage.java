@@ -46,7 +46,8 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 	public ViewsPreferencePage() {
 		super(GRID);
 		setPreferenceStore(NCLEditorPlugin.getDefault().getPreferenceStore());
-		setDescription(NCLEditorMessages.getString("Preferences.Description"));
+		setDescription(NCLEditorMessages.getInstance().getString(
+				"Preferences.Description"));
 	}
 
 	/**
@@ -57,21 +58,21 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 	public void createFieldEditors() {
 		addField(new BooleanFieldEditor(
 				PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE,
-				NCLEditorMessages.getString("Preferences.OpenLayoutEditor"),
-				getFieldEditorParent()));
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.OpenLayoutEditor"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceConstants.P_PREVIEW,
-				NCLEditorMessages
-						.getString("Preferences.OpenPrevieOnMouseOver"),
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.OpenPrevieOnMouseOver"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceConstants.P_VALIDATION,
-				NCLEditorMessages.getString("Preferences.OnTimeValidation"),
-				getFieldEditorParent()));
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.OnTimeValidation"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceConstants.P_POPUP_SUGESTION,
-				NCLEditorMessages.getString("Preferences.PopupSRC"),
-				getFieldEditorParent()));
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.PopupSRC"), getFieldEditorParent()));
 
 	}
 

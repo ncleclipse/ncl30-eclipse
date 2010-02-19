@@ -22,41 +22,33 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse;
 
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.Vector;
 
-public class NCLEditorMessages {
+import br.ufma.deinf.laws.util.Messages;
 
+/**
+ * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
+ * 
+ */
+public class NCLEditorMessages extends Messages {
 	private static String RESOURCE_BUNDLE = "br.ufma.deinf.laws.ncleclipse.NCLEditorMessages";//$NON-NLS-1$
+	protected static NCLEditorMessages instance = null;
 
-	private static ResourceBundle fgResourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
-
+	/**
+	 * The constructor is private, because this class is a Singleton. So, to
+	 * access the Singleton object use the getInstance() method.
+	 */
 	private NCLEditorMessages() {
+		fgResourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
 	}
 
-	public static String getString(String key) {
-		try {
-			return fgResourceBundle.getString(key);
-		} catch (MissingResourceException e) {
-			return "!" + key + "!";//$NON-NLS-2$ //$NON-NLS-1$
-		}
+	/**
+	 * 
+	 * @return the Singleton object instance of this class.
+	 */
+	public static NCLEditorMessages getInstance() {
+		if (instance == null)
+			instance = new NCLEditorMessages();
+		return instance;
 	}
-
-	public static String getString(String key, Vector<String> vet) {
-		String ret = fgResourceBundle.getString(key);
-		for (int i = 0; i < vet.size(); i++) {
-			ret = ret.replaceFirst("%s", vet.get(i));
-		}
-		try {
-			return ret;
-		} catch (MissingResourceException e) {
-			return "!" + key + "!";//$NON-NLS-2$ //$NON-NLS-1$
-		}
-	}
-
-	public static ResourceBundle getResourceBundle() {
-		ResourceBundle b = fgResourceBundle;
-		return fgResourceBundle;
-	}	
 }

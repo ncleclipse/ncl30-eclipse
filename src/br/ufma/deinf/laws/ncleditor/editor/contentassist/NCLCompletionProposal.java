@@ -349,8 +349,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			e.printStackTrace();
 			MessageDialog.openError(Workbench.getInstance()
 					.getActiveWorkbenchWindow().getShell(), NCLEditorMessages
-					.getString("ContentAssist.Error.Title"), NCLEditorMessages
-					.getString("ContentAssist.Error.XMLParserError"));
+					.getInstance().getString("ContentAssist.Error.Title"),
+					NCLEditorMessages.getInstance().getString(
+							"ContentAssist.Error.XMLParserError"));
 		}
 
 		boolean hasContextId = false; // Usado quando verificar se o contexto
@@ -382,22 +383,26 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 												.getActiveWorkbenchWindow()
 												.getShell(),
 										NCLEditorMessages
-												.getString("ContentAssist.Error.Title"),
+												.getInstance()
+												.getString(
+														"ContentAssist.Error.Title"),
 										NCLEditorMessages
-												.getString("ContentAssist.Error.BodyAndNCLWithoutId"));
+												.getInstance()
+												.getString(
+														"ContentAssist.Error.BodyAndNCLWithoutId"));
 						return;
 					}
 				} else {
-					Vector<String> tmp = new Vector<String>();
-					tmp.add(fatherTagName);
+					Object[] tmp = { fatherTagName };
 					MessageDialog
 							.openError(
 									Workbench.getInstance()
 											.getActiveWorkbenchWindow()
 											.getShell(),
+									NCLEditorMessages.getInstance().getString(
+											"ContentAssist.Error.Title"),
 									NCLEditorMessages
-											.getString("ContentAssist.Error.Title"),
-									NCLEditorMessages
+											.getInstance()
 											.getString(
 													"ContentAssist.Error.FatherTagNameWithoutId",
 													tmp));
@@ -517,7 +522,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						"right", "scroll", "size", "soundLevel", "style",
 						"top", "transparency", "trebleLevel", "visible",
 						"width", "zIndex" };
-				
+
 				for (int i = 0; i < name.length; i++)
 					if (name[i].startsWith(qualifier)) {
 						propList.add(new CompletionProposal(name[i], offset

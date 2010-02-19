@@ -52,7 +52,7 @@ public class NCLPreferencePage
 	public NCLPreferencePage() {
 		super(GRID);
 		setPreferenceStore(NCLEditorPlugin.getDefault().getPreferenceStore());
-		setDescription(NCLEditorMessages.getString("Preferences.Title"));
+		setDescription(NCLEditorMessages.getInstance().getString("Preferences.Title"));
 	}
 	
 	/**

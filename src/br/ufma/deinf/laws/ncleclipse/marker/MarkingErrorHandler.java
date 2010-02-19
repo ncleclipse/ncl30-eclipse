@@ -75,9 +75,9 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 		int lineNumber = e.getLineNumber();
 		int columnNumber = e.getColumnNumber();
 		MarkerUtilities.setLineNumber(map, lineNumber);
-		Vector<String> tmp = new Vector<String>();
-		tmp.add(e.getMessage());
-		MarkerUtilities.setMessage(map, NCLEditorMessages.getString(
+		Object [] tmp = {e.getMessage()};
+		
+		MarkerUtilities.setMessage(map, NCLEditorMessages.getInstance().getString(
 				"NCLValidator.Error.XMLParserError", tmp));
 		map.put(IMarker.LOCATION, file.getFullPath().toString());
 
