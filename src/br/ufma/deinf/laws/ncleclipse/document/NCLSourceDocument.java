@@ -917,6 +917,7 @@ public class NCLSourceDocument extends Document {
 	 * @return comment
 	 */
 	public String getComment(String text) {
+		
 		String comment = null;
 		try {
 			ITypedRegion region = getPartition(0);
@@ -927,27 +928,29 @@ public class NCLSourceDocument extends Document {
 			boolean flag = true;
 			do {
 			t = get (region.getOffset(), region.getLength());
-			id = getAttributeValueFromCurrentTagName(region.getOffset(), "id");
-			if (id != null && !id.equals("")){
-				if (id.equals(text)){
-					ITypedRegion r = getPreviousPartition(region);
-					String str;
+			if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+				id = getAttributeValueFromCurrentTagName(region.getOffset(), "id");
+				if (id != null && !id.equals("")){
 					
-					do {
-						str = get (r.getOffset(), r.getLength());
-						str = str.trim();
-						if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)){
-							if (str.contains(beginComment) && str.contains (endComment)){
-								comment = str.substring(str.indexOf(beginComment) + beginComment.length(), str.lastIndexOf(endComment));
-								comment = comment.replace("\t", "");
-								return comment;
+					if (id.equals(text)){
+						ITypedRegion r = getPreviousPartition(region);
+						String str;				
+						do {
+							str = get (r.getOffset(), r.getLength());
+							str = str.trim();
+							if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)){
+								if (str.contains(beginComment) && str.contains (endComment)){
+									comment = str.substring(str.indexOf(beginComment) + beginComment.length(), str.lastIndexOf(endComment));
+									System.out.println ("comment " + comment);
+									comment = comment.replace("\t", "");
+									return comment;
+								}
 							}
-						}
+							r = getPreviousPartition(r);
+						}while (str.equals (""));
 						
-						r = getPreviousPartition(r);
-					}while (str.equals (""));
-					
-					flag = false;
+						flag = false;
+					}
 				}
 			}
 			region = getNextPartition(region);
