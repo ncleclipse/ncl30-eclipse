@@ -137,11 +137,6 @@ public class NCLSourceDocument extends Document {
 		return -1;
 	}
 
-	/**
-	 * Computa a tagname pai da atual
-	 * 
-	 * @return
-	 */
 	
 	public Vector <Integer> getChildrenOffsets (int offset) {
 		
@@ -172,7 +167,11 @@ public class NCLSourceDocument extends Document {
 		}
 	}
 	
-	
+	/**
+	 * Computa a tagname pai da atual
+	 * 
+	 * @return
+	 */
 	public String getFatherTagName(int documentOffset) {
 		return getCurrentTagname(getFatherPartitionOffset(documentOffset));
 	}
@@ -910,6 +909,54 @@ public class NCLSourceDocument extends Document {
 			offset = parentOffset;
 		}
 		return parents;
+	}
+
+	/**
+	 * Retorna a info associado ao elo
+	 * @param text
+	 * @return comment
+	 */
+	public String getComment(String text) {
+		String comment = null;
+		try {
+			ITypedRegion region = getPartition(0);
+			String t;
+			String id;
+			String beginComment = "/*";
+			String endComment = "*/";
+			boolean flag = true;
+			do {
+			t = get (region.getOffset(), region.getLength());
+			id = getAttributeValueFromCurrentTagName(region.getOffset(), "id");
+			if (id != null && !id.equals("")){
+				if (id.equals(text)){
+					ITypedRegion r = getPreviousPartition(region);
+					String str;
+					
+					do {
+						str = get (r.getOffset(), r.getLength());
+						str = str.trim();
+						if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)){
+							if (str.contains(beginComment) && str.contains (endComment)){
+								comment = str.substring(str.indexOf(beginComment) + beginComment.length(), str.lastIndexOf(endComment));
+								comment = comment.replace("\t", "");
+								return comment;
+							}
+						}
+						
+						r = getPreviousPartition(r);
+					}while (str.equals (""));
+					
+					flag = false;
+				}
+			}
+			region = getNextPartition(region);
+			} while (!t.equals ("</ncl>") && flag);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return comment;
 	} 
 	
 

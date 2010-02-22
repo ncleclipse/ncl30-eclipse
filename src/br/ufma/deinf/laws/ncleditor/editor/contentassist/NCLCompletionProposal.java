@@ -361,6 +361,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// Referencias que precisam de contexto
 		String perspective = null;
 		// Contexto eh o pai
+		
 		if ((tagname.equals("port") && attribute.equals("component"))
 				|| (tagname.equals("bindRule") && attribute
 						.equals("constituent"))
@@ -499,8 +500,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						if (text.startsWith(qualifier)) {
 							cursor = text.length();
-							System.out.println("Attribute Value Proposal = "
-									+ text);
+							//System.out.println("Attribute Value Proposal = "
+							//		+ text);
 							CompletionProposal proposal = new CompletionProposal(
 									text, offset - qlen, qlen, cursor, null,
 									text, null, null);
@@ -579,7 +580,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				text = protocols[i];
 				if (text.startsWith(qualifier)) {
 					cursor = text.length();
-					System.out.println("Attribute Value Proposal = " + text);
+					//System.out.println("Attribute Value Proposal = " + text);
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, text, null, null);
 					if (!(NCLEditorPlugin.getDefault().getPreferenceStore()
@@ -663,7 +664,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		CompletionProposal proposal = null;
 		Iterator it = null;
-
 		if (perspective != null) {
 			// Pode sugerir o id do context ou body (desde que id do body
 			// exista)
@@ -687,6 +687,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				while (it2.hasNext()) {
 					text = ((NCLElement) it2.next())
 							.getAttributeValue(nclRefAtual.getRefAttribute());
+					String helpInfo = nclDoc.getComment(text);
 					if (text == null)
 						continue;
 
@@ -702,10 +703,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 					if (text.startsWith(qualifier)) {
 						cursor = text.length();
-						System.out
-								.println("Attribute Value Proposal = " + text);
+						//System.out
+						//		.println("Attribute Value Proposal = " + text);
 						proposal = new CompletionProposal(text, offset - qlen,
-								qlen, cursor, null, text, null, null);
+								qlen, cursor, null, text, null, helpInfo);
 
 						propList.add(proposal);
 					}
@@ -738,6 +739,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					NCLElement refElement = ((NCLElement) it2.next());
 					text = refElement.getAttributeValue(nclRefAtual
 							.getRefAttribute());
+					String helpInfo = nclDoc.getComment(text);
 					if (text == null || text.endsWith("#null"))
 						continue; // null
 
@@ -771,7 +773,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						System.out
 								.println("Attribute Value Proposal = " + text);
 						proposal = new CompletionProposal(text, offset - qlen,
-								qlen, cursor, null, text, null, null);
+								qlen, cursor, null, text, null, helpInfo);
 
 						propList.add(proposal);
 					}
