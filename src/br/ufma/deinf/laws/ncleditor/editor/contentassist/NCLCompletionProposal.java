@@ -23,7 +23,6 @@
 package br.ufma.deinf.laws.ncleditor.editor.contentassist;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +32,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import javax.imageio.ImageIO;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -47,7 +45,6 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -90,6 +87,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private boolean isAttributeValue;
 	private boolean isAttribute;
 	private boolean isEndTagName;
+
+	Image connectorImage = null;
+	Image regionImage = null;
+	Image fileImage = null;
 
 	/**
 	 * Responsavel por computar os valores que aparecerao na lista de sugestoes.
@@ -305,26 +306,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	 */
 	private void computeAttributesValuesProposals(IDocument doc,
 			String qualifier, int offset, List propList) {
-		Image connectorImage = null;
-		Image regionImage = null;
-		Image fileImage = null;
-	
-		Display d = Display.getDefault();
-		connectorImage = new Image (d, this.getClass()
-				.getProtectionDomain().getCodeSource().getLocation().toString()
-				.substring(5)
-				+ "icons" + "/" + "conn.png"); 
-			
-		regionImage = new Image (d, this.getClass()
-				.getProtectionDomain().getCodeSource().getLocation().toString()
-				.substring(5)
-				+ "icons" + "/" + "region_.png");
-		
-		fileImage = new Image (d, this.getClass()
-				.getProtectionDomain().getCodeSource().getLocation().toString()
-				.substring(5)
-				+ "icons" + "/" + "file.png");
-		
+
+		loadImages();
+
 		int qlen = qualifier.length();
 		// Verificar se existe valor pre-definido
 
@@ -451,8 +435,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 									nclDoc
 											.getFatherPartitionOffset(nclDoc
 													.getFatherPartitionOffset(nclDoc
-															.getFatherPartitionOffset(offset))),//TODO
-
+															.getFatherPartitionOffset(offset))),
 									"id");
 					hasContextId = false;
 				}
@@ -467,29 +450,21 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (perspective == null || perspective.equals(""))
 				return;
 		}
-		
+
+		// BUG: Estah apagando com os atributos que estiverem depois do
+		// xconnector
+		// deve-se inserir como filhos!!!
 		if (tagname.equals("link") && attribute.equals("xconnector")) {
-			
 			try {
 				ITypedRegion region;
-			
 				region = nclDoc.getPartition(offset);
 				String tag = nclDoc.get(region.getOffset(), region.getLength());
-				int beginTag = tag.indexOf(attribute) + attribute.length() + qualifier.length() + 2; //ok
-				int begin = region.getOffset() + beginTag; //ok
-				int end = tag.length() - beginTag; //ok
-				
-				/*Vector <Integer> offs = nclDoc.getChildrenOffsets(begin);
-				Vector <String> userRole = new Vector <String> ();
-				if (offs != null)
-					for (Integer i : offs) {
-						ITypedRegion reg = nclDoc.getPartition(i);
-						userRole.add(nclDoc.get(reg.getOffset(), reg.getLength()));
-					}*/
-				
+				int begin = offset - qlen; // ok
+				int end = region.getOffset() + region.getLength() - begin; // ok
+
 				Collection nclReference = nclStructure.getNCLReference(tagname,
 						attribute);
-				
+
 				Iterator it = nclReference.iterator();
 				while (it.hasNext()) {
 					NCLReference nclRefAtual = (NCLReference) it.next();
@@ -499,39 +474,47 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						continue;
 					Iterator it2 = elements.iterator();
 					while (it2.hasNext()) {
-						
+
 						NCLElement refElement = ((NCLElement) it2.next());
 						text = refElement.getAttributeValue(nclRefAtual
 								.getRefAttribute());
-						
-						
+
 						String helpInfo = nclDoc.getComment(text);
+
 						if (text == null || text.endsWith("#null"))
 							continue; // null
 						String complete = text + "\">";
 
 						int off = nclDoc.getOffsetByID(text);
 						if (off != -1) {
-							Vector <Integer> childrenConnector = nclDoc.getChildrenOffsets(off);
-							for (Integer i : childrenConnector){
+							Vector<Integer> childrenConnector = nclDoc
+									.getChildrenOffsets(off);
+							for (Integer i : childrenConnector) {
 								String Tag = nclDoc.getCurrentTagname(i);
-								if (Tag.equals("simpleCondition") || Tag
-										.equals("simpleAction") || Tag.equals("attributeAssessment")){
-									String role = nclDoc.getAttributeValueFromCurrentTagName(i, "role");
+								if (Tag.equals("simpleCondition")
+										|| Tag.equals("simpleAction")
+										|| Tag.equals("attributeAssessment")) {
+									String role = nclDoc
+											.getAttributeValueFromCurrentTagName(
+													i, "role");
 									if (role != null && !role.equals("")) {
-										String aux = "<bind role=\"" + role + "\" component=\"\" />";
-										complete += "\n" + getIndentLine(nclDoc, offset) + "\t" + aux;
+										String aux = "<bind role=\"" + role
+												+ "\" component=\"\" />";
+										complete += "\n"
+												+ getIndentLine(nclDoc, offset)
+												+ "\t" + aux;
 									}
 								}
-								
+
 							}
 						}
-						
+
 						if (text.startsWith(qualifier)) {
 							cursor = complete.length();
-							
-							CompletionProposal proposal = new CompletionProposal(complete, begin,
-									end, cursor, connectorImage, text, null, helpInfo);
+
+							CompletionProposal proposal = new CompletionProposal(
+									complete, begin, end, cursor,
+									connectorImage, text, null, helpInfo);
 
 							propList.add(proposal);
 						}
@@ -543,7 +526,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (tagname.equals("bindParam") && attribute.equals("name")) {
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
 					.getFatherPartitionOffset(nclDoc
@@ -614,9 +597,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 
-		
-		//TODO: tirar isso daqui! Poderíamos colocar no ncl30-common
-		//alguma coisa como atributos relativos a outros atributos
+		// TODO: tirar isso daqui! Poderíamos colocar no ncl30-common
+		// alguma coisa como atributos relativos a outros atributos
 		if (tagname.equals("descriptorParam")) {
 			if (attribute.equals("name")) {
 				String name[] = { "background", "balanceLevel", "bassLevel",
@@ -672,28 +654,15 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		}
 
-		//sources attributes
+		// sources attributes
 		if ((tagname.equals("media") && attribute.equals("src"))
 				|| (tagname.equals("importBase") && attribute
 						.equals("documentURI"))
 				|| (tagname.equals("descriptor")
 						&& (attribute.equals("focusSrc")) || attribute
 						.equals("focusSelSrc"))) {
-			// suggest the protocols
-			for (int i = 0; i < protocols.length; i++) {
-				text = protocols[i];
-				if (text.startsWith(qualifier)) {
-					cursor = text.length();
-					//System.out.println("Attribute Value Proposal = " + text);
-					CompletionProposal proposal = new CompletionProposal(text,
-							offset - qlen, qlen, cursor, fileImage, text, null, null);
-					if (!(NCLEditorPlugin.getDefault().getPreferenceStore()
-							.getBoolean(PreferenceConstants.P_POPUP_SUGESTION)))
-						propList.add(proposal);
-				}
-			}
 
-			//if the user preferences is to open a window to select a file
+			// if the user preferences is to open a window to select a file
 			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
 					PreferenceConstants.P_POPUP_SUGESTION)) {
 				FileDialog fileDialog = new FileDialog(new Shell(), SWT.OPEN);
@@ -716,9 +685,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				return;
 			}
-			
-			//the user want to be suggested with autocomplete
-			
+
+			// the user want to be suggested with autocomplete
+
 			// suggest the protocols
 			for (int i = 0; i < protocols.length; i++) {
 				text = protocols[i];
@@ -753,7 +722,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				for (String str : proposal) {
 					str = pre + str;
 					completionProposal = new CompletionProposal(str, offset
-							- qlen, qlen, str.length(), fileImage, str, null, null);
+							- qlen, qlen, str.length(), fileImage, str, null,
+							null);
 					propList.add(completionProposal);
 				}
 			} catch (URISyntaxException e) {
@@ -808,16 +778,18 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				Iterator it2 = elements.iterator();
 				while (it2.hasNext()) {
 					NCLElement nclElement = (NCLElement) it2.next();
-					text = nclElement
-							.getAttributeValue(nclRefAtual.getRefAttribute());
+					text = nclElement.getAttributeValue(nclRefAtual
+							.getRefAttribute());
 					String helpInfo = nclDoc.getComment(text);
 					if (text == null)
 						continue;
-					
+
 					Image image = null;
-					if (nclElement.getTagName().equals("region")) image = regionImage;
-					else if (nclElement.getTagName().equals("causalConnector")) image = connectorImage;
-		
+					if (nclElement.getTagName().equals("region"))
+						image = regionImage;
+					else if (nclElement.getTagName().equals("causalConnector"))
+						image = connectorImage;
+
 					// refer nao pode sugerir a propria media, switch, etc.
 					if (attribute.equals("refer")) {
 						String idAtual = nclDoc
@@ -869,10 +841,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					String helpInfo = nclDoc.getComment(text);
 					if (text == null || text.endsWith("#null"))
 						continue; // null
-					
+
 					Image image = null;
-					if (refElement.getTagName().equals("region")) image = regionImage;
-					else if (refElement.getTagName().equals("causalConnector")) image = connectorImage;
+					if (refElement.getTagName().equals("region"))
+						image = regionImage;
+					else if (refElement.getTagName().equals("causalConnector"))
+						image = connectorImage;
 					// TODO: the refer attribute can not refer the own parent or
 					// his childrens
 					/*
@@ -951,8 +925,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						currentTagname, view);
 
 				// String helpInfo = "help";
-				
-				
+
 				CompletionProposal proposal = new CompletionProposal(prop,
 						offset - qlen, qlen, cursor, null, view, null, helpInfo);
 
@@ -1001,6 +974,22 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		}
 	}
 
+	private void loadImages() {
+
+		Display d = Display.getDefault();
+		connectorImage = new Image(d, this.getClass().getProtectionDomain()
+				.getCodeSource().getLocation().toString().substring(5)
+				+ "icons" + "/" + "conn.png");
+
+		regionImage = new Image(d, this.getClass().getProtectionDomain()
+				.getCodeSource().getLocation().toString().substring(5)
+				+ "icons" + "/" + "region_.png");
+
+		fileImage = new Image(d, this.getClass().getProtectionDomain()
+				.getCodeSource().getLocation().toString().substring(5)
+				+ "icons" + "/" + "file.png");
+	}
+
 	/**
 	 * Retorna uma string com o número de tabulação da linha atual. Útil para
 	 * colocar o final de tag alinhado com o inicial
@@ -1032,7 +1021,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		return str;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -1128,4 +1117,5 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		int documentOffset;
 	}
+
 }
