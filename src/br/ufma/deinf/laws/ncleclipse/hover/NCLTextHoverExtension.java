@@ -342,76 +342,78 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 
 					Vector<Integer> offsets = doc.getChildrenOffsets(offset);
 					PreViewConnector connectorRoleValues = new PreViewConnector();
-					for (int i : offsets) {
-						String tag = doc.getCurrentTagname(i);
-						if (tag.equals("simpleCondition")) {
-							Attributes att = new Attributes();
-							String role = doc
-									.getAttributeValueFromCurrentTagName(i,
-											"role");
-							att.setAttribute("role", role);
-							String max = doc
-									.getAttributeValueFromCurrentTagName(i,
-											"max");
-							if (max == null)
-								max = "1";
-							att.setAttribute("max", max);
-
-							String min = doc
-									.getAttributeValueFromCurrentTagName(i,
-											"min");
-							if (min == null)
-								min = "1";
-							att.setAttribute("min", min);
-
-							String qualifier = doc
-									.getAttributeValueFromCurrentTagName(i,
-											"qualifier");
-							if (qualifier != null)
-								att.setAttribute("qualifier", qualifier);
-							connectorRoleValues.setConditionRole(att);
-						} else if (tag.equals("simpleAction")) {
-							Attributes att = new Attributes();
-							String role = doc
-									.getAttributeValueFromCurrentTagName(i,
-											"role");
-							att.setAttribute("role", role);
-							String max = doc
-									.getAttributeValueFromCurrentTagName(i,
-											"max");
-							if (max == null)
-								max = "1";
-							att.setAttribute("max", max);
-
-							String min = doc
-									.getAttributeValueFromCurrentTagName(i,
-											"min");
-							if (min == null)
-								min = "1";
-							att.setAttribute("min", min);
-							
-							String qualifier = doc
-									.getAttributeValueFromCurrentTagName(i,
-											"qualifier");
-							if (qualifier != null)
-								att.setAttribute("qualifier", qualifier);
-
-							connectorRoleValues.setActionRole(att);
-						} else if (tag.equals("compoundCondition"))
-							connectorRoleValues.setCompoundCondition(doc
-									.getAttributeValueFromCurrentTagName(i,
-											"operator"));
-						else if (tag.equals("compoundAction"))
-							connectorRoleValues.setCompoundAction(doc
-									.getAttributeValueFromCurrentTagName(i,
-											"operator"));
-						else if (tag.equals("attributeAssessment")) {
-							Attributes att = new Attributes();
-							att.setAttribute("role", "test");
-							connectorRoleValues.setConditionRole(att);
+					if (connectorRoleValues!= null) {
+						for (int i : offsets) {
+							String tag = doc.getCurrentTagname(i);
+							if (tag.equals("simpleCondition")) {
+								Attributes att = new Attributes();
+								String role = doc
+										.getAttributeValueFromCurrentTagName(i,
+												"role");
+								att.setAttribute("role", role);
+								String max = doc
+										.getAttributeValueFromCurrentTagName(i,
+												"max");
+								if (max == null)
+									max = "1";
+								att.setAttribute("max", max);
+	
+								String min = doc
+										.getAttributeValueFromCurrentTagName(i,
+												"min");
+								if (min == null)
+									min = "1";
+								att.setAttribute("min", min);
+	
+								String qualifier = doc
+										.getAttributeValueFromCurrentTagName(i,
+												"qualifier");
+								if (qualifier != null)
+									att.setAttribute("qualifier", qualifier);
+								connectorRoleValues.setConditionRole(att);
+							} else if (tag.equals("simpleAction")) {
+								Attributes att = new Attributes();
+								String role = doc
+										.getAttributeValueFromCurrentTagName(i,
+												"role");
+								att.setAttribute("role", role);
+								String max = doc
+										.getAttributeValueFromCurrentTagName(i,
+												"max");
+								if (max == null)
+									max = "1";
+								att.setAttribute("max", max);
+	
+								String min = doc
+										.getAttributeValueFromCurrentTagName(i,
+												"min");
+								if (min == null)
+									min = "1";
+								att.setAttribute("min", min);
+								
+								String qualifier = doc
+										.getAttributeValueFromCurrentTagName(i,
+												"qualifier");
+								if (qualifier != null)
+									att.setAttribute("qualifier", qualifier);
+	
+								connectorRoleValues.setActionRole(att);
+							} else if (tag.equals("compoundCondition"))
+								connectorRoleValues.setCompoundCondition(doc
+										.getAttributeValueFromCurrentTagName(i,
+												"operator"));
+							else if (tag.equals("compoundAction"))
+								connectorRoleValues.setCompoundAction(doc
+										.getAttributeValueFromCurrentTagName(i,
+												"operator"));
+							else if (tag.equals("attributeAssessment")) {
+								Attributes att = new Attributes();
+								att.setAttribute("role", "test");
+								connectorRoleValues.setConditionRole(att);
+							}
 						}
+						result = connectorRoleValues;
 					}
-					result = connectorRoleValues;
 				} else
 					result = "";
 
