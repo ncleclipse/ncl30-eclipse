@@ -1,5 +1,5 @@
 TODO:
-* Idéias
+* Ideias
 	- Fazer o preenchimento automatico do atributo xconnector da tag link baseado
 	  nas tags bind do link (caso haja ambigüidade fazer apenas sugestão dos possíveis
 	  conectores
