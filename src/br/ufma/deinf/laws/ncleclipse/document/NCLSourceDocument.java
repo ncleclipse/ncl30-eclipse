@@ -158,7 +158,7 @@ public class NCLSourceDocument extends Document {
 					if (text.equals("</" + tagname + ">"))
 						break;
 				}		
-			}while (true);
+			}while (!text.equals("</ncl>"));
 			return offsets;
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
@@ -912,49 +912,34 @@ public class NCLSourceDocument extends Document {
 	}
 
 	/**
-	 * Retorna a info associado ao elo
+	 * Retorna a info associada ao elo
 	 * @param text
 	 * @return comment
 	 */
 	public String getComment(String text) {
 		
 		String comment = null;
-		try {
-			ITypedRegion region = getPartition(0);
-			String t;
-			String id;
+		try {			
 			String beginComment = "/*";
 			String endComment = "*/";
 			boolean flag = true;
-			do {
-			t = get (region.getOffset(), region.getLength());
-			if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
-				id = getAttributeValueFromCurrentTagName(region.getOffset(), "id");
-				if (id != null && !id.equals("")){
-					
-					if (id.equals(text)){
-						ITypedRegion r = getPreviousPartition(region);
-						String str;				
-						do {
-							str = get (r.getOffset(), r.getLength());
-							str = str.trim();
-							if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)){
-								if (str.contains(beginComment) && str.contains (endComment)){
-									comment = str.substring(str.indexOf(beginComment) + beginComment.length(), str.lastIndexOf(endComment));
-									System.out.println ("comment " + comment);
-									comment = comment.replace("\t", "");
-									return comment;
-								}
-							}
-							r = getPreviousPartition(r);
-						}while (str.equals (""));
-						
-						flag = false;
-					}
-				}
+			int off = getOffsetByID(text);
+			if (off != -1){
+				ITypedRegion r = getPartition(off);
+				r = getPreviousPartition(r);
+				String str;				
+				do {
+					str = get (r.getOffset(), r.getLength());
+					str = str.trim();
+					if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)){
+							comment = str.substring(4, str.length() - 3).replace("\t", "");
+							return comment;
+						}
+					r = getPreviousPartition(r);
+				}while (str.equals (""));
+				
+				flag = false;
 			}
-			region = getNextPartition(region);
-			} while (!t.equals ("</ncl>") && flag);
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -962,5 +947,39 @@ public class NCLSourceDocument extends Document {
 		return comment;
 	} 
 	
+	/*
+	 * Retorna o offset da regiao que possui a tag com o id passado como parametro
+	 * 
+	 * @return offset (-1 se o id n for valido)
+	 * 
+	 */
+	public int getOffsetByID (String id) {
+		
+		return getOffsetByValue("id", id);
+	}
+	
+	
+	public int getOffsetByValue (String attribute, String value){
+	
+		try {
+			ITypedRegion region = getPartition(0);
+			String t;
+			do {
+			t = get (region.getOffset(), region.getLength());
+			String tagId;
+			if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+				tagId = getAttributeValueFromCurrentTagName(region.getOffset(), attribute);
+				if (tagId != null && !tagId.equals(""))
+					if (tagId.equals(value))
+						return region.getOffset();
+			}
+			region = getNextPartition(region);
+			} while (!t.equals ("</ncl>"));
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
+}
 
 }
