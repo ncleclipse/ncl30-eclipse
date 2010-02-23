@@ -32,8 +32,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
 
-import javax.swing.JFileChooser;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -361,7 +359,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// Referencias que precisam de contexto
 		String perspective = null;
 		// Contexto eh o pai
-		
+
 		if ((tagname.equals("port") && attribute.equals("component"))
 				|| (tagname.equals("bindRule") && attribute
 						.equals("constituent"))
@@ -500,8 +498,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						if (text.startsWith(qualifier)) {
 							cursor = text.length();
-							//System.out.println("Attribute Value Proposal = "
-							//		+ text);
+							// System.out.println("Attribute Value Proposal = "
+							// + text);
 							CompletionProposal proposal = new CompletionProposal(
 									text, offset - qlen, qlen, cursor, null,
 									text, null, null);
@@ -514,6 +512,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 
+		
+		//TODO: tirar isso daqui! Poderíamos colocar no ncl30-common
+		//alguma coisa como atributos relativos a outros atributos
 		if (tagname.equals("descriptorParam")) {
 			if (attribute.equals("name")) {
 				String name[] = { "background", "balanceLevel", "bassLevel",
@@ -569,26 +570,15 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		}
 
+		//sources attributes
 		if ((tagname.equals("media") && attribute.equals("src"))
 				|| (tagname.equals("importBase") && attribute
 						.equals("documentURI"))
 				|| (tagname.equals("descriptor")
 						&& (attribute.equals("focusSrc")) || attribute
 						.equals("focusSelSrc"))) {
-			// suggest the protocols
-			for (int i = 0; i < protocols.length; i++) {
-				text = protocols[i];
-				if (text.startsWith(qualifier)) {
-					cursor = text.length();
-					//System.out.println("Attribute Value Proposal = " + text);
-					CompletionProposal proposal = new CompletionProposal(text,
-							offset - qlen, qlen, cursor, null, text, null, null);
-					if (!(NCLEditorPlugin.getDefault().getPreferenceStore()
-							.getBoolean(PreferenceConstants.P_POPUP_SUGESTION)))
-						propList.add(proposal);
-				}
-			}
 
+			//if the user preferences is to open a window to select a file
 			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
 					PreferenceConstants.P_POPUP_SUGESTION)) {
 				FileDialog fileDialog = new FileDialog(new Shell(), SWT.OPEN);
@@ -610,6 +600,22 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							path, offset);
 
 				return;
+			}
+			
+			//the user want to be suggested with autocomplete
+			
+			// suggest the protocols
+			for (int i = 0; i < protocols.length; i++) {
+				text = protocols[i];
+				if (text.startsWith(qualifier)) {
+					cursor = text.length();
+					// System.out.println("Attribute Value Proposal = " + text);
+					CompletionProposal proposal = new CompletionProposal(text,
+							offset - qlen, qlen, cursor, null, text, null, null);
+					if (!(NCLEditorPlugin.getDefault().getPreferenceStore()
+							.getBoolean(PreferenceConstants.P_POPUP_SUGESTION)))
+						propList.add(proposal);
+				}
 			}
 
 			File file = null;
@@ -703,8 +709,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 					if (text.startsWith(qualifier)) {
 						cursor = text.length();
-						//System.out
-						//		.println("Attribute Value Proposal = " + text);
+						// System.out
+						// .println("Attribute Value Proposal = " + text);
 						proposal = new CompletionProposal(text, offset - qlen,
 								qlen, cursor, null, text, null, helpInfo);
 
@@ -819,7 +825,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
 						currentTagname, view);
-				// String helpInfo = "help";
+
 				// String helpInfo = "help";
 
 				CompletionProposal proposal = new CompletionProposal(prop,
