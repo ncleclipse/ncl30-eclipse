@@ -276,19 +276,26 @@ public class NCLSourceDocument extends Document {
 			int readLength = region.getLength();
 
 			String text = get(partitionOffset, readLength);
-			int p = text.indexOf(attribute);
-			if (p == -1 )
-				return null;
-			if (p > 0 &&  p + attribute.length() <= text.length())
-				if( text.charAt(p-1) == '\"' && text.charAt(p + attribute.length()) == '\"')
+			
+			int startIndex = 0;
+			int p = 0;
+			do {
+				p = text.indexOf(attribute, startIndex);
+				if (p == -1 )
 					return null;
+				if (p > 0 &&  p + attribute.length() <= text.length())
+					if( text.charAt(p-1) != '\"' && text.charAt(p + attribute.length()) != '\"')
+						break;
+				startIndex = p+1;
+			} while (true);
+			
 			int pInicial = p;
 			p += attribute.length();
 			String value = "";
 			boolean firstQuote = false;
 			while (true) {
 				p++;
-				if (p > text.length())
+				if (p >= text.length())
 					return "";
 				if (text.charAt(p) == '\'' || text.charAt(p) == '\"')
 					if (!firstQuote) {
@@ -915,18 +922,18 @@ public class NCLSourceDocument extends Document {
 	}
 
 	/**
-	 * Retorna a info associada ao elo
-	 * @param text
-	 * @return comment
+	 * Return the information of the element with identificator equals to id
+	 * @param id
+	 * @return information
 	 */
-	public String getComment(String text) {
+	public String getComment(String id) {
 		
-		String comment = null;
+		String info = null;
 		try {			
 			String beginComment = "/*";
 			String endComment = "*/";
 			boolean flag = true;
-			int off = getOffsetByID(text);
+			int off = getOffsetByID(id);
 			if (off != -1){
 				ITypedRegion r = getPartition(off);
 				r = getPreviousPartition(r);
@@ -935,8 +942,8 @@ public class NCLSourceDocument extends Document {
 					str = get (r.getOffset(), r.getLength());
 					str = str.trim();
 					if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)){
-							comment = str.substring(4, str.length() - 3).replace("\t", "");
-							return comment;
+							info = str.substring(4, str.length() - 3).replace("\t", "");
+							return info;
 						}
 					r = getPreviousPartition(r);
 				}while (str.equals (""));
@@ -947,13 +954,14 @@ public class NCLSourceDocument extends Document {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return comment;
+		return info;
 	} 
 	
-	/*
+	/**
 	 * Retorna o offset da regiao que possui a tag com o id passado como parametro
 	 * 
-	 * @return offset (-1 se o id n for valido)
+	 * @return offset 
+	 * 		-1 se o id nao for valido
 	 * 
 	 */
 	public int getOffsetByID (String id) {
