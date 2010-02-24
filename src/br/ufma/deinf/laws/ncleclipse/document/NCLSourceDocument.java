@@ -277,8 +277,11 @@ public class NCLSourceDocument extends Document {
 
 			String text = get(partitionOffset, readLength);
 			int p = text.indexOf(attribute);
-			if (p == -1)
+			if (p == -1 )
 				return null;
+			if (p > 0 &&  p + attribute.length() <= text.length())
+				if( text.charAt(p-1) == '\"' && text.charAt(p + attribute.length()) == '\"')
+					return null;
 			int pInicial = p;
 			p += attribute.length();
 			String value = "";
@@ -960,7 +963,6 @@ public class NCLSourceDocument extends Document {
 	
 	
 	public int getOffsetByValue (String attribute, String value){
-	
 		try {
 			ITypedRegion region = getPartition(0);
 			String t;
