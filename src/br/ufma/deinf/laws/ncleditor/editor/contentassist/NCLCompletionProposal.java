@@ -451,9 +451,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				return;
 		}
 
-		// BUG: Estah apagando com os atributos que estiverem depois do
-		// xconnector
-		// deve-se inserir como filhos!!!
 		if (tagname.equals("link") && attribute.equals("xconnector")) {
 			try {
 				ITypedRegion region;
@@ -464,7 +461,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				Collection nclReference = nclStructure.getNCLReference(tagname,
 						attribute);
-
+				
+				String rest = nclDoc.get(begin + nclDoc.
+						getAttributeValueFromCurrentTagName(offset, "xconnector").length() + 1, end - nclDoc.
+						getAttributeValueFromCurrentTagName(offset, "xconnector").length());
+				
+				
+				
 				Iterator it = nclReference.iterator();
 				while (it.hasNext()) {
 					NCLReference nclRefAtual = (NCLReference) it.next();
@@ -483,7 +486,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						if (text == null || text.endsWith("#null"))
 							continue; // null
-						String complete = text + "\">";
+						
+						String complete = text + "\"" + rest;
 
 						int off = nclDoc.getOffsetByID(text);
 						if (off != -1) {
@@ -508,7 +512,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 							}
 						}
-
 						if (text.startsWith(qualifier)) {
 							cursor = complete.length();
 
