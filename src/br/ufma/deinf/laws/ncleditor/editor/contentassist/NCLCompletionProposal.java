@@ -26,6 +26,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -467,6 +468,23 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						getAttributeValueFromCurrentTagName(offset, "xconnector").length());
 				
 				
+				Vector <Integer> childrenOff = nclDoc.getChildrenOffsets(offset);
+				HashMap <String, Integer> roles = new HashMap <String, Integer> ();
+				if (childrenOff != null)
+					for (Integer i : childrenOff) {
+						String role = nclDoc.getAttributeValueFromCurrentTagName(i, "role");
+						if (role != null && !role.equals("")) {
+							if (roles.containsKey(role))
+								roles.put(role, roles.get(role)+1);
+							else roles.put(role, 1);
+						}
+					}
+
+				/*Iterator iEt = roles.keySet().iterator();
+				while (iEt.hasNext()) {
+					String key = (String) iEt.next();
+					System.out.println (key + " " + roles.get(key));
+				}*/
 				
 				Iterator it = nclReference.iterator();
 				while (it.hasNext()) {
@@ -501,12 +519,19 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 									String role = nclDoc
 											.getAttributeValueFromCurrentTagName(
 													i, "role");
+									String min = nclDoc.getAttributeValueFromCurrentTagName(i, "min");
+									int Min = 1;
+									if (min!=null && !min.equals("")) Min = Integer.valueOf(min);
 									if (role != null && !role.equals("")) {
-										String aux = "<bind role=\"" + role
-												+ "\" component=\"\" />";
-										complete += "\n"
-												+ getIndentLine(nclDoc, offset)
-												+ "\t" + aux;
+										int quant = 0;
+										if (roles.containsKey(role)) quant = roles.get(role);
+										for (int j=0; j < Min - quant; j++){
+											String aux = "<bind role=\"" + role
+													+ "\" component=\"\" />";
+											complete += "\n"
+													+ getIndentLine(nclDoc, offset)
+													+ "\t" + aux;
+										}
 									}
 								}
 
