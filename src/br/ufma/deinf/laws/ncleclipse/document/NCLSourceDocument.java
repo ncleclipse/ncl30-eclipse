@@ -284,6 +284,10 @@ public class NCLSourceDocument extends Document {
 				if (p == -1 )
 					return null;
 				if (p > 0 &&  p + attribute.length() <= text.length())
+					
+					//Isso é suficiente para resolver o problema??
+					// se eu tiver algo assim: " id ", aparentemente continua 
+					//dando problema, nao??
 					if( text.charAt(p-1) != '\"' && text.charAt(p + attribute.length()) != '\"')
 						break;
 				startIndex = p+1;
