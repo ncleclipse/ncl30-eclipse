@@ -465,8 +465,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				
 				String rest = nclDoc.get(begin + nclDoc.
 						getAttributeValueFromCurrentTagName(offset, "xconnector").length() + 1, end - nclDoc.
-						getAttributeValueFromCurrentTagName(offset, "xconnector").length());
-				
+						getAttributeValueFromCurrentTagName(offset, "xconnector").length()-1);
+				//roberto: - Coloquei o -1 pq quando fazia o autocomplete e todos
+				//os binds já estavam preenchidos, ele estava inserindo uma linha
+				//entre o link e os binds
 				
 				Vector <Integer> childrenOff = nclDoc.getChildrenOffsets(offset);
 				HashMap <String, Integer> roles = new HashMap <String, Integer> ();
@@ -479,12 +481,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							else roles.put(role, 1);
 						}
 					}
-
-				/*Iterator iEt = roles.keySet().iterator();
-				while (iEt.hasNext()) {
-					String key = (String) iEt.next();
-					System.out.println (key + " " + roles.get(key));
-				}*/
 				
 				Iterator it = nclReference.iterator();
 				while (it.hasNext()) {
@@ -537,6 +533,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 							}
 						}
+
 						if (text.startsWith(qualifier)) {
 							cursor = complete.length();
 
