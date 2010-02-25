@@ -22,6 +22,11 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.document;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -34,11 +39,18 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
+import br.ufma.deinf.laws.ncleclipse.NCLEditor;
+import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.XMLPartitioner;
+import br.ufma.deinf.laws.util.DocumentUtil;
 
 /**
  * 
@@ -54,6 +66,14 @@ public class NCLSourceDocument extends Document {
 
 	public NCLSourceDocument(IDocument doc) {
 		super(doc.get());
+	}
+
+	/**
+	 * @param doc
+	 */
+	public NCLSourceDocument(String doc) {
+		// TODO Auto-generated constructor stub
+		super (doc);
 	}
 
 	/**
@@ -283,16 +303,23 @@ public class NCLSourceDocument extends Document {
 				p = text.indexOf(attribute, startIndex);
 				if (p == -1 )
 					return null;
-				if (p > 0 &&  p + attribute.length() <= text.length())
+				if (p > 0 &&  p + attribute.length() <= text.length()){
+					int start = p-1;
+					char begin = '\"';
+					char end = '\"';
+				    while (start >= 0 && text.charAt(start)==' ') start--;
+					if (start >= 0)
+						begin = text.charAt(start);
 					
-					//Isso é suficiente para resolver o problema??
-					// se eu tiver algo assim: " id ", aparentemente continua 
-					//dando problema, nao??
-					if( text.charAt(p-1) != '\"' && text.charAt(p + attribute.length()) != '\"')
+					start = p + attribute.length();
+					while (start < text.length() && text.charAt(start)==' ') start++;
+					if (start < text.length())
+						end = text.charAt(start);
+					if( begin != '\"' || end != '\"')
 						break;
+				}
 				startIndex = p+1;
 			} while (true);
-			
 			int pInicial = p;
 			p += attribute.length();
 			String value = "";
@@ -933,8 +960,53 @@ public class NCLSourceDocument extends Document {
 	public String getComment(String id) {
 		
 		String info = null;
-		try {			
+		try {
 			String beginComment = "@info";
+			int indexOf = id.indexOf('#');
+				if (indexOf != -1) {
+				IWorkbench wb = PlatformUI.getWorkbench();
+				IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+				IWorkbenchPage page = win.getActivePage();
+				NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
+						.getNCLEditor();
+				
+				int off = getOffsetByValue("alias", id.substring(0, indexOf));
+				
+				String file = getAttributeValueFromCurrentTagName(off, "documentURI");
+				
+				if (file != null) {
+					String fileAbsolutePath = DocumentUtil
+							.getAbsoluteFileName(editor.getCurrentFile()
+									.getAbsolutePath(), file);
+					try {
+						BufferedReader reader = new BufferedReader(new FileReader(new File (fileAbsolutePath)));
+						String doc = "";
+						while (reader.ready()) 
+							doc += reader.readLine() + "\n";
+						NCLSourceDocument ncl = new NCLSourceDocument(doc);
+						IDocumentPartitioner partitioner = new XMLPartitioner(
+								new XMLPartitionScanner(), new String[] {
+										XMLPartitionScanner.XML_START_TAG,
+										XMLPartitionScanner.XML_PI,
+										XMLPartitionScanner.XML_DOCTYPE,
+										XMLPartitionScanner.XML_END_TAG,
+										XMLPartitionScanner.XML_TEXT,
+										XMLPartitionScanner.XML_CDATA,
+										XMLPartitionScanner.XML_COMMENT });
+						partitioner.connect(ncl);
+						ncl.setDocumentPartitioner(partitioner);
+						return ncl.getComment(id.substring(indexOf+1));
+						
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+		
+			}					
 			int off = getOffsetByID(id);
 			if (off != -1){
 				ITypedRegion r = getPartition(off);
