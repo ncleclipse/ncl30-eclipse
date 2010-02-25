@@ -33,6 +33,7 @@ import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.text.DefaultInformationControl.IInformationPresenter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
@@ -40,17 +41,25 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.INavigationHistory;
 import org.eclipse.ui.PlatformUI;
 
 public class NCLInformationControl extends AbstractInformationControl implements
-		IInformationControlExtension2 {
+		IInformationControlExtension2{
 
 	private Composite internalComposite;
 	private StyledText text;
@@ -61,7 +70,7 @@ public class NCLInformationControl extends AbstractInformationControl implements
 	private Composite pageRegion;
 	private Composite pageText;
 	private Composite pageXml;
-	private Composite pageConnector;
+	private Canvas pageConnector;
 	private boolean isMedia;
 	private Button button;
 	private Program p;
@@ -76,9 +85,13 @@ public class NCLInformationControl extends AbstractInformationControl implements
 	private Object input;
 	private Browser fBrowser;
 	private boolean isconnector;
+	private int ConnX;
+	private int ConnY;
+	private boolean isResizable;
 
 	public NCLInformationControl(Shell parentShell, boolean isResizable) {
 		super(parentShell, false);
+		this.isResizable = isResizable;
 		fAdditionalTextStyles = isResizable ? SWT.V_SCROLL | SWT.H_SCROLL
 				: SWT.NONE;
 		create();
@@ -108,7 +121,7 @@ public class NCLInformationControl extends AbstractInformationControl implements
 
 	@Override
 	protected void createContent(Composite parent) {
-		internalComposite = new Composite(parent, SWT.BORDER_DASH);
+		internalComposite = new Composite(parent, SWT.BORDER);
 
 		internalComposite.setForeground(parent.getForeground());
 		internalComposite.setBackground(parent.getBackground());
@@ -148,11 +161,11 @@ public class NCLInformationControl extends AbstractInformationControl implements
 		fBrowser.setBackground(internalComposite.getBackground());
 		fBrowser.setFont(JFaceResources.getDialogFont());
 		Browser.clearSessions();
-
-		pageConnector = new Composite(internalComposite, SWT.NONE);
+		
+		pageConnector = new Canvas(this.internalComposite, SWT.BACKGROUND | SWT.V_SCROLL | SWT.H_SCROLL);
 		pageConnector.setLayout(new FillLayout());
-		pageConnector.setBackground(parent.getBackground());
-		pageConnector.setForeground(parent.getForeground());
+		pageConnector.setBackground(internalComposite.getBackground());
+		pageConnector.setForeground(internalComposite.getForeground());
 
 	}
 
@@ -280,9 +293,36 @@ public class NCLInformationControl extends AbstractInformationControl implements
 
 		} else if (input instanceof PreViewConnector) {
 
-			isconnector = true;
 			PreViewConnector preViewConnector = (PreViewConnector) input;
-
+			isconnector = true;
+			ConnX = ConnY = 100;
+			
+			loadPreviewConnector();
+			layout.topControl = pageConnector;
+		}
+		
+	}
+	
+	
+	private void loadPreviewConnector () {
+			PreViewConnector preViewConnector = (PreViewConnector) input;
+			if (preViewConnector.getActionRole().size() == 0
+					|| preViewConnector.getConditionRole().size() == 0)
+				ConnX = ConnY = 10;
+	
+			ConnX = 60;
+	
+			if (!preViewConnector.getCompoundAction().equals(""))
+				ConnX += 100;
+			if (!preViewConnector.getCompoundCondition().equals(""))
+				ConnX += 100;
+			ConnX += 110;
+			ConnY = 50 * (preViewConnector.getActionRole().size() > preViewConnector
+					.getConditionRole().size() ? preViewConnector
+					.getActionRole().size() : preViewConnector
+					.getConditionRole().size());
+			ConnY += 10;
+	
 			final Vector<Attributes> conditionRole = preViewConnector
 					.getConditionRole();
 			final Vector<Attributes> actionRole = preViewConnector
@@ -313,135 +353,194 @@ public class NCLInformationControl extends AbstractInformationControl implements
 				compoundAction = new Image(pageConnector.getDisplay(), path
 						+ "op" + compAction.toUpperCase() + ".png");
 			}
-
+	
 			final Image tempCondition = compoundCondition;
 			final Image tempAction = compoundAction;
-			pageConnector.addPaintListener(new PaintListener() {
-
-				@Override
-				public void paintControl(PaintEvent e) {
-					
-					for (int i = 0; i < 100; i++){
-						e.gc.setBackground(internalComposite.getBackground());
-						e.gc.setForeground(internalComposite.getForeground());
-						e.gc.fillRectangle(0, 0, 1000, 500);
-					}
-					
-					if (actions.length == 0 || conditions.length == 0)
-						return;
-					int DEFAULT_WIDTH = 40;
-					int DEFAULT_HEIGHT = 40;
-					int desX = 0;
-					int off = 50;
-					int maior = (actions.length > conditions.length ? actions.length
-							: conditions.length);
-					int Y = off * maior;
-					Y += 10;
-					if (maior > 5) {
-						Y = 220;
-						DEFAULT_HEIGHT -= 10;
-						DEFAULT_WIDTH -= 10;
-					}
-					int desY = Y / (conditions.length);
-					int x1 = 0, y1 = 0;
-					int meio = desY / 2 - DEFAULT_HEIGHT / 2;
-					for (int i = 0; i < conditions.length; i++) {
-						final Image img = conditions[i];
-						e.gc.drawImage(img, 0, 0, img.getBounds().width, img
-								.getBounds().height, desX, i * desY + meio,
-								DEFAULT_WIDTH, DEFAULT_HEIGHT);
-						String max = conditionRole.get(i).getAttribute("max");
-						String min = conditionRole.get(i).getAttribute("min");
-						
-						String toShow = "";
-						if (!min.equals("") && !min.equals("1")) toShow += min + "-";
-						
-						if (!max.equals("") && !max.equals("1")) {
-							if (max.equals("unbounded"))
-								max = "n";
-							toShow += max;
-							e.gc.drawText(toShow, desX + DEFAULT_WIDTH, i * desY
-									+ meio, true);
-
-						}
-						x1 = DEFAULT_WIDTH;
-						y1 = i * desY + meio + DEFAULT_HEIGHT / 2;
-					}
-					int Pmeio = meio;
-					desX += 100;
-					meio = Y / 2 - DEFAULT_HEIGHT / 2;
-
-					if (!compCondition.equals("")) {
-
-						e.gc.drawImage(tempCondition, 0, 0, tempCondition
-								.getBounds().width,
-								tempCondition.getBounds().height, desX, meio,
-								DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
-						for (int i = 0; i < conditions.length; i++) {
-							x1 = DEFAULT_WIDTH;
-							y1 = i * desY + Pmeio + DEFAULT_HEIGHT / 2;
-							e.gc.drawLine(x1, y1, desX, meio
-									+ (int) DEFAULT_HEIGHT / 2);
-
-						}
-						x1 = desX + DEFAULT_WIDTH;
-						y1 = meio + DEFAULT_HEIGHT / 2;
-						desX += 100;
-
-					}
-
-					int x = desX - 30;
-					
-
-					for (int i = 0; i < Y; i += 20)
-						e.gc.drawLine(x, i, x, i + 10);
-
-				
-					if (!compAction.equals("")) {
-						e.gc.drawImage(tempAction, 0, 0,
-								tempAction.getBounds().width, tempAction
-										.getBounds().height, desX, meio,
-								DEFAULT_WIDTH, DEFAULT_HEIGHT);
-						e.gc.drawLine(x1, y1, desX, meio + (int) DEFAULT_HEIGHT
-								/ 2);
-						x1 = desX + DEFAULT_WIDTH;
-						y1 = meio + DEFAULT_HEIGHT / 2;
-						desX += 100;
-					}
 	
-					desY = Y / (actions.length);
-					meio = desY / 2 - DEFAULT_HEIGHT / 2;
-					for (int i = 0; i < actions.length; i++) {
-						final Image img = actions[i];
-						e.gc.drawImage(img, 0, 0, img.getBounds().width, img
-								.getBounds().height, desX, i * desY + meio,
-								DEFAULT_WIDTH, DEFAULT_HEIGHT);
-						String max = actionRole.get(i).getAttribute("max");
-						String min = actionRole.get(i).getAttribute("min");
-						
-						String toShow = "";
-						if (!min.equals("") && !min.equals("1")) toShow += min + "-";
-						
-						
-						if (!max.equals("") && !max.equals("1")) {
-							if (max.equals("unbounded"))
-								max = "n";
-							toShow += max;
-							e.gc.drawText(toShow, desX + DEFAULT_WIDTH, i * desY
-									+ meio, true);
-
-							
-						}
-						int x2 = desX;
-						int y2 = i * desY + meio + DEFAULT_HEIGHT / 2;
-						e.gc.drawLine(x1, y1, x2, y2);
+			Image img1 = null;
+			if (img1 == null) {
+				img1 = new Image(pageConnector.getDisplay(), ConnX, ConnY);
+				GC gc = new GC(img1);
+				gc.setBackground(internalComposite.getBackground());
+				gc.setForeground(internalComposite.getForeground());
+				if (actions.length == 0 || conditions.length == 0)
+					return;
+				int DEFAULT_WIDTH = 40;
+				int DEFAULT_HEIGHT = 40;
+				int desX = 0;
+				int off = 50;
+				int maior = (actions.length > conditions.length ? actions.length
+						: conditions.length);
+				int Y = off * maior;
+				Y += 10;
+				int desY = Y / (conditions.length);
+				int x1 = 0, y1 = 0;
+				int meio = desY / 2 - DEFAULT_HEIGHT / 2;
+				for (int i = 0; i < conditions.length; i++) {
+					final Image img = conditions[i];
+					gc.drawImage(img, 0, 0, img.getBounds().width, img
+							.getBounds().height, desX, i * desY + meio,
+							DEFAULT_WIDTH, DEFAULT_HEIGHT);
+					String max = conditionRole.get(i).getAttribute("max");
+					String min = conditionRole.get(i).getAttribute("min");
+	
+					String toShow = "";
+					if (!min.equals("") && !min.equals("1"))
+						toShow += min + "-";
+	
+					if (!max.equals("") && !max.equals("1")) {
+						if (max.equals("unbounded"))
+							max = "n";
+						toShow += max;
+						gc.drawText(toShow, desX + DEFAULT_WIDTH, i * desY
+								+ meio, true);
+	
+					}
+					x1 = DEFAULT_WIDTH;
+					y1 = i * desY + meio + DEFAULT_HEIGHT / 2;
+				}
+				int Pmeio = meio;
+				desX += 100;
+				meio = Y / 2 - DEFAULT_HEIGHT / 2;
+	
+				if (!compCondition.equals("")) {
+	
+					gc.drawImage(tempCondition, 0, 0,
+							tempCondition.getBounds().width, tempCondition
+									.getBounds().height, desX, meio,
+							DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	
+					for (int i = 0; i < conditions.length; i++) {
+						x1 = DEFAULT_WIDTH;
+						y1 = i * desY + Pmeio + DEFAULT_HEIGHT / 2;
+						gc.drawLine(x1, y1, desX, meio + (int) DEFAULT_HEIGHT
+								/ 2);
+	
+					}
+					x1 = desX + DEFAULT_WIDTH;
+					y1 = meio + DEFAULT_HEIGHT / 2;
+					desX += 100;
+	
+				}
+	
+				int x = desX - 30;
+	
+				for (int i = 0; i < Y; i += 20)
+					gc.drawLine(x, i, x, i + 10);
+	
+				if (!compAction.equals("")) {
+					gc.drawImage(tempAction, 0, 0,
+							tempAction.getBounds().width, tempAction
+									.getBounds().height, desX, meio,
+							DEFAULT_WIDTH, DEFAULT_HEIGHT);
+					gc.drawLine(x1, y1, desX, meio + (int) DEFAULT_HEIGHT / 2);
+					x1 = desX + DEFAULT_WIDTH;
+					y1 = meio + DEFAULT_HEIGHT / 2;
+					desX += 100;
+				}
+	
+				desY = Y / (actions.length);
+				meio = desY / 2 - DEFAULT_HEIGHT / 2;
+				for (int i = 0; i < actions.length; i++) {
+					final Image img = actions[i];
+					gc.drawImage(img, 0, 0, img.getBounds().width, img
+							.getBounds().height, desX, i * desY + meio,
+							DEFAULT_WIDTH, DEFAULT_HEIGHT);
+					String max = actionRole.get(i).getAttribute("max");
+					String min = actionRole.get(i).getAttribute("min");
+	
+					String toShow = "";
+					if (!min.equals("") && !min.equals("1"))
+						toShow += min + "-";
+	
+					if (!max.equals("") && !max.equals("1")) {
+						if (max.equals("unbounded"))
+							max = "n";
+						toShow += max;
+						gc.drawText(toShow, desX + DEFAULT_WIDTH, i * desY
+								+ meio, true);
+	
+					}
+					int x2 = desX;
+					int y2 = i * desY + meio + DEFAULT_HEIGHT / 2;
+					gc.drawLine(x1, y1, x2, y2);
+				}
+			};
+	
+			final Image image = img1;
+			final Point origin = new Point(0, 0);
+			
+			final ScrollBar hBar = pageConnector.getHorizontalBar();
+			hBar.setVisible(isResizable);
+			hBar.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					int hSelection = hBar.getSelection();
+					int destX = -hSelection - origin.x;
+					Rectangle rect = image.getBounds();
+					pageConnector.scroll(destX, 0, 0, 0, rect.width,
+							rect.height, false);
+					origin.x = -hSelection;
+				}
+			});
+			final ScrollBar vBar = pageConnector.getVerticalBar();
+			vBar.setVisible(isResizable);
+			vBar.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					int vSelection = vBar.getSelection();
+					int destY = -vSelection - origin.y;
+					Rectangle rect = image.getBounds();
+					pageConnector.scroll(0, destY, 0, 0, rect.width,
+							rect.height, false);
+					origin.y = -vSelection;
+				}
+			});
+			pageConnector.addListener(SWT.Resize, new Listener() {
+				public void handleEvent(Event e) {
+					pageConnector.setBackground(internalComposite.getBackground());
+					pageConnector.setForeground(internalComposite.getForeground());
+					Rectangle rect = image.getBounds();
+					Rectangle client = pageConnector.getClientArea();
+					hBar.setMaximum(rect.width);
+					vBar.setMaximum(rect.height);
+					hBar.setThumb(Math.min(rect.width, client.width));
+					vBar.setThumb(Math.min(rect.height, client.height));
+					int hPage = rect.width - client.width;
+					int vPage = rect.height - client.height;
+					int hSelection = hBar.getSelection();
+					int vSelection = vBar.getSelection();
+					if (hSelection >= hPage) {
+						if (hPage <= 0)
+							hSelection = 0;
+						origin.x = -hSelection;
+					}
+					if (vSelection >= vPage) {
+						if (vPage <= 0)
+							vSelection = 0;
+						origin.y = -vSelection;
+					}
+					pageConnector.redraw();
+				}
+			});
+			pageConnector.addListener(SWT.Paint, new Listener() {
+				public void handleEvent(Event e) {
+					GC gc = e.gc;
+					gc.setBackground(internalComposite.getBackground());
+					gc.setForeground(internalComposite.getForeground());
+					gc.drawImage(image, origin.x, origin.y);
+					Rectangle rect = image.getBounds();
+					Rectangle client = pageConnector.getClientArea();
+					int marginWidth = client.width - rect.width;
+					if (marginWidth > 0) {
+						gc.fillRectangle(rect.width, 0, marginWidth,
+								client.height);
+					}
+					int marginHeight = client.height - rect.height;
+					if (marginHeight > 0) {
+						gc.fillRectangle(0, rect.height, client.width,
+								marginHeight);
 					}
 				}
 			});
-			layout.topControl = pageConnector;
-		}
-
 	}
 
 	@Override
@@ -452,22 +551,7 @@ public class NCLInformationControl extends AbstractInformationControl implements
 	public Point computeSizeHint() {
 
 		if (isconnector) {
-			PreViewConnector pre = (PreViewConnector) input;
-			if (pre.getActionRole().size() == 0 || pre.getConditionRole().size() == 0)
-				return getShell().computeSize(0, 0);
-			int x = 60, y;
-			if (!pre.getCompoundCondition().equals(""))
-				x += 100;
-			if (!pre.getCompoundAction().equals(""))
-				x += 100;
-
-			x += 110;
-
-			y = 50 * (pre.getActionRole().size() > pre.getConditionRole()
-					.size() ? pre.getActionRole().size() : pre
-					.getConditionRole().size());
-			y += 10;
-			return getShell().computeSize(x, y);
+			return getShell().computeSize(ConnX, ConnY);
 		}
 
 		if (isImage) {
