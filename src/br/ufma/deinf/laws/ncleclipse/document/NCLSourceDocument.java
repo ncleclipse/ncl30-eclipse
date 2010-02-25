@@ -934,9 +934,7 @@ public class NCLSourceDocument extends Document {
 		
 		String info = null;
 		try {			
-			String beginComment = "/*";
-			String endComment = "*/";
-			boolean flag = true;
+			String beginComment = "@info";
 			int off = getOffsetByID(id);
 			if (off != -1){
 				ITypedRegion r = getPartition(off);
@@ -946,13 +944,13 @@ public class NCLSourceDocument extends Document {
 					str = get (r.getOffset(), r.getLength());
 					str = str.trim();
 					if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)){
-							info = str.substring(4, str.length() - 3).replace("\t", "");
-							return info;
-						}
+						int index = str.indexOf(beginComment); 
+						if (index != -1)
+							info = str.substring(index + beginComment.length()+1, str.length() - 3).replace("\t", "");
+						return info; 
+					}
 					r = getPreviousPartition(r);
 				}while (str.equals (""));
-				
-				flag = false;
 			}
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
