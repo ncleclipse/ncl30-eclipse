@@ -23,6 +23,7 @@
 package br.ufma.deinf.laws.ncleditor.editor.contentassist;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -458,21 +459,20 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				region = nclDoc.getPartition(offset);
 				String tag = nclDoc.get(region.getOffset(), region.getLength());
 				int begin = offset - qlen; // ok
-				int end = region.getOffset() + region.getLength() - begin; // ok
+				int end = region.getOffset() + region.getLength() - begin; // N OK
 
 				Collection nclReference = nclStructure.getNCLReference(tagname,
 						attribute);
 				
 				String rest = nclDoc.get(begin + nclDoc.
 						getAttributeValueFromCurrentTagName(offset, "xconnector").length() + 1, end - nclDoc.
-						getAttributeValueFromCurrentTagName(offset, "xconnector").length()-1);
-				//roberto: - Coloquei o -1 pq quando fazia o autocomplete e todos
-				//os binds já estavam preenchidos, ele estava inserindo uma linha
-				//entre o link e os binds
+						getAttributeValueFromCurrentTagName(offset, "xconnector").length()-1 );
+				
+
 				
 				Vector <Integer> childrenOff = nclDoc.getChildrenOffsets(offset);
 				HashMap <String, Integer> roles = new HashMap <String, Integer> ();
-				if (childrenOff != null)
+				if (childrenOff != null) {
 					for (Integer i : childrenOff) {
 						String role = nclDoc.getAttributeValueFromCurrentTagName(i, "role");
 						if (role != null && !role.equals("")) {
@@ -481,6 +481,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							else roles.put(role, 1);
 						}
 					}
+				}
 				
 				Iterator it = nclReference.iterator();
 				while (it.hasNext()) {
@@ -502,7 +503,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							continue; // null
 						
 						String complete = text + "\"" + rest;
-
+						Vector <String> conditions = new Vector <String> ();
 						int off = nclDoc.getOffsetByID(text);
 						if (off != -1) {
 							Vector<Integer> childrenConnector = nclDoc
@@ -512,13 +513,21 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 								if (Tag.equals("simpleCondition")
 										|| Tag.equals("simpleAction")
 										|| Tag.equals("attributeAssessment")) {
+									
 									String role = nclDoc
 											.getAttributeValueFromCurrentTagName(
 													i, "role");
 									String min = nclDoc.getAttributeValueFromCurrentTagName(i, "min");
 									int Min = 1;
-									if (min!=null && !min.equals("")) Min = Integer.valueOf(min);
+									if (min!=null && !min.equals(""))
+										try{
+											Min = Integer.parseInt(min);
+											}
+										catch (NumberFormatException e) {
+											Min = 1;
+										}
 									if (role != null && !role.equals("")) {
+										if (Tag.equals("simpleCondition")) conditions.add(role);
 										int quant = 0;
 										if (roles.containsKey(role)) quant = roles.get(role);
 										for (int j=0; j < Min - quant; j++){
@@ -532,11 +541,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 								}
 
 							}
+							
 						}
-
+						
 						if (text.startsWith(qualifier)) {
 							cursor = complete.length();
-
 							CompletionProposal proposal = new CompletionProposal(
 									complete, begin, end, cursor,
 									connectorImage, text, null, helpInfo);
