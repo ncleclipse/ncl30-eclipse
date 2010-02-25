@@ -297,10 +297,13 @@ public class NCLSourceDocument extends Document {
 
 			String text = get(partitionOffset, readLength);
 			
+			//Continuo achando q não resolveu o problema
 			int startIndex = 0;
 			int p = 0;
 			do {
+				//Não podemos fazer isso!!!
 				p = text.indexOf(attribute, startIndex);
+				
 				if (p == -1 )
 					return null;
 				if (p > 0 &&  p + attribute.length() <= text.length()){
