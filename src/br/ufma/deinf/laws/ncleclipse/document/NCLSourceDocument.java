@@ -294,11 +294,13 @@ public class NCLSourceDocument extends Document {
 			ITypedRegion region = getPartition(offset);
 			int partitionOffset = region.getOffset();
 			int readLength = region.getLength();
-
-			String text = get(partitionOffset, readLength);
 			
+			if (attribute == null) return null;
+			String text = get(partitionOffset, readLength);
+
 			
 			boolean firstQuote = false;
+			boolean equal = false;
 			String attributeValue = "";
 			String attributeName = "";
 			/*System.out.println (text);
@@ -307,27 +309,34 @@ public class NCLSourceDocument extends Document {
 				if (text.charAt(i)=='\"' || text.charAt(i)=='\'') 
 					if (!firstQuote)
 						firstQuote = true;
-					else 
-						if (attributeName.equals(attribute)) {
-							//System.out.println ("value: " + attributeValue);
-							return attributeValue;
-						}
-						else {
-							//System.out.println ("NAO: " + attributeName + ":" + attributeValue);
-							attributeName = "";
-							attributeValue = "";
-							firstQuote = false;
-						}
-				else{
-					if (text.charAt(i)== ' '){
+					else{
+						String[] str = attributeName.split(" ");
+						Vector <String> v = new Vector <String> ();
+						for (String s : str)
+							if (!s.equals("")) v.add(s);			  //caso o attributo q o cara esteja procurando
+																	  //esteja logo depois do nome da tag
+																	  //o vector eh caso a tag tenha muitos espacos
+																	  //Ex: <media id   =   "media1" esse caso tem q funcionar   
+						
+						
+						if (v.get(v.size() - 1).equals(attribute)) { //caso a tag seja assim: <media dbnsyudb id="..." ...
+								return attributeValue;				 //o autocomplete n mostra a tag acima na lista de sugestao 	
+						}					
+						//System.out.println ("NAO: " + attributeName + ":" + attributeValue);
 						attributeName = "";
-						continue;
+						attributeValue = "";
+						firstQuote = false;
+						equal = true;
 					}
-					if (text.charAt(i)=='=') continue;
+				else{
 					if (firstQuote) 
 						attributeValue += text.charAt(i);
-					else
+					else{
+						if (text.charAt(i)=='='){
+							continue;
+						}
 						attributeName += text.charAt(i);
+					}
 				}
 				
 			}
@@ -1005,7 +1014,7 @@ public class NCLSourceDocument extends Document {
 		try {
 			String beginComment = "@info";
 			int indexOf = id.indexOf('#');
-				if (indexOf != -1) {
+			if (indexOf != -1) {
 				IWorkbench wb = PlatformUI.getWorkbench();
 				IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 				IWorkbenchPage page = win.getActivePage();
@@ -1088,6 +1097,7 @@ public class NCLSourceDocument extends Document {
 	
 	public int getOffsetByValue (String attribute, String value){
 		try {
+			if (attribute == null || value == null ) return -1;
 			ITypedRegion region = getPartition(0);
 			String t;
 			do {
