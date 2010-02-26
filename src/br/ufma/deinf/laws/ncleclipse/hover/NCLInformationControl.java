@@ -310,7 +310,7 @@ public class NCLInformationControl extends AbstractInformationControl implements
 					|| preViewConnector.getConditionRole().size() == 0)
 				ConnX = ConnY = 10;
 	
-			ConnX = 60;
+			ConnX = 70;
 	
 			if (!preViewConnector.getCompoundAction().equals(""))
 				ConnX += 100;
@@ -363,6 +363,7 @@ public class NCLInformationControl extends AbstractInformationControl implements
 				GC gc = new GC(img1);
 				gc.setBackground(internalComposite.getBackground());
 				gc.setForeground(internalComposite.getForeground());
+				gc.fillRectangle(0, 0, ConnX, ConnY);
 				if (actions.length == 0 || conditions.length == 0)
 					return;
 				int DEFAULT_WIDTH = 40;
