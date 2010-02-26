@@ -381,6 +381,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
 					.getFatherPartitionOffset(offset), "id");
+			System.out.println(perspective);
 			if (perspective == null) {
 				if (fatherTagName.equals("body")) {
 					perspective = nclDoc.getAttributeValueFromCurrentTagName(
@@ -426,7 +427,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			String grandFatherTagName = nclDoc.getFatherTagName(nclDoc
 					.getFatherPartitionOffset(offset));
-
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
 					.getFatherPartitionOffset(nclDoc
 							.getFatherPartitionOffset(offset)), "id");
@@ -571,11 +571,14 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				|| tagname.equals("port") && attribute.equals("interface")
 				|| tagname.equals("mapping") && attribute.equals("interface")) {
 			NCLElement element;
+			
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(offset,
 					"component");
+			
 			if (perspective == null || perspective.equals(""))
 				return;
 			element = nclDocument.getElementById(perspective);
+			
 			while (element != null
 					&& element.getAttributes().get("refer") != null) {
 				Collection nclReference = nclStructure.getNCLReference(tagname,
@@ -790,6 +793,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		CompletionProposal proposal = null;
 		Iterator it = null;
+		
+		
+		
 		if (perspective != null) {
 			// Pode sugerir o id do context ou body (desde que id do body
 			// exista)
@@ -814,10 +820,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					NCLElement nclElement = (NCLElement) it2.next();
 					text = nclElement.getAttributeValue(nclRefAtual
 							.getRefAttribute());
-					String helpInfo = nclDoc.getComment(text);
+
 					if (text == null)
 						continue;
-
+					
+					String helpInfo = nclDoc.getComment(text);
 					Image image = null;
 					if (nclElement.getTagName().equals("region"))
 						image = regionImage;
@@ -872,10 +879,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					NCLElement refElement = ((NCLElement) it2.next());
 					text = refElement.getAttributeValue(nclRefAtual
 							.getRefAttribute());
-					String helpInfo = nclDoc.getComment(text);
+					
 					if (text == null || text.endsWith("#null"))
 						continue; // null
-
+					
+					String helpInfo = nclDoc.getComment(text);
 					Image image = null;
 					if (refElement.getTagName().equals("region"))
 						image = regionImage;

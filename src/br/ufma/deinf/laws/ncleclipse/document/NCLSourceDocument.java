@@ -297,8 +297,47 @@ public class NCLSourceDocument extends Document {
 
 			String text = get(partitionOffset, readLength);
 			
+			
+			boolean firstQuote = false;
+			String attributeValue = "";
+			String attributeName = "";
+			/*System.out.println (text);
+			System.out.println ("atrribute: " + attribute);*/
+			for (int i=0; i<text.length(); i++) {
+				if (text.charAt(i)=='\"' || text.charAt(i)=='\'') 
+					if (!firstQuote)
+						firstQuote = true;
+					else 
+						if (attributeName.equals(attribute)) {
+							//System.out.println ("value: " + attributeValue);
+							return attributeValue;
+						}
+						else {
+							//System.out.println ("NAO: " + attributeName + ":" + attributeValue);
+							attributeName = "";
+							attributeValue = "";
+							firstQuote = false;
+						}
+				else{
+					if (text.charAt(i)== ' '){
+						attributeName = "";
+						continue;
+					}
+					if (text.charAt(i)=='=') continue;
+					if (firstQuote) 
+						attributeValue += text.charAt(i);
+					else
+						attributeName += text.charAt(i);
+				}
+				
+			}
+			
+			return null;
+			
+			
+			
 			//Continuo achando q não resolveu o problema
-			int startIndex = 0;
+			/*int startIndex = 0;
 			int p = 0;
 			do {
 				//Não podemos fazer isso!!!
@@ -341,7 +380,7 @@ public class NCLSourceDocument extends Document {
 					}
 				if (firstQuote)
 					value += text.charAt(p);
-			}
+			}*/
 		} catch (BadLocationException e) {
 			return "";
 		}
