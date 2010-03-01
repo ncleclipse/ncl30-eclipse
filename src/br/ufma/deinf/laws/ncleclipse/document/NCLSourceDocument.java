@@ -24,10 +24,9 @@ package br.ufma.deinf.laws.ncleclipse.document;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
@@ -50,7 +49,6 @@ import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.XMLPartitioner;
-import br.ufma.deinf.laws.util.DocumentUtil;
 
 /**
  * 
@@ -1003,6 +1001,10 @@ public class NCLSourceDocument extends Document {
 		return parents;
 	}
 
+	
+	private HashMap <String, String>  importedComments = new HashMap <String, String> ();
+	private Vector <String> importedTags = new Vector <String> ();
+
 	/**
 	 * Return the information of the element with identificator equals to id
 	 * @param id
@@ -1011,52 +1013,65 @@ public class NCLSourceDocument extends Document {
 	public String getComment(String id) {
 		
 		String info = null;
+		if (id == null || id.equals("")) return null;
 		try {
 			String beginComment = "@info";
 			int indexOf = id.indexOf('#');
+			
 			if (indexOf != -1) {
 				IWorkbench wb = PlatformUI.getWorkbench();
 				IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 				IWorkbenchPage page = win.getActivePage();
 				NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
 						.getNCLEditor();
-				
-				int off = getOffsetByValue("alias", id.substring(0, indexOf));
-				
-				String file = getAttributeValueFromCurrentTagName(off, "documentURI");
-				
-				if (file != null) {
-					String fileAbsolutePath = DocumentUtil
-							.getAbsoluteFileName(editor.getCurrentFile()
-									.getAbsolutePath(), file);
+				Vector <Integer> aliasOffsset = getAllTagsWithAttribute("alias");
+				for (int i: aliasOffsset) {
+					String alias = getAttributeValueFromCurrentTagName(i, "alias");
+					if (importedTags.contains(alias)) continue;
+					importedTags.add(alias);
+					String documentURI = getAttributeValueFromCurrentTagName(i, "documentURI");
+					File importedFile = null;
+					BufferedReader reader;
 					try {
-						BufferedReader reader = new BufferedReader(new FileReader(new File (fileAbsolutePath)));
-						String doc = "";
-						while (reader.ready()) 
-							doc += reader.readLine() + "\n";
-						NCLSourceDocument ncl = new NCLSourceDocument(doc);
-						IDocumentPartitioner partitioner = new XMLPartitioner(
-								new XMLPartitionScanner(), new String[] {
-										XMLPartitionScanner.XML_START_TAG,
-										XMLPartitionScanner.XML_PI,
-										XMLPartitionScanner.XML_DOCTYPE,
-										XMLPartitionScanner.XML_END_TAG,
-										XMLPartitionScanner.XML_TEXT,
-										XMLPartitionScanner.XML_CDATA,
-										XMLPartitionScanner.XML_COMMENT });
-						partitioner.connect(ncl);
-						ncl.setDocumentPartitioner(partitioner);
-						return ncl.getComment(id.substring(indexOf+1));
-						
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
+						if (documentURI != null
+								&& !documentURI.equals("")) {
+							importedFile = new File (documentURI);
+							if (!importedFile.isFile()) {
+								importedFile = new File (editor.getCurrentFile().getParent() + "/" + documentURI);
+							}
+						}
+						if (importedFile != null && importedFile.isFile()){
+							reader = new BufferedReader(new FileReader(importedFile));
+							String text = "";
+							while (reader.ready()) 
+								text += reader.readLine() + "\n";
+							NCLSourceDocument ncl = new NCLSourceDocument(text);
+							IDocumentPartitioner partitioner = new XMLPartitioner(
+									new XMLPartitionScanner(), new String[] {
+											XMLPartitionScanner.XML_START_TAG,
+											XMLPartitionScanner.XML_PI,
+											XMLPartitionScanner.XML_DOCTYPE,
+											XMLPartitionScanner.XML_END_TAG,
+											XMLPartitionScanner.XML_TEXT,
+											XMLPartitionScanner.XML_CDATA,
+											XMLPartitionScanner.XML_COMMENT });
+							partitioner.connect(ncl);
+							ncl.setDocumentPartitioner(partitioner);
+							Vector<Integer> ids = ncl.getAllTagsWithAttribute("id");
+							for (int j : ids) {
+								String Id = ncl.getAttributeValueFromCurrentTagName(j, "id");
+								importedComments.put(alias + "#" + Id, ncl.getComment(Id));
+							}
+							
+						}
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					
 				}
-		
+				if (importedComments.containsKey(id))
+					return importedComments.get(id);
+				return null;
 			}					
 			int off = getOffsetByID(id);
 			if (off != -1){
@@ -1067,7 +1082,7 @@ public class NCLSourceDocument extends Document {
 					str = get (r.getOffset(), r.getLength());
 					str = str.trim();
 					if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)){
-						int index = str.indexOf(beginComment); 
+						int index = str.indexOf(beginComment);
 						if (index != -1)
 							info = str.substring(index + beginComment.length()+1, str.length() - 3).replace("\t", "");
 						return info; 
@@ -1117,5 +1132,33 @@ public class NCLSourceDocument extends Document {
 		}
 		return -1;
 }
+
+	/**Return all the offsets of the tags containing the attribute  
+	 * @param attribute
+	 * @return
+	 */
+	public Vector<Integer> getAllTagsWithAttribute(String attribute) {
+		Vector <Integer> aliasOffset = new Vector <Integer> ();
+		try{
+			ITypedRegion region = getPartition(0);
+			String t;
+			
+			do {
+				t = get (region.getOffset(), region.getLength());
+				String att;
+				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+					att = getAttributeValueFromCurrentTagName(region.getOffset(), attribute);
+					if (att != null && !att.equals(""))
+						aliasOffset.add(region.getOffset());
+				}
+				region = getNextPartition(region);
+			} while (!t.equals ("</ncl>"));
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return aliasOffset;
+	}
 
 }
