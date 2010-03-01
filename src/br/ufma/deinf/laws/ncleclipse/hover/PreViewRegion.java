@@ -1,17 +1,10 @@
 package br.ufma.deinf.laws.ncleclipse.hover;
 
-import java.awt.AlphaComposite;
-
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -20,8 +13,8 @@ import org.eclipse.swt.widgets.Composite;
 
 public class PreViewRegion{
 	// private JFrame j;
-	private int WIDTH = 300;
-	private int HEIGHT = 300;
+	private int WIDTH = 250;
+	private int HEIGHT = 250;
 	private Vector<RegionValues> values;
 	private Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 	public int bgwidth;
