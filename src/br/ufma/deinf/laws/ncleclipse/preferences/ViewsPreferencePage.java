@@ -56,11 +56,12 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 	 * editor knows how to save and restore itself.
 	 */
 	public void createFieldEditors() {
-		addField(new BooleanFieldEditor(
+		/*addField(new BooleanFieldEditor(
 				PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE,
 				NCLEditorMessages.getInstance().getString(
 						"Preferences.OpenLayoutEditor"), getFieldEditorParent()));
-
+		*/
+		
 		addField(new BooleanFieldEditor(PreferenceConstants.P_PREVIEW,
 				NCLEditorMessages.getInstance().getString(
 						"Preferences.OpenPrevieOnMouseOver"),

@@ -28,9 +28,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
-import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor;
-import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditorActionBarContributor;
-
 /**
  * Mix of the TextEditorActionContributor and ActionBarContributor from GEF
  * This class must be changed soon
@@ -41,19 +38,22 @@ import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditorActionBarContributor;
 public class NCLMultiPageActionBarContributor 
 extends MultiPageEditorActionBarContributor{
 	NCLActionContributor nclActionContributor = null;
-	NCLLayoutEditorActionBarContributor nclLayoutActionBarContributor = null;
+	//layout editor, not in use for now
+	//NCLLayoutEditorActionBarContributor nclLayoutActionBarContributor = null;
 	IEditorPart activeNestedEditor = null;
 
 	public NCLMultiPageActionBarContributor() {
 		super();
 		nclActionContributor = new NCLActionContributor();
-		nclLayoutActionBarContributor = new NCLLayoutEditorActionBarContributor();
+		//layout editor, not in use for now
+		//nclLayoutActionBarContributor = new NCLLayoutEditorActionBarContributor();
 	}
 
 	public void init(IActionBars bars, IWorkbenchPage page) {
 		//super.init(bars, page);
 		nclActionContributor.init(bars);
-		nclLayoutActionBarContributor.init(bars, page);
+
+		//nclLayoutActionBarContributor.init(bars, page);
     }
 	
 	public void init(IActionBars bars){
@@ -62,7 +62,8 @@ extends MultiPageEditorActionBarContributor{
 			
 		//else if(activeNestedEditor instanceof NCLEditor)
 		nclActionContributor.init(bars);
-		nclLayoutActionBarContributor.init(bars);
+		//layout editor, not in use for now
+		//nclLayoutActionBarContributor.init(bars);
 	}
 	
 	public void setActivePage(IEditorPart activeEditor) {
@@ -91,10 +92,12 @@ extends MultiPageEditorActionBarContributor{
 	    if (part instanceof MultiPageEditorPart) {
 	        part = ((NCLMultiPageEditor) part).getActivePageAsEditor();
 	        activeNestedEditor = part;
+	        /* layout editor, not in use for now
 	        if(part instanceof NCLLayoutEditor){
 	        	nclLayoutActionBarContributor.setActiveEditor(part);
 	        }
-	        else if(part instanceof NCLEditor){
+	        else*/ 
+	        if(part instanceof NCLEditor){
 	        	nclActionContributor.setActiveEditor(part);
 	        }
 	    }
@@ -203,7 +206,8 @@ extends MultiPageEditorActionBarContributor{
 	 */
 	public void dispose() {
 		nclActionContributor.dispose();
-		nclLayoutActionBarContributor.dispose();
+		//layout editor, not in use for now
+		//nclLayoutActionBarContributor.dispose();
 		super.dispose();
 		//setActiveEditor(null);
 //		/getActionBars().clearGlobalActionHandlers();

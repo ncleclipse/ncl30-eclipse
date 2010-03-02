@@ -39,14 +39,12 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
-import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor;
-import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditorActionBarContributor;
 import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 
 public class NCLMultiPageEditor extends MultiPageEditorPart implements IResourceChangeListener{
 	/** The text editor used in page 0. */
 	private NCLEditor editor = null;
-	private NCLLayoutEditor layoutEditor = null;
+	//private NCLLayoutEditor layoutEditor = null;
 	
 	/**
 	 * Creates a multi-page editor example.
@@ -64,6 +62,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 			editor = new NCLEditor();
 			int index = addPage(editor, getEditorInput());
 			setPageText(index, "NCL File");
+			updateTitle();
 		} catch (PartInitException e) {
 			ErrorDialog.openError(
 				getSite().getShell(),
@@ -77,18 +76,18 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	 * which allows you to change the font used in page 2.
 	 */
 	void createLayoutViewPage() {
-		try {
-			layoutEditor = new NCLLayoutEditor();
-			int index = addPage(layoutEditor, getEditorInput());
-			layoutEditor.setNclSourceDocument((NCLSourceDocument)editor.getInputDocument());
-			setPageText(index, "Layout");
-		} catch (PartInitException e) {
-			ErrorDialog.openError(
-				getSite().getShell(),
-				"Error creating nested layout editor",
-				null,
-				e.getStatus());
-		}
+//		try {
+			//layoutEditor = new NCLLayoutEditor();
+			//int index = addPage(layoutEditor, getEditorInput());
+			//layoutEditor.setNclSourceDocument((NCLSourceDocument)editor.getInputDocument());
+			//setPageText(index, "Layout");
+//		} catch (PartInitException e) {
+//			ErrorDialog.openError(
+//				getSite().getShell(),
+//				"Error creating nested layout editor",
+//				null,
+//				e.getStatus());
+//		}
 	}
 	
 	/**
@@ -99,7 +98,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 		if(NCLEditorPlugin.getDefault().getPreferenceStore().
 				getBoolean(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE) 
 			)
-			createLayoutViewPage();
+//			createLayoutViewPage();
 		updateTitle();
 	}
 	/**
@@ -118,10 +117,10 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 		IEditorPart editor = getEditor(0);
 		editor.doSave(monitor);
 		//Ajeitar
-		if(layoutEditor != null){
-			editor = getEditor(1);
-			editor.doSave(monitor);
-		}
+		//if(layoutEditor != null){
+		//	editor = getEditor(1);
+		//	editor.doSave(monitor);
+		//}
 		updateTitle();
 	}
 	/**
@@ -163,16 +162,18 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements IResource
 	 * Calculates the contents of page 1 when the it is activated.
 	 */
 	NCLActionContributor nclActionContributor = null;
-	NCLLayoutEditorActionBarContributor nclLayoutActionBarContributor = null;
+	//NCLLayoutEditorActionBarContributor nclLayoutActionBarContributor = null;
 	boolean layoutActive = false;
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
 		if (newPageIndex == 1) {
-			layoutEditor.refreshGraphicalViewer();
+//			layoutEditor.refreshGraphicalViewer();
 			layoutActive = true;
 		}
-		else if(newPageIndex == 0 && layoutEditor != null && layoutActive){
-			layoutEditor.refreshNCLSourceDocument();
+		else if(newPageIndex == 0 && 
+//				layoutEditor != null && 
+				layoutActive){
+//			layoutEditor.refreshNCLSourceDocument();
 			layoutActive = false;
 		}
 
