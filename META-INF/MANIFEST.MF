@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: NCL Eclipse
 Bundle-SymbolicName: br.ufma.deinf.laws.ncleclipse;singleton:=true
-Bundle-Version: 1.4.13
+Bundle-Version: 1.4.20.qualifier
 Bundle-Activator: br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
@@ -15,8 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.ui.console,
- org.apache.xerces;bundle-version="2.9.0",
- org.eclipse.core.filesystem;bundle-version="1.2.0"
+ org.apache.xerces,
+ org.eclipse.core.filesystem
 Eclipse-LazyStart: true
 Bundle-ClassPath: bin/,
  icons/,
