@@ -1,35 +1,259 @@
-Validador com mensagens em Português.
-1. Área Funcional Structure
+Versao 1.4.20
+2010-03-03 01:21
+	- Remocao da dependencia do GEF (temporariamente, enquanto a visao de layout	
+		nao estah OK)
+	
+Versao 1.4.19
+	- Sugestao de valores para os atributos "name" e "value" da tag 
+		"descriptorParam"
+
+Versao 1.4.10
+	- Correcao do problema de ter que abrir de novo o editor para funcionar
+	a ediÃ§Ã£o de preferÃªncia das Preview's (OK)
+	- SugestÃ£o dos atributos default do elemento property
+		- Tem q dar uma revisada, pq aqueles atributos default sÃ£o apenas para
+		objetos de mÃ­dia "settings".
+		
+	- CorreÃ§Ã£o do tamanho do tooltip de texto
+	- Opcao de validacao on time
+	
+	- ncl30-validator
+		BUG: falso negativo para descriptorSwitch apontando para descriptor.
+			- Resolvido! 
+
+Versao 1.4.7
+	- Alguma mudanÃ§a causou problemas na sugestao de conteudo que estava em
+	outro arquivo! Problema resolvido!
+	
+Versao 1.4.6
+2009-11-18
+	- Correcao da sugestao do refer (Incompleta)
+	
+Versao 1.4.3
+2009-10-31
+	- ValidaÃ§Ã£o de source de arquivos, ainda com bugs quando em espaÃ§o!
+	
+2009-11-01
+	- Preferencia pra habilitar ou nao as previsualizaÃ§Ãµes!
+	
+Versao 1.4.2
+2009-10-30
+	- Desabilitado as pre-views temporariamente, pq tava abrindo infinitas 
+	janelas novas.
+		Problemas por causa do JComponent. 
+	
+Versao 1.4.1
+2009-10-14
+	- Mensagem de erro quando pedia para formatar (Ctrl+Shift+F).
+	Antes estava no codigo, agora foi movida para o NCLEditorMessages.properties 
+	Ok!
+	
+	- Autocomplete em XML que nao estah bem formado. 
+	Antes gerava uma mensagem de erro a partir da Excecao! Agora gera uma 
+	mensagem de erro e mesmo assim autocompleta (com o que foi possivel fazer o 
+	parser).
+	OK!
+	
+Versao 1.4.0 (beta)
+2009-09-30
+	- Pre-visualizacao de imagens em JComponent (OK)
+	- Pre-visualizacao de Video usando player do sistema
+	- Hiperlinks inversos (OK)
+	
+2009-09-24
+	- Validacao feita em background, idependente do usuario salvar o documento.
+		OK!
+		Resolvido BUG ()
+	
+2009-09-16
+	- Hiperlinks funcionando para mesmo arquivos e arquivos referenciados 
+	(Absolutos ou nao).
+	
+	- TODO: Ainda falta fazer para casos especiais (onde o escopo importa)
+	
+2009-08-07
+	- Removido "Run As->NCL Presentation" ateh que tenha uma versao do Ginga 
+	para windows.
+	
+Versao 1.3.5.3
+2009-08-05
+	- Sugestao do tipo comparator: Modificado ge e le para gte e lte, 
+	respectivamente.
+	
+2009-07-30
+	- Ordem dos atributos segundo atribuido em NCLStructure, inclusive sugestao.
+	
+Versao 1.3.5.1
+2009-07-15
+	- Possibilidade de abrir arquivos externos adicionada.
+	- TODO: Ainda falta marcacao de erros!
+	
+Versao 1.3.4
+2009-07-10
+	- Adicionado clip, beginOffset e endOffset ao elemento <area/>.
+	- Comentado o codigo que validava se um papel nao estava definido no 
+	conector (isso por causa do pegadali).
+	
+Versao 1.3.3
+2009-03-11
+	- Consertado posicao do cursor quando se inseria uma endtag pela sugestao.
+		OK!
+		
+	- CodificaÃ§Ã£o de mensagens de erro com acento.
+		OK!
+	
+2009-02-16
+	- Refer de contexto pode referenciar um id de um body, context ou ncl.
+	- PENDENTE: Provavelmente nÃ£o pode referenciar um contexto que seja seu pai 
+	(Verificar com o Luiz) 
+	
+Versao 1.3.2
+2009-02-14
+	- SugestÃ£o de descriptor no bindRule filho de descriptorSwitch funcionando
+	- SugestÃ£o dos ids dos descriptorSwitch's no atributo descriptor de media
+	
+Versao 1.1.0
+2009-01-07
+	- Sugestao de XML_END_TAG quando o usuario digita </
+	
+2008-11-07
+	- Adicionada paginas de Preferencia:
+		- View Preferences
+		- SSH Preferences
+
+2008-11-06
+	- Editor com duas paginas
+		- Textual
+		- Layout
+		
+2008-10-15
+	- SugestÃ£o de URL.
+		- Quase pronto. Problema no C:
+	
+	- SugestÃ£o de <area>, <property>, etc que sÃ£o do elemento que referencia 
+	outro.
+		Ok!
+		Ex:
+			<media id="m1">
+				<area id="a11"/>
+				<area id="a12"/>
+			</media>
+			<media id="m2" refer="m1">
+				<area id="a21"/>
+			</media>
+		So esta sugerindo a11 e a12. Deve sugerir a21 tambem!
+		  
+	- Enter depois do fecha elemento (</>). Antes dava um tab. Agora nao!
+		Ok!
+		
+2008-08-26
+	- Tooltip do erro/warning aparecendo
+		Ok!
+		
+Versao 1.0.0
+2008-07-23
+	- Mensagens do Emulador no console. 
+		Ok!
+	
+2008-07-17
+	- Ctrl+Shift+F - Nao funciona. Soh funciona no Menu Edit->Format.
+		Resolvido. Ver plugin.xml org.eclipse.ui.bindings
+		
+2008-07-05
+	- Tocar o documento no Linux.
+		Ok!
+
+2008-07-03
+	- Bug no Format com Encoding - sempre setava UTF-8
+		Ok!
+	
+2008-07-01
+	- Tocar documento NCL atravï¿½s do Emulador (Launch)
+		Ok!
+ 
+2008-05-23
+	- attributteType eh opcional.
+		Ok! 
+	
+	- O arquivo de conectores nao tem extensao .conn, soh .ncl mesmo.
+		OK!
+		
+	- Sugestao do atributo refer de <media>, <context> e <switch>. (BUG)
+		*Sugere a propria media (Nao sugere Mais)!
+		OK!
+		
+2008-05-13
+    - Sugestao dos atributos instance de <media>
+      	Ok!
+      
+	- Sugestao dos tipos MIME para a midia.
+		Ok!
+		
+2008-05-02
+	- Implementar Folding
+		Ok!
+		
+2008-04-24
+	- Nao sugerir um atributo que jah estah preenchido!
+		Ok!
+	- Ajeitar o autocomplete para mostrar tags sem filho na forma:
+		<tagname at=''/>
+		Ok!
+		
+2008-03-13
+	- Auto identacao. ok!
+	- Resolvido parcialmente - Implementar XMLAutoIdentStrategy ok!
+
+2008-03-13
+	ContentOutline implementado.
+	Soh eh possivel navegar no documento atraves da arvore.
+	
+2008-03-10	
+	Formatacao automatica - Feito
+		(Aprender como executa um editorAction)
+
+2008-02-27
+	Wizard para criar um documento ncl basico + Connector Base.
+		Ok
+	
+2008-02-16
+	Basico do AutoComplete.
+	
+2008-02-10
+	Coloracao das tags. (Sem problemas)
+	
+-- VER ONDE COLOCAR ISSO DEPOIS --
+-- Acho q todos jÃ¡ foram resolvidos (nao sei em q versao :P) --
+Validador com mensagens em Portugues.
+1. Area Funcional Structure
   - Adicionado o valor "http://www.ncl.org.br/NCL3.0/CausalConnectorProfile"
   ao atributo XMLNS de NCL.
   
   - NULL era sugerido com atributo de HEAD (BUG corrigido).
   
-  - BODY é obrigado a ter um id! (BUG ou restrição)
+  - BODY eh obrigado a ter um id! (BUG ou restricao)
   
-2. Área funcional Layout
+2. Area funcional Layout
   
   - Atributo device de regionBase sugere agora os valores systemAudio(i)
   e systemScreen(i). O validador gera um warning caso o valor do atributo
-  não seja desta forma.
+  nao seja desta forma.
   
-  - Atributos do tipo SIZE não aceitam DOUBLE (bug)
+  - Atributos do tipo SIZE nao aceitam DOUBLE (bug)
   
-3. Área Funcional Components
+3. Area Funcional Components
 
   - Atributo type, sugere os tipos MIME definidos na norma.
   
-  - Atributo refer de media/context sugere a própria media/context (BUG).
+  - Atributo refer de media/context sugere a propria media/context (BUG).
   
   - Atributo instance de media sugere os valores new, instSame, gradSame.
   
-  - Tipo de dados do atributo coords de area com bug na validação. (BUG).
+  - Tipo de dados do atributo coords de area com bug na validacao. (BUG).
   
-  - Muitas dúvidas no switchPort.
+  - Muitas duvidas no switchPort.
   
- 
- 
-Sugestões baseadas em perspectivas:
+Sugestoes baseadas em perspectivas:
 - component do bind
 - interface do bind
 - role do bind
