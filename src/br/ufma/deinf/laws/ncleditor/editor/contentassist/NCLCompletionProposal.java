@@ -773,13 +773,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				String id = nclDoc.getAttributeValueFromCurrentTagName(offset,
 						"id");
-
+				
 				if (path.startsWith(currentFile.getParent()))
 					path = path.substring(currentFile.getParent().length() + 1);
 				if (id != null)
-					nclDoc.setAttribute(id, "src", path);
+					nclDoc.setAttributefromTag(id, "src", path, offset);
 				else
-					nclDoc.setAttributeFromTagname(tagname, "documentURI",
+					nclDoc.setAttributefromTag (tagname, "documentURI",
 							path, offset);
 
 				return;

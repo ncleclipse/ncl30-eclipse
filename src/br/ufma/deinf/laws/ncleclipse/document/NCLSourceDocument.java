@@ -33,6 +33,8 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.smartcardio.ATR;
+
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -42,6 +44,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditor;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
@@ -672,6 +676,7 @@ public class NCLSourceDocument extends Document {
 			pr = getPartition(r.getLength() + r.getOffset() + 1);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
+			return null;
 		}
 		return pr;
 	}
@@ -1152,13 +1157,70 @@ public class NCLSourceDocument extends Document {
 						aliasOffset.add(region.getOffset());
 				}
 				region = getNextPartition(region);
-			} while (!t.equals ("</ncl>"));
+			} while (!t.equals ("</ncl>") && region != null);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return aliasOffset;
+		}
+		
+		return aliasOffset;
+	}
+
+	/**
+	 * @param id
+	 * @param string
+	 * @param path
+	 */
+	public void setAttributefromTag(String id, String attr, String path, int offset) {
+		// TODO Auto-generated method stub
+		try {
+
+			
+			if (offset == -1) return;
+			ITypedRegion region;
+			
+			region = getPartition(offset);
+			int off = region.getOffset();
+			
+			String text = get (region.getOffset(),region.getLength());
+			boolean firstQuote = false;
+			String attributeName = "";
+			String attributeValue = "";
+			for (int i=0; i<text.length(); i++) {
+				if (text.charAt(i)=='\"' || text.charAt(i)=='\'') 
+					if (!firstQuote)
+						firstQuote = true;
+					else{
+						String[] str = attributeName.split(" ");
+						Vector <String> v = new Vector <String> ();
+						for (String s : str)
+							if (!s.equals("")) v.add(s);			  				
+		
+						if (v.get(v.size() - 1).equals(attr)) { 
+							replace(off + i - attributeValue.length(), attributeValue.length(), path);
+							return;
+						}					
+						attributeName = "";
+						attributeValue = "";
+						firstQuote = false;
+					}
+				else{
+					if (firstQuote) 
+						attributeValue += text.charAt(i);
+					else{
+						if (text.charAt(i)=='='){
+							continue;
+						}
+						attributeName += text.charAt(i);
+					}
+				}
+				
+			}
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return aliasOffset;
 	}
 
 }
