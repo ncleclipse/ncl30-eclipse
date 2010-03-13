@@ -770,16 +770,16 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		// sources attributes
 		if ((tagname.equals("media") && attribute.equals("src"))
-				|| (tagname.equals("importBase") && attribute
+				|| (attribute
 						.equals("documentURI"))
 				|| (tagname.equals("descriptor")
 						&& (attribute.equals("focusSrc")) || attribute
 						.equals("focusSelSrc"))) {
-
 			// if the user preferences is to open a window to select a file
 			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
 					PreferenceConstants.P_POPUP_SUGESTION)) {
-				FileDialog fileDialog = new FileDialog(new Shell(), SWT.OPEN);
+				FileDialog fileDialog = new FileDialog(PlatformUI.getWorkbench().
+						getActiveWorkbenchWindow().getShell(), SWT.OPEN);
 				fileDialog.setFilterPath(currentFile.getParent());
 				fileDialog.setText("OK");
 				String path = fileDialog.open();
@@ -792,7 +792,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				if (path.startsWith(currentFile.getParent()))
 					path = path.substring(currentFile.getParent().length() + 1);
 				if (id != null)
-					nclDoc.setAttributefromTag(id, "src", path, offset);
+					nclDoc.setAttributefromTag(id, attribute, path, offset);
 				else
 					nclDoc.setAttributefromTag(tagname, "documentURI", path,
 							offset);
