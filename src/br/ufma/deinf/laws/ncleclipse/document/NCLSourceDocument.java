@@ -33,8 +33,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.smartcardio.ATR;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -44,8 +42,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditor;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
