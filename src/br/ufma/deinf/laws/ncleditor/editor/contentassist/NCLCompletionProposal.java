@@ -98,8 +98,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private Image connectorImage = null;
 	private Image regionImage = null;
 	private Image fileImage = null;
-	
-	private HashMap <String, NCLSourceDocument> importedNCLDocs = new HashMap <String, NCLSourceDocument> (); 
+
+	private HashMap<String, NCLSourceDocument> importedNCLDocs = new HashMap<String, NCLSourceDocument>();
 
 	/**
 	 * Responsavel por computar os valores que aparecerao na lista de sugestoes.
@@ -114,7 +114,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		IWorkbenchPage page = win.getActivePage();
 		IEditorPart editor = page.getActiveEditor();
 		List propList = new ArrayList();
-		
+
 		try {
 			if (editor.getEditorInput() instanceof IFileEditorInput) {
 				currentFile = new File(((IFileEditorInput) editor
@@ -134,30 +134,36 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		NCLSourceDocument nclDoc = NCLSourceDocument
 				.createNCLSourceDocumentFromIDocument(doc);
-				
-		Vector <Integer> aliasOffset = nclDoc.getAllTagsWithAttribute("alias");
+
+		Vector<Integer> aliasOffset = nclDoc.getAllTagsWithAttribute("alias");
 		for (int i : aliasOffset) {
-			String alias = nclDoc.getAttributeValueFromCurrentTagName(i, "alias");
-			if (alias != null && !alias.equals("")) 
+			String alias = nclDoc.getAttributeValueFromCurrentTagName(i,
+					"alias");
+			if (alias != null && !alias.equals(""))
 				if (!importedNCLDocs.containsKey(alias)) {
-					String documentURI = nclDoc.getAttributeValueFromCurrentTagName(i, "documentURI");
+					String documentURI = nclDoc
+							.getAttributeValueFromCurrentTagName(i,
+									"documentURI");
 					File importedFile = null;
-					if (documentURI != null
-							&& !documentURI.equals("")) {
-						importedFile = new File (documentURI);
+					if (documentURI != null && !documentURI.equals("")) {
+						importedFile = new File(documentURI);
 						if (!importedFile.isFile()) {
-							importedFile = new File (currentFile.getParent() + "/" + documentURI);
+							importedFile = new File(currentFile.getParent()
+									+ "/" + documentURI);
 						}
-						if (importedFile.isFile()){
+						if (importedFile.isFile()) {
 							BufferedReader reader;
 							try {
-								reader = new BufferedReader(new FileReader(importedFile));
+								reader = new BufferedReader(new FileReader(
+										importedFile));
 								String text = "";
-								while (reader.ready()) 
+								while (reader.ready())
 									text += reader.readLine() + "\n";
-								NCLSourceDocument ncl = new NCLSourceDocument(text);
+								NCLSourceDocument ncl = new NCLSourceDocument(
+										text);
 								IDocumentPartitioner partitioner = new XMLPartitioner(
-										new XMLPartitionScanner(), new String[] {
+										new XMLPartitionScanner(),
+										new String[] {
 												XMLPartitionScanner.XML_START_TAG,
 												XMLPartitionScanner.XML_PI,
 												XMLPartitionScanner.XML_DOCTYPE,
@@ -173,11 +179,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 								e.printStackTrace();
 							}
 						}
-						
+
 					}
 				}
 		}
-		
+
 		isAttributeValue = nclDoc.isAttributeValue(offset);
 		isAttribute = nclDoc.isAttribute(offset);
 		isEndTagName = nclDoc.isEndTagName(offset);
@@ -505,35 +511,38 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		if (tagname.equals("link") && attribute.equals("xconnector")) {
 			try {
-				
+
 				ITypedRegion region;
 				region = nclDoc.getPartition(offset);
 				String tag = nclDoc.get(region.getOffset(), region.getLength());
 				int begin = offset - qlen; // ok
-				int end = region.getOffset() + region.getLength() - begin; // N OK
+				int end = region.getOffset() + region.getLength() - begin; // N
+																			// OK
 
 				Collection nclReference = nclStructure.getNCLReference(tagname,
 						attribute);
-				
-				String rest = nclDoc.get(begin + nclDoc.
-						getAttributeValueFromCurrentTagName(offset, "xconnector").length() + 1, end - nclDoc.
-						getAttributeValueFromCurrentTagName(offset, "xconnector").length()-1 );
-				
-				
-				
-				Vector <Integer> childrenOff = nclDoc.getChildrenOffsets(offset);
-				HashMap <String, Integer> roles = new HashMap <String, Integer> ();
+
+				String rest = nclDoc.get(begin
+						+ nclDoc.getAttributeValueFromCurrentTagName(offset,
+								"xconnector").length() + 1, end
+						- nclDoc.getAttributeValueFromCurrentTagName(offset,
+								"xconnector").length() - 1);
+
+				Vector<Integer> childrenOff = nclDoc.getChildrenOffsets(offset);
+				HashMap<String, Integer> roles = new HashMap<String, Integer>();
 				if (childrenOff != null) {
 					for (Integer i : childrenOff) {
-						String role = nclDoc.getAttributeValueFromCurrentTagName(i, "role");
+						String role = nclDoc
+								.getAttributeValueFromCurrentTagName(i, "role");
 						if (role != null && !role.equals("")) {
 							if (roles.containsKey(role))
-								roles.put(role, roles.get(role)+1);
-							else roles.put(role, 1);
+								roles.put(role, roles.get(role) + 1);
+							else
+								roles.put(role, 1);
 						}
 					}
 				}
-				
+
 				Iterator it = nclReference.iterator();
 				while (it.hasNext()) {
 					NCLReference nclRefAtual = (NCLReference) it.next();
@@ -548,10 +557,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						text = refElement.getAttributeValue(nclRefAtual
 								.getRefAttribute());
 
-						
 						if (text == null || text.endsWith("#null"))
 							continue; // null
-						
+
 						String id = text;
 						int indexOfAlias = text.indexOf("#");
 						String alias = "";
@@ -561,11 +569,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							alias = text.substring(0, indexOfAlias);
 							nclDoc2 = importedNCLDocs.get(alias);
 						}
-							
+
 						String helpInfo = nclDoc2.getComment(id);
-					
+
 						String complete = text + "\"" + rest;
-						Vector <String> conditions = new Vector <String> ();
+						Vector<String> conditions = new Vector<String>();
 						int off = nclDoc2.getOffsetByID(id);
 						if (off != -1) {
 							Vector<Integer> childrenConnector = nclDoc2
@@ -575,37 +583,41 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 								if (Tag.equals("simpleCondition")
 										|| Tag.equals("simpleAction")
 										|| Tag.equals("attributeAssessment")) {
-									
+
 									String role = nclDoc2
 											.getAttributeValueFromCurrentTagName(
 													i, "role");
-									String min = nclDoc2.getAttributeValueFromCurrentTagName(i, "min");
+									String min = nclDoc2
+											.getAttributeValueFromCurrentTagName(
+													i, "min");
 									int Min = 1;
-									if (min!=null && !min.equals(""))
-										try{
+									if (min != null && !min.equals(""))
+										try {
 											Min = Integer.parseInt(min);
-											}
-										catch (NumberFormatException e) {
+										} catch (NumberFormatException e) {
 											Min = 1;
 										}
 									if (role != null && !role.equals("")) {
-										if (Tag.equals("simpleCondition")) conditions.add(role);
+										if (Tag.equals("simpleCondition"))
+											conditions.add(role);
 										int quant = 0;
-										if (roles.containsKey(role)) quant = roles.get(role);
-										for (int j=0; j < Min - quant; j++){
+										if (roles.containsKey(role))
+											quant = roles.get(role);
+										for (int j = 0; j < Min - quant; j++) {
 											String aux = "<bind role=\"" + role
 													+ "\" component=\"\" />";
 											complete += "\n"
-													+ getIndentLine(nclDoc2, offset)
-													+ "\t" + aux;
+													+ getIndentLine(nclDoc2,
+															offset) + "\t"
+													+ aux;
 										}
 									}
 								}
 
 							}
-							
+
 						}
-						
+
 						if (text.startsWith(qualifier)) {
 							cursor = complete.length();
 							CompletionProposal proposal = new CompletionProposal(
@@ -633,14 +645,14 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				|| tagname.equals("port") && attribute.equals("interface")
 				|| tagname.equals("mapping") && attribute.equals("interface")) {
 			NCLElement element;
-			
+
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(offset,
 					"component");
-			
+
 			if (perspective == null || perspective.equals(""))
 				return;
 			element = nclDocument.getElementById(perspective);
-			
+
 			while (element != null
 					&& element.getAttributes().get("refer") != null) {
 				Collection nclReference = nclStructure.getNCLReference(tagname,
@@ -702,11 +714,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (attribute.equals("name")) {
 				String name[] = { "background", "balanceLevel", "bassLevel",
 						"bottom", "bounds", "fit", "fontColor", "fontFamily",
-						"fontSize", "fontVariant", "fontWeight", "height",
-						"left", "location", "playerLife", "reusePlayer",
-						"right", "scroll", "size", "soundLevel", "style",
-						"top", "transparency", "trebleLevel", "visible",
-						"width", "zIndex" };
+						"fontStyle", "fontSize", "fontVariant", "fontWeight",
+						"height", "left", "location", "playerLife",
+						"reusePlayer", "right", "scroll", "size", "soundLevel",
+						"style", "top", "transparency", "trebleLevel",
+						"visible", "width", "zIndex" };
 
 				for (int i = 0; i < name.length; i++)
 					if (name[i].startsWith(qualifier)) {
@@ -743,6 +755,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				else if (name.equals("playerLife"))
 					prop = AttributeValues.getValues(DataType.PLAYER_LIFE);
+				
+				else if (name.equals("reusePlayer"))
+					prop = AttributeValues.getValues(DataType.BOOLEAN_VALUE);
 
 				for (String str : prop)
 					if (str.startsWith(qualifier))
@@ -773,14 +788,14 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				String id = nclDoc.getAttributeValueFromCurrentTagName(offset,
 						"id");
-				
+
 				if (path.startsWith(currentFile.getParent()))
 					path = path.substring(currentFile.getParent().length() + 1);
 				if (id != null)
 					nclDoc.setAttributefromTag(id, "src", path, offset);
 				else
-					nclDoc.setAttributefromTag (tagname, "documentURI",
-							path, offset);
+					nclDoc.setAttributefromTag(tagname, "documentURI", path,
+							offset);
 
 				return;
 			}
@@ -855,9 +870,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		CompletionProposal proposal = null;
 		Iterator it = null;
-		
-		
-		
+
 		if (perspective != null) {
 			// Pode sugerir o id do context ou body (desde que id do body
 			// exista)
@@ -885,7 +898,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 					if (text == null)
 						continue;
-					
+
 					String helpInfo = nclDoc.getComment(text);
 					Image image = null;
 					if (nclElement.getTagName().equals("region"))
@@ -941,10 +954,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					NCLElement refElement = ((NCLElement) it2.next());
 					text = refElement.getAttributeValue(nclRefAtual
 							.getRefAttribute());
-					
+
 					if (text == null || text.endsWith("#null"))
 						continue; // null
-					
+
 					String helpInfo = nclDoc.getComment(text);
 					Image image = null;
 					if (refElement.getTagName().equals("region"))
