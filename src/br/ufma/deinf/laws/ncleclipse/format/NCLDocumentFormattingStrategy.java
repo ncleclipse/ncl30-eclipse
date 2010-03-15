@@ -58,7 +58,7 @@ public class NCLDocumentFormattingStrategy extends ContextBasedFormattingStrateg
 		if (document != null) {
 			String text = document.get();
 			try {
-				DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+				/*DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 				builderFactory.setExpandEntityReferences(false);
 				DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
 				documentBuilder.setEntityResolver(new EntityResolver() {
@@ -72,14 +72,15 @@ public class NCLDocumentFormattingStrategy extends ContextBasedFormattingStrateg
 				
 				});
 				org.w3c.dom.Document dom = documentBuilder.parse(new InputSource(new StringReader(text)));
+				*/
 				XMLFormatter formatter = new XMLFormatter();
-				document.set(formatter.format(dom,text));
+				document.set(formatter.format(text));
 			} catch (Exception e) {
 				e.printStackTrace();
 				MessageDialog.openInformation(
 						null,
 						NCLEditorMessages.getInstance().getString("ContentFormat.Error.Title"),
-						NCLEditorMessages.getInstance().getString("ContentFormat.Error.XMLParserError"));
+						e.getMessage());
 			}
 		}
 	}
