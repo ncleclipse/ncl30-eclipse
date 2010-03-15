@@ -37,6 +37,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditor;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
+import br.ufma.deinf.laws.ncleclipse.navigation.NCLNavigationHistory;
 
 /**
  * This class implements an action responsible to open an editor for a file
@@ -142,5 +143,6 @@ public class OpenEditorAction extends Action {
 
 			}
 		}
+		NCLNavigationHistory.remove();
 	}
 }

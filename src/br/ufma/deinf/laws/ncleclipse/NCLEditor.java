@@ -70,6 +70,7 @@ import br.ufma.deinf.gia.labmint.message.MessageList;
 import br.ufma.deinf.gia.labmint.xml.XMLParserExtend;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
 import br.ufma.deinf.laws.ncleclipse.marker.MarkingErrorHandler;
+import br.ufma.deinf.laws.ncleclipse.navigation.NCLNavigationHistory;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLDocument;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
@@ -351,6 +352,33 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#handleCursorPositionChanged()
+	 */
+	@Override
+	public void handleCursorPositionChanged() {
+		// TODO Auto-generated method stub
+		NCLNavigationHistory.movedcursor(getCurrentFile().getAbsolutePath(),getCursorPosition());
+		super.handleCursorPositionChanged();
+	}
+	
+	public void setFocus(int lineOffset, int lineLength){
+		try {
+			resetHighlightRange();
+			setHighlightRange(getSourceViewer().getDocument().getLineOffset(--lineOffset), lineLength, true);
+			setFocus();
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void setFocus2(int lineOffset){
+		resetHighlightRange();
+		setHighlightRange(lineOffset, 0, true);
+		setFocus();
 	}
 
 	public void setFocusToElementId(String elementId) {

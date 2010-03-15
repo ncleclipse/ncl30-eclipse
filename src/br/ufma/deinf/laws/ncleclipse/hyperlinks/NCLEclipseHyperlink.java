@@ -84,6 +84,7 @@ public class NCLEclipseHyperlink implements IHyperlink {
 		IWorkbenchPage page = win.getActivePage();
 		NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
 				.getNCLEditor();
+		editor.setFocus2(region.getOffset());
 		if (text != null) {
 			try {
 				int indexOfPound = text.indexOf("#");
