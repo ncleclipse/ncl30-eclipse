@@ -607,7 +607,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 											String aux = "<bind role=\"" + role
 													+ "\" component=\"\" />";
 											complete += "\n"
-													+ getIndentLine(nclDoc2,
+													+ getIndentLine(nclDoc,
 															offset) + "\t"
 													+ aux;
 										}
