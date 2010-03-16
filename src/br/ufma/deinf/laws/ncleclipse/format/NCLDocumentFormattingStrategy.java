@@ -22,85 +22,64 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.format;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.LinkedList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 
-public class NCLDocumentFormattingStrategy extends ContextBasedFormattingStrategy {
-	 
+public class NCLDocumentFormattingStrategy extends
+		ContextBasedFormattingStrategy {
+
 	/** Documents to be formatted by this strategy */
-	private final LinkedList documents= new LinkedList();
-    
+	private final LinkedList documents = new LinkedList();
+
 	public NCLDocumentFormattingStrategy() {
 		super();
-    }
- 
+	}
+
 	/**
 	 * @see org.eclipse.jface.text.formatter.IFormattingStrategyExtension#format()
 	 */
 	public void format() {
-        super.format();
-     	final IDocument document= (IDocument)documents.removeFirst();
+		super.format();
+		final IDocument document = (IDocument) documents.removeFirst();
 		if (document != null) {
 			String text = document.get();
 			try {
-				/*DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-				builderFactory.setExpandEntityReferences(false);
-				DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
-				documentBuilder.setEntityResolver(new EntityResolver() {
-				
-					public InputSource resolveEntity(String publicId, String systemId)
-							throws SAXException, IOException {
-						InputSource entity;
-						entity = new InputSource(new StringReader(""));
-						return entity;
-					}
-				
-				});
-				org.w3c.dom.Document dom = documentBuilder.parse(new InputSource(new StringReader(text)));
-				*/
 				XMLFormatter formatter = new XMLFormatter();
 				document.set(formatter.format(text));
 			} catch (Exception e) {
 				e.printStackTrace();
-				MessageDialog.openInformation(
-						null,
-						NCLEditorMessages.getInstance().getString("ContentFormat.Error.Title"),
-						e.getMessage());
+				MessageDialog.openInformation(null, NCLEditorMessages
+						.getInstance().getString("ContentFormat.Error.Title"),
+						NCLEditorMessages.getInstance().getString(
+								"ContentFormat.Error.XMLParserError")
+								+ "(" + e.getMessage() + ")");
 			}
 		}
 	}
-     
-	
-    /**
- 	 * @see org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy#formatterStarts(org.eclipse.jface.text.formatter.IFormattingContext)
- 	 */
- 	public void formatterStarts(final IFormattingContext context) {
- 		super.formatterStarts(context);
- 		
- 		documents.addLast(context.getProperty(FormattingContextProperties.CONTEXT_MEDIUM));
- 	}
 
- 	/**
- 	 * @see org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy#formatterStops()
- 	 */
- 	public void formatterStops() {
- 		super.formatterStops();
+	/**
+	 * @see org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy#formatterStarts(org.eclipse.jface.text.formatter.IFormattingContext)
+	 */
+	public void formatterStarts(final IFormattingContext context) {
+		super.formatterStarts(context);
 
- 		documents.clear();
+		documents.addLast(context
+				.getProperty(FormattingContextProperties.CONTEXT_MEDIUM));
+	}
+
+	/**
+	 * @see org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy#formatterStops()
+	 */
+	public void formatterStops() {
+		super.formatterStops();
+
+		documents.clear();
 	}
 }
