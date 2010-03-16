@@ -781,7 +781,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				FileDialog fileDialog = new FileDialog(PlatformUI.getWorkbench().
 						getActiveWorkbenchWindow().getShell(), SWT.OPEN);
 				fileDialog.setFilterPath(currentFile.getParent());
-				fileDialog.setText("OK");
 				String path = fileDialog.open();
 				if (path == null)
 					return;
