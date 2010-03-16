@@ -50,7 +50,6 @@ public class URIProposer {
 	public URIProposer(String rootPath) throws URISyntaxException {
 		this.rootPath = UrlUtils.encodeURL(rootPath);
 		uriRoot = new URI(this.rootPath);
-		System.out.println(this.rootPath);
 		root = rootPath;
 	}
 
@@ -61,8 +60,10 @@ public class URIProposer {
 
 		if (isRelative) {
 			if (qualifier.contains("/")) {
-				System.out.println(uriRoot.getPath() + "/"
-						+ qualifier.substring(0, qualifier.lastIndexOf("/")));
+				/*
+				 * System.out.println(uriRoot.getPath() + "/" +
+				 * qualifier.substring(0, qualifier.lastIndexOf("/")));
+				 */
 				file = new File(uriRoot.getPath() + "/"
 						+ qualifier.substring(0, qualifier.lastIndexOf("/"))); // is
 				// relative
@@ -97,15 +98,17 @@ public class URIProposer {
 		path = aux.substring(0, aux.length() - qualifier.length());
 		parent = new File(path);
 		Vector<String> completions = new Vector<String>();
-		
-		if (aux.contains("//")) return completions;
+
+		if (aux.contains("//"))
+			return completions;
 		if (aux.startsWith("..") && aux.endsWith("../")) {
-			
+
 			if (aux.split("\\/").length >= root.split("\\/").length)
 				return completions;
 
-		} 
-		if ((!(parent.isDirectory() || parent.isFile())) || aux.startsWith(".."))
+		}
+		if ((!(parent.isDirectory() || parent.isFile()))
+				|| aux.startsWith(".."))
 			parent = new File(root + "/" + path);
 		if (!parent.isDirectory()) {
 			return completions;

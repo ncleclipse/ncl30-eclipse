@@ -47,7 +47,7 @@ public class XMLPartitioner extends FastPartitioner {
 
 	public void connect(IDocument document, boolean delayInitialization) {
 		super.connect(document, delayInitialization);
-		printPartitions(document);
+		//printPartitions(document);
 	}
 
 	public void printPartitions(IDocument document) {

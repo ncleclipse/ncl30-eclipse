@@ -204,7 +204,7 @@ public class NCLNewWizardPage extends WizardPage {
 			updateStatus("File name must be valid");
 			return;
 		}
-		System.out.println(fileName);
+		//System.out.println(fileName);
 		if (!fileName.endsWith(".ncl")) {
 				updateStatus("File extension must be \""+getExtension()+"\"");
 				return;

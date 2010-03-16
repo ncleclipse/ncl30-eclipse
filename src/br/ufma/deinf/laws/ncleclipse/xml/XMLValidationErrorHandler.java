@@ -63,7 +63,7 @@ public class XMLValidationErrorHandler extends DefaultHandler
 	{
 		XMLValidationError validationError = nextError(e, isFatal);
 		errorList.add(validationError);
-		System.out.println(validationError.toString());
+		//System.out.println(validationError.toString());
 
 	}
 
