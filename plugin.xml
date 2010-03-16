@@ -199,7 +199,7 @@ extension point="org.eclipse.debug.ui.launchShortcuts">
          type="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration">
    </launchConfigurationTabGroup>
    <launchConfigurationTabGroup
-         class="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaLaunchTabGroup"
+         class="br1.ufma.deinf.laws.ncleclipse.launch.ui.GingaLaunchTabGroup"
          id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaLauchConfigurationTabGroup"
          type="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration">
    </launchConfigurationTabGroup>
@@ -220,6 +220,12 @@ extension point="org.eclipse.debug.ui.launchShortcuts">
    </tab>
 </extension>
 
+<extension point="org.eclipse.ui.bindings">
+		<key sequence="Alt+Left"
+			commandId="uk.co.example.actions.togglecomment"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="uk.co.example.ampleEditorScope"/>
+</extension>
 
 <!--
 <extension
@@ -232,4 +238,46 @@ extension point="org.eclipse.debug.ui.launchShortcuts">
    </archivehandler>
 </extension>
 -->
+
+<extension point="org.eclipse.ui.commands">
+   <command
+         id="idcommand"
+         name="commandname">
+   </command>
+   <command
+         id="idcommand2"
+         name="commandname2">
+   </command>
+</extension>
+
+<extension point="org.eclipse.ui.handlers">
+  <handler
+        class="br.ufma.deinf.laws.ncleclipse.navigation.NCLBackwardNavigation"
+        commandId="idcommand">
+  </handler>
+  
+  <handler
+        class="br.ufma.deinf.laws.ncleclipse.navigation.NCLForwardNavigation"
+        commandId="idcommand2">
+  </handler>
+</extension>
+
+<extension point="org.eclipse.ui.bindings">
+  <key
+        commandId="idcommand"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="Alt+ARROW_LEFT"
+        contextId="org.eclipse.ui.textEditorScope">
+  </key>
+  
+  <key
+        commandId="idcommand2"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+        sequence="Alt+ARROW_RIGHT"
+        contextId="org.eclipse.ui.textEditorScope">
+  </key>
+</extension>
+
+
+
 </plugin>
