@@ -62,7 +62,7 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
 			IRegion region, boolean canShowMultipleHyperlinks) {
-		
+
 		// get the region offset
 		int offset = region.getOffset();
 		NCLSourceDocument doc = (NCLSourceDocument) textViewer.getDocument();
@@ -70,7 +70,7 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 		boolean tmp = false;
 		if (!tmp) { // test
 			try {
-				
+
 				typedRegion = doc.getPartition(region.getOffset());
 
 				// Return null if partition is different to XML_START_TAG
@@ -115,6 +115,12 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 
 							Vector<NCLElement> v = nclDocument.getElements(
 									tagname, attrValue);
+
+							if (v == null)
+								return null; // Without this the next code
+												// generate a
+												// NullPonterExcepttion
+
 							IHyperlink[] values = new NCLEclipseHyperlink[v
 									.size()];
 
@@ -127,13 +133,13 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 											textViewer, region1, v.get(i)
 													.getAttributeValue("id"), v
 													.get(i));
-								
+
 								return values;
 							}
 						} else {
 							IRegion region1 = new Region(startAttributeValue,
 									attrValue.length());
-			
+
 							return new IHyperlink[] { new NCLEclipseHyperlink(
 									textViewer, region1, attrValue) };
 						}
@@ -141,24 +147,25 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 				}
 
 			} catch (BadLocationException e) {
-				e.printStackTrace();
+				// Do nothing, just it isn't a hyperlink...
 			}
-			
+
 			return null;
 		}
 		IRegion lineInfo;
 		String line;
+		
 		try {
 			lineInfo = doc.getLineInformationOfOffset(offset);
 			line = doc.get(lineInfo.getOffset(), lineInfo.getLength());
 		} catch (BadLocationException ex) {
-			
+
 			return null;
 		}
 		int begin = line.indexOf("<");
 		int end = line.indexOf(">");
-		if (end < 0 || begin < 0 || end == begin + 1){
-			
+		if (end < 0 || begin < 0 || end == begin + 1) {
+
 			return null;
 		}
 		String text = line.substring(begin + 1, end);
@@ -166,7 +173,7 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 				.length() - 1);
 
 		// Return new Hiperlink
-		
+
 		return new IHyperlink[] { new NCLEclipseHyperlink(textViewer, region1,
 				text) };
 	}
