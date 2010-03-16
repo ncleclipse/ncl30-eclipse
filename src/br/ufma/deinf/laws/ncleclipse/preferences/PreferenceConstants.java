@@ -40,4 +40,6 @@ public class PreferenceConstants {
 	public static final String P_VALIDATION = "nclEclipseValidationPreference";
 	
 	public static final String P_POPUP_SUGESTION = "nclEclipsePopUPSugestionPreference";
+	
+	public static final String P_LINK_AUTO_COMPLETE = "nclEclipseLinkAutoComplete";
 }

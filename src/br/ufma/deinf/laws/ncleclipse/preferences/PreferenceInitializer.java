@@ -50,6 +50,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_PREVIEW, false);
 		store.setDefault(PreferenceConstants.P_VALIDATION,true);
 		store.setDefault(PreferenceConstants.P_POPUP_SUGESTION, false);
+		store.setDefault(PreferenceConstants.P_LINK_AUTO_COMPLETE, false);
 	}
 
 }

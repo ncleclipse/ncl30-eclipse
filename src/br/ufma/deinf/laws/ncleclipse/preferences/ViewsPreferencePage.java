@@ -74,6 +74,11 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 		addField(new BooleanFieldEditor(PreferenceConstants.P_POPUP_SUGESTION,
 				NCLEditorMessages.getInstance().getString(
 						"Preferences.PopupSRC"), getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(PreferenceConstants.P_LINK_AUTO_COMPLETE,
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.LinkComp"), getFieldEditorParent()));
+
 
 	}
 
