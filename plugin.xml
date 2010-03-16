@@ -58,6 +58,8 @@
    </extension -->
    <!-- End of Editor Actions -->
    
+   
+   <!-- Wizards -->
    <extension
          point="org.eclipse.ui.newWizards">
       <category
@@ -88,23 +90,65 @@
             name="%ActionDefinition.format.name">
       </command>
    </extension>
-   <extension
-         id="nclerror"
-         name="NCL Error"
-         point="org.eclipse.core.resources.markers">
-      <super
-            type="org.eclipse.core.resources.markers.problemmarker">
-      </super>
-      <super
-            type="org.eclipse.core.resources.markers.textmarker">
-      </super>
-      <persistent
-            value="true">
-      </persistent>
+   
+   <!-- Error marker -->
+   <extension	id="nclerror"
+         		name="NCL Error"
+         		point="org.eclipse.core.resources.markers">
+         		
+      <super type="org.eclipse.core.resources.markers.problemmarker"/>
+      
+      <super type="org.eclipse.core.resources.markers.textmarker"/>
+      
+      <persistent value="true"/>
    </extension>
    
-<!-- Removido ateh que Exista uma versao do Ginga para windows
-extension point="org.eclipse.debug.ui.launchShortcuts">
+   
+   <!-- Preferences pages -->
+	<extension point="org.eclipse.ui.preferencePages">
+	   <page
+	         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+	         class="br.ufma.deinf.laws.ncleclipse.preferences.ViewsPreferencePage"
+	         id="br.ufma.deinf.laws.ncleclipse.preferences.NCLEclipseViewsPreferencePage"
+	         name="NCL Eclipse Views Preferences">
+	   </page>
+	   <!-- Disabled by now
+	   page
+	         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+	         class="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
+	         id="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
+	         name="SHH Run Preferences">
+	   </page>
+	   <page
+	         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+	         class="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
+	         id="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
+	         name="Run Ginga-NCL">
+	   </page>
+	   <page
+	         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+	         class="br.ufma.deinf.laws.ncleclipse.preferences.Language"
+	         id="br.ufma.deinf.laws.ncleclipse.preferences.Language"
+	         name="NCL Language">
+	   </page-->
+	</extension>
+	
+	<extension point="org.eclipse.core.runtime.preferences">
+   		<initializer
+        	class="br.ufma.deinf.laws.ncleclipse.preferences.PreferenceInitializer">
+   		</initializer>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+   		<page
+         	class="br.ufma.deinf.laws.ncleclipse.preferences.NCLPreferencePage"
+         	id="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
+         	name="NCL"/>
+	</extension>
+
+	<!-- Launch Configuration :: Running NCL document -->
+	<!-- Removido ateh que Exista uma versao do Ginga para windows
+		extension point="org.eclipse.debug.ui.launchShortcuts">
     <shortcut label="NCL Presentation" 
        icon="icons/sample.gif" 
        modes="run, debug" 
@@ -122,110 +166,87 @@ extension point="org.eclipse.debug.ui.launchShortcuts">
      	<perspective id="org.eclipse.debug.ui.DebugPerspective"/>
     </shortcut>
   </extension -->
-<extension
-      point="org.eclipse.ui.preferencePages">
-   <page
-         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
-         class="br.ufma.deinf.laws.ncleclipse.preferences.ViewsPreferencePage"
-         id="br.ufma.deinf.laws.ncleclipse.preferences.NCLEclipseViewsPreferencePage"
-         name="NCL Eclipse Views Preferences">
-   </page>
-   <!--page
-         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
-         class="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
-         id="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
-         name="SHH Run Preferences">
-   </page>
-   <page
-         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
-         class="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
-         id="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
-         name="Run Ginga-NCL">
-   </page>
-   <page
-         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
-         class="br.ufma.deinf.laws.ncleclipse.preferences.Language"
-         id="br.ufma.deinf.laws.ncleclipse.preferences.Language"
-         name="NCL Language">
-   </page-->
-</extension>
-<extension
-      point="org.eclipse.core.runtime.preferences">
-   <initializer
-         class="br.ufma.deinf.laws.ncleclipse.preferences.PreferenceInitializer">
-   </initializer>
-</extension>
-<extension
-      point="org.eclipse.ui.preferencePages">
-   <page
-         class="br.ufma.deinf.laws.ncleclipse.preferences.NCLPreferencePage"
-         id="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
-         name="NCL">
-   </page>
-</extension>
-<extension
-      point="org.eclipse.debug.core.launchConfigurationTypes">
-   <launchConfigurationType
-         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaLaunchConfiguration"
-         id="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration"
-         modes="run,debug"
-         name="Ginga Player">
-   </launchConfigurationType>
-   <launchConfigurationType
-         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaVMLaunchConfiguration"
-         id="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration"
-         modes="run, debug"
-         name="Ginga Virtual Machine">
-   </launchConfigurationType>
-</extension>
-<extension
-      point="org.eclipse.debug.ui.launchConfigurationTypeImages">
-   <launchConfigurationTypeImage
-         configTypeID="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration"
-         icon="icons/gingavm-launching.gif"
-         id="br.ufma.deinf.laws.nleclipse.launching.ui.GingaVMLaunchConfigurationTypeImage">
-   </launchConfigurationTypeImage>
-   <launchConfigurationTypeImage
-         configTypeID="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration"
-         icon="icons/gingaemulator-launching.gif"
-         id="br.ufma.deinf.laws.nleclipse.launching.ui.GingaLaunchConfigurationTypeImage">
-   </launchConfigurationTypeImage>
-</extension>
-<extension
-      point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-   <launchConfigurationTabGroup
-         class="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaVMTabGroup"
-         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaVMLauchConfigurationTabGroup"
-         type="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration">
-   </launchConfigurationTabGroup>
-   <launchConfigurationTabGroup
-         class="br1.ufma.deinf.laws.ncleclipse.launch.ui.GingaLaunchTabGroup"
-         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaLauchConfigurationTabGroup"
-         type="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration">
-   </launchConfigurationTabGroup>
-</extension>
-<extension
-      point="org.eclipse.debug.ui.launchConfigurationTabs">
-   <tab
-         class="launchconfigurationtab.LaunchConfigurationTab1"
-         group="ncl30-eclipse.tab1"
-         id="ncl30-eclipse.tab1"
-         name="ncl30-eclipse.tab1">
-   </tab>
-   <tab
-         class="launchconfigurationtab.LaunchConfigurationTab2"
-         group="ncl30-eclipse.tab2"
-         id="ncl30-eclipse.tab2"
-         name="ncl30-eclipse.tab2">
-   </tab>
-</extension>
+	<extension
+	      point="org.eclipse.debug.core.launchConfigurationTypes">
+	   <launchConfigurationType
+	         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaLaunchConfiguration"
+	         id="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration"
+	         modes="run,debug"
+	         name="Ginga Player">
+	   </launchConfigurationType>
+	   <launchConfigurationType
+	         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaVMLaunchConfiguration"
+	         id="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration"
+	         modes="run, debug"
+	         name="Ginga Virtual Machine">
+	   </launchConfigurationType>
+	</extension>
+	<extension
+		point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+   		
+   		<launchConfigurationTypeImage
+	         configTypeID="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration"
+	         icon="icons/gingavm-launching.gif"
+	         id="br.ufma.deinf.laws.nleclipse.launching.ui.GingaVMLaunchConfigurationTypeImage">
+		</launchConfigurationTypeImage>
+		<launchConfigurationTypeImage
+	         configTypeID="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration"
+	         icon="icons/gingaemulator-launching.gif"
+	         id="br.ufma.deinf.laws.nleclipse.launching.ui.GingaLaunchConfigurationTypeImage">
+		</launchConfigurationTypeImage>
+	</extension>
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+	   <launchConfigurationTabGroup
+	         class="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaVMTabGroup"
+	         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaVMLauchConfigurationTabGroup"
+	         type="br.ufma.deinf.laws.ncleclipse.launching.GingaVMConfiguration">
+	   </launchConfigurationTabGroup>
+	   <launchConfigurationTabGroup
+	         class="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaLaunchTabGroup"
+	         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaLauchConfigurationTabGroup"
+	         type="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration">
+	   </launchConfigurationTabGroup>
+	</extension>
 
-<extension point="org.eclipse.ui.bindings">
-		<key sequence="Alt+Left"
-			commandId="uk.co.example.actions.togglecomment"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			contextId="uk.co.example.ampleEditorScope"/>
-</extension>
+	<!-- History Navigation -->
+	<!-- extension point="org.eclipse.ui.bindings">
+			<key sequence="Alt+Left"
+				commandId="uk.co.example.actions.togglecomment"
+				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+				contextId="uk.co.example.ampleEditorScope"/>
+	</extension -->
+	
+	<extension point="org.eclipse.ui.commands">
+		<command 	id="br.ufma.deinf.laws.ncleclipse.actions.navigation.backward" 
+					name="NCL Backward Navigation"/>
+					
+		<command 	id="br.ufma.deinf.laws.ncleclipse.actions.navigation.forward" 
+					name="NCL Backward Navigation"/>
+	</extension>
+
+	<extension point="org.eclipse.ui.handlers">
+		<handler class="br.ufma.deinf.laws.ncleclipse.navigation.NCLBackwardNavigation"
+	        commandId="br.ufma.deinf.laws.ncleclipse.actions.navigation.backward">
+		</handler>
+  
+		<handler class="br.ufma.deinf.laws.ncleclipse.navigation.NCLForwardNavigation"
+			commandId="br.ufma.deinf.laws.ncleclipse.actions.navigation.forward">
+		</handler>
+	</extension>
+
+	<extension point="org.eclipse.ui.bindings">
+	  <key  commandId="br.ufma.deinf.laws.ncleclipse.actions.navigation.backward"
+	        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+	        sequence="Alt+ARROW_LEFT"
+	        contextId="org.eclipse.ui.textEditorScope">
+	  </key>
+  
+	  <key  commandId="br.ufma.deinf.laws.ncleclipse.actions.navigation.forward"
+	        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+	        sequence="Alt+ARROW_RIGHT"
+	        contextId="org.eclipse.ui.textEditorScope">
+	  </key>
+	</extension>
 
 <!--
 <extension
@@ -238,46 +259,5 @@ extension point="org.eclipse.debug.ui.launchShortcuts">
    </archivehandler>
 </extension>
 -->
-
-<extension point="org.eclipse.ui.commands">
-   <command
-         id="idcommand"
-         name="commandname">
-   </command>
-   <command
-         id="idcommand2"
-         name="commandname2">
-   </command>
-</extension>
-
-<extension point="org.eclipse.ui.handlers">
-  <handler
-        class="br.ufma.deinf.laws.ncleclipse.navigation.NCLBackwardNavigation"
-        commandId="idcommand">
-  </handler>
-  
-  <handler
-        class="br.ufma.deinf.laws.ncleclipse.navigation.NCLForwardNavigation"
-        commandId="idcommand2">
-  </handler>
-</extension>
-
-<extension point="org.eclipse.ui.bindings">
-  <key
-        commandId="idcommand"
-        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-        sequence="Alt+ARROW_LEFT"
-        contextId="org.eclipse.ui.textEditorScope">
-  </key>
-  
-  <key
-        commandId="idcommand2"
-        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-        sequence="Alt+ARROW_RIGHT"
-        contextId="org.eclipse.ui.textEditorScope">
-  </key>
-</extension>
-
-
 
 </plugin>

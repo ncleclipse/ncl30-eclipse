@@ -1,6 +1,10 @@
 Versao 1.4.20
+2010-03-16
+	- ALT+ARROW_LEFT e ALT+ARROW_RIGHT agora funcionando no mesmo arquivo. 
+		(lucianocf)
+	
 2010-03-15 23:03
-	- Ctrl+Shift+F resolvido sem modificar a ordem dos atributos. (by lucianocf)
+	- Ctrl+Shift+F resolvido sem modificar a ordem dos atributos. (lucianocf)
 	
 2010-03-03 01:21
 	- Remocao da dependencia do GEF (temporariamente, enquanto a visao de layout	
