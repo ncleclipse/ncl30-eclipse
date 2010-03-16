@@ -191,7 +191,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if (selectedRange.y > 0) {
 			// TODO:
 		} else {
-			System.out.println("Attributo = " + isAttribute);
+			//System.out.println("Attributo = " + isAttribute);
 			String qualifier = getQualifier(doc, offset);
 			if (isEndTagName) {
 				computeEndTagName(doc, qualifier, offset, propList);
@@ -249,8 +249,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				.createNCLSourceDocumentFromIDocument(doc);
 
 		// fazer um filtro para buscar apenas as tags filhas da getFatherTagname
-		System.out.println("## Log: Pai da tag onde estou digitando : "
-				+ nclDoc.getFatherTagName(offset));
+		/* System.out.println("## Log: Pai da tag onde estou digitando : "
+				+ nclDoc.getFatherTagName(offset));*/
 		Map<String, Map<String, Character>> nesting = nclStructure.getNesting();
 		Vector<String> childrenStr = new Vector<String>();
 		// Procuro todos os filhos da tagname do meu pai e coloco no vector
@@ -375,7 +375,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		String tagname = nclDoc.getCurrentTagname(offset);
 		String attribute = nclDoc.getCurrentAttribute(offset);
-		System.out.println("tag: " + tagname + " attr:" + attribute);
+		//System.out.println("tag: " + tagname + " attr:" + attribute);
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		Vector<String> prop = AttributeValues.getValues(nclStructure
 				.getDataType(tagname, attribute));
@@ -385,7 +385,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				if (prop.get(i).startsWith(qualifier)) {
 					String text = prop.get(i);
 					String texttoshow = text;
-					System.out.println(text);
+					//System.out.println(text);
 					// if(!qualifier.startsWith("\"") &&
 					// !qualifier.startsWith("\'"))
 					// text = "\""+text+"\"";
@@ -437,7 +437,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
 					.getFatherPartitionOffset(offset), "id");
-			System.out.println(perspective);
+			//System.out.println(perspective);
 			if (perspective == null) {
 				if (fatherTagName.equals("body")) {
 					perspective = nclDoc.getAttributeValueFromCurrentTagName(
@@ -1024,9 +1024,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		NCLSourceDocument nclDoc = NCLSourceDocument
 				.createNCLSourceDocumentFromIDocument(doc);
 
-		System.out.println("Computing Attributes proposals...");
+		//System.out.println("Computing Attributes proposals...");
 		String currentTagname = nclDoc.getCurrentTagname(offset);
-		System.out.println("Current Tag Name = " + currentTagname);
+		//System.out.println("Current Tag Name = " + currentTagname);
 
 		List<String> attributeTyped = nclDoc.getAttributesTyped(offset);
 
@@ -1188,8 +1188,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String partitionText = document.get(partitionOffset,
 					partitionLength);
 
-			System.out.println("Partition text: "
-					+ document.get(partitionOffset, region.getLength()));
+			/*System.out.println("Partition text: "
+					+ document.get(partitionOffset, region.getLength()));*/
 			char c = partitionText.charAt(index);
 
 			if (Character.isWhitespace(c)
