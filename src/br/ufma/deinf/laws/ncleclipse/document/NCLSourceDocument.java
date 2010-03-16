@@ -130,16 +130,16 @@ public class NCLSourceDocument extends Document {
 
 			text = get(region.getOffset(), region.getLength());
 			region = getPartition(region.getOffset() - 1);
-			System.out.println(text);
+			//System.out.println(text);
 			do { // procura a tag pai
 				text = get(region.getOffset(), region.getLength());
-				System.out.println(text);
+				//System.out.println(text);
 				if (region.getType().equals(XMLPartitionScanner.XML_END_TAG))
 					pilha.push(new Integer(1));
 				else if (region.getType().equals(
 						XMLPartitionScanner.XML_START_TAG)
 						&& !text.endsWith("/>")) {
-					System.out.println(pilha.size());
+					//System.out.println(pilha.size());
 					if (pilha.size() == 0)
 						break;
 					pilha.pop();
@@ -510,7 +510,7 @@ public class NCLSourceDocument extends Document {
 					return true;
 				if (Character.isLetter(ch))
 					continue;
-				System.out.println("ch = " + ch);
+				//System.out.println("ch = " + ch);
 				return false;
 			}
 		} catch (BadLocationException e) {
@@ -1073,7 +1073,8 @@ public class NCLSourceDocument extends Document {
 				if (importedComments.containsKey(id))
 					return importedComments.get(id);
 				return null;
-			}					
+			}
+			
 			int off = getOffsetByID(id);
 			if (off != -1){
 				ITypedRegion r = getPartition(off);

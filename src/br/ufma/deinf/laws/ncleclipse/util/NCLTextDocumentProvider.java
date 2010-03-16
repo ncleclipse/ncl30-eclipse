@@ -51,7 +51,7 @@ public class NCLTextDocumentProvider extends TextFileDocumentProvider {
 		if (info == null) {
 			info = createEmptyFileInfo();
 		}
-		System.out.println(info.fTextFileBuffer.getDocument().getClass());
+		//System.out.println(info.fTextFileBuffer.getDocument().getClass());
 		IDocument document = info.fTextFileBuffer.getDocument();
 		if (document != null) {
 			IDocumentPartitioner partitioner = new XMLPartitioner(

@@ -65,7 +65,7 @@ public class OutlineLabelProvider implements ILabelProvider
 		{
 			XMLElement dtdElement = (XMLElement) element;
 			String textToShow = dtdElement.getName();
-			System.out.println("text to show = " + textToShow);
+			//System.out.println("text to show = " + textToShow);
 			String idAttributte = dtdElement.getAttributeValue("id");
 			if(idAttributte == null || idAttributte.equals("")){
 				String nameAttribute = dtdElement.getAttributeValue("name");

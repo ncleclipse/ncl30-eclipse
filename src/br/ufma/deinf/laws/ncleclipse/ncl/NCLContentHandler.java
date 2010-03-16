@@ -63,7 +63,7 @@ public class NCLContentHandler implements ContentHandler {
 	@Override
 	public void endElement(String localName, String arg1, String arg2)
 			throws SAXException {
-		System.out.println("end element " + arg1);
+		//System.out.println("end element " + arg1);
 		if (arg1.equals("body") || arg1.equals("ncl") || arg1.equals("context")
 				|| arg1.equals("media") || arg1.equals("switch")
 				|| arg1.equals("causalConnector")
@@ -89,7 +89,7 @@ public class NCLContentHandler implements ContentHandler {
 	public void processingInstruction(String arg0, String arg1)
 			throws SAXException {
 		// TODO Auto-generated method stub
-		System.out.println();
+		//System.out.println();
 
 	}
 
@@ -102,7 +102,7 @@ public class NCLContentHandler implements ContentHandler {
 	@Override
 	public void skippedEntity(String arg0) throws SAXException {
 		// TODO Auto-generated method stub
-		System.out.println();
+		//System.out.println();
 	}
 
 	@Override
@@ -129,10 +129,10 @@ public class NCLContentHandler implements ContentHandler {
 		}
 
 		// Carrega o NCLDocument
-		System.out.println("Adicionando no NCLContentHandler " + qName
+		/* System.out.println("Adicionando no NCLContentHandler " + qName
 				+ " id = " + atts.getValue("id") + " - perspective = "
 				+ strPerspective + "LineNumber = "
-				+ (locator.getLineNumber() - 1));
+				+ (locator.getLineNumber() - 1)); */
 
 		NCLElement nclElement = new NCLElement(localName, strPerspective,
 				locator.getLineNumber() - 1);
@@ -172,9 +172,9 @@ public class NCLContentHandler implements ContentHandler {
 		if (localName.equals("importBase") || localName.equals("importNCL")) {
 			String alias_ant = nclDocument.getAlias();
 			String alias = alias_ant;
-			System.out.println("importando documento... alias: "
+			/* System.out.println("importando documento... alias: "
 					+ atts.getValue("alias") + " src:"
-					+ atts.getValue("documentURI"));
+					+ atts.getValue("documentURI")); */
 			if (alias != null && !alias.equals(""))
 				alias += atts.getValue("alias");
 			else
@@ -232,7 +232,7 @@ public class NCLContentHandler implements ContentHandler {
 	public void startPrefixMapping(String arg0, String arg1)
 			throws SAXException {
 		// TODO Auto-generated method stub
-		System.out.println();
+		//System.out.println();
 	}
 
 	public NCLDocument getNclDocument() {
@@ -245,4 +245,8 @@ public class NCLContentHandler implements ContentHandler {
 		this.nclDocument = nclDocument;
 	}
 
+	public void comment(char[] arg0, int arg1, int arg2)
+			throws org.xml.sax.SAXException {
+		
+	}
 }

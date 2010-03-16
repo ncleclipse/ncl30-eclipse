@@ -63,7 +63,6 @@ public class EscapedCharRule implements IRule
 				
 				if (c == '<' || c == ']')
 				{
-				    System.out.println("Char " + (char)c);
 					for (int j= i-1; j > 0; j--)
 						scanner.unread();
 					return Token.UNDEFINED;

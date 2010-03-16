@@ -147,7 +147,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 	}
 
 	private IDocumentProvider createDocumentProvider(IEditorInput input2) {
-		System.out.println(input2.getClass().toString());
+		//System.out.println(input2.getClass().toString());
 		if (input2 instanceof IFileEditorInput) {
 			return new NCLDocumentProvider();
 		} else if (input2 instanceof IURIEditorInput) {
@@ -185,7 +185,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 				parser.setErrorHandler(markingErrorHandler);
 				parser.doParse(text);
 
-				// Validação ncl30-validator
+				// Validacao ncl30-validator
 				File docFile = getCurrentFile();
 				Document doc = null;
 				MessageList.clear();
@@ -195,7 +195,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 				// NCLEclipseValidatorErrorMessages();
 				// MessageHandler.setPropertyMessage(prop);
 
-				MessageList.setLanguage(MessageList.PORTUGUESE);
+				//MessageList.setLanguage(MessageList.PORTUGUESE);
 				try {
 					XMLParserExtend parserExtend = new XMLParserExtend();
 
