@@ -1,4 +1,7 @@
 Versao 1.4.20
+2010-03-15 23:03
+	- Ctrl+Shift+F resolvido sem modificar a ordem dos atributos. (by lucianocf)
+	
 2010-03-03 01:21
 	- Remocao da dependencia do GEF (temporariamente, enquanto a visao de layout	
 		nao estah OK)
