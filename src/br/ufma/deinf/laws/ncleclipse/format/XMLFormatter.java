@@ -29,7 +29,6 @@ import java.util.LinkedList;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -38,8 +37,11 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
+ * This class aims to format a XML document with the right tabulation, and
+ * others things. 
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
+ * @author Luciano Caracas <lucianocf@laws.deinf.ufma.br>
  * 
  */
 public class XMLFormatter extends DefaultHandler2 {
@@ -402,14 +404,17 @@ public class XMLFormatter extends DefaultHandler2 {
 			start++;
 			length--;
 		}
+		
+		if (length <= 0)
+			return;
+		
 		if (ischild.element()) {
 			output.append(">");
 			ischild.remove();
 			ischild.addFirst(false);
 			output.append(lineEnd);
 		}
-		if (length <= 0)
-			return;
+		
 		addIndent();
 		output.append(new String(ch, start, length));
 		output.append(lineEnd);
