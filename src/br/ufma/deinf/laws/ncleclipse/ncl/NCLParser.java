@@ -27,11 +27,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.StringReader;
 
-import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * 
@@ -83,7 +83,9 @@ public class NCLParser {
 	public void doParse(InputSource inputSource) throws RuntimeException {
 
 		try {
-			XMLReader reader = new SAXParser();
+			XMLReader reader = XMLReaderFactory.createXMLReader();
+			reader.setProperty("http://xml.org/sax/properties/lexical-handler",
+					contentHandler);
 			reader.setErrorHandler(errorHandler);
 			reader.setContentHandler(contentHandler);
 			// reader.setFeature(VALIDATION_FEATURE, true);
