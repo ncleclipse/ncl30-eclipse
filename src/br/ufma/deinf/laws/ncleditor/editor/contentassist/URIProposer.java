@@ -84,7 +84,7 @@ public class URIProposer {
 	}
 
 	public Vector<String> getSrcSuggest(String qualifier) {
-		System.out.println("qualifier: " + qualifier);
+		//System.out.println("qualifier: " + qualifier);
 		File parent;
 		String aux = qualifier;
 
