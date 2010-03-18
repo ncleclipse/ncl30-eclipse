@@ -16,20 +16,26 @@ TODO:
 	- Textos das licenças no feature.
 	
 * Text Editor
-	- Help contextual multilingue (atualmente só em português).	
+	- Sugestão de correção automática. 
+	- Help contextual multilingue (atualmente só em português).
+	- Hyperlinks de filhos de elementos.
+		ex.
+		<link xconnector="onBeginStart">
+			<bind role="onBegin" component="media"/>
+		</link>
+		O Hyperlink sobre o onBegin não vai para o onBegin do conector onBeginStart.
+		
 	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar antes de disponibilizar).
-	- Sugestao do atributo src de media (nao ok!).
-	- Comentarios sobre a licenca em todos os arquivos (Sempre verificar 
-	antes de disponibilizar).
+	- Sugestao do atributo src de media (faltando tratar espaçoes).
 	- Drag and Drop para adicionar midia.
-	- ALT+LEFT para voltar do hiperlink soh funciona para abrir em outros arquivos.
-	- Resolver o problema do tooltip para texto de Erros e Warnings (OK).
-	- Preview em tooltip contextual (Deixar de usar JComponent). (OK)
-	- Ctrl+Shift+F: não reordenar os atributos! (nao OK!)
+	- ALT+LEFT para voltar do hiperlink soh funciona para abrir em outros arquivos. (ok)
+	- Resolver o problema do tooltip para texto de Erros e Warnings (ok).
+	- Preview em tooltip contextual (Deixar de usar JComponent). (ok)
+	- Ctrl+Shift+F: não reordenar os atributos! (ok!)
 		- Estah sumindo com coisas do CDATA ou conteúdo de texto dentro do elemento.
 		Solução: Sobrescrever os métodos startCDATA, startDTD, etc do DefaultHandler2.
 		p.s. Provavelmente alguns métodos do DefaultHandler também devem ser sobrescritos.
-	- Ctrl+Espaço no src poderia abrir uma popup para inserir o arquivo. (OK)
+	- Ctrl+Espaço no src poderia abrir uma popup para inserir o arquivo. (ok)
 
 
 * Layout View
