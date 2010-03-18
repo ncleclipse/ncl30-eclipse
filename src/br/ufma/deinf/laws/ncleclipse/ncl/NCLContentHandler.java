@@ -30,9 +30,9 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.DefaultHandler2;
 
 import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
 import br.ufma.deinf.laws.util.MultiHashMap;
@@ -42,7 +42,7 @@ import br.ufma.deinf.laws.util.MultiHashMap;
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
  * 
  */
-public class NCLContentHandler implements ContentHandler {
+public class NCLContentHandler extends DefaultHandler2 {
 	private NCLDocument nclDocument = null;
 	private Stack<String> perspective;
 	private String perspectiveSemId = "0";
@@ -245,8 +245,9 @@ public class NCLContentHandler implements ContentHandler {
 		this.nclDocument = nclDocument;
 	}
 
-	public void comment(char[] arg0, int arg1, int arg2)
-			throws org.xml.sax.SAXException {
+	public void comment(char[] arg0, int arg1, int arg2) throws SAXException {
+		
+		System.out.println("Tratar o comentário aqui!!!");
 		
 	}
 }
