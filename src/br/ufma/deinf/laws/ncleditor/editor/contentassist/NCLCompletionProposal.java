@@ -191,7 +191,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if (selectedRange.y > 0) {
 			// TODO:
 		} else {
-			//System.out.println("Attributo = " + isAttribute);
+			// System.out.println("Attributo = " + isAttribute);
 			String qualifier = getQualifier(doc, offset);
 			if (isEndTagName) {
 				computeEndTagName(doc, qualifier, offset, propList);
@@ -238,7 +238,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private int cursor; // calcula a posição que o cursor ficará para cada
 
 	// estrutura proposta
-
 	private void computeTagsProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
 		int qlen = qualifier.length();
@@ -365,7 +364,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private void computeAttributesValuesProposals(IDocument doc,
 			String qualifier, int offset, List propList) {
 
-		loadImages();
+		// TODO: in future, show figures representing each element of language
+		// loadImages();
 
 		int qlen = qualifier.length();
 		// Verificar se existe valor pre-definido
@@ -375,7 +375,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		String tagname = nclDoc.getCurrentTagname(offset);
 		String attribute = nclDoc.getCurrentAttribute(offset);
-		//System.out.println("tag: " + tagname + " attr:" + attribute);
+		// System.out.println("tag: " + tagname + " attr:" + attribute);
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		Vector<String> prop = AttributeValues.getValues(nclStructure
 				.getDataType(tagname, attribute));
@@ -385,7 +385,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				if (prop.get(i).startsWith(qualifier)) {
 					String text = prop.get(i);
 					String texttoshow = text;
-					//System.out.println(text);
+					// System.out.println(text);
 					// if(!qualifier.startsWith("\"") &&
 					// !qualifier.startsWith("\'"))
 					// text = "\""+text+"\"";
@@ -437,7 +437,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
 					.getFatherPartitionOffset(offset), "id");
-			//System.out.println(perspective);
+			// System.out.println(perspective);
 			if (perspective == null) {
 				if (fatherTagName.equals("body")) {
 					perspective = nclDoc.getAttributeValueFromCurrentTagName(
@@ -997,8 +997,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 					if (text.startsWith(qualifier)) {
 						cursor = text.length();
-						System.out
+						/* System.out
 								.println("Attribute Value Proposal = " + text);
+						 */
 						proposal = new CompletionProposal(text, offset - qlen,
 								qlen, cursor, image, text, null, helpInfo);
 
@@ -1024,9 +1025,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		NCLSourceDocument nclDoc = NCLSourceDocument
 				.createNCLSourceDocumentFromIDocument(doc);
 
-		//System.out.println("Computing Attributes proposals...");
+		// System.out.println("Computing Attributes proposals...");
 		String currentTagname = nclDoc.getCurrentTagname(offset);
-		//System.out.println("Current Tag Name = " + currentTagname);
+		// System.out.println("Current Tag Name = " + currentTagname);
 
 		List<String> attributeTyped = nclDoc.getAttributesTyped(offset);
 
