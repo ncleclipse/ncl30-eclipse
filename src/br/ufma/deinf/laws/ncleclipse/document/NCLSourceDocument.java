@@ -44,6 +44,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditor;
+import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
@@ -1016,7 +1017,7 @@ public class NCLSourceDocument extends Document {
 		String info = null;
 		if (id == null || id.equals("")) return null;
 		try {
-			String beginComment = "@info";
+			String beginComment = "@doc";
 			int indexOf = id.indexOf('#');
 			
 			if (indexOf != -1) {
@@ -1095,6 +1096,9 @@ public class NCLSourceDocument extends Document {
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if (info == null){
+			info = NCLEditorMessages.getInstance().getString("NCLDoc.Empty");
 		}
 		return info;
 	} 
