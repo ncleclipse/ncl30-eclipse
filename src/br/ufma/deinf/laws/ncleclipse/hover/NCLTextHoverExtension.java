@@ -157,15 +157,19 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 							offset, "src");
 
 					if (mime == null) { // significa que a tag em questão é
-						// focusSelSrc ou focusSrc
+										// focusSelSrc ou focusSrc
 						mime = doc.getAttributeValueFromCurrentTagName(offset,
 								"focusSelSrc");
 						if (mime == null)
 							mime = doc.getAttributeValueFromCurrentTagName(
 									offset, "focusSrc");
+						
+						if(mime == null) return new Region(offset, 0);
+						
 					}
 
 					String temp = mime;
+					
 					temp = temp.toLowerCase();
 					if (temp.length() > 7) {
 						if (temp.substring(0, 7).equals("http://")) {
