@@ -255,9 +255,10 @@ public class NCLInformationControl extends AbstractInformationControl implements
 			final PreViewMedia med = (PreViewMedia) input;
 
 			this.button.addMouseListener(new MouseListener() {
-
+				
+				
 				@Override
-				public void mouseDoubleClick(MouseEvent e) {
+				public void mouseDown(MouseEvent e) {
 					PlatformUI.getWorkbench().getDisplay().syncExec(
 							new Runnable() {
 								public void run() {
@@ -275,14 +276,17 @@ public class NCLInformationControl extends AbstractInformationControl implements
 					dispose();
 				}
 
-				@Override
-				public void mouseDown(MouseEvent e) {
 
-				}
 
 				@Override
 				public void mouseUp(MouseEvent e) {
 
+				}
+
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
 				}
 			});
 
