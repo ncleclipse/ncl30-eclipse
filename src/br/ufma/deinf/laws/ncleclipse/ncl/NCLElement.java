@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.text.Position;
+
+import br.ufma.deinf.laws.ncl.help.NCLHelper;
+import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 /**
  * 
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
@@ -41,7 +44,20 @@ public class NCLElement
 	private String tagName;
 	private String perspective;
 	private String completePerspective;
+	private String doc = NCLEditorMessages.getInstance().getString("NCLDoc.Empty");
 	
+	public String getDoc() {
+		return doc;
+	}
+
+	public void setDoc(String doc) {
+		if (doc == null) return;
+		String beginComment = "@doc";
+		int index = doc.indexOf(beginComment);
+		if (index!= -1)
+			this.doc = doc.substring(index + beginComment.length()+1, doc.length()).replace("\t", "");
+	}
+
 	private NCLElement parent;
 	private Position position; // ver utilidade depois
 	
