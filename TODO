@@ -2,8 +2,10 @@ TODO:
 * Ideias
 	- Fazer o preenchimento automatico do atributo xconnector da tag link baseado
 	  nas tags bind do link (caso haja ambigüidade fazer apenas sugestão dos possíveis
-	  conectores
-	- NCL Doc
+	  conectores (OK)
+	- NCL Doc (OK)
+	
+	- Visão de Breadcrumb
 
 * Geral
 	- Ao renomear arquivo perguntar para o usuario se ele deseja renomear o 
