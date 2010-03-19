@@ -144,10 +144,9 @@ public class NCLContentHandler extends DefaultHandler2 {
 		nclElement.setDoc(doc);
 		doc = "";
 		
-		// System.out.println (atts.getValue("id") + ": " +
-		// nclElement.getDoc());
+		//System.out.println (nclElement.getAttributes().get("id"));
 		nclElement.setCompletePerspective(completePerspective);
-		// System.out.println("completeperspective = " + completePerspective);
+		//System.out.println("completeperspective = " + completePerspective + "\n");
 		nclDocument.addElement(nclElement, atts.getValue("id"));
 
 		// Verifica se o elemento atual define uma perspectiva
