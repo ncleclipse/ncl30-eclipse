@@ -38,7 +38,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -54,8 +56,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
-import org.eclipse.ui.texteditor.GotoLastEditPositionAction;
 import org.eclipse.ui.texteditor.ContentAssistAction;
+import org.eclipse.ui.texteditor.GotoLastEditPositionAction;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
@@ -69,6 +71,7 @@ import br.ufma.deinf.gia.labmint.main.NclParseErrorHandler;
 import br.ufma.deinf.gia.labmint.message.MessageList;
 import br.ufma.deinf.gia.labmint.xml.XMLParserExtend;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
+import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
 import br.ufma.deinf.laws.ncleclipse.marker.MarkingErrorHandler;
 import br.ufma.deinf.laws.ncleclipse.navigation.NCLNavigationHistory;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLContentHandler;
@@ -77,6 +80,7 @@ import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
 import br.ufma.deinf.laws.ncleclipse.outline.EditorContentOutlinePage;
 import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
+import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
 import br.ufma.deinf.laws.ncleclipse.util.NCLDocumentProvider;
 import br.ufma.deinf.laws.ncleclipse.util.NCLTextDocumentProvider;
@@ -458,8 +462,6 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 	 */
 	@Override
 	public void documentAboutToBeChanged(DocumentEvent event) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -499,11 +501,59 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 			updateMarkers.setPriority(Job.SHORT);
 			updateMarkers.schedule();
 		}
-
 		// TODO: Update Outline View
 		// updateOutlineView.cancel();
 		// updateOutlineView.setPriority(Job.SHORT);
 		// updateOutlineView.schedule();
+
+		if (event.fText.equals("/")) {
+			final NCLSourceDocument doc = (NCLSourceDocument) event
+					.getDocument();
+			try {
+				ITypedRegion region = doc.getPartition(event.fOffset);
+				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+					String tagname = doc.getCurrentTagname(event.fOffset);
+					final int fOffset = region.getOffset() + region.getLength();
+					int nextPartitionOffSet = fOffset+1;
+
+					char ch = doc.getChar(nextPartitionOffSet);
+					while (Character.isWhitespace(ch)) {
+						ch = doc.getChar(nextPartitionOffSet++);
+					}
+
+					region = doc.getPartition(nextPartitionOffSet);
+					doc.acceptPostNotificationReplaces();
+					
+					if (region.getType()
+							.equals(XMLPartitionScanner.XML_END_TAG)) {
+						String endTagName = doc
+								.getCurrentEndTagName(nextPartitionOffSet);
+						if (tagname.equals(endTagName)) {
+
+							final int lastOffset = (region.getOffset() + region
+									.getLength())
+									- fOffset;
+
+							doc.registerPostNotificationReplace(null,
+									new IDocumentExtension.IReplace() {
+										@Override
+										public void perform(IDocument document,
+												IDocumentListener owner) {
+											try {
+												doc.replace(fOffset,
+														lastOffset, "");
+											} catch (BadLocationException e) {
+												e.printStackTrace();
+											}
+										}
+									});
+						}
+					}
+				}
+			} catch (BadLocationException e) {
+				return;
+			}
+		}
 	}
 
 }

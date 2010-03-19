@@ -1,8 +1,20 @@
 Versao 1.4.20
 2010-03-19
+	- Fechamento automático de elementos.
+		Exemplo:
+				<media id="">
+				</media>
+			Se o usuário editar no plugin uma barra fechando a TAG assim:
+				<media id=""/>
+				</media>
+			O plugin some com o </media>, resultando em:
+				<media id=""/>
+				
 	- Habilitado atalho (Ctrl+Q) para GotoLastEditPosition
+	
 	- Estrutura de sugestão de link corrigida (utilizando NCLContentHandler 
 		agora)
+		
 	- Atualizado names de descriptorParam.  
 	
 2010-03-16
