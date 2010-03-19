@@ -135,55 +135,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		NCLSourceDocument nclDoc = NCLSourceDocument
 				.createNCLSourceDocumentFromIDocument(doc);
 
-		Vector<Integer> aliasOffset = nclDoc.getAllTagsWithAttribute("alias");
-		for (int i : aliasOffset) {
-			String alias = nclDoc.getAttributeValueFromCurrentTagName(i,
-					"alias");
-			if (alias != null && !alias.equals(""))
-				if (!importedNCLDocs.containsKey(alias)) {
-					String documentURI = nclDoc
-							.getAttributeValueFromCurrentTagName(i,
-									"documentURI");
-					File importedFile = null;
-					if (documentURI != null && !documentURI.equals("")) {
-						importedFile = new File(documentURI);
-						if (!importedFile.isFile()) {
-							importedFile = new File(currentFile.getParent()
-									+ "/" + documentURI);
-						}
-						if (importedFile.isFile()) {
-							BufferedReader reader;
-							try {
-								reader = new BufferedReader(new FileReader(
-										importedFile));
-								String text = "";
-								while (reader.ready())
-									text += reader.readLine() + "\n";
-								NCLSourceDocument ncl = new NCLSourceDocument(
-										text);
-								IDocumentPartitioner partitioner = new XMLPartitioner(
-										new XMLPartitionScanner(),
-										new String[] {
-												XMLPartitionScanner.XML_START_TAG,
-												XMLPartitionScanner.XML_PI,
-												XMLPartitionScanner.XML_DOCTYPE,
-												XMLPartitionScanner.XML_END_TAG,
-												XMLPartitionScanner.XML_TEXT,
-												XMLPartitionScanner.XML_CDATA,
-												XMLPartitionScanner.XML_COMMENT });
-								partitioner.connect(ncl);
-								ncl.setDocumentPartitioner(partitioner);
-								importedNCLDocs.put(alias, ncl);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-
-					}
-				}
-		}
-
 		isAttributeValue = nclDoc.isAttributeValue(offset);
 		isAttribute = nclDoc.isAttribute(offset);
 		isEndTagName = nclDoc.isEndTagName(offset);
@@ -263,10 +214,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				String text = computeTagStructure(tagname, indent);
 
 				// get a help info to user
-				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
-						tagname);
-				// String helpInfo = "help";
-				// String helpInfo = "help";
+				//TODO: Enable NCLHelper when internationalizing it
+				//String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
+				//tagname);
+				String helpInfo = null; //just by now
 
 				CompletionProposal proposal = new CompletionProposal(text,
 						offset - qlen, qlen, cursor, null, tagname, null,
