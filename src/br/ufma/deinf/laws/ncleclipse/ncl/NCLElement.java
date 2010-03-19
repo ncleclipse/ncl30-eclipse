@@ -29,7 +29,6 @@ import java.util.Map;
 
 import org.eclipse.jface.text.Position;
 
-import br.ufma.deinf.laws.ncl.help.NCLHelper;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 /**
  * 
