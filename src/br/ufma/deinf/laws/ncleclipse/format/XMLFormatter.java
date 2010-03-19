@@ -397,15 +397,13 @@ public class XMLFormatter extends DefaultHandler2 {
 	}
 
 	public void characters(char[] ch, int start, int length) {
-		// MessageDialog.openInformation(null, null, "*"+new
-		// String(ch,start,length)+"*");
-		while ((ch[start] == '\n' || ch[start] == ' ' || ch[start] == '\t')
-				&& length > 0) {
-			start++;
-			length--;
+		int atual = start;
+		
+		while (atual < start+length && atual < ch.length && Character.isWhitespace(ch[atual])) {
+			atual++;
 		}
 		
-		if (length <= 0)
+		if (atual >= start+length)
 			return;
 		
 		if (ischild.element()) {
