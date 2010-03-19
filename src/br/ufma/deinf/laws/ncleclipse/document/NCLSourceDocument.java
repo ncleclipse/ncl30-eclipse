@@ -150,6 +150,7 @@ public class NCLSourceDocument extends Document {
 				}
 				partitionOffset--;
 				region = getPartition(partitionOffset);
+				partitionOffset = region.getOffset();
 			} while (true);
 			return partitionOffset;
 		} catch (BadLocationException e) {
