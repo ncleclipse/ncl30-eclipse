@@ -63,8 +63,8 @@ TODO:
 	- importNCL
 	- bindRule
 
-	- Ideia MUITO BOA!!!) Acho que isso foi resolvido pelo Crtl+Shift+F
-	O Luiz sugere que num caso como abaixo:
+	- (ok) Fechamento automático de elemento (nome melhor??)
+	 Ideia MUITO BOA!!!) O Luiz sugere que num caso como abaixo:
 			<media id="">
 			</media>
 			
