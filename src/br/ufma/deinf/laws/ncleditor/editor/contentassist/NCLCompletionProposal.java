@@ -574,7 +574,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 								nclDoc2 = importedNCLDocs.get(alias);
 							}
 
-							String helpInfo = nclDoc2.getComment(id);
+							String helpInfo = refElement.getDoc();
 
 							String complete = text + "\"" + rest;
 							Vector<String> conditions = new Vector<String>();
@@ -905,7 +905,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					if (text == null)
 						continue;
 
-					String helpInfo = nclDoc.getComment(text);
+					String helpInfo = nclElement.getDoc();
 					Image image = null;
 					if (nclElement.getTagName().equals("region"))
 						image = regionImage;
@@ -964,7 +964,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					if (text == null || text.endsWith("#null"))
 						continue; // null
 
-					String helpInfo = nclDoc.getComment(text);
+					String helpInfo = refElement.getDoc();
 					Image image = null;
 					if (refElement.getTagName().equals("region"))
 						image = regionImage;
