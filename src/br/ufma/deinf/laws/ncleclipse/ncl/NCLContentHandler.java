@@ -48,6 +48,7 @@ public class NCLContentHandler extends DefaultHandler2 {
 	private String perspectiveSemId = "0";
 	private String completePerspective = "";
 	private Locator locator;
+	private String doc;
 
 	@Override
 	public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
@@ -140,7 +141,10 @@ public class NCLContentHandler extends DefaultHandler2 {
 			nclElement
 					.setAttributeValue(atts.getLocalName(i), atts.getValue(i));
 		}
-
+		System.out.println(doc);
+		nclElement.setDoc(doc);
+		doc = "";
+		//System.out.println (atts.getValue("id") + ": " + nclElement.getDoc());
 		nclElement.setCompletePerspective(completePerspective);
 		// System.out.println("completeperspective = " + completePerspective);
 		nclDocument.addElement(nclElement, atts.getValue("id"));
@@ -180,7 +184,7 @@ public class NCLContentHandler extends DefaultHandler2 {
 			else
 				alias = atts.getValue("alias");
 			// nclDocument.alias = alias;
-			XMLParser parser = new XMLParser();
+			NCLParser parser = new NCLParser();
 			NCLContentHandler contentHandlerTmp = new NCLContentHandler();
 			contentHandlerTmp.getNclDocument().setAlias(alias);
 			parser.setContentHandler(contentHandlerTmp);
@@ -219,7 +223,8 @@ public class NCLContentHandler extends DefaultHandler2 {
 							.setCompletePerspective(completePerspective
 									+ importedNclElement
 											.getCompletePerspective());
-					// System.out.println("importedNclElement.id = "+importedNclElement.getAttributes().get("id"));
+				//	System.out.println("importedNclElement.id = "+importedNclElement.getAttributes().get("id") + ": " +
+				//																	importedNclElement.getDoc());
 					nclDocument.addElement(importedNclElement,
 							importedNclElement.getAttributes().get("id"));
 				}
@@ -246,8 +251,9 @@ public class NCLContentHandler extends DefaultHandler2 {
 	}
 
 	public void comment(char[] arg0, int arg1, int arg2) throws SAXException {
-		
-		System.out.println("Tratar o comentário aqui!!!");
+		doc = "";
+		for (int i=arg1; i<arg2; i++) doc += arg0[i];
+		System.out.println ();
 		
 	}
 }
