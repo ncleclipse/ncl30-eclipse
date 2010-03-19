@@ -86,11 +86,10 @@ public class NCLDocument{
 	//tem q voltar a ser Assim
 	//Problema: Não consigo instanciar Attributes logo sempre o valor é o do último
 	public void addElement(String tagname, Attributes atts) {
-		// TODO Auto-generated method stub
 		elements.put(tagname, atts);
 	}
 	
-	/*public void addElement(String tagname, String id) {
+	/* public void addElement(String tagname, String id) {
 		// TODO Auto-generated method stub
 		if(alias != null && !alias.equals(""))
 				elements.put(tagname, alias + "#" +id);		
@@ -104,7 +103,7 @@ public class NCLDocument{
 				elements.put(element.getTagName(), element);
 		}
 		else elements.put(element.getTagName(), element);
-	}	
+	}
 
 	public String getAlias() {
 		return alias;
@@ -130,6 +129,21 @@ public class NCLDocument{
 		while(it.hasNext()){
 			NCLElement nclElement = (NCLElement)it.next();
 			if(nclElement.getPerspective().equals(perspective)){
+				elementsFromPerspective.add(nclElement);
+			}
+			
+		}
+		return elementsFromPerspective;
+	}
+	
+	public Collection getElementsFromCompletePerspective(String tagname, String completePerspective){
+		Collection elementsFromPerspective = new ArrayList();
+		Collection elements = getElements().get(tagname);
+		if (elements == null) return null;
+		Iterator it = elements.iterator();
+		while(it.hasNext()){
+			NCLElement nclElement = (NCLElement)it.next();
+			if(nclElement.getCompletePerspective().equals(completePerspective)){
 				elementsFromPerspective.add(nclElement);
 			}
 			
