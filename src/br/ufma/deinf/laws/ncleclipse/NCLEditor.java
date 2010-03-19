@@ -85,7 +85,7 @@ import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
 public class NCLEditor extends TextEditor implements IDocumentListener {
 	public static String CONTENT_ASSIST_ACTION = "br.ufma.deinf.laws.ncleclipse.actions.CONTENT_ASSIST";
 	public static String FORMAT_ACTION = "br.ufma.deinf.laws.ncleclipse.actions.format";
-	public static String GO_TO_LAST_EDIT_POSITION = "br.ufma.deinf.laws.ncleclipse.actions.GO_TO_LAST_EDIT_POSITION";
+	public static String GO_TO_LAST_EDIT_POSITION = "br.ufma.deinf.laws.ncleclipse.actions.GotoLastEditPosition";
 
 	private IEditorInput input;
 	private EditorContentOutlinePage outlinePage;
@@ -122,10 +122,10 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		setAction("ContentFormat", action);
 
 		action = new GotoLastEditPositionAction();
-		action
-				.setActionDefinitionId(ITextEditorActionDefinitionIds.GOTO_LAST_EDIT_POSITION);
-		action.setAccelerator(SWT.CTRL | 'q');
-		setAction(GO_TO_LAST_EDIT_POSITION, action);
+		action.setAccelerator(SWT.CTRL | 'Q');
+		markAsStateDependentAction(
+				ITextEditorActionDefinitionIds.GOTO_LAST_EDIT_POSITION, true); //$NON-NLS-1$
+		action.setEnabled(true);
 
 	}
 
@@ -147,7 +147,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 	}
 
 	private IDocumentProvider createDocumentProvider(IEditorInput input2) {
-		//System.out.println(input2.getClass().toString());
+		// System.out.println(input2.getClass().toString());
 		if (input2 instanceof IFileEditorInput) {
 			return new NCLDocumentProvider();
 		} else if (input2 instanceof IURIEditorInput) {
@@ -195,7 +195,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 				// NCLEclipseValidatorErrorMessages();
 				// MessageHandler.setPropertyMessage(prop);
 
-				//MessageList.setLanguage(MessageList.PORTUGUESE);
+				// MessageList.setLanguage(MessageList.PORTUGUESE);
 				try {
 					XMLParserExtend parserExtend = new XMLParserExtend();
 
@@ -353,29 +353,31 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#handleCursorPositionChanged()
 	 */
 	@Override
 	public void handleCursorPositionChanged() {
 		// TODO Auto-generated method stub
-		NCLNavigationHistory.movedcursor(getCurrentFile().getAbsolutePath(),getCursorPosition());
+		NCLNavigationHistory.movedcursor(getCurrentFile().getAbsolutePath(),
+				getCursorPosition());
 		super.handleCursorPositionChanged();
 	}
-	
-	public void setFocus(int lineOffset, int lineLength){
+
+	public void setFocus(int lineOffset, int lineLength) {
 		try {
 			resetHighlightRange();
-			setHighlightRange(getSourceViewer().getDocument().getLineOffset(--lineOffset), lineLength, true);
+			setHighlightRange(getSourceViewer().getDocument().getLineOffset(
+					--lineOffset), lineLength, true);
 			setFocus();
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	public void setFocus2(int lineOffset){
+
+	public void setFocus2(int lineOffset) {
 		resetHighlightRange();
 		setHighlightRange(lineOffset, 0, true);
 		setFocus();

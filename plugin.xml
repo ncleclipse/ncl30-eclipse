@@ -23,6 +23,13 @@
          	contextId="org.eclipse.ui.globalScope"
          	schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
          	sequence="Ctrl+Shift+F"/>
+         	
+         	<key
+         		commandId="org.eclipse.ui.edit.text.gotoLastEditPosition"
+         		contextId="org.eclipse.ui.textEditorScope"
+         		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         		sequence="Ctrl+Q"/>
+         
          <key
                commandId="br.ufma.deinf.laws.ncleclipse.actions.format"
                contextId="org.eclipse.ui.textEditorScope"
