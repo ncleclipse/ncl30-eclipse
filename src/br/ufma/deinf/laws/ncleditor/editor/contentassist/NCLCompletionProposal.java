@@ -519,6 +519,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							int indexOfAlias = text.indexOf("#");
 							String alias = "";
 							NCLSourceDocument nclDoc2 = nclDoc;
+							System.out.println (refElement.getElementChildren());
 							if (indexOfAlias != -1) {
 								id = text.substring(indexOfAlias + 1);
 								alias = text.substring(0, indexOfAlias);
@@ -670,18 +671,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// alguma coisa como atributos relativos a outros atributos
 		if (tagname.equals("descriptorParam")) {
 			if (attribute.equals("name")) {
-				String name[] = { "background", "balanceLevel", "bassLevel",
-						"bottom", "bounds", "fit", "fontColor", "fontFamily",
-						"fontStyle", "fontSize", "fontVariant", "fontWeight",
-						"height", "left", "location", "playerLife",
-						"reusePlayer", "right", "scroll", "size", "soundLevel",
-						"style", "top", "transparency", "trebleLevel",
-						"visible", "width", "zIndex" };
+				Vector <String> name = AttributeValues.getValues(DataType.PARAM_VALUES);
 
-				for (int i = 0; i < name.length; i++)
-					if (name[i].startsWith(qualifier)) {
-						propList.add(new CompletionProposal(name[i], offset
-								- qlen, qlen, name[i].length(), null, name[i],
+				for (String str : name)
+					if (str.startsWith(qualifier)) {
+						propList.add(new CompletionProposal(str, offset
+								- qlen, qlen, str.length(), null, str,
 								null, null));
 					}
 				return;
