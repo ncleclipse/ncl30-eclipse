@@ -34,7 +34,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
-import br.ufma.deinf.laws.ncleclipse.xml.XMLParser;
 import br.ufma.deinf.laws.util.MultiHashMap;
 
 /**
@@ -64,7 +63,7 @@ public class NCLContentHandler extends DefaultHandler2 {
 	@Override
 	public void endElement(String localName, String arg1, String arg2)
 			throws SAXException {
-		//System.out.println("end element " + arg1);
+		// System.out.println("end element " + arg1);
 		if (arg1.equals("body") || arg1.equals("ncl") || arg1.equals("context")
 				|| arg1.equals("media") || arg1.equals("switch")
 				|| arg1.equals("causalConnector")
@@ -90,7 +89,7 @@ public class NCLContentHandler extends DefaultHandler2 {
 	public void processingInstruction(String arg0, String arg1)
 			throws SAXException {
 		// TODO Auto-generated method stub
-		//System.out.println();
+		// System.out.println();
 
 	}
 
@@ -103,7 +102,7 @@ public class NCLContentHandler extends DefaultHandler2 {
 	@Override
 	public void skippedEntity(String arg0) throws SAXException {
 		// TODO Auto-generated method stub
-		//System.out.println();
+		// System.out.println();
 	}
 
 	@Override
@@ -141,10 +140,12 @@ public class NCLContentHandler extends DefaultHandler2 {
 			nclElement
 					.setAttributeValue(atts.getLocalName(i), atts.getValue(i));
 		}
-		System.out.println(doc);
+
 		nclElement.setDoc(doc);
 		doc = "";
-		//System.out.println (atts.getValue("id") + ": " + nclElement.getDoc());
+		
+		// System.out.println (atts.getValue("id") + ": " +
+		// nclElement.getDoc());
 		nclElement.setCompletePerspective(completePerspective);
 		// System.out.println("completeperspective = " + completePerspective);
 		nclDocument.addElement(nclElement, atts.getValue("id"));
@@ -217,14 +218,13 @@ public class NCLContentHandler extends DefaultHandler2 {
 				Iterator it2 = elements.iterator();
 				while (it2.hasNext()) {
 					NCLElement importedNclElement = (NCLElement) it2.next();
-					String aliasElement = importedNclElement.getAttributes()
-							.get("alias");
 					importedNclElement
 							.setCompletePerspective(completePerspective
 									+ importedNclElement
 											.getCompletePerspective());
-				//	System.out.println("importedNclElement.id = "+importedNclElement.getAttributes().get("id") + ": " +
-				//																	importedNclElement.getDoc());
+					// System.out.println("importedNclElement.id = "+importedNclElement.getAttributes().get("id")
+					// + ": " +
+					// importedNclElement.getDoc());
 					nclDocument.addElement(importedNclElement,
 							importedNclElement.getAttributes().get("id"));
 				}
@@ -237,7 +237,7 @@ public class NCLContentHandler extends DefaultHandler2 {
 	public void startPrefixMapping(String arg0, String arg1)
 			throws SAXException {
 		// TODO Auto-generated method stub
-		//System.out.println();
+		// System.out.println();
 	}
 
 	public NCLDocument getNclDocument() {
@@ -252,8 +252,7 @@ public class NCLContentHandler extends DefaultHandler2 {
 
 	public void comment(char[] arg0, int arg1, int arg2) throws SAXException {
 		doc = "";
-		for (int i=arg1; i<arg2; i++) doc += arg0[i];
-		System.out.println ();
-		
+		for (int i = arg1; i < arg2; i++)
+			doc += arg0[i];
 	}
 }
