@@ -1,8 +1,8 @@
 TODO:
 * Ideias
-	- Fazer o preenchimento automatico do atributo xconnector da tag link baseado
-	  nas tags bind do link (caso haja ambigüidade fazer apenas sugestão dos possíveis
-	  conectores (OK)
+	- Fazer o preenchimento automatico do atributo xconnector da tag link 
+		baseado nas tags bind do link (caso haja ambigüidade fazer apenas 
+		sugestão dos possíveis conectores (OK)
 	- NCL Doc (OK)
 	
 	- Visão de Breadcrumb
@@ -18,6 +18,8 @@ TODO:
 	- Textos das licenças no feature.
 	
 * Text Editor
+	- Fazer o parser nos arquivos incluídos somente quando necessário. Data de
+		modificação tiver sido alterada.
 	- Sugestão de correção automática. 
 	- Help contextual multilingue (atualmente só em português).
 	- Hyperlinks de filhos de elementos.
