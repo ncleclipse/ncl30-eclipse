@@ -131,7 +131,6 @@ public class NCLDocument{
 			if(nclElement.getPerspective().equals(perspective)){
 				elementsFromPerspective.add(nclElement);
 			}
-			
 		}
 		return elementsFromPerspective;
 	}
@@ -139,14 +138,14 @@ public class NCLDocument{
 	public Collection getElementsFromCompletePerspective(String tagname, String completePerspective){
 		Collection elementsFromPerspective = new ArrayList();
 		Collection elements = getElements().get(tagname);
-		if (elements == null) return null;
-		Iterator it = elements.iterator();
-		while(it.hasNext()){
-			NCLElement nclElement = (NCLElement)it.next();
-			if(nclElement.getCompletePerspective().equals(completePerspective)){
-				elementsFromPerspective.add(nclElement);
+		if (elements != null) {
+				Iterator it = elements.iterator();
+				while(it.hasNext()){
+					NCLElement nclElement = (NCLElement)it.next();
+					if(nclElement.getCompletePerspective().equals(completePerspective)){
+						elementsFromPerspective.add(nclElement);
+					}
 			}
-			
 		}
 		return elementsFromPerspective;
 	}
