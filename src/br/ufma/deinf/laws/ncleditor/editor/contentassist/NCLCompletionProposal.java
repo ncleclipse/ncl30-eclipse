@@ -961,10 +961,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						}
 
 						Collection attrAssesments = nclDocument
-								.getElementsFromPerspective(
+								.getElementsFromCompletePerspective(
 										"attributeAssessment", tmp
 												.getCompletePerspective()
 												+ "/" + id);
+						
 						it3 = attrAssesments.iterator();
 						while (it3.hasNext()) {
 							NCLElement tmp2 = ((NCLElement) it3.next());
