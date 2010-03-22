@@ -234,11 +234,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				String text = computeTagStructure(tagname, indent);
 
 				// get a help info to user
-				// TODO: Enable NCLHelper when internationalizing it
-				// String helpInfo =
-				// NCLHelper.getNCLHelper().getHelpDescription(
-				// tagname);
-				String helpInfo = null; // just by now
+				//TODO: Description of elements in English and Spanish
+				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
+						tagname);
 
 				CompletionProposal proposal = new CompletionProposal(text,
 						offset - qlen, qlen, cursor, null, tagname, null,
@@ -258,11 +256,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						|| tagname2.startsWith(qualifier)) {
 					String text = computeTagStructure(tagname, indent);
 
+					//TODO: Description of elements in English and Spanish
 					// get a help information to user
 					String helpInfo = NCLHelper.getNCLHelper()
 							.getHelpDescription(tagname);
-					// String helpInfo = "help";
-					// String helpInfo="help";
 
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, tagname, null,
@@ -680,7 +677,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			try {
 				//TODO: this is not sufficient to work with URI codification
 				qualifier = qualifier.replace("%20", " ");
-				
+
 				Vector<String> proposal = new URIProposer(currentPath)
 						.getSrcSuggest(qualifier);
 				CompletionProposal completionProposal;
@@ -1072,10 +1069,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (prop.startsWith(qualifier)) {
 				cursor = prop.length();
 
+				//TODO: Description of elements in English and Spanish
 				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
 						currentTagname, view);
-
-				// String helpInfo = "help";
 
 				CompletionProposal proposal = new CompletionProposal(prop,
 						offset - qlen, qlen, cursor, null, view, null, helpInfo);
