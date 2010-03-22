@@ -678,7 +678,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					currentPath = System.getProperty("user.home");
 			}
 			try {
+				//TODO: this is not sufficient to work with URI codification
 				qualifier = qualifier.replace("%20", " ");
+				
 				Vector<String> proposal = new URIProposer(currentPath)
 						.getSrcSuggest(qualifier);
 				CompletionProposal completionProposal;

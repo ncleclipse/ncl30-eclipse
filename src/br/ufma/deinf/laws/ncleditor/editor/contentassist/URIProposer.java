@@ -122,6 +122,7 @@ public class URIProposer {
 		String path = "";
 		path = aux.substring(0, aux.length() - qualifier.length());
 		parent = new File(path);
+		System.out.println(parent.toString());
 		Vector<String> completions = new Vector<String>();
 
 		if (aux.contains("//"))
@@ -132,9 +133,11 @@ public class URIProposer {
 				return completions;
 
 		}
+		
 		if ((!(parent.isDirectory() || parent.isFile()))
 				|| aux.startsWith(".."))
 			parent = new File(root + "/" + path);
+
 		if (!parent.isDirectory()) {
 			return completions;
 		}
@@ -145,10 +148,13 @@ public class URIProposer {
 
 		if (list == null)
 			return completions;
+		
 		for (int i = 0; i < list.length; i++) {
+			
 			if (new File(parent.getAbsolutePath() + "/" + list[i])
 					.isDirectory())
 				list[i] += "/";
+			
 			if (list[i].startsWith(qualifier)) {
 				completions.add(path + list[i]);
 
