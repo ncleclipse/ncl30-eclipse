@@ -157,19 +157,20 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 							offset, "src");
 
 					if (mime == null) { // significa que a tag em questão é
-										// focusSelSrc ou focusSrc
+						// focusSelSrc ou focusSrc
 						mime = doc.getAttributeValueFromCurrentTagName(offset,
 								"focusSelSrc");
 						if (mime == null)
 							mime = doc.getAttributeValueFromCurrentTagName(
 									offset, "focusSrc");
-						
-						if(mime == null) return new Region(offset, 0);
-						
+
+						if (mime == null)
+							return new Region(offset, 0);
+
 					}
 
 					String temp = mime;
-					
+
 					temp = temp.toLowerCase();
 					if (temp.length() > 7) {
 						if (temp.substring(0, 7).equals("http://")) {
@@ -346,7 +347,7 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 
 					Vector<Integer> offsets = doc.getChildrenOffsets(offset);
 					PreViewConnector connectorRoleValues = new PreViewConnector();
-					if (connectorRoleValues!= null) {
+					if (connectorRoleValues != null) {
 						for (int i : offsets) {
 							String tag = doc.getCurrentTagname(i);
 							if (tag.equals("simpleCondition")) {
@@ -361,14 +362,14 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 								if (max == null)
 									max = "1";
 								att.setAttribute("max", max);
-	
+
 								String min = doc
 										.getAttributeValueFromCurrentTagName(i,
 												"min");
 								if (min == null)
 									min = "1";
 								att.setAttribute("min", min);
-	
+
 								String qualifier = doc
 										.getAttributeValueFromCurrentTagName(i,
 												"qualifier");
@@ -387,20 +388,20 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 								if (max == null)
 									max = "1";
 								att.setAttribute("max", max);
-	
+
 								String min = doc
 										.getAttributeValueFromCurrentTagName(i,
 												"min");
 								if (min == null)
 									min = "1";
 								att.setAttribute("min", min);
-								
+
 								String qualifier = doc
 										.getAttributeValueFromCurrentTagName(i,
 												"qualifier");
 								if (qualifier != null)
 									att.setAttribute("qualifier", qualifier);
-	
+
 								connectorRoleValues.setActionRole(att);
 							} else if (tag.equals("compoundCondition"))
 								connectorRoleValues.setCompoundCondition(doc

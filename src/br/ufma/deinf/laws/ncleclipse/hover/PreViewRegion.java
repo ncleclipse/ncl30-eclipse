@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
-public class PreViewRegion{
+public class PreViewRegion {
 	// private JFrame j;
 	private int WIDTH = 250;
 	private int HEIGHT = 250;
@@ -21,9 +21,8 @@ public class PreViewRegion{
 	public int bgheight;
 
 	public PreViewRegion(Vector<RegionValues> values) {
-		
+
 		this.values = values;
-		
 
 		double proporcao;
 		if (d.width > d.height) {
@@ -40,7 +39,7 @@ public class PreViewRegion{
 		v.setWidth("100%");
 		v.setHeight("100%");
 		this.values.add(0, v);
-		
+
 	}
 
 	public boolean ispercent(String value) {
@@ -66,10 +65,8 @@ public class PreViewRegion{
 
 	}
 
-	
-	
 	public Point paintRegions(final Composite parent) {
-		
+
 		int top = 0;
 		int left = 0;
 		int width = 0;
@@ -100,14 +97,14 @@ public class PreViewRegion{
 			left = (int) Math.ceil(percentToint(values.get(0).getLeft()));
 
 		if (ispercent(values.get(0).getRigth()))
-			rigth = (int) Math.ceil(percentToint(values.get(0).getRigth())/ 100
-					* d.width);
+			rigth = (int) Math.ceil(percentToint(values.get(0).getRigth())
+					/ 100 * d.width);
 		else
 			rigth = (int) Math.ceil(percentToint(values.get(0).getRigth()));
 
 		if (ispercent(values.get(0).getBottom()))
-			bottom = (int) Math.ceil(percentToint(values.get(0).getBottom())/ 100 
-					* d.height);
+			bottom = (int) Math.ceil(percentToint(values.get(0).getBottom())
+					/ 100 * d.height);
 		else
 			bottom = (int) Math.ceil(percentToint(values.get(0).getBottom()));
 
@@ -129,7 +126,6 @@ public class PreViewRegion{
 			rigth = 0;
 		if (left == -1)
 			left = 0;
-		
 
 		double proporcao;
 
@@ -148,47 +144,43 @@ public class PreViewRegion{
 		left *= WIDTH;
 		rigth *= WIDTH;
 
-		if (top == 0 ) 
-			if ( bottom > 0)
+		if (top == 0)
+			if (bottom > 0)
 				top = bgheight - bottom - heght;
 			else if (bottom == 0 && !values.get(0).getRigth().equals("-1"))
 				top = bgheight;
-				
+
 		if (left == 0)
-			if ( rigth > 0)
+			if (rigth > 0)
 				left = bgwidth - rigth - width;
 			else if (rigth == 0 && !values.get(0).getRigth().equals("-1"))
-				left = bgwidth;		
+				left = bgwidth;
 
-	
-		final int bgw=bgwidth;
-		final int bgh=bgheight;
-		parent.addPaintListener(new PaintListener(){
+		final int bgw = bgwidth;
+		final int bgh = bgheight;
+		parent.addPaintListener(new PaintListener() {
 
 			@Override
 			public void paintControl(PaintEvent e) {
 				Color blue = new Color(e.display, 0, 0, 255);
 
 				e.gc.setBackground(blue);
-				
+
 				e.gc.setAlpha(80);
 				e.gc.drawRectangle(0, 0, bgw, bgh);
 				e.gc.fillRectangle(0, 0, bgw, bgh);
-				
-				
+
 			}
-			
+
 		});
-		
-		
+
 		int paiheight = bgheight;
 		int paiwidth = bgwidth;
 		int paileft = left;
 		int paitop = top;
 
-		
 		for (int i = 1; i < values.size(); i++) {
-			
+
 			if (ispercent(values.get(i).getTop()))
 				top = (int) Math.ceil(percentToint(values.get(i).getTop())
 						/ 100 * paiheight);
@@ -226,66 +218,66 @@ public class PreViewRegion{
 						.ceil(percentToint(values.get(i).getBottom()) / 100
 								* paiheight);
 			else
-				bottom = (int) Math.ceil((percentToint(values.get(i).getBottom()) / h)
+				bottom = (int) Math.ceil((percentToint(values.get(i)
+						.getBottom()) / h)
 						* HEIGHT);
 
 			if (ispercent(values.get(i).getRigth()))
-				rigth = (int) (percentToint(values.get(i).getRigth()) / 100 
-						* paiwidth);
+				rigth = (int) (percentToint(values.get(i).getRigth()) / 100 * paiwidth);
 			else
 				rigth = (int) Math
 						.ceil((percentToint(values.get(i).getRigth()) / h)
 								* WIDTH);
-			
-			
-			if (values.get(i).getWidth().equals("-1")){
+
+			if (values.get(i).getWidth().equals("-1")) {
 				width = paiwidth;
 			}
-			if (values.get(i).getHeight().equals("-1")){
+			if (values.get(i).getHeight().equals("-1")) {
 				heght = paiheight;
 			}
-			
-			
+
 			if (top == 0 && values.get(i).getTop().equals("-1"))
-				if ( bottom > 0)
+				if (bottom > 0)
 					top = paiheight - heght - bottom;
-				else if (bottom == 0 && !values.get(i).getBottom().equals("-1")) top = paiheight - heght;
-			
+				else if (bottom == 0 && !values.get(i).getBottom().equals("-1"))
+					top = paiheight - heght;
+
 			if (left == 0 && values.get(i).getLeft().equals("-1"))
 				if (rigth > 0)
 					left = paiwidth - width - rigth;
-				else if (rigth == 0 && !values.get(i).getRigth().equals("-1")) left = paiwidth - width;
-			
-		
+				else if (rigth == 0 && !values.get(i).getRigth().equals("-1"))
+					left = paiwidth - width;
+
 			if (heght + top >= paiheight)
-				heght = paiheight - top; 
-			
+				heght = paiheight - top;
+
 			if (width + left >= paiwidth)
 				width = paiwidth - left;
-			
-			
-			if (top < 0){
+
+			if (top < 0) {
 				heght += top;
-				if (heght < 0) heght = 0;
+				if (heght < 0)
+					heght = 0;
 				top = 0;
 			}
-			
-			if (left < 0){
+
+			if (left < 0) {
 				width += left;
-				if (width < 0) width = 0;
+				if (width < 0)
+					width = 0;
 				left = 0;
 			}
-			
+
 			top += paitop;
 			left += paileft;
 
-		//	g2.drawRect(left, top, width, heght);
+			//	g2.drawRect(left, top, width, heght);
 			//g2.fillRect(left, top, width, heght);
-			final int l=left;
-			final int t=top;
-			final int w1=width;
-			final int h1=heght;
-			parent.addPaintListener(new PaintListener(){
+			final int l = left;
+			final int t = top;
+			final int w1 = width;
+			final int h1 = heght;
+			parent.addPaintListener(new PaintListener() {
 
 				@Override
 				public void paintControl(PaintEvent e) {
@@ -295,25 +287,24 @@ public class PreViewRegion{
 					e.gc.setAlpha(40);
 					e.gc.drawRectangle(l, t, w1, h1);
 					e.gc.fillRectangle(l, t, w1, h1);
-					
+
 				}
-				
+
 			});
 
 			paiheight = heght;
 			paiwidth = width;
 			paileft = left;
 			paitop = top;
-		
 
 		}
-		
-		return new Point (bgw, bgh);
+
+		return new Point(bgw, bgh);
 
 	}
 
 	public String toString() {
-	
+
 		return "";
 	}
 

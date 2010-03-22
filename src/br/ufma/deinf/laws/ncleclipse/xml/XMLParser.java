@@ -1,25 +1,50 @@
 /*******************************************************************************
+ * Este arquivo é parte da implementação do ambiente de autoria em Nested 
+ * Context Language - NCL Eclipse.
+ * Direitos Autorais Reservados (c) 2007-2010 UFMA/LAWS (Laboratório de Sistemas 
+ * Avançados da Web)
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da Licença Pública Geral GNU versão 2 conforme publicada pela Free 
+ * Software Foundation.
+ *
+ * Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+ * NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral do
+ * GNU versão 2 para mais detalhes. Você deve ter recebido uma cópia da Licença
+ * Pública Geral do GNU versão 2 junto com este programa; se não, escreva para a
+ * Free Software Foundation, Inc., no endereço 59 Temple Street, Suite 330,
+ * Boston, MA 02111-1307 USA.
+ *
+ * Para maiores informações:
+ * - ncleclipse@laws.deinf.ufma.br
+ * - http://www.laws.deinf.ufma.br/ncleclipse
+ * - http://www.laws.deinf.ufma.br
+ *
+ *******************************************************************************
  * This file is part of the authoring environment in Nested Context Language -
  * NCL Eclipse.
- * 
- * Copyright: 2007-2009 UFMA/LAWS (Laboratory of Advanced Web Systems), All Rights Reserved.
- * 
- * This program is free software; you can redistribute it and/or modify it under 
+ * Copyright: 2007-2010 UFMA/LAWS (Laboratory of Advanced Web Systems), All
+ * Rights Reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License version 2 as published by
  * the Free Software Foundation.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
- * PARTICULAR PURPOSE.  See the GNU General Public License version 2 for more 
- * details.
  * 
- * You should have received a copy of the GNU General Public License version 2
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License version 2 for
+ * more details. You should have received a copy of the GNU General Public 
+ * License version 2 along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 
+ * 02110-1301, USA.
+ *
  * For further information contact:
- * 		ncleclipse@laws.deinf.ufma.br
- * 		http://www.laws.deinf.ufma.br/ncleclipse
- * 		http://www.laws.deinf.ufma.br
- ********************************************************************************/
+ * - ncleclipse@laws.deinf.ufma.br
+ * - http://www.laws.deinf.ufma.br/ncleclipse
+ * - http://www.laws.deinf.ufma.br
+ *
+ ******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.xml;
 
 import java.io.File;
@@ -36,32 +61,25 @@ import org.xml.sax.XMLReader;
 /**
  * Performs DTD validation on supplied XML document
  */
-public class XMLParser
-{
+public class XMLParser {
 
 	private ErrorHandler errorHandler;
 	private ContentHandler contentHandler;
 
-	public void setErrorHandler(ErrorHandler errorHandler)
-	{
+	public void setErrorHandler(ErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;
 	}
 
-	public void setContentHandler(ContentHandler contentHandler)
-	{
+	public void setContentHandler(ContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
 	}
 
-	public static void main(String[] args)
-	{
-		try
-		{
+	public static void main(String[] args) {
+		try {
 			XMLParser parser = new XMLParser();
 			parser.setErrorHandler(new XMLValidationErrorHandler());
 			parser.doParse(new File(args[0]));
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -72,16 +90,12 @@ public class XMLParser
 	/**
 	 * Does DTD-based validation on File
 	 */
-	public void doParse(File xmlFilePath) throws RuntimeException
-	{
+	public void doParse(File xmlFilePath) throws RuntimeException {
 
 		InputSource inputSource = null;
-		try
-		{
+		try {
 			inputSource = new InputSource(new FileReader(xmlFilePath));
-		}
-		catch (FileNotFoundException e)
-		{
+		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 		doParse(inputSource);
@@ -91,8 +105,7 @@ public class XMLParser
 	/**
 	 * Does DTD-based validation on text
 	 */
-	public void doParse(String xmlText) throws RuntimeException
-	{
+	public void doParse(String xmlText) throws RuntimeException {
 
 		InputSource inputSource = new InputSource(new StringReader(xmlText));
 		doParse(inputSource);
@@ -102,23 +115,18 @@ public class XMLParser
 	/**
 	 * Does DTD-based validation on inputSource
 	 */
-	public void doParse(InputSource inputSource) throws RuntimeException
-	{
+	public void doParse(InputSource inputSource) throws RuntimeException {
 
-		try
-		{
+		try {
 			XMLReader reader = new SAXParser();
 			reader.setErrorHandler(errorHandler);
 			reader.setContentHandler(contentHandler);
 			//reader.setFeature(VALIDATION_FEATURE, true);
 			reader.parse(inputSource);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
 
 }
-

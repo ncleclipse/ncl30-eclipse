@@ -1,25 +1,50 @@
 /*******************************************************************************
+ * Este arquivo é parte da implementação do ambiente de autoria em Nested 
+ * Context Language - NCL Eclipse.
+ * Direitos Autorais Reservados (c) 2007-2010 UFMA/LAWS (Laboratório de Sistemas 
+ * Avançados da Web)
+ *
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
+ * os termos da Licença Pública Geral GNU versão 2 conforme publicada pela Free 
+ * Software Foundation.
+ *
+ * Este programa é distribuído na expectativa de que seja útil, porém, SEM 
+ * NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral do
+ * GNU versão 2 para mais detalhes. Você deve ter recebido uma cópia da Licença
+ * Pública Geral do GNU versão 2 junto com este programa; se não, escreva para a
+ * Free Software Foundation, Inc., no endereço 59 Temple Street, Suite 330,
+ * Boston, MA 02111-1307 USA.
+ *
+ * Para maiores informações:
+ * - ncleclipse@laws.deinf.ufma.br
+ * - http://www.laws.deinf.ufma.br/ncleclipse
+ * - http://www.laws.deinf.ufma.br
+ *
+ *******************************************************************************
  * This file is part of the authoring environment in Nested Context Language -
  * NCL Eclipse.
- * 
- * Copyright: 2007-2009 UFMA/LAWS (Laboratory of Advanced Web Systems), All Rights Reserved.
- * 
- * This program is free software; you can redistribute it and/or modify it under 
+ * Copyright: 2007-2010 UFMA/LAWS (Laboratory of Advanced Web Systems), All
+ * Rights Reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License version 2 as published by
  * the Free Software Foundation.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
- * PARTICULAR PURPOSE.  See the GNU General Public License version 2 for more 
- * details.
  * 
- * You should have received a copy of the GNU General Public License version 2
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License version 2 for
+ * more details. You should have received a copy of the GNU General Public 
+ * License version 2 along with this program; if not, write to the Free 
+ * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 
+ * 02110-1301, USA.
+ *
  * For further information contact:
- * 		ncleclipse@laws.deinf.ufma.br
- * 		http://www.laws.deinf.ufma.br/ncleclipse
- * 		http://www.laws.deinf.ufma.br
- ********************************************************************************/
+ * - ncleclipse@laws.deinf.ufma.br
+ * - http://www.laws.deinf.ufma.br/ncleclipse
+ * - http://www.laws.deinf.ufma.br
+ *
+ ******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse;
 
 import org.eclipse.ui.IActionBars;
@@ -35,8 +60,8 @@ import org.eclipse.ui.part.MultiPageEditorPart;
  * @author roberto
  *
  */
-public class NCLMultiPageActionBarContributor 
-extends MultiPageEditorActionBarContributor{
+public class NCLMultiPageActionBarContributor extends
+		MultiPageEditorActionBarContributor {
 	NCLActionContributor nclActionContributor = null;
 	//layout editor, not in use for now
 	//NCLLayoutEditorActionBarContributor nclLayoutActionBarContributor = null;
@@ -54,18 +79,18 @@ extends MultiPageEditorActionBarContributor{
 		nclActionContributor.init(bars);
 
 		//nclLayoutActionBarContributor.init(bars, page);
-    }
-	
-	public void init(IActionBars bars){
+	}
+
+	public void init(IActionBars bars) {
 		//super.init(bars);
 		//if(activeNestedEditor instanceof NCLLayoutEditor)
-			
+
 		//else if(activeNestedEditor instanceof NCLEditor)
 		nclActionContributor.init(bars);
 		//layout editor, not in use for now
 		//nclLayoutActionBarContributor.init(bars);
 	}
-	
+
 	public void setActivePage(IEditorPart activeEditor) {
 		// TODO Auto-generated method stub
 		/*IActionBars actionBars = getActionBars();
@@ -89,20 +114,21 @@ extends MultiPageEditorActionBarContributor{
 	}
 
 	public void setActiveEditor(IEditorPart part) {
-	    if (part instanceof MultiPageEditorPart) {
-	        part = ((NCLMultiPageEditor) part).getActivePageAsEditor();
-	        activeNestedEditor = part;
-	        /* layout editor, not in use for now
-	        if(part instanceof NCLLayoutEditor){
-	        	nclLayoutActionBarContributor.setActiveEditor(part);
-	        }
-	        else*/ 
-	        if(part instanceof NCLEditor){
-	        	nclActionContributor.setActiveEditor(part);
-	        }
-	    }
-	    super.setActiveEditor(part);
+		if (part instanceof MultiPageEditorPart) {
+			part = ((NCLMultiPageEditor) part).getActivePageAsEditor();
+			activeNestedEditor = part;
+			/* layout editor, not in use for now
+			if(part instanceof NCLLayoutEditor){
+				nclLayoutActionBarContributor.setActiveEditor(part);
+			}
+			else*/
+			if (part instanceof NCLEditor) {
+				nclActionContributor.setActiveEditor(part);
+			}
+		}
+		super.setActiveEditor(part);
 	}
+
 	/**
 	 * Contributes to the given menu.
 	 * <p>
@@ -210,7 +236,7 @@ extends MultiPageEditorActionBarContributor{
 		//nclLayoutActionBarContributor.dispose();
 		super.dispose();
 		//setActiveEditor(null);
-//		/getActionBars().clearGlobalActionHandlers();
+		//		/getActionBars().clearGlobalActionHandlers();
 	}
 
 	/**
@@ -409,7 +435,7 @@ extends MultiPageEditorActionBarContributor{
 	* @param activeEditor
 	* The active editor
 	*
-/**	public void setActivePage(IEditorPart activeEditor) {
+	/**	public void setActivePage(IEditorPart activeEditor) {
 		ActionRegistry registry = (ActionRegistry) activeEditor.getAdapter(ActionRegistry.class);
 		if(registry == null) return;
 		IActionBars bars = getActionBars();
@@ -426,9 +452,9 @@ extends MultiPageEditorActionBarContributor{
 			dispose();
 		}
 	}
-**/	
-/**	public void dispose(){
-		removeFromToolBar();
-		super.dispose();
-	} **/
+	**/
+	/**	public void dispose(){
+			removeFromToolBar();
+			super.dispose();
+		} **/
 }

@@ -74,12 +74,9 @@ public class RegionValues {
 		width = v.getWidth();
 	}
 
-	public String toString (){
-		return "Left: " + left
-				+ " Top: " + top
-				+ " Width: " + width
-				+ " Height " + height
-				+ " Right: " + rigth
-				+ " Bottom: " + bottom;
-		}
+	public String toString() {
+		return "Left: " + left + " Top: " + top + " Width: " + width
+				+ " Height " + height + " Right: " + rigth + " Bottom: "
+				+ bottom;
+	}
 }
