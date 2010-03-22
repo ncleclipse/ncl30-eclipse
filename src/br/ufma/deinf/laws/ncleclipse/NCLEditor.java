@@ -314,7 +314,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 			annotations[i] = annotation;
 		}
 
-		// Melhorar isto aqui Remover apenas as necess�rias e n�o todas as
+		// Melhorar isto aqui Remover apenas as necessarias e nao todas as
 		// antigas
 		annotationModel.modifyAnnotations(oldAnnotations, newAnnotations, null);
 
