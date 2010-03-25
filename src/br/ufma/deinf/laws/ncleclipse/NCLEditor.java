@@ -383,8 +383,12 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#handleCursorPositionChanged()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.texteditor.AbstractTextEditor#handleCursorPositionChanged
+	 * ()
 	 */
 	@Override
 	public void handleCursorPositionChanged() {
@@ -540,17 +544,52 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 					String tagname = doc.getCurrentTagname(event.fOffset);
 					final int fOffset = region.getOffset() + region.getLength();
 					int nextPartitionOffSet = fOffset + 1;
-
+					
+					int cont = 1;
+					int offset = event.fOffset;
+					
+					String fatherTagName = doc.getFatherTagName(offset);
+					while (fatherTagName.equals(tagname)){
+						cont++;
+						offset = doc.getFatherPartitionOffset(offset);
+						fatherTagName = doc.getFatherTagName(offset);
+					}			
 					char ch = doc.getChar(nextPartitionOffSet);
 					while (Character.isWhitespace(ch)) {
 						ch = doc.getChar(nextPartitionOffSet++);
 					}
+					region = doc.getPartition(nextPartitionOffSet);
+					offset = nextPartitionOffSet;
+					
+					do {
+						if (cont == 0) break;
+						offset = region.getOffset() + region.getLength();
+						
+						if (region.getType().equals(XMLPartitionScanner.XML_END_TAG)) {
+							if (doc.getCurrentEndTagName(region.getOffset()).equals(fatherTagName)) break;
+							
+							if (doc.getCurrentEndTagName(region.getOffset()).equals(tagname)) --cont;	
+						}
+						
+						if (region.getType().equals(XMLPartitionScanner.XML_START_TAG))
+							if (doc.getCurrentTagname(region.getOffset()).equals(tagname)) ++cont;
+						
+						
+						ch = doc.getChar(offset);
+						
+						while (Character.isWhitespace(ch)) {
+							ch = doc.getChar(offset++);
+						}
+						region = doc.getPartition(offset);
+	
+					}while (true);
 
 					region = doc.getPartition(nextPartitionOffSet);
+
 					doc.acceptPostNotificationReplaces();
 
 					if (region.getType()
-							.equals(XMLPartitionScanner.XML_END_TAG)) {
+							.equals(XMLPartitionScanner.XML_END_TAG) && cont==0) {
 						String endTagName = doc
 								.getCurrentEndTagName(nextPartitionOffSet);
 						if (tagname.equals(endTagName)) {
