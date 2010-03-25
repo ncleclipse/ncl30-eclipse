@@ -254,6 +254,21 @@
 	        contextId="org.eclipse.ui.textEditorScope">
 	  </key>
 	</extension>
+ <extension
+       point="org.eclipse.ui.editorActions">
+    <editorContribution
+          id="ncl30-eclipse.NCLInTime"
+          targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
+       <action
+             class="br.ufma.deinf.laws.ncleclipse.nclinTime.NCLInTime"
+             icon="icons/rec.png"
+             id="ncl30-eclipse.start"
+             label="Start record"
+             style="toggle"
+             toolbarPath="Normal/additions">
+       </action>
+    </editorContribution>
+ </extension>
 
 <!--
 <extension
