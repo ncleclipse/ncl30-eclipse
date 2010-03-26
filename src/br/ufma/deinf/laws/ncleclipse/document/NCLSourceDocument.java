@@ -1271,5 +1271,37 @@ public class NCLSourceDocument extends Document {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Retorna uma string com o número de tabulação da linha atual. Útil para
+	 * colocar o final de tag alinhado com o inicial
+	 * 
+	 * @param doc
+	 * @param offset
+	 * @return
+	 */
+	public String getIndentLine(int offset) {
+		int ident = 0;
+		while (true) {
+			try {
+				char c = getChar(--offset);
+				// System.out.println("Character = " + c + " ident = " +ident);
+				if (c == '\n')
+					break;
+				if (c == '\t')
+					++ident;
+				else
+					ident = 0;
+			} catch (BadLocationException e) {
+				ident = 0;
+				break;
+			}
+		}
+		String str = "";
+		for (int i = 0; i < ident; i++)
+			str += "\t";
+
+		return str;
+	}
 
 }
