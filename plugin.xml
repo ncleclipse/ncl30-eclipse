@@ -257,7 +257,7 @@
  <extension
        point="org.eclipse.ui.editorActions">
     <editorContribution
-          id="ncl30-eclipse.NCLInTime"
+          id="br.ufma.deinf.laws.ncleclipse.actions.nclintime.start"
           targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
        <action
              class="br.ufma.deinf.laws.ncleclipse.nclinTime.NCLInTime"

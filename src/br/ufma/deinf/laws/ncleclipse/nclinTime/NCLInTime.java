@@ -49,6 +49,7 @@ public class NCLInTime implements IEditorActionDelegate {
 	private NCLEditor editorPrev = null;
 	private String doc1 = "";
 	private String doc2 = "";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -60,15 +61,18 @@ public class NCLInTime implements IEditorActionDelegate {
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (editor != null)
 			editorPrev = editor;
-		editor = ((NCLMultiPageEditor) targetEditor.getEditorSite().getPage().getActiveEditor()).getNCLEditor();
 		
-	
+		if(targetEditor == null) return;
+		
+		editor = ((NCLMultiPageEditor) targetEditor.getEditorSite().getPage()
+				.getActiveEditor()).getNCLEditor();
+
 		if (editorPrev == null)
 			editorPrev = editor;
-		
+
 		if (editorPrev != editor)
 			action.setChecked(false);
-		
+
 	}
 
 	/*
@@ -78,49 +82,45 @@ public class NCLInTime implements IEditorActionDelegate {
 	 */
 	@Override
 	public void run(IAction action) {
-		
+
 		String text = "";
-		
+
 		text = editor.getInputDocument().get();
-			
-		
-		if (action.isChecked()){
+
+		if (action.isChecked()) {
 			doc1 = text;
-		}
-		else {
+		} else {
 			doc2 = text;
-			//Chama a função do Rodrigo
-			 try {
-				 MessageConsole myConsole = findConsole("");
-				 IWorkbenchPage page = editor.getEditorSite().getPage();
-				 String id = IConsoleConstants.ID_CONSOLE_VIEW;
-				 IConsoleView view = (IConsoleView) page.showView(id);
-				 view.display(myConsole);
-				
-				 MessageConsoleStream out = myConsole.newMessageStream();
-				 out.println("Comando de Edição");
-			 } catch (PartInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			
+			// Chama a função do Rodrigo
+			try {
+				MessageConsole myConsole = findConsole("");
+				IWorkbenchPage page = editor.getEditorSite().getPage();
+				String id = IConsoleConstants.ID_CONSOLE_VIEW;
+				IConsoleView view = (IConsoleView) page.showView(id);
+				view.display(myConsole);
+
+				MessageConsoleStream out = myConsole.newMessageStream();
+				out.println("Comando de Edição");
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 	}
-	
-	private MessageConsole findConsole (String name) {
-	      ConsolePlugin plugin = ConsolePlugin.getDefault();
-	      IConsoleManager conMan = plugin.getConsoleManager();
-	      IConsole[] existing = conMan.getConsoles();
-	      for (int i = 0; i < existing.length; i++)
-	         if (name.equals(existing[i].getName()))
-	            return (MessageConsole) existing[i];
-	      //no console found, so create a new one
-	      MessageConsole myConsole = new MessageConsole(name, null);
-	      conMan.addConsoles(new IConsole[]{myConsole});
-	      return myConsole;
-	   }
 
-	
+	private MessageConsole findConsole(String name) {
+		ConsolePlugin plugin = ConsolePlugin.getDefault();
+		IConsoleManager conMan = plugin.getConsoleManager();
+		IConsole[] existing = conMan.getConsoles();
+		for (int i = 0; i < existing.length; i++)
+			if (name.equals(existing[i].getName()))
+				return (MessageConsole) existing[i];
+		// no console found, so create a new one
+		MessageConsole myConsole = new MessageConsole(name, null);
+		conMan.addConsoles(new IConsole[] { myConsole });
+		return myConsole;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -131,7 +131,7 @@ public class NCLInTime implements IEditorActionDelegate {
 	 */
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		//System.out.println ("selectionChanged");
+		// System.out.println ("selectionChanged");
 	}
 
 }
