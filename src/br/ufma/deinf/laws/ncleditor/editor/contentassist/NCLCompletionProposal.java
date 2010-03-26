@@ -184,15 +184,19 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			List propList) {
 		int qlen = qualifier.length();
 
-		NCLSourceDocument nclDoc = NCLSourceDocument
-				.createNCLSourceDocumentFromIDocument(doc);
+		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
 
 		int fatherOffset = nclDoc.getFatherPartitionOffsetFromEndTag(offset);
+
+		String fatherIdentLine = nclDoc.getIndentLine(fatherOffset);
+
 		String tagname = nclDoc.getCurrentTagname(fatherOffset);
 
 		String prop = "</" + tagname + ">";
-		cursor = prop.length();
-		CompletionProposal proposal = new CompletionProposal(prop, offset
+		String value = "\n" + fatherIdentLine + prop;
+
+		cursor = value.length();
+		CompletionProposal proposal = new CompletionProposal(value, offset
 				- qlen, qlen, cursor, null, prop, null, null);
 		propList.add(proposal);
 		return;
@@ -213,7 +217,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			int offset, List propList) {
 		int qlen = qualifier.length();
 		NCLStructure nclStructure = NCLStructure.getInstance();
-		String indent = getIndentLine(doc, offset);
+		String indent = ((NCLSourceDocument) doc).getIndentLine(offset);
 
 		NCLSourceDocument nclDoc = NCLSourceDocument
 				.createNCLSourceDocumentFromIDocument(doc);
@@ -234,7 +238,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				String text = computeTagStructure(tagname, indent);
 
 				// get a help info to user
-				//TODO: Description of elements in English and Spanish
+				// TODO: Description of elements in English and Spanish
 				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
 						tagname);
 
@@ -256,7 +260,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						|| tagname2.startsWith(qualifier)) {
 					String text = computeTagStructure(tagname, indent);
 
-					//TODO: Description of elements in English and Spanish
+					// TODO: Description of elements in English and Spanish
 					// get a help information to user
 					String helpInfo = NCLHelper.getNCLHelper()
 							.getHelpDescription(tagname);
@@ -675,7 +679,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					currentPath = System.getProperty("user.home");
 			}
 			try {
-				//TODO: this is not sufficient to work with URI codification
+				// TODO: this is not sufficient to work with URI codification
 				qualifier = qualifier.replace("%20", " ");
 
 				Vector<String> proposal = new URIProposer(currentPath)
@@ -945,8 +949,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 									String aux = "<bind role=\"" + role
 											+ "\" component=\"\" />";
 									complete += "\n"
-											+ getIndentLine(nclSourceDoc,
-													offset) + "\t" + aux;
+											+ nclSourceDoc
+													.getIndentLine(offset)
+											+ "\t" + aux;
 								}
 							}
 
@@ -978,8 +983,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 									String aux = "<bind role=\"" + role
 											+ "\" component=\"\" />";
 									complete += "\n"
-											+ getIndentLine(nclSourceDoc,
-													offset) + "\t" + aux;
+											+ nclSourceDoc
+													.getIndentLine(offset)
+											+ "\t" + aux;
 								}
 							}
 						}
@@ -1010,8 +1016,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 									String aux = "<bind role=\"" + role
 											+ "\" component=\"\" />";
 									complete += "\n"
-											+ getIndentLine(nclSourceDoc,
-													offset) + "\t" + aux;
+											+ nclSourceDoc
+													.getIndentLine(offset)
+											+ "\t" + aux;
 								}
 							}
 						}
@@ -1069,7 +1076,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (prop.startsWith(qualifier)) {
 				cursor = prop.length();
 
-				//TODO: Description of elements in English and Spanish
+				// TODO: Description of elements in English and Spanish
 				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
 						currentTagname, view);
 
@@ -1135,38 +1142,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		fileImage = new Image(d, this.getClass().getProtectionDomain()
 				.getCodeSource().getLocation().toString().substring(5)
 				+ "icons" + "/" + "file.png");
-	}
-
-	/**
-	 * Retorna uma string com o número de tabulação da linha atual. Útil para
-	 * colocar o final de tag alinhado com o inicial
-	 * 
-	 * @param doc
-	 * @param offset
-	 * @return
-	 */
-	private String getIndentLine(IDocument doc, int offset) {
-		int ident = 0;
-		while (true) {
-			try {
-				char c = doc.getChar(--offset);
-				// System.out.println("Character = " + c + " ident = " +ident);
-				if (c == '\n')
-					break;
-				if (c == '\t')
-					++ident;
-				else
-					ident = 0;
-			} catch (BadLocationException e) {
-				ident = 0;
-				break;
-			}
-		}
-		String str = "";
-		for (int i = 0; i < ident; i++)
-			str += "\t";
-
-		return str;
 	}
 
 	/**
