@@ -1303,5 +1303,83 @@ public class NCLSourceDocument extends Document {
 
 		return str;
 	}
+	/**
+	 * Insere a estrutura de um elemento
+	 * 
+	 * @param element
+	 *  */
 
+	public void addElement (String element) {
+		try {
+			ITypedRegion region = getPartition(0);
+			String tagname;
+			if (element.equals("causalConnector")){
+				do {	
+					tagname = get (region.getOffset(), region.getLength());
+					if (tagname != null && (tagname.equals("<connectorBase>") || 
+											tagname.equals("</head>"))) break;
+					region = getNextPartition(region);	
+				}while (!tagname.equals("</ncl>"));
+				
+				
+				if (!tagname.equals("</ncl>") && !tagname.equals("</head>")) {
+					int offset = region.getOffset() + region.getLength() + 1;
+					ITypedRegion currentRegion = null;
+					
+					do {
+						if (currentRegion != null) 
+							offset = currentRegion.getOffset() + currentRegion.getLength();
+						char ch = getChar(offset);
+						while (Character.isWhitespace(ch)) ch = getChar (++offset);
+						currentRegion = getPartition(offset);
+					}while (currentRegion.getType().equals(XMLPartitionScanner.XML_COMMENT));
+					
+					offset = currentRegion.getOffset();
+					String str = getCurrentTagname(offset);
+					String ident = "";
+					if (str.equals("causalConnector") || str.equals("importBase"))
+						ident = getIndentLine(offset); 
+					
+					String replace = "\n" + ident + "<causalConnector id=\"\" >\n" +
+									 ident + "\t<simpleCondition role=\"\" />\n" +
+									 ident + "\t<simpleAction role=\"\" />\n" +
+									 ident + "</causalConnector>\n" + ident;
+					
+					replace (getNextPartition(region).getOffset(), 0, replace);
+				}
+				
+				else {
+					
+					if (tagname.equals("</head>")){
+						int offset = region.getOffset() - 1;
+						ITypedRegion temp = null;
+						do {
+							if (temp != null)
+								offset = temp.getOffset() - 1;
+							char ch = getChar(offset);
+							while (Character.isWhitespace(ch)) ch = getChar (--offset);
+							temp = getPartition(offset);
+							
+						} while (temp.getType().equals(XMLPartitionScanner.XML_COMMENT));
+						
+						String ident = getIndentLine(offset);
+						
+						String replace = "\n" + ident + "<connectorBase>" + 
+										 "\n" + ident + "\t<causalConnector id=\"\" >" +	
+										 "\n" + ident + "\t\t<simpleCondition role=\"\" />" +
+										 "\n" + ident + "\t\t<simpleAction role=\"\" />" +
+										 "\n" + ident + "\t</causalConnector>" +
+										 "\n" + ident + "</connectorBase>\n";
+						
+						replace (getPreviousPartition(region).getOffset(), 0, replace);
+					}
+				}
+			}
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+	
 }
