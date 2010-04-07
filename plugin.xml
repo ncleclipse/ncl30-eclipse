@@ -310,8 +310,8 @@
     </perspectiveExtension>
  </extension>
  <extension
-       id="ncleclipse.NCLNatures"
-       name="ncleclipse.NCLNatures"
+       id="ncleclipse.NCLNature"
+       name="ncleclipse.NCLNature"
        point="org.eclipse.core.resources.natures">
     <runtime>
        <run

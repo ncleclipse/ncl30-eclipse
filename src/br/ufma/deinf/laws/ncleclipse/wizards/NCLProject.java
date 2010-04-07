@@ -22,8 +22,13 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.wizards;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -32,16 +37,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-
-import java.io.File;
 
 /**
  * @author Rodrigo Costa <rodrim.c@laws.deinf.ufma.br>
  * 
  */
 public class NCLProject extends Wizard implements INewWizard, IExecutableExtension {
-	private WizardNewProjectCreationPage pageOne;
+	private NCLProjectWizardPage pageOne;
 	private IConfigurationElement configurationElement;
 	/**
 	 * 
@@ -64,7 +66,7 @@ public class NCLProject extends Wizard implements INewWizard, IExecutableExtensi
 	@Override
 	public void addPages() {
 		super.addPages();
-		pageOne = new WizardNewProjectCreationPage("NCL Project Wizard");
+		pageOne = new NCLProjectWizardPage("NCL Project Wizard");
 		pageOne.setTitle("NCL Project");
 		pageOne.setInitialProjectName("New NCL Project");
 		pageOne.setDescription("Create a NCL Project");
@@ -84,7 +86,7 @@ public class NCLProject extends Wizard implements INewWizard, IExecutableExtensi
 	    }
 
 	    CustomProjectSupport.createProject(name, location);
-
+	    
 	    return true;
 	
 	}
@@ -97,5 +99,7 @@ public class NCLProject extends Wizard implements INewWizard, IExecutableExtensi
 			String propertyName, Object data) throws CoreException {
 		configurationElement = config;		
 	}
+	
+
 
 }

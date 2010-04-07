@@ -1,8 +1,15 @@
 package br.ufma.deinf.laws.ncleclipse.wizards;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -33,12 +40,23 @@ public class CustomProjectSupport {
         try {
             addNature(project);
 
-            String[] paths = { "parent/child1-1/child2", "parent/child1-2/child2/child3" }; //$NON-NLS-1$ //$NON-NLS-2$
+            String[] paths = { "media" };
             addToProjectStructure(project, paths);
+            System.out.println ();
+    	    File file = new File ("/home/rodrim.c/senha");
+    	    String filePath = project.getLocationURI().getPath() + "/newFile.txt";
+    	    File newfile = new File (filePath);
+    	    //copy (file, newfile);
+    	    IFile path = project.getFile("newFile.txt");
+    	    FileInputStream stream = new FileInputStream(file); 
+    	    path.create(stream, true, null);
+			
         } catch (CoreException e) {
             e.printStackTrace();
             project = null;
-        }
+        } catch (IOException e) {
+			e.printStackTrace();
+		}
 
         return project;
     }
@@ -111,6 +129,20 @@ public class CustomProjectSupport {
             IProgressMonitor monitor = null;
             project.setDescription(description, monitor);
         }
+    }
+    
+	private static void copy(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dst);   
+
+        // Transferindo bytes de entrada para saída
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
     }
 
 }
