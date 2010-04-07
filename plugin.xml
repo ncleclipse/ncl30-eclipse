@@ -87,6 +87,15 @@
             id="ncleclipse.wizards.ConnectorBaseNewWizard"
             name="Connector Base Document">
       </wizard>
+      <wizard
+            category="ncleclipse"
+            class="br.ufma.deinf.laws.ncleclipse.wizards.NCLProject"
+            finalPerspective="ncleclipse.perspective"
+            icon="icons/sample.gif"
+            id="ncl30-eclipse.NCLProject"
+            name="NCL Project"
+            project="true">
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -268,6 +277,47 @@
              toolbarPath="Normal/additions">
        </action>
     </editorContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <view
+          class="org.eclipse.ui.navigator.CommonNavigator"
+          icon="icons/sample.gif"
+          id="ncleclipse.navigator"
+          name="Navigator View">
+    </view>
+ </extension>
+ <extension
+       point="org.eclipse.ui.perspectives">
+    <perspective
+          class="br.ufma.deinf.laws.ncleclipse.perspective.Perspective"
+          icon="icons/sample.gif"
+          id="ncleclipse.perspective"
+          name="NCL Eclipse Perspective">
+    </perspective>
+ </extension>
+ <extension
+       point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension
+          targetID="ncleclipse.perspective">
+       <view
+             id="ncleclipse.navigator"
+             minimized="false"
+             ratio="0.25"
+             relationship="left"
+             relative="org.eclipse.ui.editorss">
+       </view>
+    </perspectiveExtension>
+ </extension>
+ <extension
+       id="ncleclipse.NCLNatures"
+       name="ncleclipse.NCLNatures"
+       point="org.eclipse.core.resources.natures">
+    <runtime>
+       <run
+             class="br.ufma.deinf.laws.ncleclipse.natures.NCLNatures">
+       </run>
+    </runtime>
  </extension>
 
 <!--
