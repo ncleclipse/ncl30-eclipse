@@ -37,6 +37,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 /**
  * @author Rodrigo Costa <rodrim.c@laws.deinf.ufma.br>
@@ -87,6 +88,8 @@ public class NCLProject extends Wizard implements INewWizard, IExecutableExtensi
 
 	    CustomProjectSupport.createProject(name, location);
 	    
+	    BasicNewProjectResourceWizard.updatePerspective(configurationElement);
+
 	    return true;
 	
 	}
