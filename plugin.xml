@@ -91,7 +91,7 @@
             category="ncleclipse"
             class="br.ufma.deinf.laws.ncleclipse.wizards.NCLProject"
             finalPerspective="ncleclipse.perspective"
-            icon="icons/sample.gif"
+            icon="icons/project.png"
             id="ncl30-eclipse.NCLProject"
             name="NCL Project"
             project="true">
