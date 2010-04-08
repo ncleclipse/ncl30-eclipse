@@ -293,7 +293,7 @@
           class="br.ufma.deinf.laws.ncleclipse.perspective.Perspective"
           icon="icons/sample.gif"
           id="ncleclipse.perspective"
-          name="NCL Eclipse Perspective">
+          name="NCL">
     </perspective>
  </extension>
  <extension
@@ -318,6 +318,14 @@
              class="br.ufma.deinf.laws.ncleclipse.natures.NCLNatures">
        </run>
     </runtime>
+ </extension>
+ <extension
+       point="org.eclipse.ui.ide.projectNatureImages">
+    <image
+          icon="icons/projectSample.png"
+          id="ncleclipse.projectImage"
+          natureId="ncleclipse.NCLNature">
+    </image>
  </extension>
 
 <!--
