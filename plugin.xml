@@ -340,4 +340,11 @@
 </extension>
 -->
 
+	<extension point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+         markerType="org.eclipse.core.resources.problemmarker"
+         class="br.ufma.deinf.laws.ncleclipse.correction.NCLErrorFixer"/>
+   </extension>
+
+
 </plugin>

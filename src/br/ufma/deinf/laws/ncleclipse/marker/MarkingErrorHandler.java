@@ -72,8 +72,8 @@ import br.ufma.deinf.laws.ncleclipse.xml.XMLValidationErrorHandler;
  * 
  */
 public class MarkingErrorHandler extends XMLValidationErrorHandler {
-
-	public static final String ERROR_MARKER_ID = "editorarticle.dtderror";
+	public static String NCLValidatorMessage = "br.ufma.deinf.laws.ncleclipse.NCLValidatorMessageErrorID";
+	public static String NCLSourceDocument = "br.ufma.deinf.laws.ncleclipse.NCLSourceDocument";
 
 	private IDocument document;
 	private IResource file;
@@ -160,8 +160,8 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 		// Imprime os warning
 		Map map = new HashMap();
 		map.put(IMarker.LOCATION, file.getFullPath().toString());
-
 		map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_WARNING));
+
 		for (int i = 0; i < warnings.size(); i++) {
 			try {
 				int lineNumber = (new Integer((String) warnings.get(i)
@@ -202,6 +202,10 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 				Integer charEnd = getCharEnd(lineNumber, columnNumber);
 				if (charEnd != null)
 					map.put(IMarker.CHAR_END, charEnd);
+
+				// set message type
+				map.put(MarkingErrorHandler.NCLValidatorMessage, erros.get(i));
+				map.put(MarkingErrorHandler.NCLSourceDocument, document);
 
 				MarkerUtilities.setMessage(map, erros.get(i).getDescription());
 				MarkerUtilities.setLineNumber(map, new Integer((String) erros
