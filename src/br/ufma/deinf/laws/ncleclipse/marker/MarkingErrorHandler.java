@@ -214,7 +214,7 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 				MarkerUtilities.setLineNumber(map, new Integer((String) erros
 						.get(i).getElement().getUserData("startLine")));
 				
-				MarkerUtilities.createMarker(file, map, NCLMarkerError);
+				MarkerUtilities.createMarker(file, map, IMarker.PROBLEM);
 				
 			} catch (CoreException ee) {
 				ee.printStackTrace();
