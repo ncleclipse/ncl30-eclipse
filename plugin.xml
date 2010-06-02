@@ -108,14 +108,11 @@
    </extension>
    
    <!-- Error marker -->
-   <extension	id="nclerror"
+   <extension	id="br.ufma.deinf.laws.ncleclipse.problemmarker"
          		name="NCL Error"
          		point="org.eclipse.core.resources.markers">
          		
-      <super type="org.eclipse.core.resources.markers.problemmarker"/>
-      
-      <super type="org.eclipse.core.resources.markers.textmarker"/>
-      
+      <super type="org.eclipse.core.resources.problemmarker"/>
       <persistent value="true"/>
    </extension>
    
@@ -225,12 +222,6 @@
 	</extension>
 
 	<!-- History Navigation -->
-	<!-- extension point="org.eclipse.ui.bindings">
-			<key sequence="Alt+Left"
-				commandId="uk.co.example.actions.togglecomment"
-				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-				contextId="uk.co.example.ampleEditorScope"/>
-	</extension -->
 	
 	<extension point="org.eclipse.ui.commands">
 		<command 	id="br.ufma.deinf.laws.ncleclipse.actions.navigation.backward" 
@@ -238,6 +229,8 @@
 					
 		<command 	id="br.ufma.deinf.laws.ncleclipse.actions.navigation.forward" 
 					name="NCL Backward Navigation"/>
+		<command 	id="br.ufma.deinf.laws.ncleclipse.actions.CommentSelection" 
+					name="Comment Selection Action"/>
 	</extension>
 
 	<extension point="org.eclipse.ui.handlers">
@@ -247,6 +240,9 @@
   
 		<handler class="br.ufma.deinf.laws.ncleclipse.navigation.NCLForwardNavigation"
 			commandId="br.ufma.deinf.laws.ncleclipse.actions.navigation.forward">
+		</handler>
+		<handler class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelection"
+			commandId="br.ufma.deinf.laws.ncleclipse.actions.CommentSelection">
 		</handler>
 	</extension>
 
@@ -260,6 +256,12 @@
 	  <key  commandId="br.ufma.deinf.laws.ncleclipse.actions.navigation.forward"
 	        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 	        sequence="Alt+ARROW_RIGHT"
+	        contextId="org.eclipse.ui.textEditorScope">
+	  </key>
+	  
+	  <key  commandId="br.ufma.deinf.laws.ncleclipse.actions.CommentSelection"
+	        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+	        sequence="Ctrl+Alt+C"
 	        contextId="org.eclipse.ui.textEditorScope">
 	  </key>
 	</extension>
@@ -342,7 +344,7 @@
 
 	<extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
-         markerType="org.eclipse.core.resources.problemmarker"
+         markerType="br.ufma.deinf.laws.ncleclipse.problemmarker"
          class="br.ufma.deinf.laws.ncleclipse.correction.NCLErrorFixer"/>
    </extension>
 
