@@ -347,6 +347,18 @@
          markerType="br.ufma.deinf.laws.ncleclipse.problemmarker"
          class="br.ufma.deinf.laws.ncleclipse.correction.NCLErrorFixer"/>
    </extension>
-
+ <extension
+       point="org.eclipse.ui.popupMenus">
+    <viewerContribution
+          id="ncl30-eclipse.viewerContribution"
+          targetID="#TextEditorContext">
+       <action
+             class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
+             id="ncl30-eclipse.commentSelectionAction"
+             label="Comment Selection"
+             menubarPath="additions">
+       </action>
+    </viewerContribution>
+ </extension>
 
 </plugin>
