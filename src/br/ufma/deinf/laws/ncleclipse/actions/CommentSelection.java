@@ -77,30 +77,53 @@ public class CommentSelection extends AbstractHandler {
 		IWorkbenchPage page = win.getActivePage();
 		NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
 				.getNCLEditor();
-		
-		TextSelection selection  = (TextSelection)editor.getSelectionProvider().getSelection();
+
+		TextSelection selection = (TextSelection) editor.getSelectionProvider()
+				.getSelection();
 		IDocument doc = editor.getInputDocument();
-		
-		
-		//TODO: Check if the line is already commented. If it is uncomment the line
-		if (selection.getLength() == 0){
-			int line = selection.getStartLine();
-			int offset;
+
+		String commentBegin = "<!--";
+		String commentEnd = "-->";
+
+		// TODO: Check if the line is already commented. If it is uncomment the
+		// line(off
+
+		if (selection.getLength() > 0) {
 			try {
+				int offset;
+
+				int line = selection.getStartLine();
 				offset = doc.getLineOffset(line);
-				doc.replace(offset, 0, "<!--");
-				offset += doc.getLineLength(line);
-				doc.replace(offset-2, 0, " -->");
+				
+				String rest = doc.get(offset, selection.getOffset() - offset);
+				int index = rest.indexOf(commentBegin);
+				if (index != -1){
+					doc.replace(offset + index, commentBegin.length(), "");
+					
+					line = selection.getEndLine();
+					offset = doc.getLineOffset(line) + doc.getLineLength(line);
+					rest = doc.get (selection.getOffset() + selection.getLength() - 
+										commentBegin.length(), offset);
+					
+					index = rest.indexOf(commentEnd);
+					if (index != -1)
+						doc.replace(selection.getOffset() + selection.getLength()  - 
+								commentBegin.length() + index, commentEnd.length(), "");
+					return null;
+				}
+				
+				offset = selection.getOffset();
+				doc.replace(offset, 0, commentBegin);
+				offset += selection.getLength() + commentBegin.length();
+				doc.replace(offset, 0, commentEnd);
 			} catch (BadLocationException e) {
 				e.printStackTrace();
-			}			
-		}
-		else {
-			//TODO: Comment the range!
+			}
+		} else {
+			// TODO: Comment the range!
 			System.out.println("Comment the range!");
 		}
-		
+
 		return null;
 	}
-
 }
