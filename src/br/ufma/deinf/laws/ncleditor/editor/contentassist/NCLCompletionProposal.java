@@ -321,6 +321,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			cursor = ret.length();
 		} else {
 			ret = "<" + tagname + attributes + ">" + "\r\n" + indent + "\t";
+			if (tagname.equals("context")) {
+				ret += "<port id=\"\" component=\"\" />";
+			} else if (tagname.equals("causalConnector")) {
+				ret += "<simpleCondition role=\"\" />" + "\n" + indent + "\t"
+						+ "<simpleAction role=\"\" />";
+			}
 			cursor = ret.length();
 			ret += "\r\n" + indent + "</" + tagname + ">";
 		}
@@ -565,58 +571,20 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 
-		// TODO: tirar isso daqui! Poderíamos colocar no ncl30-common
-		// alguma coisa como atributos relativos a outros atributos
-		if (tagname.equals("descriptorParam")) {
-			if (attribute.equals("name")) {
-				Vector<String> name = AttributeValues
-						.getValues(DataType.PARAM_VALUES);
+		//suggest descriptorParam and property values
+		if ((tagname.equals("descriptorParam") || tagname.equals("property"))
+				&& attribute.equals("value")) {
 
-				for (String str : name)
-					if (str.startsWith(qualifier)) {
-						propList.add(new CompletionProposal(str, offset - qlen,
-								qlen, str.length(), null, str, null, null));
-					}
-				return;
-			} else if (attribute.equals("value")) {
+			String name = nclDoc.getAttributeValueFromCurrentTagName(offset,
+					"name");
 
-				String name = nclDoc.getAttributeValueFromCurrentTagName(
-						offset, "name");
+			prop = AttributeValues.getValuesFromProperty(name);
 
-				if (name.equals("background"))
-					prop = AttributeValues.getValues(DataType.COLOR);
-
-				else if (name.equals("visible"))
-					prop = AttributeValues.getValues(DataType.BOOLEAN_VALUE);
-
-				else if (name.equals("fit"))
-					prop = AttributeValues.getValues(DataType.FIT_VALUE);
-
-				else if (name.equals("scroll"))
-					prop = AttributeValues.getValues(DataType.SCROLL);
-
-				else if (name.equals("fontColor"))
-					prop = AttributeValues.getValues(DataType.COLOR);
-
-				else if (name.equals("fontVariant"))
-					prop = AttributeValues.getValues(DataType.FONT_VARIANT);
-
-				else if (name.equals("fontWeight"))
-					prop = AttributeValues.getValues(DataType.FONT_WEIGHT);
-
-				else if (name.equals("playerLife"))
-					prop = AttributeValues.getValues(DataType.PLAYER_LIFE);
-
-				else if (name.equals("reusePlayer"))
-					prop = AttributeValues.getValues(DataType.BOOLEAN_VALUE);
-
-				for (String str : prop)
-					if (str.startsWith(qualifier))
-						propList.add(new CompletionProposal(str, offset - qlen,
-								qlen, str.length(), null, str, null, null));
-				return;
-			}
-
+			for (String str : prop)
+				if (str.startsWith(qualifier))
+					propList.add(new CompletionProposal(str, offset - qlen,
+							qlen, str.length(), null, str, null, null));
+			return;
 		}
 
 		// sources attributes
