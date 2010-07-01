@@ -22,11 +22,15 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.nclinTime;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -36,9 +40,11 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.xml.sax.SAXException;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditor;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
+import br.ufma.deinf.laws.nclinTime.DOMParser;
 
 /**
  * @author Rodrigo Costa <rodrim.c@laws.deinf.ufma.br>
@@ -93,15 +99,33 @@ public class NCLInTime implements IEditorActionDelegate {
 			doc2 = text;
 			// Chama a função do Rodrigo
 			try {
+				
+				
+				DOMParser execute = new DOMParser();
+				String comando = execute.exe(doc2, doc1);
 				MessageConsole myConsole = findConsole("");
 				IWorkbenchPage page = editor.getEditorSite().getPage();
 				String id = IConsoleConstants.ID_CONSOLE_VIEW;
 				IConsoleView view = (IConsoleView) page.showView(id);
 				view.display(myConsole);
-
+				myConsole.clearConsole();
 				MessageConsoleStream out = myConsole.newMessageStream();
-				out.println("Comando de Edição");
+				
+				
+				out.println(comando);
 			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
