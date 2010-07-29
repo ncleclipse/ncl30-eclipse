@@ -420,8 +420,9 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 					if (index != -1)
 						if (index == regionId.lastIndexOf("#")) {
 							aliasRegion = regionId.substring(0, index);
+							if (aliasRegion.equals("")) return null;
+							
 							regionId = regionId.substring(index + 1);
-
 							offset = doc.getOffsetByValue("alias", aliasRegion);
 							String documentURI = doc
 									.getAttributeValueFromCurrentTagName(
@@ -457,10 +458,15 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 								}
 							}
 						}
+						else return null;
 
 					int newOffset = offset;
-					newOffset = doc.getNextTagPartition(
+					try{
+						newOffset = doc.getNextTagPartition(
 							doc.getElementOffset(regionId)).getOffset();
+					}catch (BadLocationException e) {
+						return null;
+					}
 
 					PreViewRegion region = new PreViewRegion(
 							getRegionFatherTree(newOffset));
