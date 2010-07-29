@@ -96,8 +96,18 @@ public class NCLSourceDocument extends Document {
 	 * @param doc
 	 */
 	public NCLSourceDocument(String doc) {
-		// TODO Auto-generated constructor stub
 		super(doc);
+		IDocumentPartitioner partitioner = new XMLPartitioner(
+				new XMLPartitionScanner(), new String[] {
+						XMLPartitionScanner.XML_START_TAG,
+						XMLPartitionScanner.XML_PI,
+						XMLPartitionScanner.XML_DOCTYPE,
+						XMLPartitionScanner.XML_END_TAG,
+						XMLPartitionScanner.XML_TEXT,
+						XMLPartitionScanner.XML_CDATA,
+						XMLPartitionScanner.XML_COMMENT });
+		partitioner.connect(this);
+		setDocumentPartitioner(partitioner);
 	}
 
 	/**
