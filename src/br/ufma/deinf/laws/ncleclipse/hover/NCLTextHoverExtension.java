@@ -2,12 +2,12 @@ package br.ufma.deinf.laws.ncleclipse.hover;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.util.Vector;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultTextHover;
 import org.eclipse.jface.text.IRegion;
@@ -18,7 +18,6 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.graphics.Point;
-
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IURIEditorInput;
@@ -93,14 +92,200 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 		return tree;
 	}
 
+	private void hoverAudioVideo(String nameFile, String type, String path) {
+		File arquivo = new File(nameFile);
+		if (arquivo.isFile()) {
+			result = new PreViewMedia(nameFile, type);
+
+		} else {
+			nameFile = path + "/" + nameFile;
+			arquivo = new File(nameFile);
+			if (arquivo.isFile())
+
+				result = new PreViewMedia(nameFile, type);
+
+		}
+	}
+
+	private void hoverText(String nameFile, String sbstr, String path) {
+		result = "";
+
+		if (sbstr.equals("html") || sbstr.equals("xml") || sbstr.equals("htm")) {
+
+			File arquivo = new File(nameFile);
+
+			if (arquivo.isFile()) {
+				FileReader in = null;
+				try {
+					in = new FileReader(arquivo);
+					BufferedReader leitor = new BufferedReader(in);
+					String tmp, aux = "";
+					while ((tmp = leitor.readLine()) != null)
+						aux += tmp + "\n";
+					PreViewXML pre = new PreViewXML(300, 300, aux, nameFile);
+					result = pre;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} else {
+				nameFile = path + "/" + currentFile.getParent() + "/"
+						+ nameFile;
+				arquivo = new File(nameFile);
+				if (arquivo.isFile()) {
+					FileReader in = null;
+					try {
+						in = new FileReader(arquivo);
+						BufferedReader leitor = new BufferedReader(in);
+						String tmp, aux = "";
+						while ((tmp = leitor.readLine()) != null)
+							aux += tmp + "\n";
+
+						PreViewXML pre = new PreViewXML(300, 300, aux, nameFile);
+						result = pre;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} else if (sbstr.equals("txt") || sbstr.equals("css")) {
+			File file = new File(nameFile);
+			// Caso o caminho do arquivo seja um caminho
+			// completo
+			if (file.isFile()) {
+				FileReader in = null;
+				try {
+					in = new FileReader(file);
+					BufferedReader leitor = new BufferedReader(in);
+					String tmp, aux = "";
+					while ((tmp = leitor.readLine()) != null)
+						aux += tmp + "\n";
+					aux = aux.substring(0, aux.length() - 1);
+					result = aux;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				// Caso o caminho do arquivo seja um caminho
+				// relativo
+				nameFile = path + currentFile.getParent() + "/" + nameFile;
+				file = new File(nameFile);
+				if (file.isFile()) {
+					FileReader in = null;
+					try {
+						in = new FileReader(file);
+						BufferedReader leitor = new BufferedReader(in);
+						String tmp, aux = "";
+						while ((tmp = leitor.readLine()) != null)
+							aux += tmp + "\n";
+						aux = aux.substring(0, aux.length() - 1);
+						result = aux;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+
+	private void hoverImage(String nameFile, String path) {
+		PreViewImage img = null;
+		if (new File(nameFile).isFile())
+			img = new PreViewImage(nameFile);
+		else {
+			nameFile = path + "/" + nameFile;
+			if (new File(nameFile).isFile())
+				img = new PreViewImage(nameFile);
+		}
+		result = img;
+	}
+
+	private void hoverCausalConnector(int offset) {
+		Vector<Integer> offsets = doc.getChildrenOffsets(offset);
+		PreViewConnector connectorRoleValues = new PreViewConnector();
+		if (connectorRoleValues != null) {
+			for (int i : offsets) {
+				String tag = doc.getCurrentTagname(i);
+				if (tag.equals("simpleCondition")) {
+					Attributes att = new Attributes();
+					String role = doc.getAttributeValueFromCurrentTagName(i,
+							"role");
+					att.setAttribute("role", role);
+					String max = doc.getAttributeValueFromCurrentTagName(i,
+							"max");
+					if (max == null)
+						max = "1";
+					att.setAttribute("max", max);
+
+					String min = doc.getAttributeValueFromCurrentTagName(i,
+							"min");
+					if (min == null)
+						min = "1";
+					att.setAttribute("min", min);
+
+					String qualifier = doc.getAttributeValueFromCurrentTagName(
+							i, "qualifier");
+					if (qualifier != null)
+						att.setAttribute("qualifier", qualifier);
+					connectorRoleValues.setConditionRole(att);
+				} else if (tag.equals("simpleAction")) {
+					Attributes att = new Attributes();
+					String role = doc.getAttributeValueFromCurrentTagName(i,
+							"role");
+					att.setAttribute("role", role);
+					String max = doc.getAttributeValueFromCurrentTagName(i,
+							"max");
+					if (max == null)
+						max = "1";
+					att.setAttribute("max", max);
+
+					String min = doc.getAttributeValueFromCurrentTagName(i,
+							"min");
+					if (min == null)
+						min = "1";
+					att.setAttribute("min", min);
+
+					String qualifier = doc.getAttributeValueFromCurrentTagName(
+							i, "qualifier");
+					if (qualifier != null)
+						att.setAttribute("qualifier", qualifier);
+
+					connectorRoleValues.setActionRole(att);
+				} else if (tag.equals("compoundCondition"))
+					connectorRoleValues
+							.setCompoundCondition(doc
+									.getAttributeValueFromCurrentTagName(i,
+											"operator"));
+				else if (tag.equals("compoundAction"))
+					connectorRoleValues
+							.setCompoundAction(doc
+									.getAttributeValueFromCurrentTagName(i,
+											"operator"));
+				else if (tag.equals("attributeAssessment")) {
+					Attributes att = new Attributes();
+					att.setAttribute("role", "test");
+					connectorRoleValues.setConditionRole(att);
+				}
+			}
+			result = connectorRoleValues;
+		}
+	}
+
 	@Override
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
+		int returnOffset = offset;
 		TypedRegion typedRegion;
 
 		IWorkbench wb = PlatformUI.getWorkbench();
 		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 		IWorkbenchPage page = win.getActivePage();
 		IEditorPart editor = page.getActiveEditor();
+		IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
+		String path = file.getProject().getLocation().toString();
 
 		if (editor.getEditorInput() instanceof IFileEditorInput) {
 			currentFile = ((IFileEditorInput) editor.getEditorInput())
@@ -144,6 +329,26 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 				video.add("mpeg");
 				video.add("mpg");
 
+				String refer = "";
+
+				refer = doc.getAttributeValueFromCurrentTagName(offset,
+						"component");
+				if (refer != null && !refer.equals("")) {
+					offset = doc.getNextTagPartition(
+							doc.getElementOffset(refer)).getOffset();
+				}
+
+				refer = doc
+						.getAttributeValueFromCurrentTagName(offset, "refer");
+
+				while (refer != null && !refer.equals("")) {
+					offset = doc.getNextTagPartition(
+							doc.getElementOffset(refer)).getOffset();
+
+					refer = doc.getAttributeValueFromCurrentTagName(offset,
+							"refer");
+				}
+
 				String CurrentAttribute = doc.getCurrentAttribute(offset);
 				String CurrentTagname = doc.getCurrentTagname(offset);
 
@@ -185,247 +390,94 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 
 					if (audio.contains(sbstr) || video.contains(sbstr)) {
 
-						String nomeArquivo = mime;
+						hoverAudioVideo(mime, sbstr, path);
 
-						File arquivo = new File(nomeArquivo);
-						if (arquivo.isFile()) {
-							result = new PreViewMedia(nomeArquivo, sbstr);
+					} else if (text.contains(sbstr)) {
 
-						} else {
-							nomeArquivo = ResourcesPlugin.getWorkspace()
-									.getRoot().getLocation()
-									+ currentFile.getParent()
-									+ File.separatorChar + mime;
-							arquivo = new File(nomeArquivo);
-							if (arquivo.isFile())
+						hoverText(mime, sbstr, path);
 
-								result = new PreViewMedia(nomeArquivo, sbstr);
-
-						}
-
-					}
-					if (text.contains(sbstr)) {
-						result = "";
-						String nomeArquivo = mime;
-
-						if (sbstr.equals("html") || sbstr.equals("xml")
-								|| sbstr.equals("htm")) {
-
-							File arquivo = new File(nomeArquivo);
-
-							if (arquivo.isFile()) {
-								FileReader in = null;
-								try {
-									in = new FileReader(arquivo);
-									BufferedReader leitor = new BufferedReader(
-											in);
-									String tmp, aux = "";
-									while ((tmp = leitor.readLine()) != null)
-										aux += tmp + "\n";
-									PreViewXML pre = new PreViewXML(300, 300,
-											aux, nomeArquivo);
-									result = pre;
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-
-							} else {
-								nomeArquivo = ResourcesPlugin.getWorkspace()
-										.getRoot().getLocation()
-										+ currentFile.getParent()
-										+ File.separatorChar + mime;
-								arquivo = new File(nomeArquivo);
-								if (arquivo.isFile()) {
-									FileReader in = null;
-									try {
-										in = new FileReader(arquivo);
-										BufferedReader leitor = new BufferedReader(
-												in);
-										String tmp, aux = "";
-										while ((tmp = leitor.readLine()) != null)
-											aux += tmp + "\n";
-
-										PreViewXML pre = new PreViewXML(300,
-												300, aux, nomeArquivo);
-										result = pre;
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-							}
-						} else if (sbstr.equals("txt") || sbstr.equals("css")) {
-							File arquivo = new File(nomeArquivo);
-							// Caso o caminho do arquivo seja um caminho
-							// completo
-							if (arquivo.isFile()) {
-								FileReader in = null;
-								try {
-									in = new FileReader(arquivo);
-									BufferedReader leitor = new BufferedReader(
-											in);
-									String tmp, aux = "";
-									while ((tmp = leitor.readLine()) != null)
-										aux += tmp + "\n";
-									aux = aux.substring(0, aux.length() - 1);
-									result = aux;
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							} else {
-								// Caso o caminho do arquivo seja um caminho
-								// relativo
-								nomeArquivo = ResourcesPlugin.getWorkspace()
-										.getRoot().getLocation()
-										+ currentFile.getParent()
-										+ File.separatorChar + mime;
-								arquivo = new File(nomeArquivo);
-								if (arquivo.isFile()) {
-									FileReader in = null;
-									try {
-										in = new FileReader(arquivo);
-										BufferedReader leitor = new BufferedReader(
-												in);
-										String tmp, aux = "";
-										while ((tmp = leitor.readLine()) != null)
-											aux += tmp + "\n";
-										aux = aux
-												.substring(0, aux.length() - 1);
-										result = aux;
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-							}
-						}
 					} else if (image.contains(sbstr)) {
-						String nomeArquivo = mime;
-						PreViewImage img = null;
-						if (new File(nomeArquivo).isFile())
-							img = new PreViewImage(nomeArquivo);
-						else {
-							nomeArquivo = ResourcesPlugin.getWorkspace()
-									.getRoot().getLocation()
-									+ currentFile.getParent()
-									+ File.separatorChar + mime;
-							if (new File(nomeArquivo).isFile())
-								img = new PreViewImage(nomeArquivo);
-						}
-						// Image image = new
-						// Image(NCLConfiguration.getInformationControlCreator().getShell(),
-						// nomeArquivo);
-						// result = img;
-						result = img;
+
+						hoverImage(mime, path);
+
 					}
+
 				} else if (doc.getCurrentAttribute(offset).equals("id")
 						&& doc.getCurrentTagname(offset).equals("region")) {
-					PreViewRegion t = new PreViewRegion(
+
+					PreViewRegion region = new PreViewRegion(
 							getRegionFatherTree(offset));
-					result = t;
+					result = region;
+
 				} else if (doc.getCurrentTagname(offset).equals("descriptor")
 						&& doc.getCurrentAttribute(offset).equals("region")) {
 
-					String teste = doc.getAttributeValueFromCurrentTagName(
+					String regionId = doc.getAttributeValueFromCurrentTagName(
 							offset, "region");
-					int aux = offset;
-					while (((doc.getCurrentTagname(aux).equals("region") == false) || (doc
-							.getAttributeValueFromCurrentTagName(aux, "id")
-							.equals(teste) == false))
-							&& (aux > 0)) {
-						aux--;
 
-					}
-					PreViewRegion t = new PreViewRegion(
-							getRegionFatherTree(aux));
+					String aliasRegion = "";
+					int index = regionId.indexOf("#");
+					if (index != -1)
+						if (index == regionId.lastIndexOf("#")) {
+							aliasRegion = regionId.substring(0, index);
+							regionId = regionId.substring(index + 1);
 
-					result = t;
+							offset = doc.getOffsetByValue("alias", aliasRegion);
+							String documentURI = doc
+									.getAttributeValueFromCurrentTagName(
+											offset, "documentURI");
+							if (documentURI != null && !documentURI.equals("")) {
+								try {
+									File importedFile;
+									importedFile = new File(documentURI);
+									BufferedReader reader = null;
+									if (!importedFile.isFile()) {
+										importedFile = new File(path + "/"
+												+ documentURI);
+									}
+									if (importedFile != null
+											&& importedFile.isFile()) {
+
+										reader = new BufferedReader(
+												new FileReader(importedFile));
+									}
+									String newNCL = "";
+									while (reader.ready())
+										newNCL += reader.readLine() + "\n";
+									
+									doc = new NCLSourceDocument(newNCL);
+									offset = doc.getElementOffset(regionId);
+									
+								} catch (FileNotFoundException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						}
+
+					int newOffset = offset;
+					newOffset = doc.getNextTagPartition(
+							doc.getElementOffset(regionId)).getOffset();
+
+					PreViewRegion region = new PreViewRegion(
+							getRegionFatherTree(newOffset));
+
+					result = region;
 				} else if (doc.getCurrentTagname(offset).equals(
 						"causalConnector")) {
 
-					Vector<Integer> offsets = doc.getChildrenOffsets(offset);
-					PreViewConnector connectorRoleValues = new PreViewConnector();
-					if (connectorRoleValues != null) {
-						for (int i : offsets) {
-							String tag = doc.getCurrentTagname(i);
-							if (tag.equals("simpleCondition")) {
-								Attributes att = new Attributes();
-								String role = doc
-										.getAttributeValueFromCurrentTagName(i,
-												"role");
-								att.setAttribute("role", role);
-								String max = doc
-										.getAttributeValueFromCurrentTagName(i,
-												"max");
-								if (max == null)
-									max = "1";
-								att.setAttribute("max", max);
+					hoverCausalConnector(offset);
 
-								String min = doc
-										.getAttributeValueFromCurrentTagName(i,
-												"min");
-								if (min == null)
-									min = "1";
-								att.setAttribute("min", min);
-
-								String qualifier = doc
-										.getAttributeValueFromCurrentTagName(i,
-												"qualifier");
-								if (qualifier != null)
-									att.setAttribute("qualifier", qualifier);
-								connectorRoleValues.setConditionRole(att);
-							} else if (tag.equals("simpleAction")) {
-								Attributes att = new Attributes();
-								String role = doc
-										.getAttributeValueFromCurrentTagName(i,
-												"role");
-								att.setAttribute("role", role);
-								String max = doc
-										.getAttributeValueFromCurrentTagName(i,
-												"max");
-								if (max == null)
-									max = "1";
-								att.setAttribute("max", max);
-
-								String min = doc
-										.getAttributeValueFromCurrentTagName(i,
-												"min");
-								if (min == null)
-									min = "1";
-								att.setAttribute("min", min);
-
-								String qualifier = doc
-										.getAttributeValueFromCurrentTagName(i,
-												"qualifier");
-								if (qualifier != null)
-									att.setAttribute("qualifier", qualifier);
-
-								connectorRoleValues.setActionRole(att);
-							} else if (tag.equals("compoundCondition"))
-								connectorRoleValues.setCompoundCondition(doc
-										.getAttributeValueFromCurrentTagName(i,
-												"operator"));
-							else if (tag.equals("compoundAction"))
-								connectorRoleValues.setCompoundAction(doc
-										.getAttributeValueFromCurrentTagName(i,
-												"operator"));
-							else if (tag.equals("attributeAssessment")) {
-								Attributes att = new Attributes();
-								att.setAttribute("role", "test");
-								connectorRoleValues.setConditionRole(att);
-							}
-						}
-						result = connectorRoleValues;
-					}
 				} else
 					result = "";
 
 				Point selection = textViewer.getSelectedRange();
 				if (selection.x <= offset && offset < selection.x + selection.y)
 					return new Region(selection.x, selection.y);
-				return new Region(offset, 0);
+				return new Region(returnOffset, 0);
 			} catch (BadLocationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
