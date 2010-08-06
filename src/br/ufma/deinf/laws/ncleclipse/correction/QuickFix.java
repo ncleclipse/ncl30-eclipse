@@ -23,7 +23,8 @@
 package br.ufma.deinf.laws.ncleclipse.correction;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.ui.IMarkerResolution;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IMarkerResolution2;
 
 import br.ufma.deinf.gia.labmint.message.Message;
 import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
@@ -32,15 +33,30 @@ import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
  * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
  * 
  */
-public class QuickFix implements IMarkerResolution {
-	String label;
-	Message message;
-	NCLSourceDocument nclSourceDoc;
-
+public class QuickFix implements IMarkerResolution2 {
+	private String label;
+	private Message message;
+	private NCLSourceDocument nclSourceDoc;
+	private int type; //1 addElement
+					  //2 removeElement
+	                  //3 setAttribute
+					  //4 removeAttribute
+	private String [] params;
+	
 	QuickFix(String label, Message message, NCLSourceDocument nclSourceDoc) {
 		this.label = label;
 		this.message = message;
 		this.nclSourceDoc = nclSourceDoc;
+		this.type = FixType.UNKNOW;
+		this.params = null;
+	}
+	
+	QuickFix(String label, Message message, NCLSourceDocument nclSourceDoc, int type, String [] params) {
+		this.label = label;
+		this.message = message;
+		this.nclSourceDoc = nclSourceDoc;
+		this.type = type;
+		this.params = params;
 	}
 
 	public String getLabel() {
@@ -48,8 +64,43 @@ public class QuickFix implements IMarkerResolution {
 	}
 
 	public void run(IMarker marker) {
-		if(message.getMsgID() == 3001) {
-			nclSourceDoc.removeElement(message.getId());
+		if (type == FixType.ADD_ELEMENT){
+			
 		}
+		
+		else if (type == FixType.REMOVE_ELEMENT){
+			if (params == null || params.length < 1) return;
+			String id = params[0];
+			nclSourceDoc.removeElement(id);
+		}
+		
+		else if (type == FixType.SET_ATTRIBUTE){
+			if (params == null || params.length < 2) return;
+			String attribute = params[0];
+			String value = params[1];
+			nclSourceDoc.setAttribute(message.getId(), attribute, value);
+		}
+		
+		else if (type == FixType.REMOVE_ATTRIBUTE){
+			
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IMarkerResolution2#getDescription()
+	 */
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IMarkerResolution2#getImage()
+	 */
+	@Override
+	public Image getImage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
