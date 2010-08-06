@@ -63,6 +63,7 @@ import org.xml.sax.SAXParseException;
 import br.ufma.deinf.gia.labmint.composer.NCLValidator;
 import br.ufma.deinf.gia.labmint.message.Message;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
+import br.ufma.deinf.laws.ncleclipse.correction.MessagesUtilities;
 import br.ufma.deinf.laws.ncleclipse.xml.XMLValidationError;
 import br.ufma.deinf.laws.ncleclipse.xml.XMLValidationErrorHandler;
 
@@ -76,7 +77,7 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 	public static String NCLSourceDocument = "NCLSourceDocument";
 	public static String NCLMarkerError = "br.ufma.deinf.laws.ncleclipse.problemmarker";
 
-	private IDocument document;
+	private static IDocument document;
 	private IResource file;
 
 	public MarkingErrorHandler(IResource file, IDocument document) {
@@ -84,10 +85,15 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 		this.file = file;
 		this.document = document;
 	}
+	
+	public static IDocument getDocument (){
+		return document;
+	}
 
 	public void removeExistingMarkers() {
 		try {
 			file.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+			MessagesUtilities.clear();
 		} catch (CoreException e1) {
 			e1.printStackTrace();
 		}
@@ -203,18 +209,21 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 				if (charEnd != null)
 					map.put(IMarker.CHAR_END, charEnd);
 
-				// set message type
-				//Descomentar as linhas seguintes resulta em nao mostrar marcar os erros em vermelho
-				// Na versao antiga (3.4) do Eclipse funciona perfeitamente!
-				//TODO: descobrir pq
-//				map.put(MarkingErrorHandler.NCLValidatorMessage, erros.get(i));
-//				map.put(MarkingErrorHandler.NCLSourceDocument, document);
-
+				
+				MessagesUtilities.put(erros.get(i).toString(), erros.get(i));
+				
+				map.put(MarkingErrorHandler.NCLValidatorMessage, erros.get(i).toString());
+				map.put(MarkingErrorHandler.NCLSourceDocument, document.get());
+				
+				
 				MarkerUtilities.setMessage(map, erros.get(i).getDescription());
 				MarkerUtilities.setLineNumber(map, new Integer((String) erros
 						.get(i).getElement().getUserData("startLine")));
 				
-				MarkerUtilities.createMarker(file, map, IMarker.PROBLEM);
+				
+				MarkerUtilities.createMarker(file, map, NCLMarkerError);
+				
+				
 				
 			} catch (CoreException ee) {
 				ee.printStackTrace();
