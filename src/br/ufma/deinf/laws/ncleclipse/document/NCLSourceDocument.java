@@ -770,8 +770,7 @@ public class NCLSourceDocument extends Document {
 
 				replace(begin, 0, newValue);
 			} else {
-				String text = get(region.getOffset(), region.getLength());
-				int attrOffset = text.indexOf(attr);
+				int attrOffset = getAttributePosition(attr, region.getOffset()) - attr.length() - 1;
 				int attrSizeAtual = attrAtual.length();
 				begin = region.getOffset() + attrOffset;
 				newValue = attr + "=\"" + value + "\"";
@@ -789,18 +788,19 @@ public class NCLSourceDocument extends Document {
 		}
 	}
 
-	public boolean removeAttribute(String attr, int offset) {
+	private int getAttributePosition(String attr, int offset) {
 		try {
-			ITypedRegion region = getPartition(offset);
+			ITypedRegion region;
+			region = getPartition(offset);
 
 			if (!region.getType().equals(XMLPartitionScanner.XML_START_TAG))
-				return false;
+				return -1;
 
 			int partitionOffset = region.getOffset();
 			int readLength = region.getLength();
 
 			if (attr == null || attr.equals(""))
-				return false;
+				return -1;
 			String tag = get(partitionOffset, readLength);
 
 			boolean firstQuote = false;
@@ -842,13 +842,34 @@ public class NCLSourceDocument extends Document {
 				}
 
 			}
+			return index;
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public boolean removeAttribute(String attr, int offset) {
+		try {
+			ITypedRegion region;
+			region = getPartition(offset);
+			
+			if (!region.getType().equals(XMLPartitionScanner.XML_START_TAG))
+				return false;
+			
+			String tag = get(region.getOffset(), region.getLength());
 
 			int pad = 0;
+			int index = getAttributePosition(attr, offset);
+			
+			if (index == -1) return false;
+			
 			for (int i = index - 1; i > 0; i--, pad++) {
 				if (tag.charAt(i) == attr.charAt(attr.length() - 1))
 					break;
 			}
-			firstQuote = false;
+			boolean firstQuote = false;
 			int begin = index - pad - attr.length();
 			pad = 0;
 			for (int i = begin + attr.length(); i < tag.length(); i++, pad++) {
@@ -951,7 +972,7 @@ public class NCLSourceDocument extends Document {
 					} else {
 						String text = get(region.getOffset(),
 								region.getLength());
-						int attrOffset = text.indexOf(attr);
+						int attrOffset = getAttributePosition(attr, offset);
 						int attrSizeAtual = getAttributeSize(offset, attr);
 						begin = region.getOffset() + attrOffset;
 						newValue = attr + "=\"" + value + "\"";
@@ -1592,15 +1613,28 @@ public class NCLSourceDocument extends Document {
 				lastOffset = region.getOffset() + region.getLength();
 				do {
 					region = getNextPartition(region);
+					if (region == null) break;
 					tagname = getTagname(region.getOffset());
 				} while (tagname.equals(""));
-			
-			}while (!tagname.equals("/ncl"));
+				
+				if (region == null) break;
+				
+			} while (!tagname.equals("/ncl"));
 
-			while (stack.size() > 1) {
+			while (stack.size() > 0) {
 				StackElement element = stack.pop();
-				addEndtag(element.offset);
+				if (!element.element.equals("ncl"))
+					addEndtag(element.offset);
 			}
+			
+			ITypedRegion lastRegion = getPartition (get().length() - 1);
+			while (!lastRegion.getType().equals(XMLPartitionScanner.XML_END_TAG)) {
+				lastRegion = getPreviousPartition(lastRegion);
+			}
+			
+			String tag = get (lastRegion.getOffset(), lastRegion.getLength());
+			if (!tag.equals("</ncl>"))
+				replace (lastRegion.getOffset() + lastRegion.getLength(), 0, "\n</ncl>");
 
 		} catch (BadLocationException e) {
 			e.printStackTrace();
@@ -1616,13 +1650,15 @@ public class NCLSourceDocument extends Document {
 			NCLStructure nclStructure = NCLStructure.getInstance();
 			Map<String, Map<String, Character>> nesting = nclStructure
 					.getNesting();
-			
-			Map <String, Character> children = nesting.get(tagname);
-			if (children == null){
-				replace (region.getOffset() + region.getLength() - 1, 0, "/");
+
+			Map<String, Character> children = nesting.get(tagname);
+			if (children == null) {
+				replace(region.getOffset() + region.getLength() - 1, 0, "/");
 				return true;
 			}
 			
+			boolean hasChild = false;
+
 			while (!tagname.equals("/ncl")) {
 				String childTagname;
 				int lastOffset = region.getOffset() + region.getLength();
@@ -1635,17 +1671,21 @@ public class NCLSourceDocument extends Document {
 
 				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG))
 					if (!children.containsKey(childTagname)) {
-						replace(lastOffset, 0, "\n" + indent + "</"
-								+ tagname + ">");
+						if (hasChild)
+							replace(lastOffset, 0, "\n" + indent + "</" + tagname
+									+ ">");
+						else
+							replace(lastOffset - 1, 0, "/");
 						return true;
-					} else{
+					} else {
 						if (!tag.endsWith("/>"))
 							region = getEndTagPartition(region);
+						hasChild = true;
 						continue;
 					}
-				else if (region.getType().equals(XMLPartitionScanner.XML_END_TAG)){
-					replace(lastOffset, 0, "\n" + indent + "</"
-							+ tagname + ">");
+				else if (region.getType().equals(
+						XMLPartitionScanner.XML_END_TAG)) {
+					replace(lastOffset, 0, "\n" + indent + "</" + tagname + ">");
 					return true;
 				}
 			}
