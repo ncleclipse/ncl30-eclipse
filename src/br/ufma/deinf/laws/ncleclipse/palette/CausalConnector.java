@@ -53,7 +53,7 @@ public class CausalConnector implements IEditorActionDelegate {
 	 */
 	@Override
 	public void run(IAction action) {
-		doc.addElement("causalConnector");
+		//doc.addElement();
 	}
 
 	/* (non-Javadoc)

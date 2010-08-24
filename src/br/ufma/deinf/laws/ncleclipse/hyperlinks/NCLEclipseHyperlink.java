@@ -104,6 +104,7 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	}
 
 	public void open() {
+		if (nclElement == null) return;
 		IWorkbench wb = PlatformUI.getWorkbench();
 		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 		IWorkbenchPage page = win.getActivePage();
@@ -157,6 +158,7 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
+		if (nclElement == null) return "";
 		String toShow = "<" + nclElement.getTagName();
 		if (text != null)
 			toShow += " id=\"" + nclElement.getAttributeValue("id") + "\"";

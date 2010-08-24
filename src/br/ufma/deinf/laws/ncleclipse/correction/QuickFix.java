@@ -37,10 +37,8 @@ public class QuickFix implements IMarkerResolution2 {
 	private String label;
 	private Message message;
 	private NCLSourceDocument nclSourceDoc;
-	private int type; //1 addElement
-					  //2 removeElement
-	                  //3 setAttribute
-					  //4 removeAttribute
+	private int type;
+	private int offset;
 	private String [] params;
 	
 	QuickFix(String label, Message message, NCLSourceDocument nclSourceDoc) {
@@ -50,13 +48,14 @@ public class QuickFix implements IMarkerResolution2 {
 		this.type = FixType.UNKNOW;
 		this.params = null;
 	}
-	
-	QuickFix(String label, Message message, NCLSourceDocument nclSourceDoc, int type, String [] params) {
+	 
+	QuickFix(String label, Message message, NCLSourceDocument nclSourceDoc, int type, int offset, String [] params) {
 		this.label = label;
 		this.message = message;
 		this.nclSourceDoc = nclSourceDoc;
 		this.type = type;
 		this.params = params;
+		this.offset = offset;
 	}
 
 	public String getLabel() {
@@ -65,24 +64,43 @@ public class QuickFix implements IMarkerResolution2 {
 
 	public void run(IMarker marker) {
 		if (type == FixType.ADD_ELEMENT){
+			if (params == null || params.length < 2) return;
+			String tagname = params[0];
+			String id = params[1];
+			nclSourceDoc.addElement(tagname, id, offset);
+		}
+		
+		else if (type == FixType.ADD_CHILD){
+			if (params == null || params.length < 3) return;
+			String child = params[0];
+			String attribute = params[1];
+			String value = params[2];
+			nclSourceDoc.addChild(child, attribute, value,  offset);
+		}
+		
+		else if (type == FixType.REMOVE_CHILD){
 			
 		}
 		
 		else if (type == FixType.REMOVE_ELEMENT){
-			if (params == null || params.length < 1) return;
-			String id = params[0];
-			nclSourceDoc.removeElement(id);
+			nclSourceDoc.removeElement(offset);
 		}
 		
 		else if (type == FixType.SET_ATTRIBUTE){
 			if (params == null || params.length < 2) return;
 			String attribute = params[0];
 			String value = params[1];
-			nclSourceDoc.setAttribute(message.getId(), attribute, value);
+			nclSourceDoc.setAttribute(attribute, value, offset);
 		}
 		
 		else if (type == FixType.REMOVE_ATTRIBUTE){
-			
+			if (params == null || params.length < 1) return;
+			String attribute = params[0];
+			nclSourceDoc.removeAttribute(attribute, offset);
+		}
+		
+		else if (type == FixType.SINTATIC_ERROR){
+			nclSourceDoc.correctNCLStructure ();
 		}
 	}
 

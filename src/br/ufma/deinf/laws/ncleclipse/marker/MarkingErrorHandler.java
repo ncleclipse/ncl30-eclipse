@@ -108,7 +108,8 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 		int columnNumber = e.getColumnNumber();
 		MarkerUtilities.setLineNumber(map, lineNumber);
 		Object[] tmp = { e.getMessage() };
-
+		
+		
 		MarkerUtilities.setMessage(map, NCLEditorMessages.getInstance()
 				.getString("NCLValidator.Error.XMLParserError", tmp));
 		map.put(IMarker.LOCATION, file.getFullPath().toString());
@@ -122,9 +123,16 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 			map.put(IMarker.CHAR_END, charEnd);
 
 		map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
-
+		
+		MessagesUtilities.put(NCLEditorMessages.getInstance()
+				.getString("NCLValidator.Error.XMLParserError", tmp), null);
+		
+		map.put(MarkingErrorHandler.NCLValidatorMessage, NCLEditorMessages.getInstance()
+				.getString("NCLValidator.Error.XMLParserError", tmp) );
+		map.put(MarkingErrorHandler.NCLSourceDocument, document.get());
+		
 		try {
-			MarkerUtilities.createMarker(file, map, IMarker.PROBLEM);
+			MarkerUtilities.createMarker(file, map, NCLMarkerError);
 		} catch (CoreException ee) {
 			ee.printStackTrace();
 		}
