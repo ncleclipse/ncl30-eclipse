@@ -1603,11 +1603,16 @@ public class NCLSourceDocument extends Document {
 					}
 				} else if (region.getType().equals(
 						XMLPartitionScanner.XML_END_TAG)) {
-					StackElement top = stack.pop();
-					if (!top.element.equals(tagname.substring(1))) {
-						addEndtag(top.offset);
-						top = stack.peek();
-						region = getPartition(top.offset);
+					if (stack.empty()) replace(region.getOffset(), region.getLength(), "");
+					else{
+						StackElement top = stack.pop();
+						if (!top.element.equals(tagname.substring(1))) {
+							addEndtag(top.offset);
+							if (!stack.empty()){ 
+								top = stack.peek();
+								region = getPartition(top.offset);
+							}
+						}
 					}
 				}
 				lastOffset = region.getOffset() + region.getLength();

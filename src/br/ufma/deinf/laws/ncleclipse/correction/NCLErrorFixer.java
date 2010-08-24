@@ -78,7 +78,7 @@ public class NCLErrorFixer implements IMarkerResolutionGenerator2 {
   			
   			if (message == null){
   				if (nclValidatorErrorMsg != null && nclDoc != null && key.startsWith("XML sintatic error"))
-  					fixes.add(new QuickFix("Correct NCL structure", null, nclDoc, FixType.SINTATIC_ERROR, 0, null));
+  					fixes.add(new QuickFix("Try to correct NCL structure", null, nclDoc, FixType.SINTATIC_ERROR, 0, null));
   			}
   				
   			else {
