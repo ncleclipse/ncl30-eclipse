@@ -52,25 +52,35 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.commands.ITypedParameter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import com.sun.org.apache.xpath.internal.axes.ChildTestIterator;
+
+import br.ufma.deinf.laws.ncl.NCLStructure;
+import br.ufma.deinf.laws.ncl.help.NCLHelper;
 import br.ufma.deinf.laws.ncleclipse.NCLEditor;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
+import br.ufma.deinf.laws.ncleclipse.format.XMLFormatter;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLPartitionScanner;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
 import br.ufma.deinf.laws.ncleclipse.util.ColorManager;
@@ -741,6 +751,125 @@ public class NCLSourceDocument extends Document {
 		return setAttribute(id, attr, value, 1);
 	}
 
+	public boolean setAttribute(String attr, String value, int offset) {
+		try {
+			ITypedRegion region = getPartition(offset);
+			String startTag;
+
+			startTag = get(region.getOffset(), region.getLength());
+
+			String attrAtual = getAttributeValueFromCurrentTagName(offset, attr);
+			int begin = 0;
+			String newValue = attr + "=\"" + value + "\"";
+			if (attrAtual == null) {
+				begin = region.getOffset() + region.getLength() - 1;
+				if (startTag.endsWith("/>"))
+					begin--;
+				if (!get(begin - 1, 1).equals(" "))
+					newValue = " " + newValue;
+
+				replace(begin, 0, newValue);
+			} else {
+				String text = get(region.getOffset(), region.getLength());
+				int attrOffset = text.indexOf(attr);
+				int attrSizeAtual = attrAtual.length();
+				begin = region.getOffset() + attrOffset;
+				newValue = attr + "=\"" + value + "\"";
+				if (!get(begin - 1, 1).equals(" "))
+					newValue = " " + newValue;
+				if (!get(begin + attrSizeAtual, 1).equals(" "))
+					newValue = newValue + " ";
+				replace(begin, attrSizeAtual + attr.length() + 3, newValue);
+			}
+			return true;
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean removeAttribute(String attr, int offset) {
+		try {
+			ITypedRegion region = getPartition(offset);
+
+			if (!region.getType().equals(XMLPartitionScanner.XML_START_TAG))
+				return false;
+
+			int partitionOffset = region.getOffset();
+			int readLength = region.getLength();
+
+			if (attr == null || attr.equals(""))
+				return false;
+			String tag = get(partitionOffset, readLength);
+
+			boolean firstQuote = false;
+			boolean equal = false;
+			String attributeValue = "";
+			String attributeName = "";
+
+			int index = 0;
+			for (int i = 0; i < tag.length(); i++) {
+				if (tag.charAt(i) == '\"' || tag.charAt(i) == '\'')
+					if (!firstQuote) {
+						firstQuote = true;
+						index = i;
+					} else {
+						String[] str = attributeName.split(" ");
+						Vector<String> v = new Vector<String>();
+						for (String s : str)
+							if (!s.equals(""))
+								v.add(s);
+
+						if (v.get(v.size() - 1).equals(attr)) {
+							break;
+						}
+
+						attributeName = "";
+						attributeValue = "";
+						firstQuote = false;
+						equal = true;
+					}
+				else {
+					if (firstQuote)
+						attributeValue += tag.charAt(i);
+					else {
+						if (tag.charAt(i) == '=') {
+							continue;
+						}
+						attributeName += tag.charAt(i);
+					}
+				}
+
+			}
+
+			int pad = 0;
+			for (int i = index - 1; i > 0; i--, pad++) {
+				if (tag.charAt(i) == attr.charAt(attr.length() - 1))
+					break;
+			}
+			firstQuote = false;
+			int begin = index - pad - attr.length();
+			pad = 0;
+			for (int i = begin + attr.length(); i < tag.length(); i++, pad++) {
+				if (tag.charAt(i) == '\"')
+					if (firstQuote == false)
+						firstQuote = true;
+					else
+						break;
+			}
+			begin += region.getOffset();
+
+			int end = attr.length() + pad + 1;
+			replace(begin, end, "");
+			return true;
+
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	/**
 	 * Set the attribute from next element with id
 	 * 
@@ -783,7 +912,8 @@ public class NCLSourceDocument extends Document {
 							newValue = " " + newValue;
 						if (!get(begin + attrSizeAtual, 1).equals(" "))
 							newValue = newValue + " ";
-						replace(begin, attrSizeAtual + attr.length() + 3, newValue);
+						replace(begin, attrSizeAtual + attr.length() + 3,
+								newValue);
 					}
 					return true;
 				}
@@ -871,11 +1001,42 @@ public class NCLSourceDocument extends Document {
 		try {
 			int elementOffset = getElementOffset(id);
 			ITypedRegion region = getNextTagPartition(elementOffset);
-			replace(region.getOffset(), region.getLength(), "");
-			// faltando tratar o caso de ser aninhado!
+			String tag = get(region.getOffset(), region.getLength());
+			if (tag.endsWith("/>"))
+				replace(region.getOffset(), region.getLength(), "");
+			else {
+				String tagname = getCurrentTagname(offset);
+				ITypedRegion endTagRegion = getNextEndTagPartition(tagname,
+						offset);
+				int begin = region.getOffset();
+				int end = endTagRegion.getOffset() + endTagRegion.getLength()
+						- begin;
+				replace(begin, end, "");
+			}
 			return true;
 		} catch (BadLocationException e) {
 			return true; // or false?
+		}
+	}
+
+	public boolean removeElement(int offset) {
+		try {
+			ITypedRegion region = getNextTagPartition(offset);
+			String tag = get(region.getOffset(), region.getLength());
+			if (tag.endsWith("/>"))
+				replace(region.getOffset(), region.getLength(), "");
+			else {
+				String tagname = getCurrentTagname(offset);
+				ITypedRegion endTagRegion = getNextEndTagPartition(tagname,
+						offset);
+				int begin = region.getOffset();
+				int end = endTagRegion.getOffset() + endTagRegion.getLength()
+						- begin;
+				replace(begin, end, "");
+			}
+			return true;
+		} catch (BadLocationException e) {
+			return true;
 		}
 	}
 
@@ -894,14 +1055,158 @@ public class NCLSourceDocument extends Document {
 		return true;
 	}
 
-	public boolean addElement(String tagname, String id, int offset) {
+	public int getBaseOffset(String base, String id) {
+		if (base == null || base.equals(""))
+			return -1;
 		try {
-			replace(offset, 1, "<" + tagname + " id=\"" + id + "\" >\n</"
-					+ tagname + ">\n");
+			ITypedRegion region = getPartition(0);
+			region = getNextTagPartition(region);
+			String tagname = getCurrentTagname(region.getOffset());
+
+			while (!tagname.equals("/head")) {
+				if (tagname.equals(base))
+					if (id == null || id.equals(""))
+						return region.getOffset();
+					else {
+						String baseId = getAttributeValueFromCurrentTagName(
+								region.getOffset(), "id");
+						if (baseId != null && baseId.equals(id))
+							return region.getOffset();
+					}
+
+				region = getNextTagPartition(region);
+				if (region == null)
+					break;
+				tagname = getCurrentTagname(region.getOffset());
+			}
+
+			return -1;
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public boolean addElement(String tagname, String id, int elementOffset) {
+		try {
+			NCLStructure nclStructure = NCLStructure.getInstance();
+			int fatherOffset = getFatherPartitionOffset(elementOffset);
+			Map<String, Map<String, Character>> nesting = nclStructure
+					.getNesting();
+
+			Map<String, Character> headChildren = nesting.get("head");
+			Iterator it = headChildren.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, Character> entry = (Entry<String, Character>) it
+						.next();
+				String elementTagName = entry.getKey();
+				Map<String, Character> elementChildren = nesting
+						.get(elementTagName);
+				if (elementChildren != null
+						&& elementChildren.containsKey(tagname)) {
+					// filho de algum elemento de <head>
+					fatherOffset = getBaseOffset(elementTagName, "");
+					if (fatherOffset != -1) {
+						ITypedRegion region = getPartition(fatherOffset);
+						String indent = getIndentLine(fatherOffset) + "\t";
+						String tagStructure = computeTagStructure(tagname,
+								indent, id);
+						replace(region.getOffset() + region.getLength(), 0,
+								"\n" + indent + tagStructure);
+					} else {
+						fatherOffset = getBaseOffset("head", "");
+						ITypedRegion region = getPartition(fatherOffset);
+						String indent = getIndentLine(fatherOffset) + "\t";
+						String tagStructure = computeTagStructure(
+								elementTagName, indent, "");
+						replace(region.getOffset() + region.getLength(), 0,
+								"\n" + indent + tagStructure);
+						fatherOffset = getBaseOffset(elementTagName, "");
+						region = getPartition(fatherOffset);
+						indent = getIndentLine(fatherOffset) + "\t";
+						tagStructure = computeTagStructure(tagname, indent, id);
+						replace(region.getOffset() + region.getLength(), 0,
+								"\n" + indent + tagStructure);
+					}
+					return true;
+					// e quando tiver mais de uma base de regiões?
+				}
+			}
+
+			String elementTagname = getCurrentTagname(elementOffset);
+
+			if (elementTagname.equals("mapping")
+					|| elementTagname.equals("bind")) {
+				fatherOffset = getFatherPartitionOffset(getFatherPartitionOffset(elementOffset));
+			}
+
+			ITypedRegion region = getPartition(fatherOffset);
+			String indent = getIndentLine(fatherOffset) + "\t";
+			String tagStructure = computeTagStructure(tagname, indent, id);
+			replace(region.getOffset() + region.getLength(), 0, "\n" + indent
+					+ tagStructure);
+
+			return true;
+
 		} catch (BadLocationException e) {
 			return false;
 		}
-		return true;
+	}
+
+	public boolean addChild(String child, String attribute, String value,
+			int elementOffset) {
+		try {
+			ITypedRegion region = getPartition(elementOffset);
+			String indent = getIndentLine(elementOffset) + "\t";
+			String tagStructue = computeTagStructure(child, indent, "");
+
+			replace(region.getOffset() + region.getLength(), 0, "\n" + indent
+					+ tagStructue);
+
+			region = getNextTagPartition(region);
+			String tag = get(region.getOffset(), region.getLength());
+			setAttribute(attribute, value, region.getOffset());
+			return true;
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private String computeTagStructure(String tagname, String indent, String id) {
+		// TODO: retornar a tag com todos os atributos obrigatórios
+		NCLStructure nclStructure = NCLStructure.getInstance();
+		Map<String, Boolean> atts = nclStructure.getAttributes(tagname);
+		Map<String, Character> children = nclStructure
+				.getChildrenCardinality(tagname);
+		Iterator it = atts.entrySet().iterator();
+		String attributes = "";
+		while (it.hasNext()) {
+			Map.Entry<String, Boolean> entry = (Entry<String, Boolean>) it
+					.next();
+			if (((Boolean) entry.getValue()).booleanValue()) {
+				String attr = entry.getKey();
+				if (!id.equals("") && attr.equals("id"))
+					attributes += " " + attr + "=\"" + id + "\"";
+				else
+					attributes += " " + attr + "=\"\"";
+			}
+		}
+		String ret;
+		if (children.size() == 0) { // caso nao tenha filhos fecha a tag junto
+			// com a start
+			ret = "<" + tagname + attributes + "/>" + "\r\n" + indent;
+		} else {
+			ret = "<" + tagname + attributes + ">" + "\r\n" + indent + "\t";
+			if (tagname.equals("context")) {
+				ret += "<port id=\"\" component=\"\" />";
+			} else if (tagname.equals("causalConnector")) {
+				ret += "<simpleCondition role=\"\" />" + "\n" + indent + "\t"
+						+ "<simpleAction role=\"\" />";
+			}
+			ret += "\r\n" + indent + "</" + tagname + ">";
+		}
+		return ret;
 	}
 
 	/**
@@ -981,7 +1286,7 @@ public class NCLSourceDocument extends Document {
 		try {
 			if (type.equals(""))
 				return null;
-			ArrayList <String> ids = new ArrayList <String> ();
+			ArrayList<String> ids = new ArrayList<String>();
 			ITypedRegion region = getPartition(0);
 			String partition;
 			do {
@@ -990,9 +1295,11 @@ public class NCLSourceDocument extends Document {
 				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
 					int offset = region.getOffset();
 					tagName = getCurrentTagname(offset);
-					if (tagName != null && !tagName.equals("") && tagName.equals(type)){
-						String id = getAttributeValueFromCurrentTagName(offset, "id");
-						if (id!= null && !id.equals(""))
+					if (tagName != null && !tagName.equals("")
+							&& tagName.equals(type)) {
+						String id = getAttributeValueFromCurrentTagName(offset,
+								"id");
+						if (id != null && !id.equals(""))
 							ids.add(id);
 					}
 				}
@@ -1001,7 +1308,7 @@ public class NCLSourceDocument extends Document {
 			return ids;
 		} catch (BadLocationException e) {
 			e.printStackTrace();
-			return new ArrayList <String> ();
+			return new ArrayList<String>();
 		}
 	}
 
@@ -1031,7 +1338,6 @@ public class NCLSourceDocument extends Document {
 		ITypedRegion region = getNextTagPartition(offset);
 		if (region == null)
 			throw new BadLocationException();
-		String startTag = get(region.getOffset(), region.getLength());
 		String currentId = getAttributeValueFromCurrentTagName(
 				region.getOffset(), "id");
 		if (currentId != null)
@@ -1085,117 +1391,6 @@ public class NCLSourceDocument extends Document {
 			offset = parentOffset;
 		}
 		return parents;
-	}
-
-	private HashMap<String, String> importedComments = new HashMap<String, String>();
-	private Vector<String> importedTags = new Vector<String>();
-
-	/**
-	 * Return the information of the element with identificator equals to id
-	 * 
-	 * @param id
-	 * @return information
-	 */
-	public String getComment(String id) {
-
-		String info = null;
-		if (id == null || id.equals(""))
-			return null;
-		try {
-			String beginComment = "@doc";
-			int indexOf = id.indexOf('#');
-
-			if (indexOf != -1) {
-				IWorkbench wb = PlatformUI.getWorkbench();
-				IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-				IWorkbenchPage page = win.getActivePage();
-				NCLEditor editor = ((NCLMultiPageEditor) page.getActiveEditor())
-						.getNCLEditor();
-				Vector<Integer> aliasOffsset = getAllTagsWithAttribute("alias");
-				for (int i : aliasOffsset) {
-					String alias = getAttributeValueFromCurrentTagName(i,
-							"alias");
-					if (importedTags.contains(alias))
-						continue;
-					importedTags.add(alias);
-					String documentURI = getAttributeValueFromCurrentTagName(i,
-							"documentURI");
-					File importedFile = null;
-					BufferedReader reader;
-					try {
-						if (documentURI != null && !documentURI.equals("")) {
-							importedFile = new File(documentURI);
-							if (!importedFile.isFile()) {
-								importedFile = new File(editor.getCurrentFile()
-										.getParent() + "/" + documentURI);
-							}
-						}
-						if (importedFile != null && importedFile.isFile()) {
-							reader = new BufferedReader(new FileReader(
-									importedFile));
-							String text = "";
-							while (reader.ready())
-								text += reader.readLine() + "\n";
-							NCLSourceDocument ncl = new NCLSourceDocument(text);
-							IDocumentPartitioner partitioner = new XMLPartitioner(
-									new XMLPartitionScanner(), new String[] {
-											XMLPartitionScanner.XML_START_TAG,
-											XMLPartitionScanner.XML_PI,
-											XMLPartitionScanner.XML_DOCTYPE,
-											XMLPartitionScanner.XML_END_TAG,
-											XMLPartitionScanner.XML_TEXT,
-											XMLPartitionScanner.XML_CDATA,
-											XMLPartitionScanner.XML_COMMENT });
-							partitioner.connect(ncl);
-							ncl.setDocumentPartitioner(partitioner);
-							Vector<Integer> ids = ncl
-									.getAllTagsWithAttribute("id");
-							for (int j : ids) {
-								String Id = ncl
-										.getAttributeValueFromCurrentTagName(j,
-												"id");
-								importedComments.put(alias + "#" + Id,
-										ncl.getComment(Id));
-							}
-
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-				}
-				if (importedComments.containsKey(id))
-					return importedComments.get(id);
-				return null;
-			}
-
-			int off = getOffsetByID(id);
-			if (off != -1) {
-				ITypedRegion r = getPartition(off);
-				r = getPreviousPartition(r);
-				String str;
-				do {
-					str = get(r.getOffset(), r.getLength());
-					str = str.trim();
-					if (r.getType().equals(XMLPartitionScanner.XML_COMMENT)) {
-						int index = str.indexOf(beginComment);
-						if (index != -1)
-							info = str.substring(
-									index + beginComment.length() + 1,
-									str.length() - 3).replace("\t", "");
-						return info;
-					}
-					r = getPreviousPartition(r);
-				} while (str.equals(""));
-			}
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (info == null) {
-			info = NCLEditorMessages.getInstance().getString("NCLDoc.Empty");
-		}
-		return info;
 	}
 
 	/**
@@ -1336,6 +1531,7 @@ public class NCLSourceDocument extends Document {
 	 */
 	public String getIndentLine(int offset) {
 		int ident = 0;
+		int space = 0;
 		while (true) {
 			try {
 				char c = getChar(--offset);
@@ -1344,106 +1540,193 @@ public class NCLSourceDocument extends Document {
 					break;
 				if (c == '\t')
 					++ident;
-				else
+				else if (c == ' ')
+					space++;
+				else {
 					ident = 0;
+					space = 0;
+				}
 			} catch (BadLocationException e) {
 				ident = 0;
+				space = 0;
 				break;
 			}
 		}
 		String str = "";
 		for (int i = 0; i < ident; i++)
 			str += "\t";
-
+		for (int i = 0; i < space; i++)
+			str += " ";
 		return str;
 	}
 
 	/**
-	 * Insere a estrutura de um elemento
 	 * 
-	 * @param element
-	 * */
-
-	public void addElement(String element) {
+	 */
+	public void correctNCLStructure() {
 		try {
 			ITypedRegion region = getPartition(0);
-			String tagname;
-			if (element.equals("causalConnector")) {
-				do {
-					tagname = get(region.getOffset(), region.getLength());
-					if (tagname != null
-							&& (tagname.equals("<connectorBase>") || tagname
-									.equals("</head>")))
-						break;
-					region = getNextPartition(region);
-				} while (!tagname.equals("</ncl>"));
+			Stack<StackElement> stack = new Stack();
 
-				if (!tagname.equals("</ncl>") && !tagname.equals("</head>")) {
-					int offset = region.getOffset() + region.getLength() + 1;
-					ITypedRegion currentRegion = null;
+			String tagname = getCurrentTagname(region.getOffset());
+			int lastOffset = 0;
 
-					do {
-						if (currentRegion != null)
-							offset = currentRegion.getOffset()
-									+ currentRegion.getLength();
-						char ch = getChar(offset);
-						while (Character.isWhitespace(ch))
-							ch = getChar(++offset);
-						currentRegion = getPartition(offset);
-					} while (currentRegion.getType().equals(
-							XMLPartitionScanner.XML_COMMENT));
-
-					offset = currentRegion.getOffset();
-					String str = getCurrentTagname(offset);
-					String ident = "";
-					if (str.equals("causalConnector")
-							|| str.equals("importBase"))
-						ident = getIndentLine(offset);
-
-					String replace = "\n" + ident
-							+ "<causalConnector id=\"\" >\n" + ident
-							+ "\t<simpleCondition role=\"\" />\n" + ident
-							+ "\t<simpleAction role=\"\" />\n" + ident
-							+ "</causalConnector>\n" + ident;
-
-					replace(getNextPartition(region).getOffset(), 0, replace);
-				}
-
-				else {
-
-					if (tagname.equals("</head>")) {
-						int offset = region.getOffset() - 1;
-						ITypedRegion temp = null;
-						do {
-							if (temp != null)
-								offset = temp.getOffset() - 1;
-							char ch = getChar(offset);
-							while (Character.isWhitespace(ch))
-								ch = getChar(--offset);
-							temp = getPartition(offset);
-
-						} while (temp.getType().equals(
-								XMLPartitionScanner.XML_COMMENT));
-
-						String ident = getIndentLine(offset);
-
-						String replace = "\n" + ident + "<connectorBase>"
-								+ "\n" + ident + "\t<causalConnector id=\"\" >"
-								+ "\n" + ident
-								+ "\t\t<simpleCondition role=\"\" />" + "\n"
-								+ ident + "\t\t<simpleAction role=\"\" />"
-								+ "\n" + ident + "\t</causalConnector>" + "\n"
-								+ ident + "</connectorBase>\n";
-
-						replace(getPreviousPartition(region).getOffset(), 0,
-								replace);
+			do {
+				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+					String tag = get(region.getOffset(), region.getLength());
+					if (!tag.endsWith("/>")) {
+						StackElement element = new StackElement();
+						element.element = new String(tagname);
+						element.offset = region.getOffset();
+						stack.push(element);
+					}
+				} else if (region.getType().equals(
+						XMLPartitionScanner.XML_END_TAG)) {
+					StackElement top = stack.pop();
+					if (!top.element.equals(tagname.substring(1))) {
+						addEndtag(top.offset);
+						top = stack.peek();
+						region = getPartition(top.offset);
 					}
 				}
+				lastOffset = region.getOffset() + region.getLength();
+				do {
+					region = getNextPartition(region);
+					tagname = getTagname(region.getOffset());
+				} while (tagname.equals(""));
+			
+			}while (!tagname.equals("/ncl"));
+
+			while (stack.size() > 1) {
+				StackElement element = stack.pop();
+				addEndtag(element.offset);
 			}
+
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 
+	}
+
+	public boolean addEndtag(int offset) {
+		try {
+			ITypedRegion region = getPartition(offset);
+			String tagname = getTagname(region.getOffset());
+			String indent = getIndentLine(region.getOffset());
+			NCLStructure nclStructure = NCLStructure.getInstance();
+			Map<String, Map<String, Character>> nesting = nclStructure
+					.getNesting();
+			
+			Map <String, Character> children = nesting.get(tagname);
+			if (children == null){
+				replace (region.getOffset() + region.getLength() - 1, 0, "/");
+				return true;
+			}
+			
+			while (!tagname.equals("/ncl")) {
+				String childTagname;
+				int lastOffset = region.getOffset() + region.getLength();
+				do {
+					region = getNextPartition(region);
+					childTagname = getTagname(region.getOffset());
+				} while (childTagname.equals(""));
+
+				String tag = get(region.getOffset(), region.getLength());
+
+				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG))
+					if (!children.containsKey(childTagname)) {
+						replace(lastOffset, 0, "\n" + indent + "</"
+								+ tagname + ">");
+						return true;
+					} else{
+						if (!tag.endsWith("/>"))
+							region = getEndTagPartition(region);
+						continue;
+					}
+				else if (region.getType().equals(XMLPartitionScanner.XML_END_TAG)){
+					replace(lastOffset, 0, "\n" + indent + "</"
+							+ tagname + ">");
+					return true;
+				}
+			}
+			return false;
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public ITypedRegion getEndTagPartition(ITypedRegion region) {
+		try {
+			if (!region.getType().equals(XMLPartitionScanner.XML_START_TAG)
+					|| region == null)
+				return null;
+			String tag;
+
+			tag = get(region.getOffset(), region.getLength());
+
+			if (tag.endsWith("/>"))
+				return null;
+
+			String tagname = getTagname(region.getOffset());
+			int stack = 0;
+			do {
+				String childTagname;
+				do {
+					region = getNextPartition(region);
+					childTagname = getTagname(region.getOffset());
+				} while (childTagname.equals(""));
+
+				tag = get(region.getOffset(), region.getLength());
+
+				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+					if (tag.endsWith("/>"))
+						continue;
+					else if (childTagname.equals(tagname))
+						stack++;
+				} else if (region.getType().equals(
+						XMLPartitionScanner.XML_END_TAG)) {
+					if (tagname.equals(childTagname.substring(1)))
+						if (stack == 0)
+							return region;
+						else
+							stack--;
+				}
+			} while (!tagname.equals("/ncl"));
+
+			return null;
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * @param offset
+	 * @return
+	 */
+	private String getTagname(int offset) {
+		ITypedRegion region;
+		try {
+			region = getPartition(offset);
+
+			if (region.getType().equals(XMLPartitionScanner.XML_START_TAG))
+				return getCurrentTagname(region.getOffset());
+			if (region.getType().equals(XMLPartitionScanner.XML_END_TAG))
+				return "/" + getCurrentEndTagName(region.getOffset());
+			return "";
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	class StackElement {
+		String element;
+		int offset;
 	}
 
 }
