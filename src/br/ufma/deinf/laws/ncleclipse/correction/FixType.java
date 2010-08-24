@@ -28,8 +28,11 @@ package br.ufma.deinf.laws.ncleclipse.correction;
  */
 public class FixType {
 	public static int UNKNOW = -1;
+	public static final int SINTATIC_ERROR = 0;
 	public static int ADD_ELEMENT = 1;
-	public static int REMOVE_ELEMENT = 2;
-	public static int SET_ATTRIBUTE = 3;
-	public static int REMOVE_ATTRIBUTE = 4;
+	public static int ADD_CHILD = 2;
+	public static int REMOVE_CHILD = 3;
+	public static int REMOVE_ELEMENT = 4;
+	public static int SET_ATTRIBUTE = 5;
+	public static int REMOVE_ATTRIBUTE = 6;
 }
