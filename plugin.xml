@@ -229,8 +229,6 @@
 					
 		<command 	id="br.ufma.deinf.laws.ncleclipse.actions.navigation.forward" 
 					name="NCL Backward Navigation"/>
-		<command 	id="br.ufma.deinf.laws.ncleclipse.actions.CommentSelection" 
-					name="Comment Selection Action"/>
 	</extension>
 
 	<extension point="org.eclipse.ui.handlers">
@@ -259,11 +257,6 @@
 	        contextId="org.eclipse.ui.textEditorScope">
 	  </key>
 	  
-	  <key  commandId="br.ufma.deinf.laws.ncleclipse.actions.CommentSelection"
-	        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-	        sequence="Ctrl+Alt+C"
-	        contextId="org.eclipse.ui.textEditorScope">
-	  </key>
 	</extension>
  <extension
        point="org.eclipse.ui.editorActions">
@@ -277,6 +270,26 @@
              label="Start record"
              style="toggle"
              toolbarPath="Normal/additions">
+       </action>
+    </editorContribution>
+    <editorContribution
+          id="br.ufma.deinf.laws.ncleclipse.actions.commentSelection"
+          targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
+       <action
+             accelerator="Ctrl+Alt+C"
+             class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
+             id="ncl30-eclipse.commentSelection"
+             label="Comment Selection">
+       </action>
+    </editorContribution>
+    <editorContribution
+          id="br.ufma.deinf.laws.ncleclipse.actions.UncommentSelection"
+          targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
+       <action
+             accelerator="Ctrl+Alt+V"
+             class="br.ufma.deinf.laws.ncleclipse.actions.UncommentSelection"
+             id="ncl30-eclipse.uncommentSelection"
+             label="Uncomment Selection">
        </action>
     </editorContribution>
  </extension>
@@ -353,7 +366,14 @@
           id="ncl30-eclipse.viewerContribution"
           targetID="#TextEditorContext">
        <action
+             class="br.ufma.deinf.laws.ncleclipse.actions.UncommentSelection"
+             id="ncl30-eclipse.uncommentSelectionAction"
+             label="Uncomment Selection"
+             menubarPath="additions">
+       </action>
+       <action
              class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
+             definitionId="br.ufma.deinf.laws.ncleclipse.actions.CommentSelection"
              id="ncl30-eclipse.commentSelectionAction"
              label="Comment Selection"
              menubarPath="additions">
