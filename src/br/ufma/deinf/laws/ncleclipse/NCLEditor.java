@@ -570,10 +570,12 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		// updateOutlineView.cancel();
 		// updateOutlineView.setPriority(Job.SHORT);
 		// updateOutlineView.schedule();
-		final NCLSourceDocument doc = (NCLSourceDocument) event
-		.getDocument();
+		IDocument idoc = event.getDocument();
+		if(!(idoc instanceof NCLSourceDocument)) return;
+		
+		final NCLSourceDocument doc = (NCLSourceDocument) idoc;
+		
 		if (event.fText.equals("/")) {
-			
 			try {
 				// We are CLOSING a START_TAG in a single line
 				if (doc.getChar(event.fOffset + 1) == '>') {

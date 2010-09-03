@@ -135,10 +135,15 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		IEditorPart editor = page.getActiveEditor();
 		List propList = new ArrayList();
 
+		boolean isFileEditor = true;
+		
 		try {
 			if (editor.getEditorInput() instanceof IFileEditorInput) {
 				currentFile = new File(((IFileEditorInput) editor
 						.getEditorInput()).getFile().getLocationURI());
+				
+				isFileEditor = false;
+				
 			} else {
 				currentFile = new File(((IURIEditorInput) editor
 						.getEditorInput()).getURI());
@@ -152,8 +157,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		IDocument doc = viewer.getDocument();
 		text = doc.get();
 
-		NCLSourceDocument nclDoc = NCLSourceDocument
+		NCLSourceDocument nclDoc = null;
+		
+		if(isFileEditor)
+			nclDoc = NCLSourceDocument
 				.createNCLSourceDocumentFromIDocument(doc);
+		else
+			nclDoc = (NCLSourceDocument) doc;
 
 		isAttributeValue = nclDoc.isAttributeValue(offset);
 		isAttribute = nclDoc.isAttribute(offset);
@@ -163,16 +173,16 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			// TODO:
 		} else {
 			// System.out.println("Attributo = " + isAttribute);
-			String qualifier = getQualifier(doc, offset);
+			String qualifier = getQualifier(nclDoc, offset);
 			if (isEndTagName) {
-				computeEndTagName(doc, qualifier, offset, propList);
+				computeEndTagName(nclDoc, qualifier, offset, propList);
 			} else if (isAttributeValue) {
-				computeAttributesValuesProposals(doc, qualifier, offset,
+				computeAttributesValuesProposals(nclDoc, qualifier, offset,
 						propList);
 			} else if (!isAttribute) {
-				computeTagsProposals(doc, qualifier, offset, propList);
+				computeTagsProposals(nclDoc, qualifier, offset, propList);
 			} else if (!nclDoc.isTagname(offset))
-				computeAttributesProposals(doc, qualifier, offset, propList);
+				computeAttributesProposals(nclDoc, qualifier, offset, propList);
 		}
 		ICompletionProposal[] proposals = new ICompletionProposal[propList
 				.size()];

@@ -285,7 +285,13 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 		IWorkbenchPage page = win.getActivePage();
 		IEditorPart editor = page.getActiveEditor();
 		IFile file = (IFile) editor.getEditorInput().getAdapter(IFile.class);
-		String path = file.getProject().getLocation().toString();
+		String path = null;
+		
+		try {
+			path = file.getProject().getLocation().toString();
+		} catch(Exception e){
+			return null;
+		}
 
 		if (editor.getEditorInput() instanceof IFileEditorInput) {
 			currentFile = ((IFileEditorInput) editor.getEditorInput())
