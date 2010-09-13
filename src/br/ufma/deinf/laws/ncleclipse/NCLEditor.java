@@ -693,12 +693,16 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 					int offset = event.fOffset;
 					
 					char ch = doc.getChar(--offset);
-					//while (Character.isWhitespace(ch)) ch = doc.getChar(--offset);
+					while (Character.isWhitespace(ch)) ch = doc.getChar(--offset);
 					
 					ITypedRegion region = doc.getPartition(offset);
-					if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)){						
-						ch = doc.getChar(--offset);
-						if (ch != '/') {
+					ITypedRegion sStartTagRegion = region;
+					if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)){
+						int endRegionOffset = region.getOffset()+region.getLength();
+						ch = doc.getChar(endRegionOffset-2);
+						
+						if (ch != '/' && (offset == endRegionOffset-1)) {
+							--offset;
 							final String tagname = doc.getCurrentTagname (offset);
 							String fatherTagName = doc.getFatherTagName(offset);
 							
@@ -714,9 +718,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 							region = doc.getPartition(offset);
 							
 							do {
-								
 								if (stack == 0) break;
-								
 								ch = doc.getChar(++offset);
 								while (Character.isWhitespace(ch)) ch = doc.getChar(++offset);
 								
@@ -724,7 +726,9 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 								
 								if (region.getType().equals(XMLPartitionScanner.XML_END_TAG)) {
 									String endTag = doc.getCurrentEndTagName(offset); 
-									if (endTag.equals(tagname)) --stack;
+									if (endTag.equals(tagname)) {
+										--stack;
+									}
 									
 									if (endTag.equals(fatherTagName)) break;
 								}
@@ -742,8 +746,10 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 												
 							if (stack > 0){
 								region = doc.getPartition(nextPartitionOffset);
+								final int beginStartTag = sStartTagRegion.getOffset();
 								final int beginWithChild = region.getOffset();
 								final int beginWithoutChild = region.getOffset() - 1;
+								final int highlightLine = doc.getLineOfOffset(region.getOffset()+region.getLength()-2); 
 								doc.acceptPostNotificationReplaces();
 								
 								doc.registerPostNotificationReplace(null, new IDocumentExtension.IReplace() {
@@ -753,12 +759,19 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 										try {
 											
 											if (NCLStructure.getChildrenCardinality(tagname).size() > 0){
-												doc.replace(beginWithChild, 0, "\n" + doc.getIndentLine(beginWithChild-1) + 
-														"\n" + doc.getIndentLine(beginWithChild-1) + "</" + tagname + ">");
+												doc.replace(beginWithChild, 0, "\n" + doc.getIndentLine(beginStartTag)+ "\t" + 
+														"\n" + doc.getIndentLine(beginStartTag) + "</" + tagname + ">");
 												
 												resetHighlightRange();
-												setHighlightRange(beginWithChild, 20, true);
-												setFocus();
+												
+												System.out.println(highlightLine);
+												
+												//FIXME: Still not working
+												setHighlightRange(
+														highlightLine-1, 
+														1, 
+														true);
+												//setFocus(0, 1);
 												
 											}
 											else
