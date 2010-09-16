@@ -113,11 +113,13 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 							offset, currentAttr);
 					int startAttributeValue = doc
 							.getStartAttributeValueOffset(offset) + 1;
+
 					if (startAttributeValue != -1 && !attrValue.equals("")) {
 						NCLStructure nclStructure = NCLStructure.getInstance();
 						Collection nclReference = nclStructure.getNCLReference(
 								tagname, currentAttr);
 						if (nclReference == null || nclReference.size() == 0) {
+
 							Collection c = nclStructure.getNCLReverseReference(
 									tagname, currentAttr);
 
@@ -147,7 +149,7 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 							// NullPonterExcepttion
 
 							IHyperlink[] values = new NCLEclipseHyperlink[v
-									.size()];
+									.size() + 1];
 
 							if (c != null && c.size() != 0 && v != null) {
 								IRegion region1 = new Region(
@@ -156,8 +158,12 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 								for (int i = 0; i < v.size(); i++)
 									values[i] = new NCLEclipseHyperlink(
 											textViewer, region1, v.get(i)
-													.getAttributeValue("id"), v
-													.get(i));
+													.getAttributeValue("id"),
+											v.get(i));
+								values[v.size()] = new NCLEclipseHyperlink(
+										textViewer, new Region(
+												startAttributeValue,
+												attrValue.length()), "");
 
 								return values;
 							}
@@ -194,8 +200,8 @@ public class NCLEclipseHyperlinkDetector implements IHyperlinkDetector {
 			return null;
 		}
 		String text = line.substring(begin + 1, end);
-		IRegion region1 = new Region(lineInfo.getOffset() + begin + 1, text
-				.length() - 1);
+		IRegion region1 = new Region(lineInfo.getOffset() + begin + 1,
+				text.length() - 1);
 
 		// Return new Hiperlink
 
