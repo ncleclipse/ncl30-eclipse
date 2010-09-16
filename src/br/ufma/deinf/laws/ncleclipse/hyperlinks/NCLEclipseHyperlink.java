@@ -104,7 +104,6 @@ public class NCLEclipseHyperlink implements IHyperlink {
 	}
 
 	public void open() {
-		if (nclElement == null) return;
 		IWorkbench wb = PlatformUI.getWorkbench();
 		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 		IWorkbenchPage page = win.getActivePage();
