@@ -51,6 +51,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -662,6 +663,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				Vector<String> proposal = new URIProposer(currentPath)
 						.getSrcSuggest(qualifier);
+				
+				Collections.sort(proposal);
+				
 				CompletionProposal completionProposal;
 				for (String str : proposal) {
 					str = pre + str;
