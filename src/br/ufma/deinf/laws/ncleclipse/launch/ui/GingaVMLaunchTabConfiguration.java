@@ -75,7 +75,7 @@ public class GingaVMLaunchTabConfiguration extends GingaLaunchTabConfiguration {
 	protected Text fUserPasswordText;
 
 	public static String DEFAULT_REMOTE_APP_DIR_PATH = "/misc/ncl30/";
-	public static String DEFAULT_HOST = "192.168.117.1";
+	public static String DEFAULT_HOST = "192.168.64.129";
 	public static String DEFAULT_USER_NAME = "root";
 	public static String DEFAULT_USER_PASSWORD = "telemidia";
 
@@ -90,7 +90,7 @@ public class GingaVMLaunchTabConfiguration extends GingaLaunchTabConfiguration {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		fRemoteAppDirPathLabel = new Label(composite, SWT.NONE);
-		fRemoteAppDirPathLabel.setText("Remote apps directory path:");
+		fRemoteAppDirPathLabel.setText("Remote workspace:");
 		fRemoteAppDirPathText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		fRemoteAppDirPathText.setLayoutData(gd);
 
@@ -128,13 +128,27 @@ public class GingaVMLaunchTabConfiguration extends GingaLaunchTabConfiguration {
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
 			super.initializeFrom(configuration);
-			fRemoteAppDirPathText.setText(configuration.getAttribute(
-					"remoteAppDirPath", DEFAULT_REMOTE_APP_DIR_PATH));
-			fHostText.setText(configuration.getAttribute("host", DEFAULT_HOST));
-			fUserNameText.setText(configuration.getAttribute("userName",
-					DEFAULT_USER_NAME));
-			fUserPasswordText.setText(configuration.getAttribute(
-					"userPassword", DEFAULT_USER_PASSWORD));
+			
+			fRemoteAppDirPathText.setText(
+					configuration.getAttribute(
+							"remoteWorkspace", 
+							DEFAULT_REMOTE_APP_DIR_PATH));
+			
+			fHostText.setText(
+					configuration.getAttribute(
+							"hostName", 
+							DEFAULT_HOST));
+			
+			fUserNameText.setText(
+					configuration.getAttribute(
+							"userName",
+							DEFAULT_USER_NAME));
+			
+			fUserPasswordText.setText(
+					configuration.getAttribute(
+							"userPassword", 
+							DEFAULT_USER_PASSWORD));
+			
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,11 +158,21 @@ public class GingaVMLaunchTabConfiguration extends GingaLaunchTabConfiguration {
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		super.performApply(configuration);
-		configuration.setAttribute("remoteAppDirPath", fRemoteAppDirPathText
-				.getText());
-		configuration.setAttribute("host", fHostText.getText());
-		configuration.setAttribute("userName", fUserNameText.getText());
-		configuration.setAttribute("userPassword", fUserPasswordText.getText());
+		configuration.setAttribute(
+				"remoteWorkspace", 
+				fRemoteAppDirPathText.getText());
+		
+		configuration.setAttribute(
+				"hostName", 
+				fHostText.getText());
+		
+		configuration.setAttribute(
+				"userName", 
+				fUserNameText.getText());
+		
+		configuration.setAttribute(
+				"userPassword", 
+				fUserPasswordText.getText());
 	}
 
 	@Override
