@@ -213,14 +213,6 @@ public class RemoteUtility {
 					+"'"
 					+command
 					+"'"
-					+" "
-					+"as"
-					+" "
-					+"'"
-					+userName
-					+"@"
-					+hostName
-					+"'"
 					+".");			
 		}
 		

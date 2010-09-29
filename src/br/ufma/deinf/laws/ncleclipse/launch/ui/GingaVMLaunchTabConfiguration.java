@@ -74,7 +74,7 @@ public class GingaVMLaunchTabConfiguration extends GingaLaunchTabConfiguration {
 	protected Label fUserPasswordLabel;
 	protected Text fUserPasswordText;
 
-	public static String DEFAULT_REMOTE_APP_DIR_PATH = "/misc/ncl30/";
+	public static String DEFAULT_REMOTE_APP_DIR_PATH = "/misc/ncl30";
 	public static String DEFAULT_HOST = "192.168.64.129";
 	public static String DEFAULT_USER_NAME = "root";
 	public static String DEFAULT_USER_PASSWORD = "telemidia";
