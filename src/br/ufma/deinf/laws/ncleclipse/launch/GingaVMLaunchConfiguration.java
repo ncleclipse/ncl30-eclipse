@@ -47,26 +47,156 @@
  ******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.launch;
 
+import java.io.IOException;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
-/**
- * 
- * @author Roberto Azevedo <roberto@laws.deinf.ufma.br>
- *
- */
+import br.ufma.deinf.laws.ncleclipse.launch.util.GingaVMRemoteUtility;
+
 public class GingaVMLaunchConfiguration extends LaunchConfigurationDelegate {
+	
+	public void launch(
+			ILaunchConfiguration configuration, 
+			String mode,
+			ILaunch launch, 
+			IProgressMonitor monitor
+			) throws CoreException {
+			
+		// Getting default values
+		String hostName = configuration.getAttribute(
+				"hostName", "192.168.64.129");
+		
+		String userName = configuration.getAttribute(
+				"userName", "root");
+		
+		String userPassword = configuration.getAttribute(
+				"hostPassword", "telemidia");
+		
+		String remoteLauncher = configuration.getAttribute(
+				"remoteLauncher", "/misc/launcher.sh");
+		
+		String remoteWorkspace = configuration.getAttribute(
+				"remoteWorkspace", "/misc/ncl30");
+		
+		// Getting workspace path
+		String workspace = ResourcesPlugin
+			.getWorkspace()
+			.getRoot()
+			.getLocation()
+			.toString();
+		
+		// Getting active project and active file
+		IFile activeFile = null;
+		IProject activeProject = null;
+		
+		IWorkbenchWindow[] windows = 
+			PlatformUI.getWorkbench().getWorkbenchWindows();
+		
+		IWorkbenchWindow window = windows[0];
 
-	public void launch(ILaunchConfiguration configuration, String mode,
-			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		// TODO SSH Support
-		System.out.println("Ginga VM Launch Configuration "
-				+ configuration.getAttribute("host", "192.168.117.1") + " - "
-				+ configuration.getAttribute("userName", "root") + " - "
-				+ configuration.getAttribute("userPassword", "telemidia"));
-	}
-
+		if ( window != null ) {
+			IWorkbenchPage page = window.getActivePage();
+		   
+			if ( page != null ) {  
+				IEditorPart editor = page.getActiveEditor();
+		      
+				if ( editor != null ) {
+					IEditorInput input = editor.getEditorInput();
+					
+					if ( input instanceof IFileEditorInput ) {
+						IFileEditorInput fileInput = (IFileEditorInput) input;
+					  	
+						activeFile = fileInput.getFile();
+						activeProject = fileInput.getFile().getProject();   
+					}
+				}
+			}		
+		
+		}
+		
+		//  Validating values
+		System.out.println("[#] Validating values...");
+		
+		if (activeFile != null && activeProject != null){
+			System.out.println("[#] Done!");
+		}else{
+			System.out.println("[#] Fail!");
+			return;
+		}
+		
+		System.out.println();
+		
+		String workspaceProject = activeProject.getFullPath().toString();
+		
+		String workspaceProjectFile = activeFile.getFullPath().toString();
+		
+		// Setting values
+		GingaVMRemoteUtility remoteUtility = new GingaVMRemoteUtility(
+				hostName,
+				userName,
+				userPassword,
+				remoteLauncher,
+				remoteWorkspace);
+		
+		remoteUtility.setVerboseMode(true);
+		
+		// Connecting to server
+		System.out.println(
+				"[#] Connecting to server" +
+				" " +
+				"(" +
+				userName +
+				"@" +
+				hostName +
+				")" +
+				"...");
+		try {
+			remoteUtility.connect();
+			System.out.println("[#] Done!");
+		} catch (IOException e) {
+			System.out.println("[#] Fail!");
+			return;
+		}
+		
+		System.out.println();
+		
+		// Commit to server
+		System.out.println(
+				"[#] Committing files to server...");
+		try {
+			remoteUtility.commit(workspace+workspaceProject);
+			System.out.println("[#] Done!");
+		} catch (IOException e) {
+			System.out.println("[#] Fail!");
+			return;
+		}
+		
+		System.out.println();
+		
+		// Play application
+		System.out.println(
+				"[#] Playing application on server...");
+		try {
+			remoteUtility.play(remoteWorkspace+workspaceProjectFile);
+			System.out.println("[#] Done!");
+		} catch (IOException e) {
+			System.out.println("[#] Fail!");
+			return;
+		}
+		
+		System.out.println();
+	}	
 }
