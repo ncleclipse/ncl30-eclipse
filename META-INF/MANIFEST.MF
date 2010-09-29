@@ -20,6 +20,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-LazyStart: true
 Bundle-ClassPath: bin/,
  icons/,
- resources/
+ resources/,
+ lib/ganymed-ssh2-build250.jar
 Bundle-Vendor: Laboratory of Advanced Web Systems (http://laws.deinf.ufma.br)
 
