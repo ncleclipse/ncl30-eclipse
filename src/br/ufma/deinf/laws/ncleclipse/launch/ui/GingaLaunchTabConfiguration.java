@@ -71,7 +71,7 @@ public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab 
 
 	public static String DEFAULT_PROJECT = "";
 	public static String DEFAULT_NCL_FILE = "";
-	public static String DEFAULT_NCL_LAUNCHER_PATH = "/misc/gingaNcl";
+	public static String DEFAULT_NCL_LAUNCHER_PATH = "/misc/launcher.sh";
 
 	protected GridLayout topLayout = null;
 	protected Composite composite = null;
@@ -86,7 +86,7 @@ public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab 
 
 		GridData gd;
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-
+/*
 		//Project
 		fProjectLabel = new Label(composite, SWT.NONE);
 		fProjectLabel.setText("Project:");
@@ -100,12 +100,12 @@ public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab 
 		fNCLFileLabel.setText("NCL File:");
 		fNCLFileText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		fNCLFileText.setLayoutData(gd);
-
+*/
 		//Launcher Path
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		fNCLLauncherPathLabel = new Label(composite, SWT.NONE);
-		fNCLLauncherPathLabel.setText("NCL Launcher Path:");
+		fNCLLauncherPathLabel.setText("Remote laucher:");
 		fNCLLauncherPathText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		fNCLLauncherPathText.setLayoutData(gd);
 	}
@@ -120,12 +120,14 @@ public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab 
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		// TODO Auto-generated method stub
 		try {
-			fProjectText.setText(configuration.getAttribute("project",
+		/*	fProjectText.setText(configuration.getAttribute("project",
 					DEFAULT_PROJECT));
 			fNCLFileText.setText(configuration.getAttribute("nclFile",
 					DEFAULT_NCL_FILE));
-			fNCLLauncherPathText.setText(configuration.getAttribute(
-					"nclLauncherPath", DEFAULT_NCL_LAUNCHER_PATH));
+			*/fNCLLauncherPathText.setText(
+					configuration.getAttribute(
+							"remoteLauncher", 
+							DEFAULT_NCL_LAUNCHER_PATH));
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -134,9 +136,9 @@ public class GingaLaunchTabConfiguration extends AbstractLaunchConfigurationTab 
 
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute("project", fProjectText.getText());
-		configuration.setAttribute("nclFile", fNCLFileText.getText());
-		configuration.setAttribute("nclLauncherPath", fNCLLauncherPathText
+//		configuration.setAttribute("project", fProjectText.getText());
+//		configuration.setAttribute("nclFile", fNCLFileText.getText());
+		configuration.setAttribute("remoteLauncher", fNCLLauncherPathText
 				.getText());
 	}
 
