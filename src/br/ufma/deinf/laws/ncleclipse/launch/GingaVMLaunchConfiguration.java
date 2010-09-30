@@ -173,9 +173,9 @@ public class GingaVMLaunchConfiguration extends LaunchConfigurationDelegate {
 		
 		System.out.println();
 		
-		// Commit to server
+		// Copying files to server
 		System.out.println(
-				"[#] Committing files to server...");
+				"[#] Copying files to server...");
 		try {
 			remoteUtility.commit(workspace+workspaceProject);
 			System.out.println("[#] Done!");

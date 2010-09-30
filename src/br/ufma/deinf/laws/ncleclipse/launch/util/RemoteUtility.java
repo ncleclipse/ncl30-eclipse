@@ -135,7 +135,7 @@ public class RemoteUtility {
 				// If doesnt exist, create directory on server
 				if (verboseMode == true){
 					System.out.println(
-							"[!] Putting " +
+							"[!] Copying " +
 							"'" +
 							localFilePath +
 							"'" +
@@ -154,7 +154,7 @@ public class RemoteUtility {
 							localSeparator +
 							localFileName
 						), 
-						755);
+						644);
 			}
 			
 			// Commit sub directories and files
@@ -167,7 +167,7 @@ public class RemoteUtility {
 		}else{
 			// Verifying if file exist on server
 			try {
-				// If exist and is old, put file on server
+				// If exist and is old, copy file to server
 				long localFileLastModified =
 					localFile.lastModified()/1000;
 				
@@ -182,12 +182,12 @@ public class RemoteUtility {
 				if (localFileLastModified > remoteFileLastModified){
 					if (verboseMode == true){
 						System.out.println(
-								"[!] Putting " +
+								"[!] Copying " +
 								"'" +
 								localFilePath +
 								"'" +
 								" " +
-								"on" +
+								"to" +
 								" " +
 								"'" +
 								format(remoteDirectory) +
@@ -203,15 +203,15 @@ public class RemoteUtility {
 							"0655");
 				}
 			} catch (IOException e) {
-				// If doesnt exist, put file on server
+				// If doesnt exist, copy file to server
 				if (verboseMode == true){
 					System.out.println(
-							"[!] Putting " +
+							"[!] Copying " +
 							"'" +
 							localFilePath +
  							"'" +
 							" " +
-							"on" +
+							"to" +
 							" " +
 							"'" +
 							format(remoteDirectory) +
