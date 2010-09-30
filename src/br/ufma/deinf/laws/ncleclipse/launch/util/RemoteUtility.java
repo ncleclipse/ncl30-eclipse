@@ -27,8 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Time;
-import java.util.Date;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
@@ -89,7 +87,7 @@ public class RemoteUtility {
 	public void get(String remoteFile, String localDirectory) 
 		throws IOException{
 		
-		scp.get(remoteFile, localDirectory);
+		scp.get(remoteFile,localDirectory);
 	}
 	
 	public void sync(String localPath, String remotePath){
@@ -100,12 +98,16 @@ public class RemoteUtility {
 		// TODO: public void update(String remotePath, String localDirectory)
 	}
 	
+	public String format(String path){
+		return path.replace(' ', '_');
+	}
+
 	public void commit(String localPath, String remoteDirectory) 
 		throws IOException{
 			
 		// Setting values
 		File localFile = new File(localPath);	
-		
+			
 		String localFileName = localFile.getName(); 
 		String localFilePath = localFile.getAbsolutePath();	
 		String localSeparator = System.getProperty("file.separator");
@@ -122,25 +124,37 @@ public class RemoteUtility {
 			// Verifying if directory exist on server
 			try {
 				// If exist, do nothing
-				sftp.lstat(remoteDirectory+localSeparator+localFileName);
+				sftp.lstat(
+						format(
+							remoteDirectory +
+							localSeparator +
+							localFileName
+						));
+				
 			} catch (IOException e) {
 				// If doesnt exist, create directory on server
 				if (verboseMode == true){
 					System.out.println(
-							"[!] Putting "
-							+"'"
-							+localFile.getCanonicalPath()
-							+"'"
-							+" "
-							+"on"
-							+" "
-							+"'"
-							+remoteDirectory
-							+"'"
-							+".");
+							"[!] Putting " +
+							"'" +
+							localFilePath +
+							"'" +
+							" " + 
+							"on" +
+							" " +
+							"'" +
+							format(remoteDirectory) +
+ 							"'" +
+							".");
 				}
-				
-				sftp.mkdir(remoteDirectory+localSeparator+localFileName, 755);		
+			
+				sftp.mkdir(
+						format(
+							remoteDirectory +
+							localSeparator +
+							localFileName
+						), 
+						755);
 			}
 			
 			// Commit sub directories and files
@@ -158,46 +172,59 @@ public class RemoteUtility {
 					localFile.lastModified()/1000;
 				
 				long remoteFileLastModified = 
-					sftp.lstat(remoteDirectory
-							+localSeparator
-							+localFileName).atime;
+					sftp.lstat(
+							format(
+								remoteDirectory +
+								localSeparator +
+								localFileName
+							)).atime;
 								
 				if (localFileLastModified > remoteFileLastModified){
 					if (verboseMode == true){
 						System.out.println(
-								"[!] Putting "
-								+"'"
-								+localFilePath
-								+"'"
-								+" "
-								+"on"
-								+" "
-								+"'"
-								+remoteDirectory
-								+"'"
-								+".");
+								"[!] Putting " +
+								"'" +
+								localFilePath +
+								"'" +
+								" " +
+								"on" +
+								" " +
+								"'" +
+								format(remoteDirectory) +
+								"/" +
+								format(localFileName) +
+								"'" +
+								".");
 					}
 					
-					scp.put(localFilePath, remoteDirectory);
+					scp.put(localFilePath,
+							format(localFileName),
+							format(remoteDirectory),
+							"0655");
 				}
 			} catch (IOException e) {
 				// If doesnt exist, put file on server
 				if (verboseMode == true){
 					System.out.println(
-							"[!] Putting "
-							+"'"
-							+localFilePath
-							+"'"
-							+" "
-							+"on"
-							+" "
-							+"'"
-							+remoteDirectory
-							+"'"
-							+".");
+							"[!] Putting " +
+							"'" +
+							localFilePath +
+ 							"'" +
+							" " +
+							"on" +
+							" " +
+							"'" +
+							format(remoteDirectory) +
+							"/" +
+							format(localFileName) +
+							"'" +
+							".");
 				}
 				
-				scp.put(localFilePath, remoteDirectory);
+				scp.put(localFilePath,
+						format(localFileName),
+						format(remoteDirectory),
+						"0655");
 			}
 		}
 	}
@@ -208,12 +235,12 @@ public class RemoteUtility {
 		// Sending command to server 
 		if (verboseMode == true){
 			System.out.println(
-					"[!] Executing"
-					+" "
-					+"'"
-					+command
-					+"'"
-					+".");			
+					"[!] Executing" +
+					" " +
+					"'" + 
+					command +
+ 					"'" +
+					".");			
 		}
 		
 		Session session = connection.openSession();

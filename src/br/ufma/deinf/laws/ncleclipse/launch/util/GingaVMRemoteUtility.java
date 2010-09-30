@@ -60,7 +60,7 @@ public class GingaVMRemoteUtility extends RemoteUtility {
 	public void play(String workspaceProjectFile) 
 		throws IOException {
 		
-		exec(remoteLauncher+" "+workspaceProjectFile);
+		exec(remoteLauncher+" "+format(workspaceProjectFile));
 	}
 
 	public String getRemoteLauncher() {
