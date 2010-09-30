@@ -224,7 +224,7 @@ public class RemoteUtility {
 				scp.put(localFilePath,
 						format(localFileName),
 						format(remoteDirectory),
-						"0655");
+						"0644");
 			}
 		}
 	}
