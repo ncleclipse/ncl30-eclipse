@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.eclipse.ui.console.MessageConsoleStream;
+
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
 import ch.ethz.ssh2.SFTPv3Client;
@@ -47,15 +49,19 @@ public class RemoteUtility {
 	
 	private boolean verboseMode;
 	
+	private MessageConsoleStream consoleStream;
+	
 	public RemoteUtility(
 			String hostName, 
 			String userName, 
-			String userPassword) {
+			String userPassword,
+			MessageConsoleStream consoleStream) {
 		
 		// Setting attributes
 		setHostName(hostName);
 		setUserName(userName);
 		setUserPassword(userPassword);
+		setConsoleStream(consoleStream);
 		
 		setConnection(new Connection(getHostName()));
 		
@@ -134,13 +140,13 @@ public class RemoteUtility {
 			} catch (IOException e) {
 				// If doesnt exist, create directory on server
 				if (verboseMode == true){
-					System.out.println(
-							"[!] Copying " +
+					consoleStream.println(
+							"Copying " +
 							"'" +
 							localFilePath +
 							"'" +
 							" " + 
-							"on" +
+							"to" +
 							" " +
 							"'" +
 							format(remoteDirectory) +
@@ -181,8 +187,8 @@ public class RemoteUtility {
 								
 				if (localFileLastModified > remoteFileLastModified){
 					if (verboseMode == true){
-						System.out.println(
-								"[!] Copying " +
+						consoleStream.println(
+								"Copying " +
 								"'" +
 								localFilePath +
 								"'" +
@@ -205,8 +211,8 @@ public class RemoteUtility {
 			} catch (IOException e) {
 				// If doesnt exist, copy file to server
 				if (verboseMode == true){
-					System.out.println(
-							"[!] Copying " +
+					consoleStream.println(
+							"Copying " +
 							"'" +
 							localFilePath +
  							"'" +
@@ -234,8 +240,8 @@ public class RemoteUtility {
 		
 		// Sending command to server 
 		if (verboseMode == true){
-			System.out.println(
-					"[!] Executing" +
+			consoleStream.println(
+					"Executing" +
 					" " +
 					"'" + 
 					command +
@@ -256,7 +262,7 @@ public class RemoteUtility {
 		String line;
 		
 		while ((line = remoteStdoutReader.readLine()) != null){
-			System.out.println(line);
+			consoleStream.println(line);
 		}
 		
 		// Close session
@@ -315,7 +321,15 @@ public class RemoteUtility {
 		this.sftp = sftp;
 	}
 	
+	public MessageConsoleStream getConsoleStream() {
+		return consoleStream;
+	}
+
+	public void setConsoleStream(MessageConsoleStream consoleStream) {
+		this.consoleStream = consoleStream;
+	}
+	
 	public void setVerboseMode(boolean verboseMode) {
 		this.verboseMode = verboseMode;
-	}
+	}	
 }

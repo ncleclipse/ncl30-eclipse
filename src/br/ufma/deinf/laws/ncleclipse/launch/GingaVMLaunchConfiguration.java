@@ -63,6 +63,10 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 
 import br.ufma.deinf.laws.ncleclipse.launch.util.GingaVMRemoteUtility;
 
@@ -127,76 +131,77 @@ public class GingaVMLaunchConfiguration extends LaunchConfigurationDelegate {
 		
 		}
 		
+		// Creating console
+		
+		MessageConsole console = 
+			new MessageConsole(
+					"Ginga-NCL VM Player - "+userName+"@"+hostName,null);
+		
+		console.activate();
+		console.clearConsole();
+		
+		ConsolePlugin
+			.getDefault()
+			.getConsoleManager()
+			.addConsoles((IConsole[]) new IConsole[] { (IConsole) console });
+		
+		MessageConsoleStream consoleStream = console.newMessageStream();
+		
 		//  Validating values
-		System.out.println("[#] Validating values...");
+		consoleStream.println("Validating values...");
 		
 		if (activeFile != null && activeProject != null){
-			System.out.println("[#] Done!");
+			consoleStream.println("Done!");
 		}else{
-			System.out.println("[#] Fail!");
+			consoleStream.println("Fail!");
 			return;
 		}
-		
-		System.out.println();
-		
-		String workspaceProject = activeProject.getFullPath().toString();
-		
-		String workspaceProjectFile = activeFile.getFullPath().toString();
-		
+	
 		// Setting values
 		GingaVMRemoteUtility remoteUtility = new GingaVMRemoteUtility(
 				hostName,
 				userName,
 				userPassword,
+				consoleStream,
 				remoteLauncher,
 				remoteWorkspace);
 		
 		remoteUtility.setVerboseMode(true);
 		
+		String workspaceProject = activeProject.getFullPath().toString();		
+		String workspaceProjectFile = activeFile.getFullPath().toString();
+		
 		// Connecting to server
-		System.out.println(
-				"[#] Connecting to server" +
-				" " +
-				"(" +
-				userName +
-				"@" +
-				hostName +
-				")" +
-				"...");
+		consoleStream.println(
+				"Connecting to server...");
 		try {
 			remoteUtility.connect();
-			System.out.println("[#] Done!");
+			consoleStream.println("Done!");
 		} catch (IOException e) {
-			System.out.println("[#] Fail!");
+			consoleStream.println("Fail!");
 			return;
 		}
-		
-		System.out.println();
 		
 		// Copying files to server
-		System.out.println(
-				"[#] Copying files to server...");
+		consoleStream.println(
+				"Copying files to server...");
 		try {
 			remoteUtility.commit(workspace+workspaceProject);
-			System.out.println("[#] Done!");
+			consoleStream.println("Done!");
 		} catch (IOException e) {
-			System.out.println("[#] Fail!");
+			consoleStream.println("Fail!");
 			return;
 		}
-		
-		System.out.println();
 		
 		// Play application
-		System.out.println(
-				"[#] Playing application on server...");
+		consoleStream.println(
+				"Playing application on server...");
 		try {
 			remoteUtility.play(remoteWorkspace+workspaceProjectFile);
-			System.out.println("[#] Done!");
+			consoleStream.println("Done!");
 		} catch (IOException e) {
-			System.out.println("[#] Fail!");
+			consoleStream.println("Fail!");
 			return;
 		}
-		
-		System.out.println();
 	}	
 }

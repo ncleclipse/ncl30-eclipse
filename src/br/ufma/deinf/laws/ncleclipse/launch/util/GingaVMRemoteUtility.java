@@ -24,6 +24,8 @@ package br.ufma.deinf.laws.ncleclipse.launch.util;
 
 import java.io.IOException;
 
+import org.eclipse.ui.console.MessageConsoleStream;
+
 public class GingaVMRemoteUtility extends RemoteUtility {
 
 	private String remoteLauncher;
@@ -33,19 +35,21 @@ public class GingaVMRemoteUtility extends RemoteUtility {
 	public GingaVMRemoteUtility(
 			String hostName, 
 			String userName,
-			String userPassword) {
+			String userPassword,
+			MessageConsoleStream consoleStream) {
 		
-		super(hostName, userName, userPassword);
+		super(hostName, userName, userPassword, consoleStream);
 	}
 	
 	public GingaVMRemoteUtility(
 			String hostName, 
 			String userName,
 			String userPassword,
+			MessageConsoleStream consoleStream,
 			String remoteLauncher,
 			String remoteWorkspace) {
 		
-		super(hostName, userName, userPassword);
+		super(hostName, userName, userPassword, consoleStream);
 		
 		setRemoteLauncher(remoteLauncher);
 		setRemoteWorkspace(remoteWorkspace);
