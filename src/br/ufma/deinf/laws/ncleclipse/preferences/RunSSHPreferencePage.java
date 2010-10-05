@@ -74,7 +74,8 @@ public class RunSSHPreferencePage extends FieldEditorPreferencePage implements
 	public RunSSHPreferencePage() {
 		super(GRID);
 		setPreferenceStore(NCLEditorPlugin.getDefault().getPreferenceStore());
-		setDescription("Run Ginga-NCL in Set-top box");
+		setDescription("Set default options for " +
+				"execute application on a remote host");
 	}
 
 	/**
@@ -84,15 +85,23 @@ public class RunSSHPreferencePage extends FieldEditorPreferencePage implements
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
+		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_SCRIPT,
+				"&Remote Launcher", getFieldEditorParent()));
+		
+		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_WORKSPACE,
+				"&Remote Workspace", getFieldEditorParent()));
+		
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_IP,
-				"&IP of Set-top box (or Virtual set-top box):",
+				"&Hostname",
 				getFieldEditorParent()));
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_USER,
-				"&User", getFieldEditorParent()));
+				"&Username", getFieldEditorParent()));
+		
 		StringFieldEditor passw = new StringFieldEditor(
 				PreferenceConstants.P_SSH_RUN_PASSW, "&Password:",
 				getFieldEditorParent());
 		passw.getTextControl(getFieldEditorParent()).setEchoChar('*');
+		
 		addField(passw);
 	}
 
