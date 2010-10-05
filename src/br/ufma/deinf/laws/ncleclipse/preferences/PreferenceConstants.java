@@ -57,6 +57,10 @@ public class PreferenceConstants {
 	public static final String P_SSH_RUN_USER = "nclEclipseSshUserRunPreference";
 	public static final String P_SSH_RUN_PASSW = "nclEclipseSshPasswRunPreference";
 	public static final String P_SSH_RUN_IP = "nclEclipseSshIpRunPreference";
+	
+	public static final String P_SSH_RUN_SCRIPT = "nclEclipseSshScriptRunPreference";
+	
+	public static final String P_SSH_RUN_WORKSPACE = "nclEclipseSshWorkspaceRunPreference";
 
 	public static final String P_LANGUAGE = "nclEclipseLanguagePreference";
 
