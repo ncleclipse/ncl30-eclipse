@@ -96,61 +96,78 @@ public class LaunchShortcut implements ILaunchShortcut {
 
 	public void run(IFile activeFile) {
 		final IFile file = activeFile;
-		
+
 		Thread runThread = new Thread() {
 			public void run() {
 				// Getting default values
-				String hostName = NCLEditorPlugin.getDefault().getPreferenceStore()
-						.getString(PreferenceConstants.P_SSH_RUN_IP);
-		
-				String userName = NCLEditorPlugin.getDefault().getPreferenceStore()
-				.getString(PreferenceConstants.P_SSH_RUN_USER);
-				
-				String userPassword = NCLEditorPlugin.getDefault().getPreferenceStore()
-				.getString(PreferenceConstants.P_SSH_RUN_PASSW);
-		
-				String remoteLauncher = NCLEditorPlugin.getDefault().getPreferenceStore()
-				.getString(PreferenceConstants.P_SSH_RUN_SCRIPT);
-		
-				String remoteWorkspace = NCLEditorPlugin.getDefault().getPreferenceStore()
-				.getString(PreferenceConstants.P_SSH_RUN_WORKSPACE);
-		
+				String hostName = NCLEditorPlugin.getDefault()
+						.getPreferenceStore().getString(
+								PreferenceConstants.P_SSH_RUN_IP);
+
+				String userName = NCLEditorPlugin.getDefault()
+						.getPreferenceStore().getString(
+								PreferenceConstants.P_SSH_RUN_USER);
+
+				String userPassword = NCLEditorPlugin.getDefault()
+						.getPreferenceStore().getString(
+								PreferenceConstants.P_SSH_RUN_PASSW);
+
+				String remoteLauncher = NCLEditorPlugin.getDefault()
+						.getPreferenceStore().getString(
+								PreferenceConstants.P_SSH_RUN_SCRIPT);
+
+				String remoteWorkspace = NCLEditorPlugin.getDefault()
+						.getPreferenceStore().getString(
+								PreferenceConstants.P_SSH_RUN_WORKSPACE);
+
 				// Getting workspace path
 				String workspace = ResourcesPlugin.getWorkspace().getRoot()
 						.getLocation().toString();
-		
+
 				// Creating console
-				MessageConsole console = new MessageConsole("Ginga-NCL VM Player - "
-						+ userName + "@" + hostName, null);
-		
+				MessageConsole console = new MessageConsole(
+						"Ginga-NCL VM Player - " + userName + "@" + hostName,
+						null);
+
 				console.activate();
 				console.clearConsole();
-		
+
+				IConsole[] consoles = (IConsole[]) new IConsole[] { (IConsole) console };
 				ConsolePlugin.getDefault().getConsoleManager().addConsoles(
-						(IConsole[]) new IConsole[] { (IConsole) console });
-		
+						consoles);
+
 				MessageConsoleStream consoleStream = console.newMessageStream();
-		
+
 				// Validating values
 				consoleStream.println("Validating values...");
-		
+
 				if (file != null) {
 					consoleStream.println("Done!");
 				} else {
 					consoleStream.println("Fail!");
+					try {
+						sleep(5);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					ConsolePlugin.getDefault().getConsoleManager()
+							.removeConsoles(consoles);
+					console.destroy();
 					return;
 				}
-		
+
 				// Setting values
-				GingaVMRemoteUtility remoteUtility = new GingaVMRemoteUtility(hostName,
-						userName, userPassword, consoleStream, remoteLauncher,
-						remoteWorkspace);
-		
+				GingaVMRemoteUtility remoteUtility = new GingaVMRemoteUtility(
+						hostName, userName, userPassword, consoleStream,
+						remoteLauncher, remoteWorkspace);
+
 				remoteUtility.setVerboseMode(true);
-		
-				String workspaceProject = file.getProject().getFullPath().toString();
+
+				String workspaceProject = file.getProject().getFullPath()
+						.toString();
 				String workspaceProjectFile = file.getFullPath().toString();
-		
+
 				// Connecting to server
 				consoleStream.println("Connecting to server...");
 				try {
@@ -158,9 +175,18 @@ public class LaunchShortcut implements ILaunchShortcut {
 					consoleStream.println("Done!");
 				} catch (IOException e) {
 					consoleStream.println("Fail!");
+					try {
+						sleep(2);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					ConsolePlugin.getDefault().getConsoleManager()
+							.removeConsoles(consoles);
+					console.destroy();
 					return;
 				}
-		
+
 				// Copying files to server
 				consoleStream.println("Copying files to server...");
 				try {
@@ -168,21 +194,48 @@ public class LaunchShortcut implements ILaunchShortcut {
 					consoleStream.println("Done!");
 				} catch (IOException e) {
 					consoleStream.println("Fail!");
+					try {
+						sleep(2);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					ConsolePlugin.getDefault().getConsoleManager()
+							.removeConsoles(consoles);
+					console.destroy();
 					return;
 				}
-		
+
 				// Play application
 				consoleStream.println("Playing application on server...");
 				try {
 					remoteUtility.play(remoteWorkspace + workspaceProjectFile);
+					try {
+						sleep(2);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					consoleStream.println("Done!");
+					ConsolePlugin.getDefault().getConsoleManager()
+							.removeConsoles(consoles);
+					console.destroy();
 				} catch (IOException e) {
 					consoleStream.println("Fail!");
+					try {
+						sleep(2);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					ConsolePlugin.getDefault().getConsoleManager()
+							.removeConsoles(consoles);
+					console.destroy();
 					return;
 				}
 			}
 		};
-		
+
 		runThread.start();
 	}
 }
