@@ -125,13 +125,14 @@
 	         id="br.ufma.deinf.laws.ncleclipse.preferences.NCLEclipseViewsPreferencePage"
 	         name="NCL Eclipse Views Preferences">
 	   </page>
-	   <!-- Disabled by now
-	   page
+	   
+	   <page
 	         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
 	         class="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
 	         id="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
-	         name="SHH Run Preferences">
+	         name="Remote Ginga-NCL Play">
 	   </page>
+	   <!-- Disabled by now
 	   <page
 	         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
 	         class="br.ufma.deinf.laws.ncleclipse.preferences.RunLocalGingaPreferencePage"
@@ -160,9 +161,9 @@
 	</extension>
 
 	<!-- Launch Configuration :: Running NCL document -->
-	<!-- Removido ateh que Exista uma versao do Ginga para windows
-		extension point="org.eclipse.debug.ui.launchShortcuts">
-    <shortcut label="NCL Presentation" 
+	<!-- Removido ateh que Exista uma versao do Ginga para windows-->
+	<extension point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut label="NCL Application" 
        icon="icons/sample.gif" 
        modes="run, debug" 
        class="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut" 
@@ -173,13 +174,13 @@
                 <count value="1"/>
              </with>
           </enablement>
-          <contextLabel mode="run" label="NCL Presentation"/>
+          <contextLabel mode="run" label="NCL Application"/>
        </contextualLaunch>
 		<perspective id="org.eclipse.jdt.ui.JavaPerspective"/>
      	<perspective id="org.eclipse.debug.ui.DebugPerspective"/>
     </shortcut>
-  </extension -->
-	<extension
+  </extension>
+	<!--<extension
 	      point="org.eclipse.debug.core.launchConfigurationTypes">
 	   <launchConfigurationType
 	         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaLaunchConfiguration"
@@ -219,7 +220,7 @@
 	         id="br.ufma.deinf.laws.ncleclipse.launch.ui.GingaLauchConfigurationTabGroup"
 	         type="br.ufma.deinf.laws.ncleclipse.launching.GingaEmulatorConfiguration">
 	   </launchConfigurationTabGroup>
-	</extension>
+	</extension>-->
 
 	<!-- History Navigation -->
 	
