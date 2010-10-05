@@ -67,10 +67,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				.getPreferenceStore();
 		store.setDefault(PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE,
 				false);
-		store.setDefault(PreferenceConstants.P_SSH_RUN_IP, "192.168.0.1");
+		store.setDefault(PreferenceConstants.P_SSH_RUN_IP, "192.168.64.129");
 		store.setDefault(PreferenceConstants.P_SSH_RUN_USER, "root");
 		store.setDefault(PreferenceConstants.P_SSH_RUN_PASSW, "telemidia");
 
+		store.setDefault(PreferenceConstants.P_SSH_RUN_SCRIPT, "/misc/launcher.sh");
+		store.setDefault(PreferenceConstants.P_SSH_RUN_WORKSPACE, "/misc/ncl30");
+		
 		store.setDefault(PreferenceConstants.P_LANGUAGE,
 				"messagesPt.properties");
 		store.setDefault(PreferenceConstants.P_PREVIEW, false);
