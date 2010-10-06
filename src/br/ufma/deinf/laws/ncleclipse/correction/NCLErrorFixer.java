@@ -22,19 +22,21 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.correction;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
-import java.util.Map.Entry;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -65,26 +67,27 @@ public class NCLErrorFixer implements IMarkerResolutionGenerator2 {
 		try {
 			Object nclValidatorErrorMsg = mk
 					.getAttribute(MarkingErrorHandler.NCLValidatorMessage);
-			
+
 			Message message = null;
 			NCLSourceDocument nclDoc = (NCLSourceDocument) MarkingErrorHandler
 					.getDocument();
 			ArrayList<IMarkerResolution> fixes = new ArrayList<IMarkerResolution>();
 			String key = (String) nclValidatorErrorMsg;
-			
-  			if (nclValidatorErrorMsg != null) {
+
+			if (nclValidatorErrorMsg != null) {
 				message = MessagesUtilities.get(key);
 			}
-  			
-  			if (message == null){
-  				if (nclValidatorErrorMsg != null && nclDoc != null && key.startsWith("XML sintatic error"))
-  					fixes.add(new QuickFix("Try to correct NCL structure", null, nclDoc, FixType.SINTATIC_ERROR, 0, null));
-  			}
-  				
-  			else {
+
+			if (message == null) {
+				if (nclValidatorErrorMsg != null && nclDoc != null
+						&& key.startsWith("XML sintatic error"))
+					fixes.add(new QuickFix("Try to correct NCL structure",
+							null, nclDoc, FixType.SINTATIC_ERROR, 0, null));
+			}
+
+			else {
 				List<String> fixMessages = new ArrayList<String>();
 
-				
 				int msgId = message.getMsgID();
 				String description = message.getDescription();
 
@@ -101,7 +104,7 @@ public class NCLErrorFixer implements IMarkerResolutionGenerator2 {
 
 				String tagname = nclDoc.getCurrentTagname(offset);
 
- 				switch (msgId) {
+				switch (msgId) {
 					// DTD Validator
 					case 2002: // Invalid attribute '%s' on <%s> element.
 						fixes.add(removeAttributeResolution(message, nclDoc,
@@ -134,7 +137,8 @@ public class NCLErrorFixer implements IMarkerResolutionGenerator2 {
 						fixes.add(addChildResolution(message, nclDoc,
 								description.substring(
 										description.lastIndexOf('<' + 1),
-										description.lastIndexOf('>')), "", "", offset));
+										description.lastIndexOf('>')), "", "",
+								offset));
 						break;
 
 					case 2008: // The <%s> element must have exactly one <%s>
@@ -268,10 +272,12 @@ public class NCLErrorFixer implements IMarkerResolutionGenerator2 {
 								// '%s' must appear at least %s time(s).
 						int index = description.lastIndexOf("'");
 						String role = "";
-						for (int i = index - 1; i >= 0 && description.charAt(i) != '\''; i--)
+						for (int i = index - 1; i >= 0
+								&& description.charAt(i) != '\''; i--)
 							role = description.charAt(i) + role;
-						
-						fixes.add(addChildResolution(message, nclDoc, "bind", "role", role, offset));
+
+						fixes.add(addChildResolution(message, nclDoc, "bind",
+								"role", role, offset));
 						break;
 
 					case 3905: // The 'xconnector' attribute with value '%s' is
@@ -422,12 +428,12 @@ public class NCLErrorFixer implements IMarkerResolutionGenerator2 {
 						return new IMarkerResolution[0];
 				}
 			}
-  			if (fixes.size() == 0)
-  				return new IMarkerResolution[0];
+			if (fixes.size() == 0)
+				return new IMarkerResolution[0];
 			IMarkerResolution[] resolutions = new IMarkerResolution[fixes
-			                                						.size()];
-			                                				fixes.toArray(resolutions);
-			                                				return resolutions;
+					.size()];
+			fixes.toArray(resolutions);
+			return resolutions;
 
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -471,13 +477,97 @@ public class NCLErrorFixer implements IMarkerResolutionGenerator2 {
 		ArrayList<IMarkerResolution> fixes = new ArrayList<IMarkerResolution>();
 
 		fixes.add(addElementResolution(message, nclDoc, element, offset));
-
 		fixes.add(removeElementResolution(message, nclDoc, offset));
 
 		ArrayList<String> IDs = nclDoc.getAllElementsOfType(element);
 		for (String id : IDs) {
-			fixes.add(changeAttributeResolution(message, nclDoc, element, id,
+			fixes.add(changeAttributeResolution(message, nclDoc, element.equals("causalConnector") ? "xconnector" : element, id,
 					offset));
+		}
+
+		// if (element.equals("causalConnector") || element.equals("descriptor")
+		// || element.equals("region") || element.equals("transIn")
+		// || element.equals("transOut") || element.equals("rule")) {
+		//
+		//
+		//
+		// }
+
+		int baseOffset = -1;
+
+		if (element.equals("causalConnector"))
+			baseOffset = nclDoc.getBaseOffset("connectorBase", "");
+		else if (element.equals("region"))
+			baseOffset = nclDoc.getBaseOffset("regionBase", "");
+		else if (element.equals("descriptor"))
+			baseOffset = nclDoc.getBaseOffset("descriptorBase", "");
+		else if (element.equals("rule"))
+			baseOffset = nclDoc.getBaseOffset("ruleBase", "");
+		else if (element.equals("transition"))
+			baseOffset = nclDoc.getBaseOffset("transitionBase", "");
+
+		if (baseOffset != -1) {
+			String alias = "";
+			Vector<Integer> childrenOffsets = nclDoc
+					.getChildrenOffsets(baseOffset);
+
+			for (int i : childrenOffsets) {
+				String tag = nclDoc.getCurrentTagname(i);
+				if (tag.equals("importBase")) {
+					String fileName = nclDoc
+							.getAttributeValueFromCurrentTagName(i,
+									"documentURI");
+
+					alias = nclDoc.getAttributeValueFromCurrentTagName(i,
+							"alias");
+					if (!fileName.equals("")) {
+						File file = new File(fileName);
+
+						if (!file.isFile()) {
+							IWorkbench wb = PlatformUI.getWorkbench();
+							IWorkbenchWindow win = wb
+									.getActiveWorkbenchWindow();
+							IWorkbenchPage page = win.getActivePage();
+							IEditorPart editor = page.getActiveEditor();
+							IFile iFile = (IFile) editor.getEditorInput()
+									.getAdapter(IFile.class);
+							String path = iFile.getProject().getParent()
+									.getLocation().toString()
+									+ iFile.getParent().getFullPath()
+											.toString() + "/" + fileName;
+							file = new File(path);
+						}
+
+						if (file.isFile()) {
+							try {
+								BufferedReader reader = new BufferedReader(
+										new FileReader(file));
+								String newNCL = "";
+								while (reader.ready())
+									newNCL += reader.readLine() + "\n";
+								
+								NCLSourceDocument newNCLDoc = new NCLSourceDocument(newNCL); 
+
+								IDs = newNCLDoc.getAllElementsOfType(element);
+								for (String id : IDs) {
+									if (alias != null)
+										id = alias + "#" + id;
+									fixes.add(changeAttributeResolution(
+											message, nclDoc, element.equals("causalConnector") ? "xconnector" : element, id,
+											offset));
+								}
+
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+
+					}
+				}
+			}
 		}
 
 		if (element.equals("descriptor")) {
@@ -598,7 +688,7 @@ public class NCLErrorFixer implements IMarkerResolutionGenerator2 {
 			it = nclReference.iterator();
 			while (it.hasNext()) {
 				NCLReference nclRefAtual = (NCLReference) it.next();
- 
+
 				Collection elements = nclDocument.getElementsFromPerspective(
 						nclRefAtual.getRefTagname(), perspective);
 				if (elements == null)
