@@ -47,14 +47,11 @@
  ******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.outline;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.activities.WorkbenchActivityHelper;
-import org.eclipse.ui.internal.Workbench;
+import org.eclipse.swt.widgets.Display;
 
-import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 import br.ufma.deinf.laws.ncleclipse.xml.XMLElement;
 
 /**
@@ -73,13 +70,15 @@ public class OutlineLabelProvider implements ILabelProvider {
 	}
 
 	public Image getImage(Object element) {
-		/*if (element instanceof XMLElement)
+		if (element instanceof XMLElement)
 		{
 			XMLElement dtdElement = (XMLElement) element;
-			if(dtdElement.getName().equals("link")){
-				return linkImage;
+			if(dtdElement.getName().equals("causalConnector")){
+				return new Image(Display.getDefault(), this.getClass().getProtectionDomain()
+						.getCodeSource().getLocation().toString().substring(5)
+						+ "icons" + "/" + "conn.png");
 			}
-		}*/
+		}
 		return null;
 	}
 
@@ -108,6 +107,7 @@ public class OutlineLabelProvider implements ILabelProvider {
 	}
 
 	public boolean isLabelProperty(Object element, String property) {
+		System.out.println (property);
 		return false;
 	}
 
