@@ -289,6 +289,9 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 		
 		try {
 			path = file.getProject().getLocation().toString();
+			String values [] = path.split("/");
+			path = "";
+			for (int i=0; i < values.length - 1; i++) path += values[i] + "/";
 		} catch(Exception e){
 			return null;
 		}
@@ -300,6 +303,11 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 			currentFile = new File(((IURIEditorInput) editor.getEditorInput())
 					.getURI());
 		}
+		
+		
+		path += currentFile.getParent().substring(1);
+		
+		
 		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
 				PreferenceConstants.P_PREVIEW)) {
 
