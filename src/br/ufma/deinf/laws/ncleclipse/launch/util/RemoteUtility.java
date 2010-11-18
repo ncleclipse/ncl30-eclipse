@@ -27,6 +27,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
+
+import javax.xml.crypto.Data;
 
 import org.eclipse.ui.console.MessageConsoleStream;
 
@@ -178,13 +181,21 @@ public class RemoteUtility {
 					localFile.lastModified()/1000;
 				
 				long remoteFileLastModified = 
-					sftp.lstat(
+					sftp.stat(
 							format(
 								remoteDirectory +
 								localSeparator +
 								localFileName
-							)).atime;
-								
+							)).mtime;
+				
+				/*
+				 * POSSIBLE API BUG!!!
+				 * 
+				 * Not sure why this delay (3h). 
+				 * Need a LOT of test before release.
+				 */
+				remoteFileLastModified -= 3*3600;
+				
 				if (localFileLastModified > remoteFileLastModified){
 					if (verboseMode == true){
 						consoleStream.println(
