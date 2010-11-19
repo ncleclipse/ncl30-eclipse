@@ -67,9 +67,10 @@ public class NCLInTime implements IEditorActionDelegate {
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (editor != null)
 			editorPrev = editor;
-		
-		if(targetEditor == null) return;
-		
+
+		if (targetEditor == null)
+			return;
+
 		editor = ((NCLMultiPageEditor) targetEditor.getEditorSite().getPage()
 				.getActiveEditor()).getNCLEditor();
 
@@ -97,10 +98,8 @@ public class NCLInTime implements IEditorActionDelegate {
 			doc1 = text;
 		} else {
 			doc2 = text;
-			// Chama a funÃ§Ã£o do Rodrigo
+			// Chama a função do Rodrigo
 			try {
-				
-				
 				DOMParser execute = new DOMParser();
 				String comando = execute.exe(doc2, doc1);
 				MessageConsole myConsole = findConsole("");
@@ -110,8 +109,7 @@ public class NCLInTime implements IEditorActionDelegate {
 				view.display(myConsole);
 				myConsole.clearConsole();
 				MessageConsoleStream out = myConsole.newMessageStream();
-				
-				
+
 				out.println(comando);
 			} catch (PartInitException e) {
 				// TODO Auto-generated catch block
