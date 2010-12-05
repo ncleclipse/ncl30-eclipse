@@ -48,6 +48,7 @@
 package br.ufma.deinf.laws.ncleclipse.launch;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -182,6 +183,20 @@ public class GingaVMLaunchConfiguration extends LaunchConfigurationDelegate {
 			return;
 		}
 		
+		//Synchronizing clocks
+		consoleStream.println(
+			"Synchronizing clocks...");
+		
+		long ctime = System.currentTimeMillis();
+		
+		try {
+			remoteUtility.exec("date --rfc-3339=\""+ctime+"\"");
+			consoleStream.println("Done!");
+		} catch (IOException e) {
+			consoleStream.println("Fail!");
+			return;
+		}
+		
 		// Copying files to server
 		consoleStream.println(
 				"Copying files to server...");
@@ -203,5 +218,6 @@ public class GingaVMLaunchConfiguration extends LaunchConfigurationDelegate {
 			consoleStream.println("Fail!");
 			return;
 		}
+		
 	}	
 }
