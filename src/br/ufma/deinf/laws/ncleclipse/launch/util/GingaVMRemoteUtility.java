@@ -63,8 +63,20 @@ public class GingaVMRemoteUtility extends RemoteUtility {
 
 	public void play(String workspaceProjectFile) 
 		throws IOException {
-		
-		exec(remoteLauncher+" "+format(workspaceProjectFile));
+		exec("export LD_LIBRARY_PATH=/usr/local/lib/lua/5.1/socket:" +
+				"/usr/local/lib/ginga:" +
+				"/usr/local/lib/ginga/adapters:" +
+				"/usr/local/lib/ginga/cm:" +
+				"/usr/local/lib/ginga/converters:" +
+				"/usr/local/lib/ginga/ic:" +
+				"/usr/local/lib/ginga/iocontents:" +
+				"/usr/local/lib/ginga/players:" +
+				"/usr/local/lib/ginga/dp:" +
+				"/usr/local/lib/ginga/epgfactory:" +
+				"$LD_LIBRARY_PATH ;" +
+				remoteLauncher +
+				" " +
+				format(workspaceProjectFile));
 	}
 
 	public String getRemoteLauncher() {
