@@ -297,7 +297,7 @@
  <extension
        point="org.eclipse.ui.views">
     <view
-          class="org.eclipse.ui.navigator.CommonNavigator"
+          class="org.eclipse.ui.views.navigator.ResourceNavigator"
           icon="icons/sample.gif"
           id="ncleclipse.navigator"
           name="Navigator View">
