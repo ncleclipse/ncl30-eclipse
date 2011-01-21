@@ -265,7 +265,7 @@ public class NCLInformationControl extends AbstractInformationControl implements
 			this.cf = pageRegion.getForeground();
 			pageRegion.addPaintListener(new PaintListener() {
 				public void paintControl(PaintEvent e) {
-					for (int i = 0; i < 100; i++) {
+					for (int i = 0; i < 2500; i++) {
 						e.gc.setBackground(cb);
 						e.gc.setForeground(cf);
 						e.gc.fillRectangle(0, 0, 300, 300);
