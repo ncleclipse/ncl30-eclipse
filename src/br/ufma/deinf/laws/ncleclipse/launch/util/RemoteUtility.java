@@ -118,9 +118,11 @@ public class RemoteUtility {
 		String localFilePath = localFile.getAbsolutePath();	
 		String localSeparator = System.getProperty("file.separator");
 		
+		String remoteSeparator = "/";
+		
 		// Getting remoteDirectory without last separator
 		if (remoteDirectory.charAt(remoteDirectory.length()-1) 
-				== localSeparator.charAt(0)){
+				== remoteSeparator.charAt(0)){
 			
 			remoteDirectory = remoteDirectory
 				.substring(0, remoteDirectory.length()-1);
@@ -133,7 +135,7 @@ public class RemoteUtility {
 				sftp.lstat(
 						format(
 							remoteDirectory +
-							localSeparator +
+							remoteSeparator +
 							localFileName
 						));
 				
@@ -157,7 +159,7 @@ public class RemoteUtility {
 				sftp.mkdir(
 						format(
 							remoteDirectory +
-							localSeparator +
+							remoteSeparator +
 							localFileName
 						), 
 						644);
@@ -168,7 +170,7 @@ public class RemoteUtility {
 			
 			for (String subFileName : subFilesNames) {
 				commit(localFilePath+localSeparator+subFileName, 
-						remoteDirectory+localSeparator+localFileName);
+						remoteDirectory+remoteSeparator+localFileName);
 			}	
 		}else{
 			// Verifying if file exist on server
@@ -181,7 +183,7 @@ public class RemoteUtility {
 					sftp.stat(
 							format(
 								remoteDirectory +
-								localSeparator +
+								remoteSeparator +
 								localFileName
 							)).mtime;
 				
