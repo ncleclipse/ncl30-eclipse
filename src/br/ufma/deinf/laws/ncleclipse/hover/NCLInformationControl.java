@@ -115,7 +115,7 @@ public class NCLInformationControl extends AbstractInformationControl implements
 	private boolean isResizable;
 
 	public NCLInformationControl(Shell parentShell, boolean isResizable) {
-		super(parentShell, false);
+		super(parentShell, isResizable);
 		this.isResizable = isResizable;
 		fAdditionalTextStyles = isResizable ? SWT.V_SCROLL | SWT.H_SCROLL
 				: SWT.NONE;
@@ -233,9 +233,9 @@ public class NCLInformationControl extends AbstractInformationControl implements
 
 				@Override
 				public void paintControl(PaintEvent e) {
-					for (int i = 0; i < 100; i++) {
-						e.gc.fillRectangle(0, 0, widthImage, heightImage);
-					}
+					e.gc.setAlpha(255);
+					e.gc.setBackground(new Color (e.display, 255, 255, 255 ));
+					e.gc.fillRectangle(0, 0, widthImage, heightImage);
 				}
 
 			});
@@ -260,22 +260,18 @@ public class NCLInformationControl extends AbstractInformationControl implements
 		} else if (input instanceof PreViewRegion) {
 			this.isRegion = true;
 			PreViewRegion region = (PreViewRegion) input;
-			this.cb = pageRegion.getBackground();
-			this.cf = pageRegion.getForeground();
+			
 			
 			pageRegion.addPaintListener(new PaintListener() {
 				public void paintControl(PaintEvent e) {
-					for (int i = 0; i < 50; i++) {
-						e.gc.setBackground(cb);
-						e.gc.setForeground(cf);
-						e.gc.fillRectangle(0, 0, 300, 300);
-
-					}
+					e.gc.setAlpha(255);
+					e.gc.setBackground(new Color (e.display, 255, 255, 255 ));
+					e.gc.fillRectangle(0, 0, 300, 300);
 				}
 
 			});
+			
 			regionSize = region.paintRegions(pageRegion);
-			pageRegion.update();
 			layout.topControl = pageRegion;
 		} else if (input instanceof PreViewMedia) {
 			this.isMedia = true;
