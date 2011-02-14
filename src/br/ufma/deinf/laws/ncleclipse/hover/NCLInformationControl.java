@@ -1,22 +1,22 @@
 /*******************************************************************************
- * Este arquivo é parte da implementação do ambiente de autoria em Nested 
+ * Este arquivo Ã© parte da implementaÃ§Ã£o do ambiente de autoria em Nested 
  * Context Language - NCL Eclipse.
- * Direitos Autorais Reservados (c) 2007-2010 UFMA/LAWS (Laboratório de Sistemas 
- * Avançados da Web)
+ * Direitos Autorais Reservados (c) 2007-2010 UFMA/LAWS (LaboratÃ³rio de Sistemas 
+ * AvanÃ§ados da Web)
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
- * os termos da Licença Pública Geral GNU versão 2 conforme publicada pela Free 
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo sob
+ * os termos da LicenÃ§a PÃºblica Geral GNU versÃ£o 2 conforme publicada pela Free 
  * Software Foundation.
  *
- * Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- * NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral do
- * GNU versão 2 para mais detalhes. Você deve ter recebido uma cópia da Licença
- * Pública Geral do GNU versão 2 junto com este programa; se não, escreva para a
- * Free Software Foundation, Inc., no endereço 59 Temple Street, Suite 330,
+ * Este programa Ã© distribuÃ­do na expectativa de que seja Ãºtil, porÃ©m, SEM 
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃ�FICA. Consulte a LicenÃ§a PÃºblica Geral do
+ * GNU versÃ£o 2 para mais detalhes. VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a
+ * PÃºblica Geral do GNU versÃ£o 2 junto com este programa; se nÃ£o, escreva para a
+ * Free Software Foundation, Inc., no endereÃ§o 59 Temple Street, Suite 330,
  * Boston, MA 02111-1307 USA.
  *
- * Para maiores informações:
+ * Para maiores informaÃ§Ãµes:
  * - ncleclipse@laws.deinf.ufma.br
  * - http://www.laws.deinf.ufma.br/ncleclipse
  * - http://www.laws.deinf.ufma.br
@@ -259,13 +259,13 @@ public class NCLInformationControl extends AbstractInformationControl implements
 
 		} else if (input instanceof PreViewRegion) {
 			this.isRegion = true;
-			layout.topControl = pageRegion;
 			PreViewRegion region = (PreViewRegion) input;
 			this.cb = pageRegion.getBackground();
 			this.cf = pageRegion.getForeground();
+			
 			pageRegion.addPaintListener(new PaintListener() {
 				public void paintControl(PaintEvent e) {
-					for (int i = 0; i < 2500; i++) {
+					for (int i = 0; i < 50; i++) {
 						e.gc.setBackground(cb);
 						e.gc.setForeground(cf);
 						e.gc.fillRectangle(0, 0, 300, 300);
@@ -275,6 +275,8 @@ public class NCLInformationControl extends AbstractInformationControl implements
 
 			});
 			regionSize = region.paintRegions(pageRegion);
+			pageRegion.update();
+			layout.topControl = pageRegion;
 		} else if (input instanceof PreViewMedia) {
 			this.isMedia = true;
 			layout.topControl = pageButton;
