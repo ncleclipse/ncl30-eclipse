@@ -48,11 +48,12 @@
 package br.ufma.deinf.laws.ncleclipse.launch;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -192,10 +193,11 @@ public class LaunchShortcut implements ILaunchShortcut {
 				consoleStream.println(
 					"Synchronizing clocks...");
 				
-				long ctime = System.currentTimeMillis();
-				
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss -z");
+		        String date = dateFormat.format(new Date ());
+		        
 				try {
-					remoteUtility.exec("date --rfc-3339=\""+ctime+"\"");
+					remoteUtility.exec("date --set=\"" + date + "\"");
 					consoleStream.println("Done!");
 				} catch (IOException e) {
 					consoleStream.println("Fail!");
