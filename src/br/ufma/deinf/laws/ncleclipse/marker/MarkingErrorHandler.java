@@ -73,8 +73,8 @@ import br.ufma.deinf.laws.ncleclipse.xml.XMLValidationErrorHandler;
  * 
  */
 public class MarkingErrorHandler extends XMLValidationErrorHandler {
-	public static String NCLValidatorMessage = "NCLValidatorMessageErrorID";
-	public static String NCLSourceDocument = "NCLSourceDocument";
+	public static String NCLValidatorMessage = "br.ufma.deinf.laws.ncleclipse.problemmarker.NCLValidatorMessage";
+	public static String NCLSourceDocument = "br.ufma.deinf.laws.ncleclipse.problemmarker.NCLSourceDocument";
 	public static String NCLMarkerError = "br.ufma.deinf.laws.ncleclipse.problemmarker";
 
 	private static IDocument document;
@@ -103,7 +103,7 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 
 		XMLValidationError validationError = super.nextError(e, isFatal);
 
-		Map map = new HashMap();
+		Map <String, Object> map = new HashMap <String, Object> ();
 		int lineNumber = e.getLineNumber();
 		int columnNumber = e.getColumnNumber();
 		MarkerUtilities.setLineNumber(map, lineNumber);
@@ -112,9 +112,11 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 		
 		MarkerUtilities.setMessage(map, NCLEditorMessages.getInstance()
 				.getString("NCLValidator.Error.XMLParserError", tmp));
+		
 		map.put(IMarker.LOCATION, file.getFullPath().toString());
 
 		Integer charStart = getCharStart(lineNumber, columnNumber);
+		
 		if (charStart != null)
 			map.put(IMarker.CHAR_START, charStart);
 
@@ -129,12 +131,15 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 		
 		map.put(MarkingErrorHandler.NCLValidatorMessage, NCLEditorMessages.getInstance()
 				.getString("NCLValidator.Error.XMLParserError", tmp) );
+		
 		map.put(MarkingErrorHandler.NCLSourceDocument, document.get());
 		
 		try {
 			MarkerUtilities.createMarker(file, map, NCLMarkerError);
+			
 		} catch (CoreException ee) {
 			ee.printStackTrace();
+			
 		}
 
 		return validationError;
@@ -173,7 +178,7 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 		Vector<Message> warnings = NCLValidator.getWarnings();
 		Vector<Message> erros = NCLValidator.getErrors();
 		// Imprime os warning
-		Map map = new HashMap();
+		Map <String, Object> map = new HashMap <String, Object> ();
 		map.put(IMarker.LOCATION, file.getFullPath().toString());
 		map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_WARNING));
 		for (int i = 0; i < warnings.size(); i++) {
@@ -201,6 +206,7 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 				ee.printStackTrace();
 			}
 		}
+		
 		// Imprime os erros
 		map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
 		for (int i = 0; i < erros.size(); i++) {
@@ -223,6 +229,12 @@ public class MarkingErrorHandler extends XMLValidationErrorHandler {
 				map.put(MarkingErrorHandler.NCLValidatorMessage, erros.get(i).toString());
 				map.put(MarkingErrorHandler.NCLSourceDocument, document.get());
 				
+				// set message type
+				//Descomentar as linhas seguintes resulta em nao mostrar marcar os erros em vermelho
+				// Na versao antiga (3.4) do Eclipse funciona perfeitamente!
+				//TODO: descobrir pq
+				//map.put(MarkingErrorHandler.NCLValidatorMessage, erros.get(i));
+				//map.put(MarkingErrorHandler.NCLSourceDocument, document);
 				
 				MarkerUtilities.setMessage(map, erros.get(i).getDescription());
 				MarkerUtilities.setLineNumber(map, new Integer((String) erros
