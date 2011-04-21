@@ -133,37 +133,34 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		setSourceViewerConfiguration(new NCLConfiguration(colorManager, this));
 		loadHelp();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#configureSourceViewerDecorationSupport(org.eclipse.ui.texteditor.SourceViewerDecorationSupport)
 	 */
 	public final static String EDITOR_MATCHING_BRACKETS = "matchingBrackets";
-	public final static String EDITOR_MATCHING_BRACKETS_COLOR= "matchingBracketsColor";
+	public final static String EDITOR_MATCHING_BRACKETS_COLOR = "matchingBracketsColor";
 
 	@Override
 	protected void configureSourceViewerDecorationSupport(
 			SourceViewerDecorationSupport support) {
-		
-		
+
 		super.configureSourceViewerDecorationSupport(support);
-		char[] matchChars = {'<', '>'}; //which brackets to match		
-		
-		ICharacterPairMatcher matcher = new DefaultCharacterPairMatcher(matchChars ,
-				 IDocumentExtension3.DEFAULT_PARTITIONING);
-			
+		char[] matchChars = { '<', '>' }; // which brackets to match
+
+		ICharacterPairMatcher matcher = new DefaultCharacterPairMatcher(
+				matchChars, IDocumentExtension3.DEFAULT_PARTITIONING);
+
 		support.setCharacterPairMatcher(matcher);
-		support.setMatchingCharacterPainterPreferenceKeys(EDITOR_MATCHING_BRACKETS,EDITOR_MATCHING_BRACKETS_COLOR);
-	 
-		
-		
-		//Enable bracket highlighting in the preference store
+		support.setMatchingCharacterPainterPreferenceKeys(
+				EDITOR_MATCHING_BRACKETS, EDITOR_MATCHING_BRACKETS_COLOR);
+
+		// Enable bracket highlighting in the preference store
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(EDITOR_MATCHING_BRACKETS, true);
 		store.setDefault(EDITOR_MATCHING_BRACKETS_COLOR, "128,128,128");
-		
 
 	}
-	
+
 	public void dispose() {
 		colorManager.dispose();
 		super.dispose();
@@ -275,7 +272,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 					Vector<NclValidatorDocument> documents = new Vector<NclValidatorDocument>();
 					// NclDocumentManager.resetDocumentManager();
 					NclValidatorDocument nclValidatorDocument = new NclValidatorDocument(
-							doc);
+							null, doc);
 					documents.add(nclValidatorDocument);
 
 					NCLValidator.validate(documents);
@@ -291,7 +288,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 				markingErrorHandler.MarkNCLValidatorErrorsAndWarnings();
 			}
 		} catch (Exception e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -571,10 +568,11 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		// updateOutlineView.setPriority(Job.SHORT);
 		// updateOutlineView.schedule();
 		IDocument idoc = event.getDocument();
-		if(!(idoc instanceof NCLSourceDocument)) return;
-		
+		if (!(idoc instanceof NCLSourceDocument))
+			return;
+
 		final NCLSourceDocument doc = (NCLSourceDocument) idoc;
-		
+
 		if (event.fText.equals("/")) {
 			try {
 				// We are CLOSING a START_TAG in a single line
@@ -630,14 +628,16 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 
 							if (region.getType().equals(
 									XMLPartitionScanner.XML_START_TAG)) {
-								String str = doc.get(region.getOffset(), region.getLength());
-								if (doc.getCurrentTagname(region.getOffset()).equals(tagname) && !str.endsWith("/>"))
+								String str = doc.get(region.getOffset(), region
+										.getLength());
+								if (doc.getCurrentTagname(region.getOffset())
+										.equals(tagname)
+										&& !str.endsWith("/>"))
 									++stack;
-								
+
 							}
 
 							region = doc.getNextPartition(region);
-
 
 						} while (true);
 
@@ -680,124 +680,162 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 				return;
 			}
 		}
-		
+
 		else {
-			
+
 			String s = event.getText();
 			s = s.replace(" ", "");
 			s = s.replace("\r", "");
 			s = s.replace("\t", "");
-			
+
 			if (s.equals("\n")) {
 				try {
 					int offset = event.fOffset;
-					
+
 					char ch = doc.getChar(--offset);
-					while (Character.isWhitespace(ch)) ch = doc.getChar(--offset);
-					
+					while (Character.isWhitespace(ch))
+						ch = doc.getChar(--offset);
+
 					ITypedRegion region = doc.getPartition(offset);
 					ITypedRegion sStartTagRegion = region;
-					if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)){
-						int endRegionOffset = region.getOffset()+region.getLength();
-						ch = doc.getChar(endRegionOffset-2);
-						
-						if (ch != '/' && (offset == endRegionOffset-1)) {
+					if (region.getType().equals(
+							XMLPartitionScanner.XML_START_TAG)) {
+						int endRegionOffset = region.getOffset()
+								+ region.getLength();
+						ch = doc.getChar(endRegionOffset - 2);
+
+						if (ch != '/' && (offset == endRegionOffset - 1)) {
 							--offset;
-							final String tagname = doc.getCurrentTagname (offset);
+							final String tagname = doc
+									.getCurrentTagname(offset);
 							String fatherTagName = doc.getFatherTagName(offset);
-							
+
 							int stack = 1;
-							while (fatherTagName.equals(tagname)){
+							while (fatherTagName.equals(tagname)) {
 								stack++;
 								offset = doc.getFatherPartitionOffset(offset);
 								fatherTagName = doc.getFatherTagName(offset);
 							}
-							
+
 							offset = event.fOffset;
 							final int nextPartitionOffset = offset;
 							region = doc.getPartition(offset);
-							
+
 							do {
-								if (stack == 0) break;
+								if (stack == 0)
+									break;
 								ch = doc.getChar(++offset);
-								while (Character.isWhitespace(ch)) ch = doc.getChar(++offset);
-								
+								while (Character.isWhitespace(ch))
+									ch = doc.getChar(++offset);
+
 								region = doc.getPartition(offset);
-								
-								if (region.getType().equals(XMLPartitionScanner.XML_END_TAG)) {
-									String endTag = doc.getCurrentEndTagName(offset); 
+
+								if (region.getType().equals(
+										XMLPartitionScanner.XML_END_TAG)) {
+									String endTag = doc
+											.getCurrentEndTagName(offset);
 									if (endTag.equals(tagname)) {
 										--stack;
 									}
-									
-									if (endTag.equals(fatherTagName)) break;
+
+									if (endTag.equals(fatherTagName))
+										break;
 								}
-								
-								if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)){
-									String str = doc.get(region.getOffset(), region.getLength()); 
-									if (doc.getCurrentTagname(offset).equals(tagname) && !str.endsWith("/>")) ++stack;
+
+								if (region.getType().equals(
+										XMLPartitionScanner.XML_START_TAG)) {
+									String str = doc.get(region.getOffset(),
+											region.getLength());
+									if (doc.getCurrentTagname(offset).equals(
+											tagname)
+											&& !str.endsWith("/>"))
+										++stack;
 								}
-								
-								offset = region.getOffset() + region.getLength() + 1;
-							}while (true);
-							
-							
-							
-												
-							if (stack > 0){
+
+								offset = region.getOffset()
+										+ region.getLength() + 1;
+							} while (true);
+
+							if (stack > 0) {
 								region = doc.getPartition(nextPartitionOffset);
-								final int beginStartTag = sStartTagRegion.getOffset();
+								final int beginStartTag = sStartTagRegion
+										.getOffset();
 								final int beginWithChild = region.getOffset();
-								final int beginWithoutChild = region.getOffset() - 1;
-								final int highlightLine = doc.getLineOfOffset(region.getOffset()+region.getLength()-2); 
+								final int beginWithoutChild = region
+										.getOffset() - 1;
+								final int highlightLine = doc
+										.getLineOfOffset(region.getOffset()
+												+ region.getLength() - 2);
 								doc.acceptPostNotificationReplaces();
-								
-								doc.registerPostNotificationReplace(null, new IDocumentExtension.IReplace() {
-									
-									@Override
-									public void perform(IDocument document, IDocumentListener owner) {
-										try {
-											
-											if (NCLStructure.getChildrenCardinality(tagname).size() > 0){
-												doc.replace(beginWithChild, 0, "\n" + doc.getIndentLine(beginStartTag)+ "\t" + 
-														"\n" + doc.getIndentLine(beginStartTag) + "</" + tagname + ">");
-												
-												resetHighlightRange();
-												
-												System.out.println(highlightLine);
-												
-												//FIXME: Still not working
-												setHighlightRange(
-														highlightLine-1, 
-														1, 
-														true);
-												//setFocus(0, 1);
-												
+
+								doc.registerPostNotificationReplace(null,
+										new IDocumentExtension.IReplace() {
+
+											@Override
+											public void perform(
+													IDocument document,
+													IDocumentListener owner) {
+												try {
+
+													if (NCLStructure
+															.getChildrenCardinality(
+																	tagname)
+															.size() > 0) {
+														doc
+																.replace(
+																		beginWithChild,
+																		0,
+																		"\n"
+																				+ doc
+																						.getIndentLine(beginStartTag)
+																				+ "\t"
+																				+ "\n"
+																				+ doc
+																						.getIndentLine(beginStartTag)
+																				+ "</"
+																				+ tagname
+																				+ ">");
+
+														resetHighlightRange();
+
+														System.out
+																.println(highlightLine);
+
+														// FIXME: Still not
+														// working
+														setHighlightRange(
+																highlightLine - 1,
+																1, true);
+														// selectAndReveal(0,
+														// 10);
+
+													} else
+														doc
+																.replace(
+																		beginWithoutChild,
+																		0, "/");
+
+												} catch (BadLocationException e) {
+													// TODO Auto-generated catch
+													// block
+													e.printStackTrace();
+												}
 											}
-											else
-												doc.replace(beginWithoutChild, 0, "/");
-											
-										} catch (BadLocationException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
-									}
-								});
-								
+										});
+
 							}
-							
-							
+
 						}
-						
+
 					}
 				} catch (BadLocationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		}
-		
+
 	}
 
 }
