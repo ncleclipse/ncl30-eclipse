@@ -113,6 +113,10 @@
          		point="org.eclipse.core.resources.markers">
          		
       <super type="org.eclipse.core.resources.problemmarker"/>
+      <super type="org.eclipse.core.resources.textmarker"/>
+      
+      <attribute name="br.ufma.deinf.laws.ncleclipse.problemmarker.NCLValidatorMessage"/>
+      <attribute name="br.ufma.deinf.laws.ncleclipse.problemmarker.NCLSourceDocument"/>
       <persistent value="true"/>
    </extension>
    
@@ -125,7 +129,7 @@
 	         id="br.ufma.deinf.laws.ncleclipse.preferences.NCLEclipseViewsPreferencePage"
 	         name="NCL Eclipse Views Preferences">
 	   </page>
-	   
+
 	   <page
 	         category="br.ufma.deinf.laws.ncleclipse.preferences.NCL"
 	         class="br.ufma.deinf.laws.ncleclipse.preferences.RunSSHPreferencePage"
@@ -161,26 +165,26 @@
 	</extension>
 
 	<!-- Launch Configuration :: Running NCL document -->
-	<!-- Removido ateh que Exista uma versao do Ginga para windows-->
+	<!-- Removido ateh que Exista uma versao do Ginga para windows -->
 	<extension point="org.eclipse.debug.ui.launchShortcuts">
-    <shortcut label="NCL Application" 
-       icon="icons/sample.gif" 
-       modes="run, debug" 
-       class="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut" 
-       id="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut">
-       <contextualLaunch>
-          <enablement>
-             <with variable="selection">
-                <count value="1"/>
-             </with>
-          </enablement>
-          <contextLabel mode="run" label="NCL Application"/>
-       </contextualLaunch>
-		<perspective id="org.eclipse.jdt.ui.JavaPerspective"/>
-     	<perspective id="org.eclipse.debug.ui.DebugPerspective"/>
-    </shortcut>
-  </extension>
-	<!--<extension
+    
+	    <shortcut label="NCL Application" 
+	       icon="icons/sample.gif" 
+	       modes="run, debug" 
+	       class="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut" 
+	       id="br.ufma.deinf.laws.ncleclipse.launch.LaunchShortcut">
+	      
+	       <contextualLaunch>
+	          <enablement>
+	             <with variable="selection">
+	                <count value="1"/>
+	             </with>
+	          </enablement>
+	          <contextLabel mode="run" label="NCL Application"/>
+	       </contextualLaunch>
+	    </shortcut>
+	</extension>
+	<!-- extension
 	      point="org.eclipse.debug.core.launchConfigurationTypes">
 	   <launchConfigurationType
 	         delegate="br.ufma.deinf.laws.ncleclipse.launch.GingaLaunchConfiguration"
@@ -223,7 +227,6 @@
 	</extension>-->
 
 	<!-- History Navigation -->
-	
 	<extension point="org.eclipse.ui.commands">
 		<command 	id="br.ufma.deinf.laws.ncleclipse.actions.navigation.backward" 
 					name="NCL Backward Navigation"/>
@@ -259,7 +262,7 @@
 	  </key>
 	  
 	</extension>
- <extension
+ <!-- <extension
        point="org.eclipse.ui.editorActions">
     <editorContribution
           id="br.ufma.deinf.laws.ncleclipse.actions.nclintime.start"
@@ -293,7 +296,7 @@
              label="Uncomment Selection">
        </action>
     </editorContribution>
- </extension>
+ </extension> -->
  <extension
        point="org.eclipse.ui.views">
     <view
@@ -306,7 +309,7 @@
  <extension
        point="org.eclipse.ui.perspectives">
     <perspective
-          class="br.ufma.deinf.laws.ncleclipse.perspective.Perspective"
+          class="br.ufma.deinf.laws.ncleclipse.perspective.PerspectiveFactory"
           icon="icons/sample.gif"
           id="ncleclipse.perspective"
           name="NCL">
@@ -321,7 +324,7 @@
              minimized="false"
              ratio="0.25"
              relationship="left"
-             relative="org.eclipse.ui.editorss">
+             relative="org.eclipse.ui.editors">
        </view>
     </perspectiveExtension>
  </extension>
@@ -356,11 +359,11 @@
 </extension>
 -->
 
-	<extension point="org.eclipse.ui.ide.markerResolution">
+	<!-- extension point="org.eclipse.ui.ide.markerResolution">
       <markerResolutionGenerator
          markerType="br.ufma.deinf.laws.ncleclipse.problemmarker"
          class="br.ufma.deinf.laws.ncleclipse.correction.NCLErrorFixer"/>
-   </extension>
+   </extension -->
  <extension
        point="org.eclipse.ui.popupMenus">
     <viewerContribution
@@ -380,6 +383,15 @@
              menubarPath="additions">
        </action>
     </viewerContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.perspectives">
+    <perspective
+          class="br.ufma.deinf.laws.ncleclipse.perspective.NCLPerspectiveFactory"
+          icon="icons/project.png"
+          id="br.ufma.deinf.laws.ncleclipse.NCLPerspective"
+          name="NCL Perspective">
+    </perspective>
  </extension>
 
 </plugin>
