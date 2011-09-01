@@ -22,21 +22,31 @@
  ********************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.perspective;
 
+import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 /**
  * @author Rodrigo Costa <rodrim.c@laws.deinf.ufma.br>
- *
+ * 
  */
-public class Perspective implements IPerspectiveFactory {
+public class PerspectiveFactory implements IPerspectiveFactory {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
-	 */
-	@Override
-	public void createInitialLayout(IPageLayout layout) {
-		// TODO Auto-generated method stub
+	private static final String VIEW_ID = 
+		"br.ufma.deinf.laws.ncleclipse.NCLPerspective";
+
+	private static final String BOTTOM = "bottom";
+
+	public void createInitialLayout(IPageLayout myLayout) {
+
+		myLayout.addView(IPageLayout.ID_OUTLINE, 
+				IPageLayout.LEFT, 0.30f,
+				myLayout.getEditorArea());
+
+		IFolderLayout bot = 
+			myLayout.createFolder(BOTTOM, IPageLayout.BOTTOM,
+				0.76f, myLayout.getEditorArea());
+		bot.addView(VIEW_ID);
 
 	}
 

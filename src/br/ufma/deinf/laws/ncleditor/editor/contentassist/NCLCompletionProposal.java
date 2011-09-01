@@ -226,6 +226,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	// estrutura proposta
 	private void computeTagsProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
+		
+		//TODO: Ignore case-sensitive in autocomplete
+		
 		int qlen = qualifier.length();
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		String indent = ((NCLSourceDocument) doc).getIndentLine(offset);
@@ -250,8 +253,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				// get a help info to user
 				// TODO: Description of elements in English and Spanish
-				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
-						tagname);
+				
+				String helpInfo = null;
+				//Test if the user wants to see help information
+				if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+						PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+				}
 
 				CompletionProposal proposal = new CompletionProposal(text,
 						offset - qlen, qlen, cursor, null, tagname, null,
@@ -273,12 +281,18 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 					// TODO: Description of elements in English and Spanish
 					// get a help information to user
-					String helpInfo = NCLHelper.getNCLHelper()
-							.getHelpDescription(tagname);
+					String helpInfo = null;
+					
+					//Test if the user wants to see help information
+					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+						helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+					}
 
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, tagname, null,
 							helpInfo);
+					
 					propList.add(proposal);
 				}
 			}
@@ -733,7 +747,14 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					if (text == null)
 						continue;
 
-					String helpInfo = nclElement.getDoc();
+					String helpInfo = null;
+					//Test if the user wants to see help information
+					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+						// Get documentation of the element to show
+						helpInfo = nclElement.getDoc();
+					}
+					
 					Image image = null;
 					if (nclElement.getTagName().equals("region"))
 						image = regionImage;
@@ -792,7 +813,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					if (text == null || text.endsWith("#null"))
 						continue; // null
 
-					String helpInfo = refElement.getDoc();
+					String helpInfo = null;
+					//Test if the user wants to see help information
+					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+						// Get documentation of the element to show
+						helpInfo = refElement.getDoc();
+					}
 					Image image = null;
 					if (refElement.getTagName().equals("region"))
 						image = regionImage;
@@ -1006,7 +1033,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						}
 					}
 
-					String helpInfo = refElement.getDoc();
+					String helpInfo = null;
+					//Test if the user wants to see help information
+					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+						// Get documentation of the element to show
+						helpInfo = refElement.getDoc();
+					}
 
 					if (text.startsWith(qualifier)) {
 						cursor = complete.length();
@@ -1059,8 +1092,14 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				cursor = prop.length();
 
 				// TODO: Description of elements in English and Spanish
-				String helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
-						currentTagname, view);
+				String helpInfo = null;
+				//Test if the user wants to see help information
+				if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+						PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+					// Get documentation of the element to show
+					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
+							currentTagname, view);
+				}
 
 				CompletionProposal proposal = new CompletionProposal(prop,
 						offset - qlen, qlen, cursor, null, view, null, helpInfo);

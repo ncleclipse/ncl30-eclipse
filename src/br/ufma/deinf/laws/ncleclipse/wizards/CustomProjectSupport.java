@@ -31,7 +31,7 @@ public class CustomProjectSupport {
 	 * @return
 	 */
 	public static IProject createProject(String projectName, URI location,
-			boolean isImportConnectorBase) {
+			boolean isImportConnectorBase, boolean mustCreateMediaDir) {
 		Assert.isNotNull(projectName);
 		Assert.isTrue(projectName.trim().length() > 0);
 
@@ -39,8 +39,11 @@ public class CustomProjectSupport {
 		try {
 			addNature(project);
 
-			String[] paths = { "media" };
-			addToProjectStructure(project, paths);
+			if (mustCreateMediaDir) {
+				String[] paths = { "media" };
+				addToProjectStructure(project, paths);
+			}
+			
 			if (isImportConnectorBase) {
 				File file = new File(new CustomProjectSupport().getClass()
 						.getProtectionDomain().getCodeSource().getLocation().toString()

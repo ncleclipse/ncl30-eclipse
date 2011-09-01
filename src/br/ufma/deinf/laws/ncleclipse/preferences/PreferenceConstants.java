@@ -71,4 +71,6 @@ public class PreferenceConstants {
 	public static final String P_POPUP_SUGESTION = "nclEclipsePopUPSugestionPreference";
 
 	public static final String P_LINK_AUTO_COMPLETE = "nclEclipseLinkAutoComplete";
+	
+	public static final String P_SHOW_HELP_INFO_ON_AUTOCOMPLETE = "nclEclipseShowHelpInfoOnAutoComplete";
 }

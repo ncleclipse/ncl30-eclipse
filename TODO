@@ -18,6 +18,7 @@ TODO:
 	- Textos das licenças no feature.
 	
 * Text Editor
+	- Autocomplete sem case-sensitive.
 	- Permitir, logo após autocompletar, que o usuário possa preencher diretamente
 		os valores dos atributos, alternando entre os valores com TAB (e CTRL+TAB?)
 	- Fazer o parser nos arquivos incluídos somente quando necessário. Data de

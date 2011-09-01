@@ -65,7 +65,8 @@ public class NCLProjectWizardPage extends WizardPage {
 
     // widgets
     private Text projectNameField;
-    private Button checkBox;
+    private Button importConnBaseCheckBox;
+    private Button createMediaDirCheckBox;
 
     private Listener nameModifyListener = new Listener() {
         public void handleEvent(Event e) {
@@ -133,7 +134,7 @@ public class NCLProjectWizardPage extends WizardPage {
 			locationArea.updateProjectName(initialProjectFieldValue);
 		}
         
-        createImportConnectorBase (composite);
+        createOptions(composite);
         
 		// Scale the button based on the rest of the dialog
 		setButtonLayoutData(locationArea.getBrowseButton());
@@ -147,24 +148,34 @@ public class NCLProjectWizardPage extends WizardPage {
     }
     
     public boolean isImportConnectorBase (){
-    	return checkBox.getSelection();
+    	return importConnBaseCheckBox.getSelection();
+    }
+    
+    public boolean mustCreateMediaDir(){
+    	return createMediaDirCheckBox.getSelection();
     }
     
     /**
 	 * @param parent
 	 */
-	private void createImportConnectorBase(Composite parent) {
+	private void createOptions(Composite parent) {
         Composite checkBoxGroup = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         layout.numColumns = 1;
         checkBoxGroup.setLayout(layout);
         checkBoxGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        checkBox = new Button (checkBoxGroup, SWT.CHECK | SWT.RIGHT);
-        checkBox.setSelection(true);
-        checkBox.setText(NCLEditorMessages.getInstance().getString(
+        importConnBaseCheckBox = new Button (checkBoxGroup, SWT.CHECK | SWT.RIGHT);
+        importConnBaseCheckBox.setSelection(false);
+        importConnBaseCheckBox.setText(NCLEditorMessages.getInstance().getString(
 							"NCLProjectWizard.ImportConnectorBase"));
-        checkBox.setFont(parent.getFont());
+        importConnBaseCheckBox.setFont(parent.getFont());
+        
+        createMediaDirCheckBox = new Button (checkBoxGroup, SWT.CHECK | SWT.RIGHT);
+        createMediaDirCheckBox.setSelection(false);
+        createMediaDirCheckBox.setText(NCLEditorMessages.getInstance().getString(
+							"NCLProjectWizard.CreateMediaDir"));
+        createMediaDirCheckBox.setFont(parent.getFont());
 	}
 
 	/**

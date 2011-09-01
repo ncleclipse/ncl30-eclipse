@@ -87,6 +87,11 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 						"Preferences.OpenLayoutEditor"), getFieldEditorParent()));
 		*/
 
+		addField(new BooleanFieldEditor(PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE,
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.ShowHelpInfoOnAutoComplete"),
+				getFieldEditorParent()));
+		
 		addField(new BooleanFieldEditor(PreferenceConstants.P_PREVIEW,
 				NCLEditorMessages.getInstance().getString(
 						"Preferences.OpenPrevieOnMouseOver"),
