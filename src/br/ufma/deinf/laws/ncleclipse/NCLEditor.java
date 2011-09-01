@@ -265,7 +265,6 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 					p.setFile(docFile.getAbsolutePath());
 					parserExtend.setErrorHandler(p);
 					parserExtend.parseString(text);
-
 					doc = parserExtend.getDocument();
 					doc.setDocumentURI(docFile.toURI().toString());
 
