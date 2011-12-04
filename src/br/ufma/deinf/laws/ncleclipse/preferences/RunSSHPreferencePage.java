@@ -47,62 +47,102 @@
  ******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.preferences;
 
+import org.eclipse.debug.internal.ui.sourcelookup.AddSourceContainerDialog;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 
 /**
- * This class represents a preference page that
- * is contributed to the Preferences dialog. By 
- * subclassing <samp>FieldEditorPreferencePage</samp>, we
- * can use the field support built into JFace that allows
- * us to create a page that is small and knows how to 
- * save, restore and apply itself.
+ * This class represents a preference page that is contributed to the
+ * Preferences dialog. By subclassing <samp>FieldEditorPreferencePage</samp>, we
+ * can use the field support built into JFace that allows us to create a page
+ * that is small and knows how to save, restore and apply itself.
  * <p>
- * This page is used to modify preferences only. They
- * are stored in the preference store that belongs to
- * the main plug-in class. That way, preferences can
- * be accessed directly via the preference store.
+ * This page is used to modify preferences only. They are stored in the
+ * preference store that belongs to the main plug-in class. That way,
+ * preferences can be accessed directly via the preference store.
  */
 
 public class RunSSHPreferencePage extends FieldEditorPreferencePage implements
-		IWorkbenchPreferencePage {
+		IWorkbenchPreferencePage, IPropertyChangeListener {
+
+	private BooleanFieldEditor enableRemoteSettings;
 
 	public RunSSHPreferencePage() {
 		super(GRID);
 		setPreferenceStore(NCLEditorPlugin.getDefault().getPreferenceStore());
-		setDescription("Set default options for " +
-				"execute application on a remote host");
+		setDescription("Set default options for "
+				+ "execute application on a remote host");
 	}
 
 	/**
-	 * Creates the field editors. Field editors are abstractions of
-	 * the common GUI blocks needed to manipulate various types
-	 * of preferences. Each field editor knows how to save and
-	 * restore itself.
+	 * Creates the field editors. Field editors are abstractions of the common
+	 * GUI blocks needed to manipulate various types of preferences. Each field
+	 * editor knows how to save and restore itself.
 	 */
 	public void createFieldEditors() {
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_SCRIPT,
-				"&Remote Launcher", getFieldEditorParent()));
-		
+				"Remote &Launcher", getFieldEditorParent()));
+
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_WORKSPACE,
-				"&Remote Workspace", getFieldEditorParent()));
-		
+				"Remote &Workspace", getFieldEditorParent()));
+
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_IP,
-				"&Hostname",
-				getFieldEditorParent()));
+				"&Hostname", getFieldEditorParent()));
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_USER,
 				"&Username", getFieldEditorParent()));
-		
+
 		StringFieldEditor passw = new StringFieldEditor(
 				PreferenceConstants.P_SSH_RUN_PASSW, "&Password:",
 				getFieldEditorParent());
 		passw.getTextControl(getFieldEditorParent()).setEchoChar('*');
-		
+
 		addField(passw);
+
+		
+		// Enable remote settings variables
+		enableRemoteSettings = new BooleanFieldEditor(
+				PreferenceConstants.P_ENABLE_REMOTE_SETTINGS,
+				"Enable Remote &Settings", getFieldEditorParent());
+
+		addField(enableRemoteSettings);
+
+		addField(new StringFieldEditor(PreferenceConstants.P_REMOTE_SETTINGS_PATH,
+				"Remote Context &File", getFieldEditorParent()));
+		
+		String columnName[] = new String[2];
+		columnName[0] = "variable";
+		columnName[1] = "value";
+
+		int columSize[] = new int[2];
+		columSize[0] = 200;
+		columSize[1] = 100;
+
+		addField(new TableFieldEditor(
+				PreferenceConstants.P_REMOTE_SETTINGS_VARIABLES,
+				"Settings Variables", columnName, columSize,
+				getFieldEditorParent()) {
+			@Override
+			protected String[][] parseString(String string) {
+				return PreferenceInitializer.parseString(string);
+			}
+
+			@Override
+			protected String[] getNewInputObject() {
+				// TODO Auto-generated method stub
+				return new String[] { "variable", "value"};
+			}
+
+			@Override
+			protected String createList(String[][] items) {
+				return PreferenceInitializer.createList(items);
+			}
+		});
 	}
 
 	/* (non-Javadoc)

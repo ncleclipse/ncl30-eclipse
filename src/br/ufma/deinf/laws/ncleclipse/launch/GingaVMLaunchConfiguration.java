@@ -165,7 +165,8 @@ public class GingaVMLaunchConfiguration extends LaunchConfigurationDelegate {
 				userPassword,
 				consoleStream,
 				remoteLauncher,
-				remoteWorkspace);
+				remoteWorkspace,
+				"");
 		
 		remoteUtility.setVerboseMode(true);
 		

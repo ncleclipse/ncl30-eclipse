@@ -47,6 +47,8 @@
  ******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.preferences;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -71,16 +73,64 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_SSH_RUN_USER, "root");
 		store.setDefault(PreferenceConstants.P_SSH_RUN_PASSW, "telemidia");
 
-		store.setDefault(PreferenceConstants.P_SSH_RUN_SCRIPT, "/misc/launcher.sh");
+		store.setDefault(PreferenceConstants.P_SSH_RUN_SCRIPT,
+				"/misc/launcher.sh");
 		store.setDefault(PreferenceConstants.P_SSH_RUN_WORKSPACE, "/misc/ncl30");
-		
+
 		store.setDefault(PreferenceConstants.P_LANGUAGE,
 				"messagesPt.properties");
+
 		store.setDefault(PreferenceConstants.P_PREVIEW, false);
 		store.setDefault(PreferenceConstants.P_VALIDATION, true);
 		store.setDefault(PreferenceConstants.P_POPUP_SUGESTION, false);
 		store.setDefault(PreferenceConstants.P_LINK_AUTO_COMPLETE, false);
-		store.setDefault(PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE, false);
+		store.setDefault(PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE,
+				false);
+		
+		store.setDefault(PreferenceConstants.P_ENABLE_REMOTE_SETTINGS, false);
+		store.setDefault(PreferenceConstants.P_REMOTE_SETTINGS_PATH, "/usr/local/etc/ginga/files/contextmanager/contexts.ini");
 	}
 
+	private static String LINE_SEPARATOR = "@@@@";
+	private static String FIELD_SEPARATOR = "####";
+
+	public static String createList(String[][] commands) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (int i = 0; i < commands.length; i++) {
+			if (i > 0) {
+				stringBuilder.append(LINE_SEPARATOR);
+			}
+			String[] command = commands[i];
+			for (int j = 0; j < command.length; j++) {
+				if (j > 0) {
+					stringBuilder.append(FIELD_SEPARATOR);
+				}
+				stringBuilder.append(command[j]);
+			}
+		}
+		return stringBuilder.toString();
+	}
+
+	public static String[][] parseString(String commandsString) {
+		if (commandsString != null && commandsString.length() > 0) {
+			String[] commands = commandsString.split(Pattern
+					.quote(LINE_SEPARATOR));
+			String[][] parsedCommands = new String[commands.length][];
+			for (int i = 0; i < commands.length; i++) {
+				String command = commands[i];
+				if (command.indexOf(FIELD_SEPARATOR) == -1) {
+					parsedCommands[i] = new String[] { command, "*", command };
+				} else {
+					String[] fields = command.split(Pattern
+							.quote(FIELD_SEPARATOR));
+					parsedCommands[i] = new String[fields.length];
+					for (int j = 0; j < fields.length; j++) {
+						parsedCommands[i][j] = fields[j];
+					}
+				}
+			}
+			return parsedCommands;
+		}
+		return new String[0][0];
+	}
 }

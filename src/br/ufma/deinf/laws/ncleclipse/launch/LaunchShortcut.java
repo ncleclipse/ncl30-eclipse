@@ -68,6 +68,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 import br.ufma.deinf.laws.ncleclipse.launch.util.GingaVMRemoteUtility;
 import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
+import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceInitializer;
 
 /**
  * 
@@ -103,24 +104,34 @@ public class LaunchShortcut implements ILaunchShortcut {
 			public void run() {
 				// Getting default values
 				String hostName = NCLEditorPlugin.getDefault()
-						.getPreferenceStore().getString(
-								PreferenceConstants.P_SSH_RUN_IP);
+						.getPreferenceStore()
+						.getString(PreferenceConstants.P_SSH_RUN_IP);
 
 				String userName = NCLEditorPlugin.getDefault()
-						.getPreferenceStore().getString(
-								PreferenceConstants.P_SSH_RUN_USER);
+						.getPreferenceStore()
+						.getString(PreferenceConstants.P_SSH_RUN_USER);
 
 				String userPassword = NCLEditorPlugin.getDefault()
-						.getPreferenceStore().getString(
-								PreferenceConstants.P_SSH_RUN_PASSW);
+						.getPreferenceStore()
+						.getString(PreferenceConstants.P_SSH_RUN_PASSW);
 
 				String remoteLauncher = NCLEditorPlugin.getDefault()
-						.getPreferenceStore().getString(
-								PreferenceConstants.P_SSH_RUN_SCRIPT);
+						.getPreferenceStore()
+						.getString(PreferenceConstants.P_SSH_RUN_SCRIPT);
 
 				String remoteWorkspace = NCLEditorPlugin.getDefault()
-						.getPreferenceStore().getString(
-								PreferenceConstants.P_SSH_RUN_WORKSPACE);
+						.getPreferenceStore()
+						.getString(PreferenceConstants.P_SSH_RUN_WORKSPACE);
+
+				boolean enableRemoteSettings = NCLEditorPlugin
+						.getDefault()
+						.getPreferenceStore()
+						.getBoolean(
+								PreferenceConstants.P_ENABLE_REMOTE_SETTINGS);
+
+				String remoteSettingsIni = NCLEditorPlugin.getDefault()
+						.getPreferenceStore()
+						.getString(PreferenceConstants.P_REMOTE_SETTINGS_PATH);
 
 				// Getting workspace path
 				String workspace = ResourcesPlugin.getWorkspace().getRoot()
@@ -135,8 +146,8 @@ public class LaunchShortcut implements ILaunchShortcut {
 				console.clearConsole();
 
 				IConsole[] consoles = (IConsole[]) new IConsole[] { (IConsole) console };
-				ConsolePlugin.getDefault().getConsoleManager().addConsoles(
-						consoles);
+				ConsolePlugin.getDefault().getConsoleManager()
+						.addConsoles(consoles);
 
 				MessageConsoleStream consoleStream = console.newMessageStream();
 
@@ -162,7 +173,7 @@ public class LaunchShortcut implements ILaunchShortcut {
 				// Setting values
 				GingaVMRemoteUtility remoteUtility = new GingaVMRemoteUtility(
 						hostName, userName, userPassword, consoleStream,
-						remoteLauncher, remoteWorkspace);
+						remoteLauncher, remoteWorkspace, remoteSettingsIni);
 
 				remoteUtility.setVerboseMode(true);
 
@@ -188,14 +199,14 @@ public class LaunchShortcut implements ILaunchShortcut {
 					console.destroy();
 					return;
 				}
-				
-				//Synchronizing clocks
-				consoleStream.println(
-					"Synchronizing clocks...");
-				
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss -z");
-		        String date = dateFormat.format(new Date ());
-		        
+
+				// Synchronizing clocks
+				consoleStream.println("Synchronizing clocks...");
+
+				DateFormat dateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd hh:mm:ss -z");
+				String date = dateFormat.format(new Date());
+
 				try {
 					remoteUtility.exec("date --set=\"" + date + "\"");
 					consoleStream.println("Done!");
@@ -206,7 +217,7 @@ public class LaunchShortcut implements ILaunchShortcut {
 					console.destroy();
 					return;
 				}
-				
+
 				// Copying files to server
 				consoleStream.println("Copying files to server...");
 				try {
@@ -224,6 +235,30 @@ public class LaunchShortcut implements ILaunchShortcut {
 							.removeConsoles(consoles);
 					console.destroy();
 					return;
+				}
+
+				if (enableRemoteSettings) {
+					consoleStream.println("Replacing remote settings...");
+					String tmp = "::\t\t= 0\n";
+					tmp += "||\t\t= 0\n";
+
+					String[][] settings = PreferenceInitializer
+							.parseString(NCLEditorPlugin
+									.getDefault()
+									.getPreferenceStore()
+									.getString(
+											PreferenceConstants.P_REMOTE_SETTINGS_VARIABLES));
+					
+					for (int i = 0; i < settings.length; i++)
+						tmp += settings[i][0] + " = " + settings[i][1] + "\n";
+
+					try {
+						remoteUtility.exec("echo \"" + tmp + "\" >"
+								+ remoteSettingsIni);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 
 				// Play application

@@ -29,8 +29,8 @@ import org.eclipse.ui.console.MessageConsoleStream;
 public class GingaVMRemoteUtility extends RemoteUtility {
 
 	private String remoteLauncher;
-	
 	private String remoteWorkspace;
+	private String remoteSettingsIni;
 	
 	public GingaVMRemoteUtility(
 			String hostName, 
@@ -47,12 +47,14 @@ public class GingaVMRemoteUtility extends RemoteUtility {
 			String userPassword,
 			MessageConsoleStream consoleStream,
 			String remoteLauncher,
-			String remoteWorkspace) {
+			String remoteWorkspace,
+			String remoSettingsIni) {
 		
 		super(hostName, userName, userPassword, consoleStream);
 		
 		setRemoteLauncher(remoteLauncher);
 		setRemoteWorkspace(remoteWorkspace);
+		setRemoteSettingsIni(remoSettingsIni);
 	}
 	
 	public void commit(String workspaceProject) 
@@ -93,5 +95,19 @@ public class GingaVMRemoteUtility extends RemoteUtility {
 
 	public void setRemoteWorkspace(String remoteWorkspace) {
 		this.remoteWorkspace = remoteWorkspace;
+	}
+	
+	/**
+	 * @return the remoteSettingsIni
+	 */
+	public String getRemoteSettingsIni() {
+		return remoteSettingsIni;
+	}
+
+	/**
+	 * @param remoteSettingsIni the remoteSettingsIni to set
+	 */
+	public void setRemoteSettingsIni(String remoteSettingsIni) {
+		this.remoteSettingsIni = remoteSettingsIni;
 	}
 }

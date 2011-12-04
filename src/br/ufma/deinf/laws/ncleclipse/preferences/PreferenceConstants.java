@@ -57,9 +57,9 @@ public class PreferenceConstants {
 	public static final String P_SSH_RUN_USER = "nclEclipseSshUserRunPreference";
 	public static final String P_SSH_RUN_PASSW = "nclEclipseSshPasswRunPreference";
 	public static final String P_SSH_RUN_IP = "nclEclipseSshIpRunPreference";
-	
+
 	public static final String P_SSH_RUN_SCRIPT = "nclEclipseSshScriptRunPreference";
-	
+
 	public static final String P_SSH_RUN_WORKSPACE = "nclEclipseSshWorkspaceRunPreference";
 
 	public static final String P_LANGUAGE = "nclEclipseLanguagePreference";
@@ -71,6 +71,12 @@ public class PreferenceConstants {
 	public static final String P_POPUP_SUGESTION = "nclEclipsePopUPSugestionPreference";
 
 	public static final String P_LINK_AUTO_COMPLETE = "nclEclipseLinkAutoComplete";
-	
+
 	public static final String P_SHOW_HELP_INFO_ON_AUTOCOMPLETE = "nclEclipseShowHelpInfoOnAutoComplete";
+
+	// Remote settings
+	public static final String P_ENABLE_REMOTE_SETTINGS = "nclEclipseEnableRemoteSettings";
+	public static final String P_REMOTE_SETTINGS_PATH = "nclEclipseRemoteSettingsPath";
+	public static final String P_REMOTE_SETTINGS_VARIABLES = "nclEclipseRemoteSettings";
+
 }
