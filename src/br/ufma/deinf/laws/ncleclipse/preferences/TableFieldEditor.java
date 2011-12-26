@@ -49,6 +49,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 
+import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
+
 /**
  * An abstract field editor that manages a table of input values. The editor
  * displays a table containing the rows of values, buttons for adding,
@@ -189,11 +191,11 @@ public abstract class TableFieldEditor extends FieldEditor {
          *            the box for the buttons
          */
         private void createButtons(Composite box) {
-                addButton = createPushButton(box, "New");
-                duplicateButton = createPushButton(box, "Duplicate");
-                removeButton = createPushButton(box, "Remove");
-                upButton = createPushButton(box, "Up");
-                downButton = createPushButton(box, "Down");
+                addButton = createPushButton(box, NCLEditorMessages.getInstance().getString("New"));
+                duplicateButton = createPushButton(box, NCLEditorMessages.getInstance().getString("Duplicate"));
+                removeButton = createPushButton(box, NCLEditorMessages.getInstance().getString("Remove"));
+                upButton = createPushButton(box, NCLEditorMessages.getInstance().getString("Up"));
+                downButton = createPushButton(box, NCLEditorMessages.getInstance().getString("Down"));
         }
 
         /**

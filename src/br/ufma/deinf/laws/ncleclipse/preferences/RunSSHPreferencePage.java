@@ -47,7 +47,6 @@
  ******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.preferences;
 
-import org.eclipse.debug.internal.ui.sourcelookup.AddSourceContainerDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -55,6 +54,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
 
 /**
@@ -76,8 +76,8 @@ public class RunSSHPreferencePage extends FieldEditorPreferencePage implements
 	public RunSSHPreferencePage() {
 		super(GRID);
 		setPreferenceStore(NCLEditorPlugin.getDefault().getPreferenceStore());
-		setDescription("Set default options for "
-				+ "execute application on a remote host");
+		setDescription(NCLEditorMessages.getInstance().getString(
+				"Preferences.RunSSHIntro"));
 	}
 
 	/**
@@ -87,37 +87,47 @@ public class RunSSHPreferencePage extends FieldEditorPreferencePage implements
 	 */
 	public void createFieldEditors() {
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_SCRIPT,
-				"Remote &Launcher", getFieldEditorParent()));
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.RemoteLauncher"), getFieldEditorParent()));
 
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_WORKSPACE,
-				"Remote &Workspace", getFieldEditorParent()));
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.RemoteWorkspace"), getFieldEditorParent()));
 
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_IP,
-				"&Hostname", getFieldEditorParent()));
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.Hostname"), getFieldEditorParent()));
+
 		addField(new StringFieldEditor(PreferenceConstants.P_SSH_RUN_USER,
-				"&Username", getFieldEditorParent()));
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.Username"), getFieldEditorParent()));
 
 		StringFieldEditor passw = new StringFieldEditor(
-				PreferenceConstants.P_SSH_RUN_PASSW, "&Password:",
+				PreferenceConstants.P_SSH_RUN_PASSW, NCLEditorMessages
+						.getInstance().getString("Preferences.Password"),
 				getFieldEditorParent());
 		passw.getTextControl(getFieldEditorParent()).setEchoChar('*');
 
 		addField(passw);
 
-		
 		// Enable remote settings variables
 		enableRemoteSettings = new BooleanFieldEditor(
-				PreferenceConstants.P_ENABLE_REMOTE_SETTINGS,
-				"Enable Remote &Settings", getFieldEditorParent());
+				PreferenceConstants.P_ENABLE_REMOTE_SETTINGS, NCLEditorMessages
+						.getInstance().getString(
+								"Preferences.EnableRemoteSettings"),
+				getFieldEditorParent());
 
 		addField(enableRemoteSettings);
 
-		addField(new StringFieldEditor(PreferenceConstants.P_REMOTE_SETTINGS_PATH,
-				"Remote Context &File", getFieldEditorParent()));
-		
+		addField(new StringFieldEditor(
+				PreferenceConstants.P_REMOTE_SETTINGS_PATH, NCLEditorMessages
+						.getInstance().getString(
+								"Preferences.RemoteSettingsFile"),
+				getFieldEditorParent()));
+
 		String columnName[] = new String[2];
-		columnName[0] = "variable";
-		columnName[1] = "value";
+		columnName[0] = NCLEditorMessages.getInstance().getString("variable");
+		columnName[1] = NCLEditorMessages.getInstance().getString("value");
 
 		int columSize[] = new int[2];
 		columSize[0] = 200;
@@ -125,8 +135,9 @@ public class RunSSHPreferencePage extends FieldEditorPreferencePage implements
 
 		addField(new TableFieldEditor(
 				PreferenceConstants.P_REMOTE_SETTINGS_VARIABLES,
-				"Settings Variables", columnName, columSize,
-				getFieldEditorParent()) {
+				NCLEditorMessages.getInstance().getString(
+						"Preferences.SettingsTableName"), columnName,
+				columSize, getFieldEditorParent()) {
 			@Override
 			protected String[][] parseString(String string) {
 				return PreferenceInitializer.parseString(string);
@@ -135,7 +146,9 @@ public class RunSSHPreferencePage extends FieldEditorPreferencePage implements
 			@Override
 			protected String[] getNewInputObject() {
 				// TODO Auto-generated method stub
-				return new String[] { "variable", "value"};
+				return new String[] {
+						NCLEditorMessages.getInstance().getString("variable"),
+						NCLEditorMessages.getInstance().getString("value") };
 			}
 
 			@Override
