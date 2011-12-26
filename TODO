@@ -54,7 +54,8 @@ TODO:
 	- Bug no MultiPageActionContributor
 		- As acoes do GEF funcionam perfeitamente mas nao vao embora quando as
 		acoes de texto devem aparecer
-	-Ajeitar identação automática,não mudar a ordem dos atributos.
+	- Ajeitar identação automática,não mudar a ordem dos atributos.
+	- Refer cíclico, entra em loop infinito. (ok)
 	
 * Estudar		
 	- Estudar o Web Standard Tool e verificar a possibilidade de inclui-lo no 

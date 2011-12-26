@@ -56,8 +56,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
@@ -84,7 +84,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 
 import br.ufma.deinf.laws.ncl.AttributeValues;
-import br.ufma.deinf.laws.ncl.DataType;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
 import br.ufma.deinf.laws.ncl.help.NCLHelper;
@@ -541,16 +540,23 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				return;
 			element = nclDocument.getElementById(perspective);
 
+			Vector <String> referPath = new Vector<String>();
 			while (element != null
 					&& element.getAttributes().get("refer") != null) {
 				Collection nclReference = nclStructure.getNCLReference(tagname,
 						attribute);
 				// Computa os valores de atributos dos elementos filhos do refer
 
-				// Refatorar este codigo... Isto estah repetindo o que estah
-				// sendo
-				// feito lah embaixo
+				// TODO: Refactoring this code. This is repeating what will be
+				// done bellow!
 				String perspectivetmp = element.getAttributeValue("refer");
+				if(referPath.contains(perspectivetmp)) {
+					// Warning: This "if" avoids an infinite loop!!!
+					//TODO: Returns an error message.
+					System.out.println("Ciclic refer");
+					return;
+				}
+				referPath.add(perspectivetmp);
 				element = nclDocument.getElementById(perspectivetmp);
 				if (nclReference == null)
 					return;
@@ -825,8 +831,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						image = regionImage;
 					else if (refElement.getTagName().equals("causalConnector"))
 						image = connectorImage;
-					// TODO: the refer attribute can not refer the own parent or
-					// his childrens
+					// TODO: the refer attribute can not refer its own parent or
+					// its childrens
 					/*
 					 * String refCompletePerspective =
 					 * refElement.getCompletePerspective();
