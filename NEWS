@@ -1,3 +1,7 @@
+Versao 1.6.0
+2011-12-26
+	- [BUG Fixed] Fix ciclic refer! It was entering in an inifinite loop.
+
 Versao 1.5.3
 2011-08-31
 	- Informacoes adicionais no autocomplete agora é opcional.
