@@ -89,6 +89,24 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		store.setDefault(PreferenceConstants.P_ENABLE_REMOTE_SETTINGS, false);
 		store.setDefault(PreferenceConstants.P_REMOTE_SETTINGS_PATH, "/usr/local/etc/ginga/files/contextmanager/contexts.ini");
+		
+		String [][] defaultRemoteSettings = new String[5][2];
+		defaultRemoteSettings[0][0] = "system.background-color";
+		defaultRemoteSettings[0][1] = "000000";
+		
+		defaultRemoteSettings[1][0] = "default.focusBorderColor";
+		defaultRemoteSettings[1][1] = "blue";
+		
+		defaultRemoteSettings[2][0] = "default.selBorderColor";
+		defaultRemoteSettings[2][1] = "green";
+		
+		defaultRemoteSettings[3][0] = "default.focusBorderWidth";
+		defaultRemoteSettings[3][1] = "3";
+		
+		defaultRemoteSettings[4][0] = "default.focusBorderTransparency";
+		defaultRemoteSettings[4][1] = "0";
+		
+		store.setDefault(PreferenceConstants.P_REMOTE_SETTINGS_VARIABLES, createList(defaultRemoteSettings));
 	}
 
 	private static String LINE_SEPARATOR = "@@@@";

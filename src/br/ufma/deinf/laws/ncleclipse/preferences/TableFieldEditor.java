@@ -352,10 +352,8 @@ public abstract class TableFieldEditor extends FieldEditor {
                                         getPreferenceName());
                         String[][] array = parseString(s);
                         for (int i = 0; i < array.length; i++) {
-                                TableItem tableItem = new TableItem(table, SWT.NONE);
-                                for (int j = 0; j < array[i].length; j++) {
-                                        tableItem.setText(array[i][j]);
-                                }
+                            TableItem tableItem = new TableItem(table, SWT.NONE);
+                            tableItem.setText(array[i]);
                         }
                 }
         }
