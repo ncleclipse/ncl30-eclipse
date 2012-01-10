@@ -384,14 +384,5 @@
        </action>
     </viewerContribution>
  </extension>
- <extension
-       point="org.eclipse.ui.perspectives">
-    <perspective
-          class="br.ufma.deinf.laws.ncleclipse.perspective.NCLPerspectiveFactory"
-          icon="icons/project.png"
-          id="br.ufma.deinf.laws.ncleclipse.NCLPerspective"
-          name="NCL Perspective">
-    </perspective>
- </extension>
 
 </plugin>

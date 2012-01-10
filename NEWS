@@ -1,4 +1,11 @@
 Versao 1.6.0
+2012-01-10
+	- Remove one NCL Perspective (it shouldn't be there!)
+	
+2012-01-04
+	- Sugestion of attribute interface from <port> also for <property>s.
+	- Preferências para editar o settings remoto.
+
 2011-12-26
 	- [BUG Fixed] Fix ciclic refer! It was entering in an inifinite loop.
 
