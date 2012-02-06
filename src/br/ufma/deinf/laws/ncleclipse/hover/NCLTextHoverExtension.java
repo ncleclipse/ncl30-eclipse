@@ -355,7 +355,16 @@ public class NCLTextHoverExtension extends DefaultTextHover implements
 				refer = doc
 						.getAttributeValueFromCurrentTagName(offset, "refer");
 
+				
+				Vector<String> refersPath = new Vector<String>();
+	
 				while (refer != null && !refer.equals("")) {
+					String currentId = doc.getAttributeValueFromCurrentTagName(offset,
+							"id");
+					if(refersPath.contains(refer))
+						break;
+					refersPath.add(currentId);
+					
 					offset = doc.getNextTagPartition(
 							doc.getElementOffset(refer)).getOffset();
 
