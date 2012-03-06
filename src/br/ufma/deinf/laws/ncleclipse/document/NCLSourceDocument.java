@@ -490,7 +490,7 @@ public class NCLSourceDocument extends Document {
 				while (true && offset >= partitionOffset) {
 					char ch = getChar(offset--);
 					if (findingAttributeName) {
-						if (Character.isJavaIdentifierPart(ch)) {
+						if (Character.isJavaIdentifierPart(ch) || ch == ':') {
 							if (endAttributeName == -1) {
 								endAttributeName = offset;
 							}

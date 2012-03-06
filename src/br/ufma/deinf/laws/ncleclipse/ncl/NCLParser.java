@@ -76,6 +76,7 @@ public class NCLParser {
 	}
 
 	public static final String VALIDATION_FEATURE = "http://xml.org/sax/features/validation";
+	public static final String VALIDATE_PREFIX = "http://xml.org/sax/features/namespaces";
 
 	/**
 	 * Does DTD-based validation on File
@@ -111,6 +112,7 @@ public class NCLParser {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setProperty("http://xml.org/sax/properties/lexical-handler",
 					contentHandler);
+			reader.setFeature(VALIDATE_PREFIX, false);
 			reader.setErrorHandler(errorHandler);
 			reader.setContentHandler(contentHandler);
 			// reader.setFeature(VALIDATION_FEATURE, true);

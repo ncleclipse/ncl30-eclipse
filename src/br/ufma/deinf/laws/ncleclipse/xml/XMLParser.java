@@ -86,6 +86,7 @@ public class XMLParser {
 	}
 
 	public static final String VALIDATION_FEATURE = "http://xml.org/sax/features/validation";
+	public static final String VALIDATE_PREFIX = "http://xml.org/sax/features/namespaces";
 
 	/**
 	 * Does DTD-based validation on File
@@ -121,6 +122,7 @@ public class XMLParser {
 			XMLReader reader = new SAXParser();
 			reader.setErrorHandler(errorHandler);
 			reader.setContentHandler(contentHandler);
+			reader.setFeature(VALIDATE_PREFIX, false);
 			//reader.setFeature(VALIDATION_FEATURE, true);
 			reader.parse(inputSource);
 		} catch (Exception e) {
