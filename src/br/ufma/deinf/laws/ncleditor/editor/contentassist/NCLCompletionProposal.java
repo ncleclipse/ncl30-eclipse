@@ -48,9 +48,6 @@
 package br.ufma.deinf.laws.ncleditor.editor.contentassist;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -85,13 +82,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
-import br.ufma.deinf.laws.handlers.TALProposalContentHandler;
-import br.ufma.deinf.laws.handlers.TALVocabularyContentHandler;
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
 import br.ufma.deinf.laws.ncl.NCLStructure;
@@ -105,7 +96,6 @@ import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
 import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
-import br.ufma.deinf.laws.util.TALUtilities;
 
 /**
  * 
@@ -146,18 +136,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		List propList = new ArrayList();
 
 		boolean isFileEditor = true;
-
+		
 		try {
 			if (editor.getEditorInput() instanceof IFileEditorInput) {
-				currentFile = new File(
-						((IFileEditorInput) editor.getEditorInput()).getFile()
-								.getLocationURI());
-
+				currentFile = new File(((IFileEditorInput) editor
+						.getEditorInput()).getFile().getLocationURI());
+				
 				isFileEditor = false;
-
+				
 			} else {
-				currentFile = new File(
-						((IURIEditorInput) editor.getEditorInput()).getURI());
+				currentFile = new File(((IURIEditorInput) editor
+						.getEditorInput()).getURI());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -169,10 +158,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		text = doc.get();
 
 		NCLSourceDocument nclDoc = null;
-
-		if (isFileEditor)
+		
+		if(isFileEditor)
 			nclDoc = NCLSourceDocument
-					.createNCLSourceDocumentFromIDocument(doc);
+				.createNCLSourceDocumentFromIDocument(doc);
 		else
 			nclDoc = (NCLSourceDocument) doc;
 
@@ -236,9 +225,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	// estrutura proposta
 	private void computeTagsProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
-
-		// TODO: Ignore case-sensitive in autocomplete
-
+		
+		//TODO: Ignore case-sensitive in autocomplete
+		
 		int qlen = qualifier.length();
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		String indent = ((NCLSourceDocument) doc).getIndentLine(offset);
@@ -263,16 +252,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				// get a help info to user
 				// TODO: Description of elements in English and Spanish
-
+				
 				String helpInfo = null;
-				// Test if the user wants to see help information
-				if (NCLEditorPlugin
-						.getDefault()
-						.getPreferenceStore()
-						.getBoolean(
-								PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
-					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
-							tagname);
+				//Test if the user wants to see help information
+				if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+						PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
 				}
 
 				CompletionProposal proposal = new CompletionProposal(text,
@@ -296,21 +281,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					// TODO: Description of elements in English and Spanish
 					// get a help information to user
 					String helpInfo = null;
-
-					// Test if the user wants to see help information
-					if (NCLEditorPlugin
-							.getDefault()
-							.getPreferenceStore()
-							.getBoolean(
-									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
-						helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
-								tagname);
+					
+					//Test if the user wants to see help information
+					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+						helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
 					}
 
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, tagname, null,
 							helpInfo);
-
+					
 					propList.add(proposal);
 				}
 			}
@@ -434,11 +415,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			parser.doParse(nclText);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			MessageDialog.openError(
-					Workbench.getInstance().getActiveWorkbenchWindow()
-							.getShell(),
-					NCLEditorMessages.getInstance().getString(
-							"ContentAssist.Error.Title"),
+			MessageDialog.openError(Workbench.getInstance()
+					.getActiveWorkbenchWindow().getShell(), NCLEditorMessages
+					.getInstance().getString("ContentAssist.Error.Title"),
 					NCLEditorMessages.getInstance().getString(
 							"ContentAssist.Error.XMLParserError"));
 		}
@@ -459,8 +438,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			String fatherTagName = nclDoc.getFatherTagName(offset);
 
-			perspective = nclDoc.getAttributeValueFromCurrentTagName(
-					nclDoc.getFatherPartitionOffset(offset), "id");
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
+					.getFatherPartitionOffset(offset), "id");
 			// System.out.println(perspective);
 			if (perspective == null) {
 				if (fatherTagName.equals("body")) {
@@ -514,8 +493,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				if (grandFatherTagName.equals("body")) {
 					perspective = nclDoc
 							.getAttributeValueFromCurrentTagName(
-									nclDoc.getFatherPartitionOffset(nclDoc.getFatherPartitionOffset(nclDoc
-											.getFatherPartitionOffset(offset))),
+									nclDoc
+											.getFatherPartitionOffset(nclDoc
+													.getFatherPartitionOffset(nclDoc
+															.getFatherPartitionOffset(offset))),
 									"id");
 					hasContextId = false;
 				}
@@ -525,13 +506,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		if (tagname.equals("bind") && attribute.equals("role")
 				|| (tagname.equals("linkParam") && (attribute.equals("name")))) {
-			perspective = nclDoc.getAttributeValueFromCurrentTagName(
-					nclDoc.getFatherPartitionOffset(offset), "xconnector");
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
+					.getFatherPartitionOffset(offset), "xconnector");
 			if (perspective == null || perspective.equals(""))
 				return;
 		}
-		if (NCLEditorPlugin.getDefault().getPreferenceStore()
-				.getBoolean(PreferenceConstants.P_LINK_AUTO_COMPLETE)) {
+		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_LINK_AUTO_COMPLETE)) {
 			if (tagname.equals("link") && attribute.equals("xconnector")) {
 
 				computeLinkValuesWithStructure(nclDoc, offset, qualifier,
@@ -559,7 +540,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				return;
 			element = nclDocument.getElementById(perspective);
 
-			Vector<String> referPath = new Vector<String>();
+			Vector <String> referPath = new Vector<String>();
 			while (element != null
 					&& element.getAttributes().get("refer") != null) {
 				Collection nclReference = nclStructure.getNCLReference(tagname,
@@ -569,9 +550,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				// TODO: Refactoring this code. This is repeating what will be
 				// done bellow!
 				String perspectivetmp = element.getAttributeValue("refer");
-				if (referPath.contains(perspectivetmp)) {
+				if(referPath.contains(perspectivetmp)) {
 					// Warning: This "if" avoids an infinite loop!!!
-					// TODO: Returns an error message.
+					//TODO: Returns an error message.
 					System.out.println("Ciclic refer");
 					return;
 				}
@@ -583,8 +564,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				while (it.hasNext()) {
 					NCLReference nclRefAtual = (NCLReference) it.next();
 					Collection elements = nclDocument
-							.getElementsFromPerspective(
-									nclRefAtual.getRefTagname(), perspectivetmp);
+							.getElementsFromPerspective(nclRefAtual
+									.getRefTagname(), perspectivetmp);
 					if (elements == null)
 						continue;
 					Iterator it2 = elements.iterator();
@@ -621,7 +602,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 
-		// suggest descriptorParam and property values
+		//suggest descriptorParam and property values
 		if ((tagname.equals("descriptorParam") || tagname.equals("property"))
 				&& attribute.equals("value")) {
 
@@ -642,10 +623,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				|| (attribute.equals("documentURI"))
 				|| (tagname.equals("descriptor")
 						&& (attribute.equals("focusSrc")) || attribute
-							.equals("focusSelSrc"))) {
+						.equals("focusSelSrc"))) {
 			// if the user preferences is to open a window to select a file
-			if (NCLEditorPlugin.getDefault().getPreferenceStore()
-					.getBoolean(PreferenceConstants.P_POPUP_SUGESTION)) {
+			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+					PreferenceConstants.P_POPUP_SUGESTION)) {
 				FileDialog fileDialog = new FileDialog(PlatformUI
 						.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						SWT.OPEN);
@@ -702,9 +683,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				Vector<String> proposal = new URIProposer(currentPath)
 						.getSrcSuggest(qualifier);
-
+				
 				Collections.sort(proposal);
-
+				
 				CompletionProposal completionProposal;
 				for (String str : proposal) {
 					str = pre + str;
@@ -733,115 +714,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			 * propList.add(proposal); } } return; } catch (URISyntaxException
 			 * e) { // TODO Auto-generated catch block e.printStackTrace(); }
 			 */
-		}
-
-		if ((tagname.equals("context") || tagname.equals("body"))
-				&& attribute.equals("tal:template")) {
-			try {
-
-				Vector<String> proposal = new Vector<String>();
-
-				if (qualifier.contains("#")) {
-					String talFilePath = qualifier.substring(0,
-							qualifier.indexOf("#"));
-
-					File file = new File(talFilePath);
-					if (!file.exists())
-						file = new File(currentFile.getParent() + talFilePath);
-
-					TALProposalContentHandler talParser = new TALProposalContentHandler(
-							qualifier, proposal);
-					XMLReader reader = XMLReaderFactory.createXMLReader();
-					reader.setContentHandler(talParser);
-					reader.setFeature("http://xml.org/sax/features/namespaces",
-							false);
-
-					InputSource input = new InputSource();
-					input.setByteStream(new FileInputStream(file));
-					reader.parse(input);
-
-				}
-
-				else {
-
-					Vector<String> suggest = new URIProposer(
-							currentFile.getParent()).getSrcSuggest(qualifier);
-
-					for (String srt : suggest) {
-						if (!srt.endsWith("/"))
-							srt += "#";
-
-						proposal.add(srt);
-					}
-
-				}
-
-				CompletionProposal completionProposal;
-				for (String suggest : proposal) {
-					completionProposal = new CompletionProposal(suggest, offset
-							- qlen, qlen, suggest.length(), fileImage, suggest,
-							null, null);
-
-					propList.add(completionProposal);
-				}
-
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		if ((tagname.equals("media") || tagname.equals("context")
-				|| tagname.equals("switch") || tagname.equals("area") || tagname
-					.equals("property")) && attribute.equals("tal:class")) {
-			
-			String fatherTagname = nclDoc.getFatherTagName(offset);
-			int searchOffset = offset;
-			
-			if (fatherTagname.equals("media"))
-				searchOffset = nclDoc.getFatherPartitionOffset(offset);
-
-			String templateAttributeValue = nclDoc
-					.getAttributeValueFromCurrentTagName(
-							nclDoc.getFatherPartitionOffset(searchOffset),
-							"tal:template");
-
-			if (templateAttributeValue != null) {
-
-				int index = templateAttributeValue.indexOf("#");
-				String templatePath = templateAttributeValue
-						.substring(0, index);
-
-				int lastIndex = templatePath.lastIndexOf("/");
-				String relativeTemplatePath = index == -1 ? "" : templatePath
-						.substring(0, lastIndex == -1 ? 0 : lastIndex) + "/";
-
-				String templateId = templateAttributeValue.substring(index + 1);
-
-				Vector<String> proposals = TALUtilities
-						.getValidClassAttributeValues(tagname, attribute,
-								templatePath, relativeTemplatePath, templateId);
-
-				if (proposals != null) {
-					CompletionProposal completionProposal;
-					for (String suggest : proposals) {
-						if (!suggest.startsWith(qualifier)) continue;
-						completionProposal = new CompletionProposal(suggest,
-								offset - qlen, qlen, suggest.length(),
-								fileImage, suggest, null, null);
-
-						propList.add(completionProposal);
-					}
-				}
-
-			}
-
 		}
 
 		// System.out.println("perspective = " + perspective);
@@ -882,16 +754,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						continue;
 
 					String helpInfo = null;
-					// Test if the user wants to see help information
-					if (NCLEditorPlugin
-							.getDefault()
-							.getPreferenceStore()
-							.getBoolean(
-									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
+					//Test if the user wants to see help information
+					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
 						// Get documentation of the element to show
 						helpInfo = nclElement.getDoc();
 					}
-
+					
 					Image image = null;
 					if (nclElement.getTagName().equals("region"))
 						image = regionImage;
@@ -951,12 +820,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						continue; // null
 
 					String helpInfo = null;
-					// Test if the user wants to see help information
-					if (NCLEditorPlugin
-							.getDefault()
-							.getPreferenceStore()
-							.getBoolean(
-									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
+					//Test if the user wants to see help information
+					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
 						// Get documentation of the element to show
 						helpInfo = refElement.getDoc();
 					}
@@ -1015,19 +881,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		try {
 			ITypedRegion region;
 			region = nclSourceDoc.getPartition(offset);
-			String tag = nclSourceDoc.get(region.getOffset(),
-					region.getLength());
+			String tag = nclSourceDoc.get(region.getOffset(), region
+					.getLength());
 
 			int begin = offset - qualifier.length();
 			int end = region.getOffset() + region.getLength() - begin;
 
-			String rest = nclSourceDoc.get(
-					begin
-							+ nclSourceDoc.getAttributeValueFromCurrentTagName(
-									offset, "xconnector").length() + 1,
-					end
-							- nclSourceDoc.getAttributeValueFromCurrentTagName(
-									offset, "xconnector").length() - 1);
+			String rest = nclSourceDoc.get(begin
+					+ nclSourceDoc.getAttributeValueFromCurrentTagName(offset,
+							"xconnector").length() + 1, end
+					- nclSourceDoc.getAttributeValueFromCurrentTagName(offset,
+							"xconnector").length() - 1);
 
 			Vector<Integer> childrenOff = nclSourceDoc
 					.getChildrenOffsets(offset);
@@ -1075,8 +939,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						Collection conditions = nclDocument
 								.getElementsFromCompletePerspective(
-										"simpleCondition",
-										tmp.getCompletePerspective() + "/" + id);
+										"simpleCondition", tmp
+												.getCompletePerspective()
+												+ "/" + id);
 
 						Iterator it3 = conditions.iterator();
 
@@ -1109,8 +974,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						Collection actions = nclDocument
 								.getElementsFromCompletePerspective(
-										"simpleAction",
-										tmp.getCompletePerspective() + "/" + id);
+										"simpleAction", tmp
+												.getCompletePerspective()
+												+ "/" + id);
 						it3 = actions.iterator();
 						while (it3.hasNext()) {
 							NCLElement tmp2 = ((NCLElement) it3.next());
@@ -1141,8 +1007,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						Collection attrAssesments = nclDocument
 								.getElementsFromCompletePerspective(
-										"attributeAssessment",
-										tmp.getCompletePerspective() + "/" + id);
+										"attributeAssessment", tmp
+												.getCompletePerspective()
+												+ "/" + id);
 
 						it3 = attrAssesments.iterator();
 						while (it3.hasNext()) {
@@ -1173,12 +1040,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					}
 
 					String helpInfo = null;
-					// Test if the user wants to see help information
-					if (NCLEditorPlugin
-							.getDefault()
-							.getPreferenceStore()
-							.getBoolean(
-									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
+					//Test if the user wants to see help information
+					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
 						// Get documentation of the element to show
 						helpInfo = refElement.getDoc();
 					}
@@ -1235,12 +1099,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				// TODO: Description of elements in English and Spanish
 				String helpInfo = null;
-				// Test if the user wants to see help information
-				if (NCLEditorPlugin
-						.getDefault()
-						.getPreferenceStore()
-						.getBoolean(
-								PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
+				//Test if the user wants to see help information
+				if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+						PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
 					// Get documentation of the element to show
 					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
 							currentTagname, view);
