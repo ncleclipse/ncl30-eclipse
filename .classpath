@@ -7,5 +7,6 @@
 	<classpathentry kind="src" path="ncl30-validator"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="lib/ganymed-ssh2-build250.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
