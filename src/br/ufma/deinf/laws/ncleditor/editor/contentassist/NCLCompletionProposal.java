@@ -59,6 +59,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import javax.smartcardio.ATR;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -342,7 +344,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if (children.size() == 0) { // caso nao tenha filhos fecha a tag junto
 			// com a start
 			ret = "<" + tagname + attributes + "/>" + "\r\n" + indent;
+			
+			if (tagname.equals("Property")){
+				cursor = ret.indexOf("\"\"") + 1; 
+			}
+			else{
 			cursor = ret.length();
+			}
 		} else {
 			ret = "<" + tagname + attributes + ">" + "\r\n" + indent + "\t";
 			if (tagname.equals("context")) {
@@ -612,6 +620,40 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			prop = AttributeValues.getValuesFromProperty(name);
 
 			for (String str : prop)
+				if (str.startsWith(qualifier))
+					propList.add(new CompletionProposal(str, offset - qlen,
+							qlen, str.length(), null, str, null, null));
+			return;
+		}
+		
+		//suggest the connectorParams 
+		if ((tagname.equals("simpleAction") && attribute.equals("key")) || (tagname.equals("simpleAction")
+				&& attribute.equals("value")) || (tagname.equals("simpleAction") && attribute.equals("delay"))) {
+			
+			int fatherOffset = offset ;
+			while (( fatherOffset != -1) && (!nclDoc.getCurrentTagname(fatherOffset).equals("causalConnector"))){
+			 fatherOffset = nclDoc.getFatherPartitionOffset(fatherOffset);
+			}
+			Vector <Integer> childrenOffset = nclDoc.getChildrenOffsets(fatherOffset);
+			
+			Vector <String> suggest = new Vector<String>();
+			
+			for (int i = 0; i < childrenOffset.size(); i++){
+				int childOffset = childrenOffset.elementAt(i);
+				
+				String tag = nclDoc.getCurrentTagname(childOffset);
+				
+				if (tag != null && tag.equals("connectorParam")){
+					String name = nclDoc.getAttributeValueFromCurrentTagName(childOffset, "name");
+					if (name != null && !name.equals("")){
+						suggest.add("$"+name);
+					}
+				}
+				
+				
+			}
+			
+			for (String str : suggest)
 				if (str.startsWith(qualifier))
 					propList.add(new CompletionProposal(str, offset - qlen,
 							qlen, str.length(), null, str, null, null));
@@ -1095,7 +1137,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				continue;
 			String prop = entry.getKey() + "=\"\"";
 			if (prop.startsWith(qualifier)) {
-				cursor = prop.length();
+				cursor = prop.length() - 1;
 
 				// TODO: Description of elements in English and Spanish
 				String helpInfo = null;
