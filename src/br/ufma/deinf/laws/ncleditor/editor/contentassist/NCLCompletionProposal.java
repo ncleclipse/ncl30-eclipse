@@ -229,6 +229,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			int offset, List propList) {
 		
 		//TODO: Ignore case-sensitive in autocomplete
+		String qualifier_lower = qualifier.toLowerCase();
 		
 		int qlen = qualifier.length();
 		NCLStructure nclStructure = NCLStructure.getInstance();
@@ -249,7 +250,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if (fatherTagName.equals("")) {
 			String tagname = "ncl";
 			String tagname2 = "<" + tagname;
-			if (tagname.startsWith(qualifier) || tagname2.startsWith(qualifier)) {
+			
+			String tagname_lower = tagname.toLowerCase();
+			String tagname2_lower = tagname2.toLowerCase();
+			
+			if (tagname_lower.startsWith(qualifier_lower) || 
+					tagname2_lower.startsWith(qualifier_lower)) {
 				String text = computeTagStructure(tagname, indent);
 
 				// get a help info to user
@@ -276,8 +282,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						.next();
 				String tagname = entry.getKey();
 				String tagname2 = "<" + tagname;
-				if (tagname.startsWith(qualifier)
-						|| tagname2.startsWith(qualifier)) {
+				
+				String tagname_lower = tagname.toLowerCase();
+				String tagname2_lower = tagname2.toLowerCase();
+				
+				if (tagname_lower.startsWith(qualifier_lower)
+						|| tagname2_lower.startsWith(qualifier_lower)) {
+					
 					String text = computeTagStructure(tagname, indent);
 
 					// TODO: Description of elements in English and Spanish
@@ -378,6 +389,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// TODO: in future, show figures representing each element of language
 		// loadImages();
 
+		String qualifier_lower = qualifier.toLowerCase();
 		int qlen = qualifier.length();
 		// Verificar se existe valor pre-definido
 
@@ -393,7 +405,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		if (prop.size() > 0) {
 			for (int i = 0; i < prop.size(); i++) {
-				if (prop.get(i).startsWith(qualifier)) {
+				String prop_lower = prop.get(i).toLowerCase();
+				if (prop_lower.startsWith(qualifier_lower)) {
 					String text = prop.get(i);
 					String texttoshow = text;
 					// System.out.println(text);
@@ -594,7 +607,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 									continue;
 						}
 
-						if (text.startsWith(qualifier)) {
+						String text_lower = text.toLowerCase();
+						if (text_lower.startsWith(qualifier_lower)) {
 							cursor = text.length();
 							// System.out.println("Attribute Value Proposal = "
 							// + text);
@@ -619,10 +633,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			prop = AttributeValues.getValuesFromProperty(name);
 
-			for (String str : prop)
-				if (str.startsWith(qualifier))
+			for (String str : prop) {
+				String str_lower = str.toLowerCase();
+				if (str_lower.startsWith(qualifier_lower))
 					propList.add(new CompletionProposal(str, offset - qlen,
 							qlen, str.length(), null, str, null, null));
+			}
 			return;
 		}
 		
@@ -653,10 +669,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				
 			}
 			
-			for (String str : suggest)
-				if (str.startsWith(qualifier))
+			for (String str : suggest) {
+				String str_lower = str.toLowerCase();
+				if (str_lower.startsWith(qualifier_lower))
 					propList.add(new CompletionProposal(str, offset - qlen,
 							qlen, str.length(), null, str, null, null));
+			}
 			return;
 		}
 
@@ -819,7 +837,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 								continue;
 					}
 
-					if (text.startsWith(qualifier)) {
+					String text_lower = text.toLowerCase();
+					if (text_lower.startsWith(qualifier_lower)) {
 						cursor = text.length();
 						// System.out
 						// .println("Attribute Value Proposal = " + text);
@@ -897,8 +916,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							if (text.equals(idAtual))
 								continue;
 					}
-
-					if (text.startsWith(qualifier)) {
+					
+					String text_lower = text.toLowerCase();
+					if (text_lower.startsWith(qualifier_lower)) {
 						cursor = text.length();
 						/* System.out
 								.println("Attribute Value Proposal = " + text);
@@ -917,6 +937,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private void computeLinkValuesWithStructure(NCLSourceDocument nclSourceDoc,
 			int offset, String qualifier, List propList) {
 
+		String qualifier_lower = qualifier.toLowerCase();
 		String tagname = nclSourceDoc.getCurrentTagname(offset);
 		String attribute = nclSourceDoc.getCurrentAttribute(offset);
 
@@ -1089,7 +1110,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						helpInfo = refElement.getDoc();
 					}
 
-					if (text.startsWith(qualifier)) {
+					String text_lower = text.toLowerCase();
+					if (text_lower.startsWith(qualifier_lower)) {
 						cursor = complete.length();
 						CompletionProposal proposal = new CompletionProposal(
 								complete, begin, end, cursor, connectorImage,
@@ -1114,6 +1136,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	 */
 	private void computeAttributesProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
+
+		String qualifier_lower = qualifier.toLowerCase();
 		int qlen = qualifier.length();
 
 		NCLSourceDocument nclDoc = NCLSourceDocument
@@ -1136,7 +1160,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (attributeTyped.contains(view) || view == null)
 				continue;
 			String prop = entry.getKey() + "=\"\"";
-			if (prop.startsWith(qualifier)) {
+			String prop_lower = prop.toLowerCase();
+			if (prop_lower.startsWith(qualifier_lower)) {
 				cursor = prop.length() - 1;
 
 				// TODO: Description of elements in English and Spanish
