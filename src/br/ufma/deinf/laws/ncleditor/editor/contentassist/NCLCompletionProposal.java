@@ -243,6 +243,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				+ nclDoc.getFatherTagName(offset));*/
 		Map<String, Map<String, Character>> nesting = nclStructure.getNesting();
 		Vector<String> childrenStr = new Vector<String>();
+
 		// Procuro todos os filhos da tagname do meu pai e coloco no vector
 		// childrenStr
 
@@ -356,11 +357,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			// com a start
 			ret = "<" + tagname + attributes + "/>" + "\r\n" + indent;
 			
-			if (tagname.equals("Property")){
+			if(!attributes.isEmpty()) {
 				cursor = ret.indexOf("\"\"") + 1; 
 			}
-			else{
-			cursor = ret.length();
+			else {
+				cursor = ret.length();
 			}
 		} else {
 			ret = "<" + tagname + attributes + ">" + "\r\n" + indent + "\t";
@@ -370,7 +371,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				ret += "<simpleCondition role=\"\" />" + "\n" + indent + "\t"
 						+ "<simpleAction role=\"\" />";
 			}
-			cursor = ret.length();
+			if(!attributes.isEmpty()) {
+				cursor = ret.indexOf("\"\"") + 1; 
+			}
+			else {
+				cursor = ret.length();
+			}
 			ret += "\r\n" + indent + "</" + tagname + ">";
 		}
 		return ret;
