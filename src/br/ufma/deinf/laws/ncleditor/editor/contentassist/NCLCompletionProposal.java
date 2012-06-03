@@ -355,7 +355,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		String ret;
 		if (children.size() == 0) { // caso nao tenha filhos fecha a tag junto
 			// com a start
-			ret = "<" + tagname + attributes + "/>" + "\r\n" + indent;
+			ret = "<" + tagname + attributes + "/>" /*+ "\r\n" + indent*/;
 			
 			if(!attributes.isEmpty()) {
 				cursor = ret.indexOf("\"\"") + 1; 
