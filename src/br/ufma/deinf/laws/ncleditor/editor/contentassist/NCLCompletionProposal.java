@@ -1142,7 +1142,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	 */
 	private void computeAttributesProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
-
+		
+		
 		String qualifier_lower = qualifier.toLowerCase();
 		int qlen = qualifier.length();
 
@@ -1152,7 +1153,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// System.out.println("Computing Attributes proposals...");
 		String currentTagname = nclDoc.getCurrentTagname(offset);
 		// System.out.println("Current Tag Name = " + currentTagname);
-
+		
+		//String currentLine = 
+		
 		List<String> attributeTyped = nclDoc.getAttributesTyped(offset);
 
 		NCLStructure nclStructure = NCLStructure.getInstance();
@@ -1165,7 +1168,25 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String view = entry.getKey();
 			if (attributeTyped.contains(view) || view == null)
 				continue;
-			String prop = entry.getKey() + "=\"\"";
+			String prop = " ";
+			
+			try{
+				String  isWSpace = ""+doc.getChar(offset-1);
+				if (!isWSpace.equals(" ")){
+					prop = " "+entry.getKey() + "=\"\"";
+				}
+				else {
+					prop = entry.getKey() + "=\"\"";
+				}
+				isWSpace = ""+doc.getChar(offset);
+				System.out.println("aqui="+isWSpace);
+				if (!isWSpace.equals(" ")){
+					prop = prop+" ";
+				}
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
 			String prop_lower = prop.toLowerCase();
 			if (prop_lower.startsWith(qualifier_lower)) {
 				cursor = prop.length() - 1;
