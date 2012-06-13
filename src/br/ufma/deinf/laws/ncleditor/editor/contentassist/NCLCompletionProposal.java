@@ -1178,11 +1178,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				else {
 					prop = entry.getKey() + "=\"\"";
 				}
-				isWSpace = ""+doc.getChar(offset);
-				System.out.println("aqui="+isWSpace);
-				if (!isWSpace.equals(" ")){
-					prop = prop+" ";
-				}
 			}
 			catch (Exception e) {
 				// TODO: handle exception
