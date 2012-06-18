@@ -98,6 +98,7 @@ import br.ufma.deinf.laws.ncleclipse.ncl.NCLElement;
 import br.ufma.deinf.laws.ncleclipse.ncl.NCLParser;
 import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 import br.ufma.deinf.laws.ncleclipse.scanners.XMLTagScanner;
+import br.ufma.deinf.laws.ncleclipse.util.NCLWhitespaceDetector;
 
 /**
  * 
@@ -1171,12 +1172,19 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String prop = " ";
 			
 			try{
-				String  isWSpace = ""+doc.getChar(offset-1);
-				if (!isWSpace.equals(" ")){
+				NCLWhitespaceDetector nclwhitespacedetector = new NCLWhitespaceDetector();
+				boolean iswhitespace = nclwhitespacedetector.isWhitespace(doc.getChar(offset-1));
+				if (!iswhitespace){
 					prop = " "+entry.getKey() + "=\"\"";
 				}
 				else {
 					prop = entry.getKey() + "=\"\"";
+				}
+				cursor = prop.length();
+				iswhitespace = nclwhitespacedetector.isWhitespace(doc.getChar(offset));
+				if (!iswhitespace){
+					prop = prop+" ";
+					cursor = prop.length() - 1;
 				}
 			}
 			catch (Exception e) {
@@ -1184,7 +1192,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 			String prop_lower = prop.toLowerCase();
 			if (prop_lower.startsWith(qualifier_lower)) {
-				cursor = prop.length() - 1;
+				cursor = cursor - 1;
 
 				// TODO: Description of elements in English and Spanish
 				String helpInfo = null;
