@@ -110,8 +110,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private XMLTagScanner scanner;
 	private File currentFile;
 	private String text;
-	private String protocols[] = { "file:///", "http://", "rtsp://", "rtp://",
-			"sbtvd-ts://" };
+	private String protocols[] = { "file:///", "http://", "https://", "rtsp://",
+			"rtp://", "ncl-mirror://", "sbtvd-ts://", "isdb-ts://", "ts://" };
 	private boolean isAttributeValue;
 	private boolean isAttribute;
 	private boolean isEndTagName;
@@ -1143,8 +1143,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	 */
 	private void computeAttributesProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
-		
-		
+
 		String qualifier_lower = qualifier.toLowerCase();
 		int qlen = qualifier.length();
 
@@ -1154,9 +1153,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		// System.out.println("Computing Attributes proposals...");
 		String currentTagname = nclDoc.getCurrentTagname(offset);
 		// System.out.println("Current Tag Name = " + currentTagname);
-		
-		//String currentLine = 
-		
+
 		List<String> attributeTyped = nclDoc.getAttributesTyped(offset);
 
 		NCLStructure nclStructure = NCLStructure.getInstance();
@@ -1182,7 +1179,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				}
 				cursor = prop.length();
 				iswhitespace = nclwhitespacedetector.isWhitespace(doc.getChar(offset));
-				if (!iswhitespace){
+				if (!iswhitespace && doc.getChar(offset) != '/'){
 					prop = prop+" ";
 					cursor = prop.length() - 1;
 				}
