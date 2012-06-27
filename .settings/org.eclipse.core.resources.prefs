@@ -2,3 +2,5 @@ eclipse.preferences.version=1
 encoding//ncl30-common/br/ufma/deinf/laws/ncl/AttributeValues.java=UTF-8
 encoding//ncl30-common/br/ufma/deinf/laws/ncl/DataType.java=UTF-8
 encoding//ncl30-common/br/ufma/deinf/laws/ncl/NCLStructure.java=UTF-8
+encoding//src/br/ufma/deinf/laws/ncleclipse/launch/LaunchShortcut.java=UTF-8
+encoding//src/br/ufma/deinf/laws/ncleclipse/launch/ui/GingaLaunchTabConfiguration.java=UTF-8
