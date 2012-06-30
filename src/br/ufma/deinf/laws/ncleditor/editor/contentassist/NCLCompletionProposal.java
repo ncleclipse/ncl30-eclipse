@@ -110,8 +110,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private XMLTagScanner scanner;
 	private File currentFile;
 	private String text;
-	private String protocols[] = { "file:///", "http://", "https://", "rtsp://",
-			"rtp://", "ncl-mirror://", "sbtvd-ts://", "isdb-ts://", "ts://" };
+	private String protocols[] = { "file:///", "http://", "https://",
+			"rtsp://", "rtp://", "ncl-mirror://", "sbtvd-ts://", "isdb-ts://",
+			"ts://" };
 	private boolean isAttributeValue;
 	private boolean isAttribute;
 	private boolean isEndTagName;
@@ -139,17 +140,18 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		List propList = new ArrayList();
 
 		boolean isFileEditor = true;
-		
+
 		try {
 			if (editor.getEditorInput() instanceof IFileEditorInput) {
-				currentFile = new File(((IFileEditorInput) editor
-						.getEditorInput()).getFile().getLocationURI());
-				
+				currentFile = new File(
+						((IFileEditorInput) editor.getEditorInput()).getFile()
+								.getLocationURI());
+
 				isFileEditor = false;
-				
+
 			} else {
-				currentFile = new File(((IURIEditorInput) editor
-						.getEditorInput()).getURI());
+				currentFile = new File(
+						((IURIEditorInput) editor.getEditorInput()).getURI());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -161,10 +163,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		text = doc.get();
 
 		NCLSourceDocument nclDoc = null;
-		
-		if(isFileEditor)
+
+		if (isFileEditor)
 			nclDoc = NCLSourceDocument
-				.createNCLSourceDocumentFromIDocument(doc);
+					.createNCLSourceDocumentFromIDocument(doc);
 		else
 			nclDoc = (NCLSourceDocument) doc;
 
@@ -228,10 +230,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	// estrutura proposta
 	private void computeTagsProposals(IDocument doc, String qualifier,
 			int offset, List propList) {
-		
-		//TODO: Ignore case-sensitive in autocomplete
+
+		// TODO: Ignore case-sensitive in autocomplete
 		String qualifier_lower = qualifier.toLowerCase();
-		
+
 		int qlen = qualifier.length();
 		NCLStructure nclStructure = NCLStructure.getInstance();
 		String indent = ((NCLSourceDocument) doc).getIndentLine(offset);
@@ -252,22 +254,26 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if (fatherTagName.equals("")) {
 			String tagname = "ncl";
 			String tagname2 = "<" + tagname;
-			
+
 			String tagname_lower = tagname.toLowerCase();
 			String tagname2_lower = tagname2.toLowerCase();
-			
-			if (tagname_lower.startsWith(qualifier_lower) || 
-					tagname2_lower.startsWith(qualifier_lower)) {
+
+			if (tagname_lower.startsWith(qualifier_lower)
+					|| tagname2_lower.startsWith(qualifier_lower)) {
 				String text = computeTagStructure(tagname, indent);
 
 				// get a help info to user
 				// TODO: Description of elements in English and Spanish
-				
+
 				String helpInfo = null;
-				//Test if the user wants to see help information
-				if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-						PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
-					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+				// Test if the user wants to see help information
+				if (NCLEditorPlugin
+						.getDefault()
+						.getPreferenceStore()
+						.getBoolean(
+								PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
+					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
+							tagname);
 				}
 
 				CompletionProposal proposal = new CompletionProposal(text,
@@ -284,29 +290,33 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						.next();
 				String tagname = entry.getKey();
 				String tagname2 = "<" + tagname;
-				
+
 				String tagname_lower = tagname.toLowerCase();
 				String tagname2_lower = tagname2.toLowerCase();
-				
+
 				if (tagname_lower.startsWith(qualifier_lower)
 						|| tagname2_lower.startsWith(qualifier_lower)) {
-					
+
 					String text = computeTagStructure(tagname, indent);
 
 					// TODO: Description of elements in English and Spanish
 					// get a help information to user
 					String helpInfo = null;
-					
-					//Test if the user wants to see help information
-					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
-						helpInfo = NCLHelper.getNCLHelper().getHelpDescription(tagname);
+
+					// Test if the user wants to see help information
+					if (NCLEditorPlugin
+							.getDefault()
+							.getPreferenceStore()
+							.getBoolean(
+									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
+						helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
+								tagname);
 					}
 
 					CompletionProposal proposal = new CompletionProposal(text,
 							offset - qlen, qlen, cursor, null, tagname, null,
 							helpInfo);
-					
+
 					propList.add(proposal);
 				}
 			}
@@ -357,11 +367,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if (children.size() == 0) { // caso nao tenha filhos fecha a tag junto
 			// com a start
 			ret = "<" + tagname + attributes + "/>" /*+ "\r\n" + indent*/;
-			
-			if(!attributes.isEmpty()) {
-				cursor = ret.indexOf("\"\"") + 1; 
-			}
-			else {
+
+			if (!attributes.isEmpty()) {
+				cursor = ret.indexOf("\"\"") + 1;
+			} else {
 				cursor = ret.length();
 			}
 		} else {
@@ -372,10 +381,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				ret += "<simpleCondition role=\"\" />" + "\n" + indent + "\t"
 						+ "<simpleAction role=\"\" />";
 			}
-			if(!attributes.isEmpty()) {
-				cursor = ret.indexOf("\"\"") + 1; 
-			}
-			else {
+			if (!attributes.isEmpty()) {
+				cursor = ret.indexOf("\"\"") + 1;
+			} else {
 				cursor = ret.length();
 			}
 			ret += "\r\n" + indent + "</" + tagname + ">";
@@ -443,9 +451,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			parser.doParse(nclText);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			MessageDialog.openError(Workbench.getInstance()
-					.getActiveWorkbenchWindow().getShell(), NCLEditorMessages
-					.getInstance().getString("ContentAssist.Error.Title"),
+			MessageDialog.openError(
+					Workbench.getInstance().getActiveWorkbenchWindow()
+							.getShell(),
+					NCLEditorMessages.getInstance().getString(
+							"ContentAssist.Error.Title"),
 					NCLEditorMessages.getInstance().getString(
 							"ContentAssist.Error.XMLParserError"));
 		}
@@ -466,8 +476,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			String fatherTagName = nclDoc.getFatherTagName(offset);
 
-			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
-					.getFatherPartitionOffset(offset), "id");
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(
+					nclDoc.getFatherPartitionOffset(offset), "id");
 			// System.out.println(perspective);
 			if (perspective == null) {
 				if (fatherTagName.equals("body")) {
@@ -521,10 +531,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				if (grandFatherTagName.equals("body")) {
 					perspective = nclDoc
 							.getAttributeValueFromCurrentTagName(
-									nclDoc
-											.getFatherPartitionOffset(nclDoc
-													.getFatherPartitionOffset(nclDoc
-															.getFatherPartitionOffset(offset))),
+									nclDoc.getFatherPartitionOffset(nclDoc.getFatherPartitionOffset(nclDoc
+											.getFatherPartitionOffset(offset))),
 									"id");
 					hasContextId = false;
 				}
@@ -534,13 +542,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		if (tagname.equals("bind") && attribute.equals("role")
 				|| (tagname.equals("linkParam") && (attribute.equals("name")))) {
-			perspective = nclDoc.getAttributeValueFromCurrentTagName(nclDoc
-					.getFatherPartitionOffset(offset), "xconnector");
+			perspective = nclDoc.getAttributeValueFromCurrentTagName(
+					nclDoc.getFatherPartitionOffset(offset), "xconnector");
 			if (perspective == null || perspective.equals(""))
 				return;
 		}
-		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-				PreferenceConstants.P_LINK_AUTO_COMPLETE)) {
+		if (NCLEditorPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.P_LINK_AUTO_COMPLETE)) {
 			if (tagname.equals("link") && attribute.equals("xconnector")) {
 
 				computeLinkValuesWithStructure(nclDoc, offset, qualifier,
@@ -568,7 +576,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				return;
 			element = nclDocument.getElementById(perspective);
 
-			Vector <String> referPath = new Vector<String>();
+			Vector<String> referPath = new Vector<String>();
 			while (element != null
 					&& element.getAttributes().get("refer") != null) {
 				Collection nclReference = nclStructure.getNCLReference(tagname,
@@ -578,9 +586,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				// TODO: Refactoring this code. This is repeating what will be
 				// done bellow!
 				String perspectivetmp = element.getAttributeValue("refer");
-				if(referPath.contains(perspectivetmp)) {
+				if (referPath.contains(perspectivetmp)) {
 					// Warning: This "if" avoids an infinite loop!!!
-					//TODO: Returns an error message.
+					// TODO: Returns an error message.
 					System.out.println("Ciclic refer");
 					return;
 				}
@@ -592,8 +600,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				while (it.hasNext()) {
 					NCLReference nclRefAtual = (NCLReference) it.next();
 					Collection elements = nclDocument
-							.getElementsFromPerspective(nclRefAtual
-									.getRefTagname(), perspectivetmp);
+							.getElementsFromPerspective(
+									nclRefAtual.getRefTagname(), perspectivetmp);
 					if (elements == null)
 						continue;
 					Iterator it2 = elements.iterator();
@@ -631,7 +639,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		}
 
-		//suggest descriptorParam and property values
+		// suggest descriptorParam and property values
 		if ((tagname.equals("descriptorParam") || tagname.equals("property"))
 				&& attribute.equals("value")) {
 
@@ -648,34 +656,38 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 			return;
 		}
-		
-		//suggest the connectorParams 
-		if ((tagname.equals("simpleAction") && attribute.equals("key")) || (tagname.equals("simpleAction")
-				&& attribute.equals("value")) || (tagname.equals("simpleAction") && attribute.equals("delay"))) {
-			
-			int fatherOffset = offset ;
-			while (( fatherOffset != -1) && (!nclDoc.getCurrentTagname(fatherOffset).equals("causalConnector"))){
-			 fatherOffset = nclDoc.getFatherPartitionOffset(fatherOffset);
+
+		// suggest the connectorParams
+		if ((tagname.equals("simpleAction") && attribute.equals("key"))
+				|| (tagname.equals("simpleAction") && attribute.equals("value"))
+				|| (tagname.equals("simpleAction") && attribute.equals("delay"))) {
+
+			int fatherOffset = offset;
+			while ((fatherOffset != -1)
+					&& (!nclDoc.getCurrentTagname(fatherOffset).equals(
+							"causalConnector"))) {
+				fatherOffset = nclDoc.getFatherPartitionOffset(fatherOffset);
 			}
-			Vector <Integer> childrenOffset = nclDoc.getChildrenOffsets(fatherOffset);
-			
-			Vector <String> suggest = new Vector<String>();
-			
-			for (int i = 0; i < childrenOffset.size(); i++){
+			Vector<Integer> childrenOffset = nclDoc
+					.getChildrenOffsets(fatherOffset);
+
+			Vector<String> suggest = new Vector<String>();
+
+			for (int i = 0; i < childrenOffset.size(); i++) {
 				int childOffset = childrenOffset.elementAt(i);
-				
+
 				String tag = nclDoc.getCurrentTagname(childOffset);
-				
-				if (tag != null && tag.equals("connectorParam")){
-					String name = nclDoc.getAttributeValueFromCurrentTagName(childOffset, "name");
-					if (name != null && !name.equals("")){
-						suggest.add("$"+name);
+
+				if (tag != null && tag.equals("connectorParam")) {
+					String name = nclDoc.getAttributeValueFromCurrentTagName(
+							childOffset, "name");
+					if (name != null && !name.equals("")) {
+						suggest.add("$" + name);
 					}
 				}
-				
-				
+
 			}
-			
+
 			for (String str : suggest) {
 				String str_lower = str.toLowerCase();
 				if (str_lower.startsWith(qualifier_lower))
@@ -690,10 +702,10 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				|| (attribute.equals("documentURI"))
 				|| (tagname.equals("descriptor")
 						&& (attribute.equals("focusSrc")) || attribute
-						.equals("focusSelSrc"))) {
+							.equals("focusSelSrc"))) {
 			// if the user preferences is to open a window to select a file
-			if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-					PreferenceConstants.P_POPUP_SUGESTION)) {
+			if (NCLEditorPlugin.getDefault().getPreferenceStore()
+					.getBoolean(PreferenceConstants.P_POPUP_SUGESTION)) {
 				FileDialog fileDialog = new FileDialog(PlatformUI
 						.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						SWT.OPEN);
@@ -750,9 +762,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				Vector<String> proposal = new URIProposer(currentPath)
 						.getSrcSuggest(qualifier);
-				
+
 				Collections.sort(proposal);
-				
+
 				CompletionProposal completionProposal;
 				for (String str : proposal) {
 					str = pre + str;
@@ -821,13 +833,16 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						continue;
 
 					String helpInfo = null;
-					//Test if the user wants to see help information
-					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+					// Test if the user wants to see help information
+					if (NCLEditorPlugin
+							.getDefault()
+							.getPreferenceStore()
+							.getBoolean(
+									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
 						// Get documentation of the element to show
 						helpInfo = nclElement.getDoc();
 					}
-					
+
 					Image image = null;
 					if (nclElement.getTagName().equals("region"))
 						image = regionImage;
@@ -888,9 +903,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						continue; // null
 
 					String helpInfo = null;
-					//Test if the user wants to see help information
-					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+					// Test if the user wants to see help information
+					if (NCLEditorPlugin
+							.getDefault()
+							.getPreferenceStore()
+							.getBoolean(
+									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
 						// Get documentation of the element to show
 						helpInfo = refElement.getDoc();
 					}
@@ -923,7 +941,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							if (text.equals(idAtual))
 								continue;
 					}
-					
+
 					String text_lower = text.toLowerCase();
 					if (text_lower.startsWith(qualifier_lower)) {
 						cursor = text.length();
@@ -951,17 +969,19 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		try {
 			ITypedRegion region;
 			region = nclSourceDoc.getPartition(offset);
-			String tag = nclSourceDoc.get(region.getOffset(), region
-					.getLength());
+			String tag = nclSourceDoc.get(region.getOffset(),
+					region.getLength());
 
 			int begin = offset - qualifier.length();
 			int end = region.getOffset() + region.getLength() - begin;
 
-			String rest = nclSourceDoc.get(begin
-					+ nclSourceDoc.getAttributeValueFromCurrentTagName(offset,
-							"xconnector").length() + 1, end
-					- nclSourceDoc.getAttributeValueFromCurrentTagName(offset,
-							"xconnector").length() - 1);
+			String rest = nclSourceDoc.get(
+					begin
+							+ nclSourceDoc.getAttributeValueFromCurrentTagName(
+									offset, "xconnector").length() + 1,
+					end
+							- nclSourceDoc.getAttributeValueFromCurrentTagName(
+									offset, "xconnector").length() - 1);
 
 			Vector<Integer> childrenOff = nclSourceDoc
 					.getChildrenOffsets(offset);
@@ -1009,9 +1029,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						Collection conditions = nclDocument
 								.getElementsFromCompletePerspective(
-										"simpleCondition", tmp
-												.getCompletePerspective()
-												+ "/" + id);
+										"simpleCondition",
+										tmp.getCompletePerspective() + "/" + id);
 
 						Iterator it3 = conditions.iterator();
 
@@ -1044,9 +1063,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						Collection actions = nclDocument
 								.getElementsFromCompletePerspective(
-										"simpleAction", tmp
-												.getCompletePerspective()
-												+ "/" + id);
+										"simpleAction",
+										tmp.getCompletePerspective() + "/" + id);
 						it3 = actions.iterator();
 						while (it3.hasNext()) {
 							NCLElement tmp2 = ((NCLElement) it3.next());
@@ -1077,9 +1095,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 						Collection attrAssesments = nclDocument
 								.getElementsFromCompletePerspective(
-										"attributeAssessment", tmp
-												.getCompletePerspective()
-												+ "/" + id);
+										"attributeAssessment",
+										tmp.getCompletePerspective() + "/" + id);
 
 						it3 = attrAssesments.iterator();
 						while (it3.hasNext()) {
@@ -1110,9 +1127,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					}
 
 					String helpInfo = null;
-					//Test if the user wants to see help information
-					if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-							PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+					// Test if the user wants to see help information
+					if (NCLEditorPlugin
+							.getDefault()
+							.getPreferenceStore()
+							.getBoolean(
+									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
 						// Get documentation of the element to show
 						helpInfo = refElement.getDoc();
 					}
@@ -1166,36 +1186,50 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String view = entry.getKey();
 			if (attributeTyped.contains(view) || view == null)
 				continue;
-			String prop = " ";
-			
-			try{
-				NCLWhitespaceDetector nclwhitespacedetector = new NCLWhitespaceDetector();
-				boolean iswhitespace = nclwhitespacedetector.isWhitespace(doc.getChar(offset-1));
-				if (!iswhitespace){
-					prop = " "+entry.getKey() + "=\"\"";
-				}
-				else {
-					prop = entry.getKey() + "=\"\"";
-				}
-				cursor = prop.length();
-				iswhitespace = nclwhitespacedetector.isWhitespace(doc.getChar(offset));
-				if (!iswhitespace && doc.getChar(offset) != '/'){
-					prop = prop+" ";
-					cursor = prop.length() - 1;
-				}
-			}
-			catch (Exception e) {
-				// TODO: handle exception
-			}
+
+			String prop = entry.getKey();			
 			String prop_lower = prop.toLowerCase();
+			
 			if (prop_lower.startsWith(qualifier_lower)) {
+
+				// fix previous and next Whitespaces
+				try {
+					NCLWhitespaceDetector nclwhitespacedetector = new NCLWhitespaceDetector();
+					boolean iswhitespace = nclwhitespacedetector.isWhitespace(doc
+							.getChar(offset - 1));
+					
+					if (!iswhitespace) {
+						prop = " " + prop + "=\"\"";
+					} else {
+						prop = prop + "=\"\"";
+					}
+					
+					cursor = prop.length();
+					
+					iswhitespace = nclwhitespacedetector.isWhitespace(doc
+							.getChar(offset));
+					
+					if (!iswhitespace 
+							&& doc.getChar(offset) != '/'
+							&& doc.getChar(offset) != '>') {
+						prop = prop + " ";
+						cursor = prop.length() - 1;
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				
 				cursor = cursor - 1;
 
 				// TODO: Description of elements in English and Spanish
+				
 				String helpInfo = null;
-				//Test if the user wants to see help information
-				if(NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
-						PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)){
+				// Test if the user wants to see help information
+				if (NCLEditorPlugin
+						.getDefault()
+						.getPreferenceStore()
+						.getBoolean(
+								PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
 					// Get documentation of the element to show
 					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
 							currentTagname, view);
