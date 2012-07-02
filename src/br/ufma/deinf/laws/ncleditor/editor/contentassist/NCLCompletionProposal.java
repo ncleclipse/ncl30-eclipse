@@ -84,6 +84,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
+import org.w3c.dom.Element;
 
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
@@ -733,7 +734,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			// suggest the protocols
 			for (int i = 0; i < protocols.length; i++) {
 				text = protocols[i];
-				if (text.startsWith(qualifier)) {
+				if (text.startsWith(qualifier) && !text.equals(qualifier)) {
 					cursor = text.length();
 					// System.out.println("Attribute Value Proposal = " + text);
 					CompletionProposal proposal = new CompletionProposal(text,
@@ -756,27 +757,55 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				if (qualifier.equals(""))
 					currentPath = System.getProperty("user.home");
 			}
-			try {
-				// TODO: this is not sufficient to work with URI codification
-				qualifier = qualifier.replace("%20", " ");
-
-				Vector<String> proposal = new URIProposer(currentPath)
-						.getSrcSuggest(qualifier);
-
-				Collections.sort(proposal);
-
-				CompletionProposal completionProposal;
-				for (String str : proposal) {
-					str = pre + str;
-					completionProposal = new CompletionProposal(str, offset
-							- qlen, qlen, str.length(), fileImage, str, null,
-							null);
-					propList.add(completionProposal);
+			
+			CompletionProposal completionProposal;
+			
+			String nclMirror = "ncl-mirror://";
+			if (qualifier.startsWith(nclMirror)) {
+				
+				String mediaId = qualifier.substring(nclMirror.length());
+				ArrayList<String> elements = nclDoc.getAllElementsOfType("media");
+				Collections.sort(elements);
+				
+				String id = nclDoc.getAttributeValueFromCurrentTagName(offset,
+						"id");
+				
+				if (id == null) id = "";
+				
+				for (String str : elements){
+					if (str.startsWith(mediaId) && !str.equals(id)){
+						str = nclMirror + str;
+						completionProposal = new CompletionProposal(str, offset
+								- qlen, qlen, str.length(), fileImage, str,
+								null, null);
+						propList.add(completionProposal);
+					}
 				}
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				return;
+				
+			} else
+				try {
+					// TODO: this is not sufficient to work with URI
+					// codification
+					qualifier = qualifier.replace("%20", " ");
+
+					Vector<String> proposal = new URIProposer(currentPath)
+							.getSrcSuggest(qualifier);
+
+					Collections.sort(proposal);
+
+					
+					for (String str : proposal) {
+						str = pre + str;
+						completionProposal = new CompletionProposal(str, offset
+								- qlen, qlen, str.length(), fileImage, str,
+								null, null);
+						propList.add(completionProposal);
+					}
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			/**
 			 * Nao sugerindo temporariamente try { URIProposer fs = new
 			 * URIProposer(currentFile.getParent()); Vector<String> v =
@@ -1187,30 +1216,29 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			if (attributeTyped.contains(view) || view == null)
 				continue;
 
-			String prop = entry.getKey();			
+			String prop = entry.getKey();
 			String prop_lower = prop.toLowerCase();
-			
+
 			if (prop_lower.startsWith(qualifier_lower)) {
 
 				// fix previous and next Whitespaces
 				try {
 					NCLWhitespaceDetector nclwhitespacedetector = new NCLWhitespaceDetector();
-					boolean iswhitespace = nclwhitespacedetector.isWhitespace(doc
-							.getChar(offset - 1));
-					
+					boolean iswhitespace = nclwhitespacedetector
+							.isWhitespace(doc.getChar(offset - 1));
+
 					if (!iswhitespace) {
 						prop = " " + prop + "=\"\"";
 					} else {
 						prop = prop + "=\"\"";
 					}
-					
+
 					cursor = prop.length();
-					
+
 					iswhitespace = nclwhitespacedetector.isWhitespace(doc
 							.getChar(offset));
-					
-					if (!iswhitespace 
-							&& doc.getChar(offset) != '/'
+
+					if (!iswhitespace && doc.getChar(offset) != '/'
 							&& doc.getChar(offset) != '>') {
 						prop = prop + " ";
 						cursor = prop.length() - 1;
@@ -1218,11 +1246,11 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-				
+
 				cursor = cursor - 1;
 
 				// TODO: Description of elements in English and Spanish
-				
+
 				String helpInfo = null;
 				// Test if the user wants to see help information
 				if (NCLEditorPlugin
