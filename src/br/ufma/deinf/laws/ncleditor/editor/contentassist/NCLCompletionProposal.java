@@ -1195,6 +1195,39 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		String qualifier_lower = qualifier.toLowerCase();
 		int qlen = qualifier.length();
+		
+		boolean mustIncludeWhitespaceInTheBegin = false,
+				mustIncludeWhitespaceInTheEnd = false;
+		
+		/* Compute if we must or not include whitespace on the beggining and
+		 * on the end of the proposal attibute.
+		 */
+		try {
+			NCLWhitespaceDetector nclwhitespacedetector = 
+					new NCLWhitespaceDetector();
+			
+			char ch;
+			ch = doc.getChar(offset-qualifier.length()-1);
+			
+			boolean iswhitespace = nclwhitespacedetector
+					.isWhitespace(ch);
+			
+			if (!iswhitespace) {
+				mustIncludeWhitespaceInTheBegin = true;
+			}
+			
+			ch = doc.getChar(offset);
+			iswhitespace = nclwhitespacedetector.isWhitespace(ch);
+
+			if (!iswhitespace && doc.getChar(offset) != '/'
+					&& doc.getChar(offset) != '>') {
+				mustIncludeWhitespaceInTheEnd = true;
+			}
+			
+		} catch (BadLocationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		NCLSourceDocument nclDoc = NCLSourceDocument
 				.createNCLSourceDocumentFromIDocument(doc);
@@ -1212,6 +1245,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		while (it.hasNext()) {
 			Map.Entry<String, Boolean> entry = (Entry<String, Boolean>) it
 					.next();
+			
 			String view = entry.getKey();
 			if (attributeTyped.contains(view) || view == null)
 				continue;
@@ -1220,31 +1254,17 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String prop_lower = prop.toLowerCase();
 
 			if (prop_lower.startsWith(qualifier_lower)) {
-
 				// fix previous and next Whitespaces
-				try {
-					NCLWhitespaceDetector nclwhitespacedetector = new NCLWhitespaceDetector();
-					boolean iswhitespace = nclwhitespacedetector
-							.isWhitespace(doc.getChar(offset - 1));
+				if (mustIncludeWhitespaceInTheBegin)
+					prop = " " + prop + "=\"\"";
+				else
+					prop = prop + "=\"\"";
 
-					if (!iswhitespace) {
-						prop = " " + prop + "=\"\"";
-					} else {
-						prop = prop + "=\"\"";
-					}
+				cursor = prop.length();
 
-					cursor = prop.length();
-
-					iswhitespace = nclwhitespacedetector.isWhitespace(doc
-							.getChar(offset));
-
-					if (!iswhitespace && doc.getChar(offset) != '/'
-							&& doc.getChar(offset) != '>') {
-						prop = prop + " ";
-						cursor = prop.length() - 1;
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
+				if (mustIncludeWhitespaceInTheEnd) {
+					prop = prop + " ";
+					cursor = prop.length() - 1;
 				}
 
 				cursor = cursor - 1;
