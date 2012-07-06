@@ -87,21 +87,13 @@ public class LaunchShortcut implements ILaunchShortcut {
 		IWorkbench wb = PlatformUI.getWorkbench();
 		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 		IWorkbenchPage page = win.getActivePage();
-		IEditorPart editor = page.getActiveEditor();
-
-		if (editor.isDirty()) {
-
-			boolean save = MessageDialog.openQuestion(Workbench.getInstance()
-					.getActiveWorkbenchWindow().getShell(),
-					"NCL Eclipse Informação",
-					"Deseja salvar as alterações feitas no arquivo " 
-					+ file.getName() + "?");
-
-			if (save) {
-				editor.doSave(null);
-			}
+		IEditorPart [] editors = page.getDirtyEditors();
+		
+		if (editors.length > 0){
+			Workbench.getInstance().saveAllEditors(true);
 		}
 
+	
 		Thread runThread = new Thread() {
 			public void run() {
 				// Getting default values
