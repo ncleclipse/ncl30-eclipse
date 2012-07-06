@@ -31,7 +31,8 @@ import java.util.Date;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.ui.ILaunchShortcut;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.*;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IEditorInput;
@@ -47,6 +48,7 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.internal.Workbench;
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditorMessages;
 import br.ufma.deinf.laws.ncleclipse.NCLEditorPlugin;
@@ -87,20 +89,12 @@ public class LaunchShortcut implements ILaunchShortcut {
 		IWorkbench wb = PlatformUI.getWorkbench();
 		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 		IWorkbenchPage page = win.getActivePage();
-		IEditorPart editor = page.getActiveEditor();
-
-		if (editor.isDirty()) {
-
-			boolean save = MessageDialog.openQuestion(Workbench.getInstance()
-					.getActiveWorkbenchWindow().getShell(),
-					"NCL Eclipse Informação",
-					"Deseja salvar as alterações feitas no arquivo " 
-					+ file.getName() + "?");
-
-			if (save) {
-				editor.doSave(null);
-			}
+		IEditorPart [] editors = page.getDirtyEditors();
+		
+		if (editors.length > 0){
+			Workbench.getInstance().saveAllEditors(true);
 		}
+		
 
 		Thread runThread = new Thread() {
 			public void run() {
