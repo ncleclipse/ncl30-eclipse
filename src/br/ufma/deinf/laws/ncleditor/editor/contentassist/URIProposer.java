@@ -28,8 +28,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Vector;
 
-import org.eclipse.jface.text.contentassist.CompletionProposal;
-
 import br.ufma.deinf.laws.util.UrlUtils;
 
 /**

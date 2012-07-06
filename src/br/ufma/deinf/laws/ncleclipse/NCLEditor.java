@@ -71,6 +71,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.w3c.dom.Document;
 import org.xml.sax.helpers.LocatorImpl;
 
+import sun.security.jca.GetInstance;
+
 import br.ufma.deinf.gia.labmint.composer.NCLValidator;
 import br.ufma.deinf.gia.labmint.document.NclValidatorDocument;
 import br.ufma.deinf.gia.labmint.main.NclParseErrorHandler;
@@ -753,6 +755,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 												try {
 
 													if (NCLStructure
+															.getInstance()
 															.getChildrenCardinality(
 																	tagname)
 															.size() > 0) {

@@ -35,8 +35,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import javax.smartcardio.ATR;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -60,7 +58,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
-import org.w3c.dom.Element;
 
 import br.ufma.deinf.laws.ncl.AttributeValues;
 import br.ufma.deinf.laws.ncl.NCLReference;
@@ -84,7 +81,6 @@ import br.ufma.deinf.laws.ncleclipse.util.NCLWhitespaceDetector;
  */
 
 public class NCLCompletionProposal implements IContentAssistProcessor {
-	private XMLTagScanner scanner;
 	private File currentFile;
 	private String text;
 	private String protocols[] = { "file:///", "http://", "https://",
@@ -98,7 +94,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private Image regionImage = null;
 	private Image fileImage = null;
 
-	private HashMap<String, NCLSourceDocument> importedNCLDocs = new HashMap<String, NCLSourceDocument>();
+	// private HashMap<String, NCLSourceDocument> importedNCLDocs = new HashMap<String, NCLSourceDocument>();
 
 	NCLDocument nclDocument;
 
@@ -114,7 +110,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
 		IWorkbenchPage page = win.getActivePage();
 		IEditorPart editor = page.getActiveEditor();
-		List propList = new ArrayList();
+		List <CompletionProposal> propList = new ArrayList <CompletionProposal>();
 
 		boolean isFileEditor = true;
 
@@ -154,7 +150,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if (selectedRange.y > 0) {
 			// TODO:
 		} else {
+
 			// System.out.println("Attributo = " + isAttribute);
+			
 			String qualifier = getQualifier(nclDoc, offset);
 			if (isEndTagName) {
 				computeEndTagName(nclDoc, qualifier, offset, propList);
@@ -173,7 +171,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	}
 
 	private void computeEndTagName(IDocument doc, String qualifier, int offset,
-			List propList) {
+			List <CompletionProposal> propList) {
 		int qlen = qualifier.length();
 
 		NCLSourceDocument nclDoc = (NCLSourceDocument) doc;
@@ -195,20 +193,20 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 	}
 
+	
+	private int cursor; // compute the cursor position after autocomplete insert
+						// a text.
+
 	/**
-	 * Computa as tags que serao propostas para o usuario
+	 * Compute the tags that will be suggested for user.
 	 * 
 	 * @param qualifier
 	 * @param offset
 	 * @param propList
 	 */
-	private int cursor; // calcula a posição que o cursor ficará para cada
-
-	// estrutura proposta
 	private void computeTagsProposals(IDocument doc, String qualifier,
-			int offset, List propList) {
-
-		// TODO: Ignore case-sensitive in autocomplete
+			int offset, List <CompletionProposal> propList) {
+		
 		String qualifier_lower = qualifier.toLowerCase();
 
 		int qlen = qualifier.length();
@@ -222,10 +220,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		/* System.out.println("## Log: Pai da tag onde estou digitando : "
 				+ nclDoc.getFatherTagName(offset));*/
 		Map<String, Map<String, Character>> nesting = nclStructure.getNesting();
-		Vector<String> childrenStr = new Vector<String>();
-
-		// Procuro todos os filhos da tagname do meu pai e coloco no vector
-		// childrenStr
 
 		String fatherTagName = nclDoc.getFatherTagName(offset);
 		if (fatherTagName.equals("")) {
@@ -241,16 +235,15 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 				// get a help info to user
 				// TODO: Description of elements in English and Spanish
-
 				String helpInfo = null;
+				
 				// Test if the user wants to see help information
 				if (NCLEditorPlugin
 						.getDefault()
 						.getPreferenceStore()
 						.getBoolean(
 								PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
-					helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
-							tagname);
+					helpInfo = NCLHelper.getHelpDescription(tagname);
 				}
 
 				CompletionProposal proposal = new CompletionProposal(text,
@@ -261,10 +254,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 		} else if (nesting.containsKey(fatherTagName)) {
 			Map<String, Character> children = nesting.get(fatherTagName);
-			Iterator it = children.entrySet().iterator();
+			Iterator <Map.Entry<String, Character> > it = 
+					children.entrySet().iterator();
+			
 			while (it.hasNext()) {
-				Map.Entry<String, Character> entry = (Entry<String, Character>) it
-						.next();
+				Map.Entry<String, Character> entry = 
+						(Entry<String, Character>) it.next();
 				String tagname = entry.getKey();
 				String tagname2 = "<" + tagname;
 
@@ -286,8 +281,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 							.getPreferenceStore()
 							.getBoolean(
 									PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE)) {
-						helpInfo = NCLHelper.getNCLHelper().getHelpDescription(
-								tagname);
+						helpInfo = NCLHelper.getHelpDescription(tagname);
 					}
 
 					CompletionProposal proposal = new CompletionProposal(text,
@@ -301,7 +295,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		}
 
 		/*
-		 * Nao faz sentido computar tudo nunca!
+		 * Never makes sense compute everything!
 		 * 
 		 * //Caso contrário computa tudo Map<String, Map<String, Boolean>> atts
 		 * = nclStructure.getAttributes(); Iterator it =
@@ -319,11 +313,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	}
 
 	/**
-	 * Computa a estrutura da Tag Valores Defaults, atributos obrigatorios,
-	 * coloca tudo de uma vez quando o usuario quer inserir a tag.
+	 * Compute the structure of a tag, i.e., default values, required 
+	 * attributes, etc.
 	 * 
 	 * @param tagname
-	 * @return
+	 * @return the string composed of the tag and all its required attributes
+	 * 		and default values.
 	 */
 	String computeTagStructure(String tagname, String indent) {
 		// TODO: retornar a tag com todos os atributos obrigatórios
