@@ -67,7 +67,7 @@ public class OutlineContentHandler extends DefaultHandler implements
 			Attributes attributes) throws SAXException {
 
 		int lineNumber = locator.getLineNumber() - 1;
-		XMLElement element = new XMLElement(localname);
+		XMLElement element = new XMLElement(qName);
 
 		int startPosition = getOffsetFromLine(lineNumber);
 		Position position = new Position(startPosition);
@@ -84,7 +84,7 @@ public class OutlineContentHandler extends DefaultHandler implements
 			int attributeLength = attributes.getLength();
 			for (int i = 0; i < attributeLength; i++) {
 				String value = attributes.getValue(i);
-				String localName = attributes.getLocalName(i);
+				String localName = attributes.getQName(i);
 
 				element.addChildAttribute(new XMLAttribute(localName, value));
 			}
