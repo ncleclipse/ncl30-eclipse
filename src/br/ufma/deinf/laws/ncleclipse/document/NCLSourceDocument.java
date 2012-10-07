@@ -978,6 +978,18 @@ public class NCLSourceDocument extends Document {
 			if (region.getType() == XMLPartitionScanner.XML_START_TAG) {
 				String currentPartition = get(region.getOffset(),
 						region.getLength());
+				int lt_pos = currentPartition.substring(1).indexOf('<');
+				
+				// If the input text is not a well-formed XML, getPartition
+				// can return something like that:
+				//           "<area id=''... <area id='...' coord='...' .../>
+				//
+				// If that happens, we will cut the currentPartition text until
+				// we find the first "<" (it does not include initial from 
+				// openning tag).
+				if(lt_pos >= 0) 
+					currentPartition = currentPartition.substring(0, lt_pos+1);
+				
 				Pattern p = Pattern.compile("\\s[a-zA-Z]+");
 				Matcher m = p.matcher(currentPartition); // get a matcher
 				// object
@@ -1286,27 +1298,28 @@ public class NCLSourceDocument extends Document {
 			if (type.equals(""))
 				return null;
 
-				ArrayList<String> ids = new ArrayList<String>();
-				ITypedRegion region = getPartition(0);
-				String partition;
-				do {
-					partition = get(region.getOffset(), region.getLength());
-					String tagName;
-					if (region.getType().equals(
-							XMLPartitionScanner.XML_START_TAG)) {
-						int offset = region.getOffset();
-						tagName = getCurrentTagname(offset);
-						if (tagName != null && !tagName.equals("")
-								&& tagName.equals(type)) {
-							String id = getAttributeValueFromCurrentTagName(
-									offset, "id");
-							if (id != null && !id.equals(""))
-								ids.add(id);
-						}
+			ArrayList<String> ids = new ArrayList<String>();
+			ITypedRegion region = getPartition(0);
+			String partition;
+			do {
+				partition = get(region.getOffset(), region.getLength());
+				String tagName;
+				if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+					int offset = region.getOffset();
+					tagName = getCurrentTagname(offset);
+					if (tagName != null && !tagName.equals("")
+							&& tagName.equals(type)) {
+						String id = getAttributeValueFromCurrentTagName(offset,
+								"id");
+						if (id != null && !id.equals(""))
+							ids.add(id);
 					}
-					region = getNextPartition(region);
-				} while (!partition.equals("</ncl>"));
-				return ids;
+				}
+				region = getNextPartition(region);
+			} while (!partition.equals("</ncl>"));
+			
+			return ids;
+			
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 			return new ArrayList<String>();
