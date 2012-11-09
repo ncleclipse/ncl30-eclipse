@@ -262,9 +262,9 @@
 	  </key>
 	  
 	</extension>
- <!-- <extension
+  <extension
        point="org.eclipse.ui.editorActions">
-    <editorContribution
+ <!--   <editorContribution
           id="br.ufma.deinf.laws.ncleclipse.actions.nclintime.start"
           targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
        <action
@@ -274,8 +274,8 @@
              label="Start record"
              style="toggle"
              toolbarPath="Normal/additions">
-       </action>
-    </editorContribution>
+       </action> 
+    </editorContribution>-->
     <editorContribution
           id="br.ufma.deinf.laws.ncleclipse.actions.commentSelection"
           targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
@@ -290,13 +290,13 @@
           id="br.ufma.deinf.laws.ncleclipse.actions.UncommentSelection"
           targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
        <action
-             accelerator="Ctrl+Alt+V"
+             accelerator="Ctrl+Alt+U"
              class="br.ufma.deinf.laws.ncleclipse.actions.UncommentSelection"
              id="ncl30-eclipse.uncommentSelection"
              label="Uncomment Selection">
        </action>
     </editorContribution>
- </extension> -->
+ </extension> 
  <extension
        point="org.eclipse.ui.views">
     <view

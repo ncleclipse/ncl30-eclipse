@@ -407,7 +407,6 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					propList.add(proposal);
 				}
 			}
-			return;
 		}
 
 		// Propoe elementos que referenciam tipos simples
@@ -628,10 +627,47 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 			return;
 		}
+		
+		if ((tagname.equals("simpleCondition") && attribute.equals("key"))){
+			int fatherOffset = offset;
+			while ((fatherOffset != -1)
+					&& (!nclDoc.getCurrentTagname(fatherOffset).equals(
+							"causalConnector"))) {
+				fatherOffset = nclDoc.getFatherPartitionOffset(fatherOffset);
+			}
+			Vector<Integer> childrenOffset = nclDoc
+					.getChildrenOffsets(fatherOffset);
 
+			Vector<String> suggest = new Vector<String>();
+
+			for (int i = 0; i < childrenOffset.size(); i++) {
+				int childOffset = childrenOffset.elementAt(i);
+
+				String tag = nclDoc.getCurrentTagname(childOffset);
+
+				if (tag != null && tag.equals("connectorParam")) {
+					String name = nclDoc.getAttributeValueFromCurrentTagName(
+							childOffset, "name");
+					if (name != null && !name.equals("")) {
+						suggest.add("$" + name);
+					}
+				}
+
+			}
+
+			for (String str : suggest) {
+				String str_lower = str.toLowerCase();
+				if (str_lower.startsWith(qualifier_lower))
+					propList.add(new CompletionProposal(str, offset - qlen,
+							qlen, str.length(), null, str, null, null));
+			}
+			return;
+		}
+
+		
+		
 		// suggest the connectorParams
-		if ((tagname.equals("simpleAction") && attribute.equals("key"))
-				|| (tagname.equals("simpleAction") && attribute.equals("value"))
+		if ((tagname.equals("simpleAction") && attribute.equals("value"))
 				|| (tagname.equals("simpleAction") && attribute.equals("delay"))) {
 
 			int fatherOffset = offset;
