@@ -88,7 +88,7 @@ public class NCLProject extends Wizard implements INewWizard, IExecutableExtensi
 	    }
 
 	    CustomProjectSupport.createProject(name, location, pageOne.isImportConnectorBase(), 
-	    		pageOne.mustCreateMediaDir());
+	    		pageOne.mustCreateMediaDir(),pageOne.mustCreateMainNcl(),pageOne.getFileName(),pageOne.getFileId());
 	    
 	    //BasicNewProjectResourceWizard.updatePerspective(configurationElement);
 

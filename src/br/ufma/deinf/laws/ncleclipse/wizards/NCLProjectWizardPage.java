@@ -25,6 +25,8 @@ package br.ufma.deinf.laws.ncleclipse.wizards;
 
 import java.net.URI;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -36,6 +38,13 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -63,11 +72,18 @@ public class NCLProjectWizardPage extends WizardPage {
 
     // initial value stores
     private String initialProjectFieldValue;
+    
+    
 
     // widgets
     private Text projectNameField;
+    private Text nameMainNclNameField;
+    private Text idMainNclNameField;
     private Button importConnBaseCheckBox;
     private Button createMediaDirCheckBox;
+    private Button createMainNclCheckBox;
+    
+    protected String extension;
 
     private Listener nameModifyListener = new Listener() {
         public void handleEvent(Event e) {
@@ -93,6 +109,7 @@ public class NCLProjectWizardPage extends WizardPage {
     public NCLProjectWizardPage (String pageName) {
     	super(pageName);
 	    setPageComplete(false);
+	    setExtension(".ncl");
     }
 
     /**
@@ -136,6 +153,27 @@ public class NCLProjectWizardPage extends WizardPage {
 		}
         
         createOptions(composite);
+        createMainFileOptions(composite);
+        createMainNclCheckBox.addListener(SWT.Selection, new Listener()
+        {
+            @Override
+            public void handleEvent(Event e) 
+            {
+                Button button = (Button)(e.widget);
+				
+                if (button.getSelection()){
+                	idMainNclNameField.setEnabled(true);
+                	nameMainNclNameField.setEnabled(true);
+                }
+                else {
+                	idMainNclNameField.setEnabled(false);
+                	idMainNclNameField.setText("");
+                	nameMainNclNameField.setEnabled(false);
+                	nameMainNclNameField.setText("");
+                	
+                }
+            }
+        });
         
 		// Scale the button based on the rest of the dialog
 		setButtonLayoutData(locationArea.getBrowseButton());
@@ -155,6 +193,25 @@ public class NCLProjectWizardPage extends WizardPage {
     public boolean mustCreateMediaDir(){
     	return createMediaDirCheckBox.getSelection();
     }
+    
+    public boolean mustCreateMainNcl(){
+    	return createMainNclCheckBox.getSelection();
+    }
+    
+    public String getFileName(){
+    	return nameMainNclNameField.getText();
+    }
+    
+    public String getFileId() {
+		return idMainNclNameField.getText();
+	}
+    
+    public void setExtension(String ext) {
+		this.extension = ext;
+	}
+    public String getExtension() {
+		return extension;
+	}
     
     /**
 	 * @param parent
@@ -177,8 +234,89 @@ public class NCLProjectWizardPage extends WizardPage {
         createMediaDirCheckBox.setText(NCLEditorMessages.getInstance().getString(
 							"NCLProjectWizard.CreateMediaDir"));
         createMediaDirCheckBox.setFont(parent.getFont());
+        
+        createMainNclCheckBox = new Button (checkBoxGroup, SWT.CHECK | SWT.RIGHT);
+        createMainNclCheckBox.setSelection(false);
+        createMainNclCheckBox.setText(NCLEditorMessages.getInstance().getString(
+							"NCLProjectWizard.CreateMainNcl"));
+        createMainNclCheckBox.setFont(parent.getFont());
+            
 	}
+	
+	public void createMainFileOptions(Composite parent){
+		 Composite projectGroup = new Composite(parent, SWT.NONE);
+	        GridLayout layout1 = new GridLayout();
+	        layout1.numColumns = 2;
+	        projectGroup.setLayout(layout1);
+	        projectGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	        
+	        // main NCL ID label
+	        Label fileIdLabel = new Label(projectGroup, SWT.NONE);
+	        fileIdLabel.setText("&Id:");
+	        fileIdLabel.setFont(parent.getFont());
+	        
+	        idMainNclNameField = new Text(projectGroup, SWT.BORDER);
+	        GridData data = new GridData(GridData.FILL_HORIZONTAL);
+	        data.widthHint = SIZING_TEXT_FIELD_WIDTH;
+	        idMainNclNameField.setLayoutData(data);
+	        idMainNclNameField.setFont(parent.getFont());
+	        idMainNclNameField.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					fileIdChanged();
+				}
+			});
+	        
+	        // main NCL name label 
+	        Label fileNameLabel = new Label(projectGroup, SWT.NONE);
+	        fileNameLabel.setText(IDEWorkbenchMessages.WizardNewFileCreationPage_fileLabel);
+	        fileNameLabel.setFont(parent.getFont());
 
+	        // new file name entry field
+	        nameMainNclNameField = new Text(projectGroup, SWT.BORDER);
+	        data.widthHint = SIZING_TEXT_FIELD_WIDTH;
+	        nameMainNclNameField.setLayoutData(data);
+	        nameMainNclNameField.setFont(parent.getFont());
+	        nameMainNclNameField.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					fileNameChanged();
+				}
+			});
+	        
+	        idMainNclNameField.setEnabled(false);
+	        nameMainNclNameField.setEnabled(false);
+	}
+	
+	protected void fileNameChanged() {
+		String fileName = getFileName();
+		if (fileName.length() == 0 && mustCreateMainNcl()) {
+			updateStatus("File name must be specified");
+			return;
+		}
+		if (fileName.replace('\\', '/').indexOf('/', 1) > 0) {
+			updateStatus("File name must be valid");
+			return;
+		}
+		//System.out.println(fileName);
+		if (!fileName.endsWith(".ncl") && mustCreateMainNcl()) {
+			updateStatus("File extension must be \"" + getExtension() + "\"");
+			return;
+		}
+		updateStatus(null);
+	}
+	
+	protected void updateStatus(String message) {
+		setErrorMessage(message);
+	}
+	
+	protected void fileIdChanged() {
+		String fileId = getFileId();
+		nameMainNclNameField.setText(fileId + getExtension());
+		if (fileId.length() == 0) {
+			updateStatus("File id must be specified.");
+			return;
+		}
+		updateStatus(null);
+	}
 	/**
 	 * Create a working set group for this page. This method can only be called
 	 * once.
@@ -254,7 +392,7 @@ public class NCLProjectWizardPage extends WizardPage {
         data.widthHint = SIZING_TEXT_FIELD_WIDTH;
         projectNameField.setLayoutData(data);
         projectNameField.setFont(parent.getFont());
-
+        
         // Set the initial value first before listener
         // to avoid handling an event during the creation.
         if (initialProjectFieldValue != null) {
@@ -288,7 +426,8 @@ public class NCLProjectWizardPage extends WizardPage {
     public URI getLocationURI() {
     	return locationArea.getProjectLocationURI();
     }
-
+    
+    
     /**
 	 * Creates a project resource handle for the current project name field
 	 * value. The project handle is created relative to the workspace root.
