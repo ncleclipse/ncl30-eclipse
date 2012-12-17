@@ -82,7 +82,8 @@ public class NCLProjectWizardPage extends WizardPage {
     private Button importConnBaseCheckBox;
     private Button createMediaDirCheckBox;
     private Button createMainNclCheckBox;
-    
+    private Label fileIdLabel;
+    private Label fileNameLabel;
     protected String extension;
 
     private Listener nameModifyListener = new Listener() {
@@ -162,12 +163,16 @@ public class NCLProjectWizardPage extends WizardPage {
                 Button button = (Button)(e.widget);
 				
                 if (button.getSelection()){
+                	fileIdLabel.setEnabled(true);
                 	idMainNclNameField.setEnabled(true);
+                	fileNameLabel.setEnabled(true);
                 	nameMainNclNameField.setEnabled(true);
                 }
                 else {
+                	fileIdLabel.setEnabled(false);
                 	idMainNclNameField.setEnabled(false);
                 	idMainNclNameField.setText("");
+                	fileNameLabel.setEnabled(false);
                 	nameMainNclNameField.setEnabled(false);
                 	nameMainNclNameField.setText("");
                 	
@@ -251,7 +256,7 @@ public class NCLProjectWizardPage extends WizardPage {
 	        projectGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	        
 	        // main NCL ID label
-	        Label fileIdLabel = new Label(projectGroup, SWT.NONE);
+	        fileIdLabel = new Label(projectGroup, SWT.NONE);
 	        fileIdLabel.setText("&Id:");
 	        fileIdLabel.setFont(parent.getFont());
 	        
@@ -267,7 +272,7 @@ public class NCLProjectWizardPage extends WizardPage {
 			});
 	        
 	        // main NCL name label 
-	        Label fileNameLabel = new Label(projectGroup, SWT.NONE);
+	        fileNameLabel = new Label(projectGroup, SWT.NONE);
 	        fileNameLabel.setText(IDEWorkbenchMessages.WizardNewFileCreationPage_fileLabel);
 	        fileNameLabel.setFont(parent.getFont());
 
@@ -284,6 +289,8 @@ public class NCLProjectWizardPage extends WizardPage {
 	        
 	        idMainNclNameField.setEnabled(false);
 	        nameMainNclNameField.setEnabled(false);
+	        fileIdLabel.setEnabled(false);
+	        fileNameLabel.setEnabled(false);
 	}
 	
 	protected void fileNameChanged() {
@@ -306,12 +313,13 @@ public class NCLProjectWizardPage extends WizardPage {
 	
 	protected void updateStatus(String message) {
 		setErrorMessage(message);
+		setPageComplete(message == null);
 	}
 	
 	protected void fileIdChanged() {
 		String fileId = getFileId();
 		nameMainNclNameField.setText(fileId + getExtension());
-		if (fileId.length() == 0) {
+		if (fileId.length() == 0 && mustCreateMainNcl()) {
 			updateStatus("File id must be specified.");
 			return;
 		}

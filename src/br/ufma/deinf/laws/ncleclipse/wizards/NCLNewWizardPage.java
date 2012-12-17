@@ -197,7 +197,7 @@ public class NCLNewWizardPage extends WizardPage {
 
 	protected void fileNameChanged() {
 		String fileName = getFileName();
-		if (fileName.length() == 0) {
+		if (fileName.length() == 0 ) {
 			updateStatus("File name must be specified");
 			return;
 		}
