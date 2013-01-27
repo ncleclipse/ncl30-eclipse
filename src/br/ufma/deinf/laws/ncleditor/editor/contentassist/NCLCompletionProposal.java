@@ -229,8 +229,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String tagname_lower = tagname.toLowerCase();
 			String tagname2_lower = tagname2.toLowerCase();
 
-			if (tagname_lower.startsWith(qualifier_lower)
-					|| tagname2_lower.startsWith(qualifier_lower)) {
+			if (tagname_lower.contains(qualifier_lower)
+					|| tagname2_lower.contains(qualifier_lower)) {
 				String text = computeTagStructure(tagname, indent);
 
 				// get a help info to user
@@ -266,8 +266,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				String tagname_lower = tagname.toLowerCase();
 				String tagname2_lower = tagname2.toLowerCase();
 
-				if (tagname_lower.startsWith(qualifier_lower)
-						|| tagname2_lower.startsWith(qualifier_lower)) {
+				if (tagname_lower.contains(qualifier_lower)
+						|| tagname2_lower.contains(qualifier_lower)) {
 
 					String text = computeTagStructure(tagname, indent);
 
@@ -302,8 +302,8 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		 * atts.entrySet().iterator(); while(it.hasNext()){ Map.Entry<String,
 		 * Map<String, Boolean>> entry = (Entry<String, Map<String, Boolean>>)
 		 * it.next(); String tagname = entry.getKey(); String tagname2 =
-		 * "<"+tagname; if(tagname.startsWith(qualifier) ||
-		 * tagname2.startsWith(qualifier)){ String text =
+		 * "<"+tagname; if(tagname.contains(qualifier) ||
+		 * tagname2.contains(qualifier)){ String text =
 		 * computeTagStructure(tagname, indent);
 		 * 
 		 * CompletionProposal proposal = new CompletionProposal(text, offset -
@@ -393,12 +393,12 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		if (prop.size() > 0) {
 			for (int i = 0; i < prop.size(); i++) {
 				String prop_lower = prop.get(i).toLowerCase();
-				if (prop_lower.startsWith(qualifier_lower)) {
+				if (prop_lower.contains(qualifier_lower)) {
 					String text = prop.get(i);
 					String texttoshow = text;
 					// System.out.println(text);
-					// if(!qualifier.startsWith("\"") &&
-					// !qualifier.startsWith("\'"))
+					// if(!qualifier.contains("\"") &&
+					// !qualifier.contains("\'"))
 					// text = "\""+text+"\"";
 					cursor = text.length();
 					CompletionProposal proposal = new CompletionProposal(text,
@@ -594,7 +594,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 						}
 
 						String text_lower = text.toLowerCase();
-						if (text_lower.startsWith(qualifier_lower)) {
+						if (text_lower.contains(qualifier_lower)) {
 							cursor = text.length();
 							// System.out.println("Attribute Value Proposal = "
 							// + text);
@@ -621,7 +621,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			for (String str : prop) {
 				String str_lower = str.toLowerCase();
-				if (str_lower.startsWith(qualifier_lower))
+				if (str_lower.contains(qualifier_lower))
 					propList.add(new CompletionProposal(str, offset - qlen,
 							qlen, str.length(), null, str, null, null));
 			}
@@ -657,7 +657,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			for (String str : suggest) {
 				String str_lower = str.toLowerCase();
-				if (str_lower.startsWith(qualifier_lower))
+				if (str_lower.contains(qualifier_lower))
 					propList.add(new CompletionProposal(str, offset - qlen,
 							qlen, str.length(), null, str, null, null));
 			}
@@ -698,7 +698,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 
 			for (String str : suggest) {
 				String str_lower = str.toLowerCase();
-				if (str_lower.startsWith(qualifier_lower))
+				if (str_lower.contains(qualifier_lower))
 					propList.add(new CompletionProposal(str, offset - qlen,
 							qlen, str.length(), null, str, null, null));
 			}
@@ -725,7 +725,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				String id = nclDoc.getAttributeValueFromCurrentTagName(offset,
 						"id");
 
-				if (path.startsWith(currentFile.getParent()))
+				if (path.contains(currentFile.getParent()))
 					path = path.substring(currentFile.getParent().length() + 1);
 				if (id != null)
 					nclDoc.setAttributefromTag(id, attribute, path, offset);
@@ -741,7 +741,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			// suggest the protocols
 			for (int i = 0; i < protocols.length; i++) {
 				text = protocols[i];
-				if (text.startsWith(qualifier) && !text.equals(qualifier)) {
+				if (text.contains(qualifier) && !text.equals(qualifier)) {
 					cursor = text.length();
 					// System.out.println("Attribute Value Proposal = " + text);
 					CompletionProposal proposal = new CompletionProposal(text,
@@ -758,7 +758,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String pre = "";
 
 			String currentPath = currentFile.getParent();
-			if (qualifier.startsWith("file://")) {
+			if (qualifier.contains("file://")) {
 				pre = "file://";
 				qualifier = qualifier.substring(pre.length());
 				if (qualifier.equals(""))
@@ -768,7 +768,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			CompletionProposal completionProposal;
 			
 			String nclMirror = "ncl-mirror://";
-			if (qualifier.startsWith(nclMirror)) {
+			if (qualifier.contains(nclMirror)) {
 				
 				String mediaId = qualifier.substring(nclMirror.length());
 				ArrayList<String> elements = nclDoc.getAllElementsOfType("media");
@@ -780,7 +780,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 				if (id == null) id = "";
 				
 				for (String str : elements){
-					if (str.startsWith(mediaId) && !str.equals(id)){
+					if (str.contains(mediaId) && !str.equals(id)){
 						str = nclMirror + str;
 						completionProposal = new CompletionProposal(str, offset
 								- qlen, qlen, str.length(), fileImage, str,
@@ -817,13 +817,13 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			 * Nao sugerindo temporariamente try { URIProposer fs = new
 			 * URIProposer(currentFile.getParent()); Vector<String> v =
 			 * fs.getDirectories(qualifier); for (int i = 0; i < v.size(); i++)
-			 * { if (v.get(i).startsWith(qualifier)) { cursor =
+			 * { if (v.get(i).contains(qualifier)) { cursor =
 			 * v.get(i).length(); CompletionProposal proposal = new
 			 * CompletionProposal(v .get(i), offset - qlen, qlen, cursor, null,
 			 * v .get(i), null, null); propList.add(proposal); } } fs = new
 			 * URIProposer(currentFile.getParent().toString()); v =
 			 * fs.getFiles(qualifier); for (int i = 0; i < v.size(); i++) { if
-			 * (v.get(i).startsWith(qualifier)) { cursor = v.get(i).length();
+			 * (v.get(i).contains(qualifier)) { cursor = v.get(i).length();
 			 * CompletionProposal proposal = new CompletionProposal(v .get(i),
 			 * offset - qlen, qlen, cursor, null, v .get(i), null, null);
 			 * propList.add(proposal); } } return; } catch (URISyntaxException
@@ -896,7 +896,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					}
 
 					String text_lower = text.toLowerCase();
-					if (text_lower.startsWith(qualifier_lower)) {
+					if (text_lower.contains(qualifier_lower)) {
 						cursor = text.length();
 						// System.out
 						// .println("Attribute Value Proposal = " + text);
@@ -979,7 +979,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					}
 
 					String text_lower = text.toLowerCase();
-					if (text_lower.startsWith(qualifier_lower)) {
+					if (text_lower.contains(qualifier_lower)) {
 						cursor = text.length();
 						/* System.out
 								.println("Attribute Value Proposal = " + text);
@@ -1174,7 +1174,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 					}
 
 					String text_lower = text.toLowerCase();
-					if (text_lower.startsWith(qualifier_lower)) {
+					if (text_lower.contains(qualifier_lower)) {
 						cursor = complete.length();
 						CompletionProposal proposal = new CompletionProposal(
 								complete, begin, end, cursor, connectorImage,
@@ -1260,7 +1260,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			String prop = entry.getKey();
 			String prop_lower = prop.toLowerCase();
 
-			if (prop_lower.startsWith(qualifier_lower)) {
+			if (prop_lower.contains(qualifier_lower)) {
 				// fix previous and next Whitespaces
 				if (mustIncludeWhitespaceInTheBegin)
 					prop = " " + prop + "=\"\"";
