@@ -29,27 +29,27 @@
 		<link>
 			<name>inTIme</name>
 			<type>2</type>
-			<location>/home/daniel/C::/Users/Daniel/workspace/NCLinTime/src</location>
+			<location>/home/roberto/git/NCLinTime/src</location>
 		</link>
 		<link>
 			<name>nc30-helper</name>
 			<type>2</type>
-			<location>/home/daniel/workspace-ncleclipse/ncl30-quick-reference/src</location>
+			<location>/home/roberto/git/ncl30-quick-reference/src</location>
 		</link>
 		<link>
 			<name>ncl30-common</name>
 			<type>2</type>
-			<location>/home/daniel/workspace-ncleclipse/ncl30-common/src</location>
+			<location>/home/roberto/git/ncl30-common/src</location>
 		</link>
 		<link>
 			<name>ncl30-eclipse-layout</name>
 			<type>2</type>
-			<location>/home/daniel/C::/home/roberto/workspace/ncl30-eclipse-layout/src</location>
+			<location>/home/roberto/eclipse/C::/home/roberto/workspace/ncl30-eclipse-layout/src</location>
 		</link>
 		<link>
 			<name>ncl30-validator</name>
 			<type>2</type>
-			<location>/home/daniel/workspace-ncleclipse/ncl30-validator/src</location>
+			<location>/home/roberto/git/ncl30-validator/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>

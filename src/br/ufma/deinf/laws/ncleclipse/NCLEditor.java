@@ -544,6 +544,7 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 		// updateOutlineView.cancel();
 		// updateOutlineView.setPriority(Job.SHORT);
 		// updateOutlineView.schedule();
+		
 		IDocument idoc = event.getDocument();
 		if (!(idoc instanceof NCLSourceDocument))
 			return;
@@ -590,26 +591,18 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 
 							if (region.getType().equals(
 									XMLPartitionScanner.XML_END_TAG)) {
-								if (doc
-										.getCurrentEndTagName(
-												region.getOffset()).equals(
-												fatherTagName))
+								if (doc.getCurrentEndTagName(region.getOffset()).equals(fatherTagName))
 									break;
 
-								if (doc
-										.getCurrentEndTagName(
-												region.getOffset()).equals(
-												tagname))
+								if (doc.getCurrentEndTagName(region.getOffset()).equals(tagname))
 									--stack;
 							}
 
 							if (region.getType().equals(
 									XMLPartitionScanner.XML_START_TAG)) {
-								String str = doc.get(region.getOffset(), region
-										.getLength());
-								if (doc.getCurrentTagname(region.getOffset())
-										.equals(tagname)
-										&& !str.endsWith("/>"))
+								String str = doc.get(region.getOffset(), region.getLength());
+								
+								if (doc.getCurrentTagname(region.getOffset()).equals(tagname) && !str.endsWith("/>"))
 									++stack;
 
 							}
@@ -638,13 +631,11 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 								doc.registerPostNotificationReplace(null,
 										new IDocumentExtension.IReplace() {
 											@Override
-											public void perform(
-													IDocument document,
-													IDocumentListener owner) {
+											public void perform(IDocument document, IDocumentListener owner) {
 												try {
-													doc.replace(fOffset,
-															lastOffset, "");
-												} catch (BadLocationException e) {
+													doc.replace(fOffset, lastOffset, "");
+												}
+												catch (BadLocationException e) {
 													e.printStackTrace();
 												}
 											}
@@ -675,16 +666,14 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 
 					ITypedRegion region = doc.getPartition(offset);
 					ITypedRegion sStartTagRegion = region;
-					if (region.getType().equals(
-							XMLPartitionScanner.XML_START_TAG)) {
-						int endRegionOffset = region.getOffset()
-								+ region.getLength();
+					if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+						
+						int endRegionOffset = region.getOffset() + region.getLength();
 						ch = doc.getChar(endRegionOffset - 2);
 
 						if (ch != '/' && (offset == endRegionOffset - 1)) {
 							--offset;
-							final String tagname = doc
-									.getCurrentTagname(offset);
+							final String tagname = doc.getCurrentTagname(offset);
 							String fatherTagName = doc.getFatherTagName(offset);
 
 							int stack = 1;
@@ -701,16 +690,15 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 							do {
 								if (stack == 0)
 									break;
+								
 								ch = doc.getChar(++offset);
 								while (Character.isWhitespace(ch))
 									ch = doc.getChar(++offset);
 
 								region = doc.getPartition(offset);
 
-								if (region.getType().equals(
-										XMLPartitionScanner.XML_END_TAG)) {
-									String endTag = doc
-											.getCurrentEndTagName(offset);
+								if (region.getType().equals(XMLPartitionScanner.XML_END_TAG)) {
+									String endTag = doc.getCurrentEndTagName(offset);
 									if (endTag.equals(tagname)) {
 										--stack;
 									}
@@ -719,79 +707,52 @@ public class NCLEditor extends TextEditor implements IDocumentListener {
 										break;
 								}
 
-								if (region.getType().equals(
-										XMLPartitionScanner.XML_START_TAG)) {
-									String str = doc.get(region.getOffset(),
-											region.getLength());
-									if (doc.getCurrentTagname(offset).equals(
-											tagname)
-											&& !str.endsWith("/>"))
+								if (region.getType().equals(XMLPartitionScanner.XML_START_TAG)) {
+									String str = doc.get(region.getOffset(), region.getLength());
+									if (doc.getCurrentTagname(offset).equals(tagname) && !str.endsWith("/>"))
 										++stack;
 								}
 
-								offset = region.getOffset()
-										+ region.getLength() + 1;
+								offset = region.getOffset() + region.getLength() + 1;
 							} while (true);
 
 							if (stack > 0) {
 								region = doc.getPartition(nextPartitionOffset);
-								final int beginStartTag = sStartTagRegion
-										.getOffset();
+								final int beginStartTag = sStartTagRegion.getOffset();
 								final int beginWithChild = region.getOffset();
-								final int beginWithoutChild = region
-										.getOffset() - 1;
-								final int highlightLine = doc
-										.getLineOfOffset(region.getOffset()
-												+ region.getLength() - 2);
+								final int beginWithoutChild = region.getOffset() - 1;
+								final int highlightLine = doc.getLineOfOffset(region.getOffset() + region.getLength() - 2);
+								
 								doc.acceptPostNotificationReplaces();
 
-								doc.registerPostNotificationReplace(null,
+								doc.registerPostNotificationReplace(null, 
 										new IDocumentExtension.IReplace() {
 
 											@Override
-											public void perform(
-													IDocument document,
-													IDocumentListener owner) {
+											public void perform( IDocument document, IDocumentListener owner) {
 												try {
-
-													if (NCLStructure
-															.getInstance()
-															.getChildrenCardinality(
-																	tagname)
-															.size() > 0) {
-														doc
-																.replace(
-																		beginWithChild,
-																		0,
-																		"\n"
-																				+ doc
-																						.getIndentLine(beginStartTag)
+													if (NCLStructure.getInstance().getChildrenCardinality(tagname).size() > 0) {
+														doc.replace(beginWithChild, 0,
+																				"\n"
+																				+ doc.getIndentLine(beginStartTag)
 																				+ "\t"
 																				+ "\n"
-																				+ doc
-																						.getIndentLine(beginStartTag)
+																				+ doc.getIndentLine(beginStartTag)
 																				+ "</"
 																				+ tagname
 																				+ ">");
 
-														resetHighlightRange();
+//														resetHighlightRange();
+//														System.out.println(highlightLine);
 
-														System.out
-																.println(highlightLine);
+														// FIXME: Still not working
+//														setHighlightRange(highlightLine - 1, 1, true);
+														// selectAndReveal(0, 10);
 
-														// FIXME: Still not
-														// working
-														setHighlightRange(
-																highlightLine - 1,
-																1, true);
-														// selectAndReveal(0,
-														// 10);
-
-													} else
-														doc
-																.replace(
-																		beginWithoutChild,
-																		0, "/");
+													}
+													else {
+														doc.replace(beginWithoutChild, 0, "/");
+													}
 
 												} catch (BadLocationException e) {
 													// TODO Auto-generated catch
