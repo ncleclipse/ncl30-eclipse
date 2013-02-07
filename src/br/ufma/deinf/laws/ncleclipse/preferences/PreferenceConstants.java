@@ -49,7 +49,9 @@ public class PreferenceConstants {
 	public static final String P_LINK_AUTO_COMPLETE = "nclEclipseLinkAutoComplete";
 
 	public static final String P_SHOW_HELP_INFO_ON_AUTOCOMPLETE = "nclEclipseShowHelpInfoOnAutoComplete";
-
+	
+	public static final String P_INSERT_PORT_IN_CONTEXT_ON_AUTOCOMPLETE = "nclEclipseInsertPortInContextOnAutoComplete";
+	
 	// Remote settings
 	public static final String P_ENABLE_REMOTE_SETTINGS = "nclEclipseEnableRemoteSettings";
 	public static final String P_REMOTE_SETTINGS_PATH = "nclEclipseRemoteSettingsPath";

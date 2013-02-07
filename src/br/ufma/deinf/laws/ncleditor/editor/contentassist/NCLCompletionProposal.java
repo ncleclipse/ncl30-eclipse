@@ -348,7 +348,15 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 		} else {
 			ret = "<" + tagname + attributes + ">" + "\r\n" + indent + "\t";
 			if (tagname.equals("context")) {
-				ret += "<port id=\"\" component=\"\" />";
+				// Test if the user wants to insert a port 
+				if (NCLEditorPlugin
+						.getDefault()
+						.getPreferenceStore()
+						.getBoolean(
+								PreferenceConstants.P_INSERT_PORT_IN_CONTEXT_ON_AUTOCOMPLETE)) {
+					ret += "<port id=\"\" component=\"\" />";
+				}
+				
 			} else if (tagname.equals("causalConnector")) {
 				ret += "<simpleCondition role=\"\" />" + "\n" + indent + "\t"
 						+ "<simpleAction role=\"\" />";

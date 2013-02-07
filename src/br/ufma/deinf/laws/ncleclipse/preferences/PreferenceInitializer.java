@@ -62,6 +62,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_LINK_AUTO_COMPLETE, false);
 		store.setDefault(PreferenceConstants.P_SHOW_HELP_INFO_ON_AUTOCOMPLETE,
 				false);
+		store.setDefault(PreferenceConstants.P_INSERT_PORT_IN_CONTEXT_ON_AUTOCOMPLETE,
+				true);
 		
 		store.setDefault(PreferenceConstants.P_ENABLE_REMOTE_SETTINGS, false);
 		store.setDefault(PreferenceConstants.P_REMOTE_SETTINGS_PATH, "/usr/local/etc/ginga/files/contextmanager/contexts.ini");

@@ -85,7 +85,11 @@ public class ViewsPreferencePage extends FieldEditorPreferencePage implements
 				PreferenceConstants.P_LINK_AUTO_COMPLETE, NCLEditorMessages
 						.getInstance().getString("Preferences.LinkComp"),
 				getFieldEditorParent()));
-
+		
+		addField(new BooleanFieldEditor(
+				PreferenceConstants.P_INSERT_PORT_IN_CONTEXT_ON_AUTOCOMPLETE, NCLEditorMessages
+						.getInstance().getString("Preferences.InsertPortInContextOnAutoComplete"),
+				getFieldEditorParent()));
 	}
 
 	/*
