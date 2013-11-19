@@ -40,6 +40,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
+import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor;
 import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
 
 public class NCLMultiPageEditor extends MultiPageEditorPart implements
@@ -47,7 +48,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements
 	/** The text editor used in page 0. */
 	private NCLEditor editor = null;
 
-	//private NCLLayoutEditor layoutEditor = null;
+	private NCLLayoutEditor layoutEditor = null;
 
 	/**
 	 * Creates a multi-page editor example.
@@ -78,18 +79,16 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements
 	 * which allows you to change the font used in page 2.
 	 */
 	void createLayoutViewPage() {
-		//		try {
-		//layoutEditor = new NCLLayoutEditor();
-		//int index = addPage(layoutEditor, getEditorInput());
-		//layoutEditor.setNclSourceDocument((NCLSourceDocument)editor.getInputDocument());
-		//setPageText(index, "Layout");
-		//		} catch (PartInitException e) {
-		//			ErrorDialog.openError(
-		//				getSite().getShell(),
-		//				"Error creating nested layout editor",
-		//				null,
-		//				e.getStatus());
-		//		}
+		try {
+			layoutEditor = new NCLLayoutEditor();
+			int index = addPage((IEditorPart) layoutEditor, getEditorInput());
+			layoutEditor.setNclSourceDocument((NCLSourceDocument) editor
+					.getInputDocument());
+			setPageText(index, "Layout");
+		} catch (PartInitException e) {
+			ErrorDialog.openError(getSite().getShell(),
+					"Error creating nested layout editor", null, e.getStatus());
+		}
 	}
 
 	/**
@@ -97,10 +96,12 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements
 	 */
 	protected void createPages() {
 		createNCLEditorPage();
-		if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
+		/* if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
 				PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE))
-			//			createLayoutViewPage();
-			updateTitle();
+		{ */
+			createLayoutViewPage();
+		/* } */
+		updateTitle();
 	}
 
 	/**
