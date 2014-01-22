@@ -39,10 +39,6 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
-import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
-import br.ufma.deinf.laws.ncleclipse.layout.NCLLayoutEditor;
-import br.ufma.deinf.laws.ncleclipse.preferences.PreferenceConstants;
-
 public class NCLMultiPageEditor extends MultiPageEditorPart implements
 		IResourceChangeListener {
 	/** The text editor used in page 0. */
