@@ -56,17 +56,18 @@ public class XMLPartitionScanner extends RuleBasedPartitionScanner {
 		IToken startTag = new Token(XML_START_TAG);
 		IToken endTag = new Token(XML_END_TAG);
 		IToken docType = new Token(XML_DOCTYPE);
-		IToken text = new Token(XML_TEXT);
+		// IToken text = new Token(XML_TEXT);
 		// IToken tag = new Token(XML_TAG);
 
 		IPredicateRule[] rules = new IPredicateRule[6];
 
 		rules[0] = new NonMatchingRule();
-		rules[1] = new MultiLineRule("<!--", "-->", xmlComment);
+		rules[1] = new MultiLineRule("<!--", "-->", xmlComment, '\\', true);
 		rules[2] = new MultiLineRule("<?", "?>", xmlPI);
 		rules[3] = new MultiLineRule("</", ">", endTag);
 		rules[4] = new StartTagRule(startTag);
 		rules[5] = new MultiLineRule("<!DOCTYPE", ">", docType);
+
 		// rules[6] = new XMLTextPredicateRule(text);
 		// rules[7] = new TagRule(tag);
 
