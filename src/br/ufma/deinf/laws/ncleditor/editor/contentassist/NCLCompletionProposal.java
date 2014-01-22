@@ -84,7 +84,9 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 	private File currentFile;
 	private String text;
 	private String protocols[] = { "file:///", "http://", "https://",
-			"rtsp://", "rtp://", "ncl-mirror://", "sbtvd-ts://", "isdb-ts://",
+			"rtsp://", "rtp://", "ncl-mirror://", 
+			"sbtvd-ts://", "sbtvd-ts://video", "sbtvd-ts://audio", 
+			"isdb-ts://", "isdb-ts://video", "isdb-ts://audio",
 			"ts://" };
 	private boolean isAttributeValue;
 	private boolean isAttribute;
