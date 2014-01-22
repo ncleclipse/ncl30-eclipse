@@ -48,7 +48,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements
 	/** The text editor used in page 0. */
 	private NCLEditor editor = null;
 
-	private NCLLayoutEditor layoutEditor = null;
+	// private NCLLayoutEditor layoutEditor = null;
 
 	/**
 	 * Creates a multi-page editor example.
@@ -78,7 +78,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements
 	 * Creates page 1 of the multi-page editor,
 	 * which allows you to change the font used in page 2.
 	 */
-	void createLayoutViewPage() {
+	/* void createLayoutViewPage() {
 		try {
 			layoutEditor = new NCLLayoutEditor();
 			int index = addPage((IEditorPart) layoutEditor, getEditorInput());
@@ -89,7 +89,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements
 			ErrorDialog.openError(getSite().getShell(),
 					"Error creating nested layout editor", null, e.getStatus());
 		}
-	}
+	} */
 
 	/**
 	 * Creates the pages of the multi-page editor.
@@ -99,7 +99,7 @@ public class NCLMultiPageEditor extends MultiPageEditorPart implements
 		/* if (NCLEditorPlugin.getDefault().getPreferenceStore().getBoolean(
 				PreferenceConstants.P_NCL_LAYOUT_EDITOR_ACTIVATE))
 		{ */
-			createLayoutViewPage();
+			// createLayoutViewPage();
 		/* } */
 		updateTitle();
 	}
