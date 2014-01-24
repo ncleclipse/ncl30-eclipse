@@ -280,7 +280,7 @@
           id="br.ufma.deinf.laws.ncleclipse.actions.commentSelection"
           targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
        <action
-             accelerator="Ctrl+Alt+C"
+             accelerator="Ctrl+Shift+C"
              class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
              id="ncl30-eclipse.commentSelection"
              label="Comment Selection">
@@ -290,7 +290,7 @@
           id="br.ufma.deinf.laws.ncleclipse.actions.UncommentSelection"
           targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
        <action
-             accelerator="Ctrl+Alt+U"
+             accelerator="Ctrl+Shift+C"
              class="br.ufma.deinf.laws.ncleclipse.actions.UncommentSelection"
              id="ncl30-eclipse.uncommentSelection"
              label="Uncomment Selection">
