@@ -349,7 +349,7 @@ public class NCLCompletionProposal implements IContentAssistProcessor {
 			}
 		} else {
 			ret = "<" + tagname + attributes + ">" + "\r\n" + indent + "\t";
-			if (tagname.equals("context")) {
+			if (tagname.equals("context") || tagname.equals("body") || tagname.equals("switch")) {
 				// Test if the user wants to insert a port 
 				if (NCLEditorPlugin
 						.getDefault()
