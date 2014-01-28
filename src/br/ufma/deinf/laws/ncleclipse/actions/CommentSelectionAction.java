@@ -28,6 +28,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -47,12 +48,14 @@ import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
  * 
  */
 public class CommentSelectionAction implements IEditorActionDelegate{
-
+	final String commentBegin = "<!--";
+	final String commentEnd = "-->";
 	/**
 	 * 
 	 */
 	public CommentSelectionAction() {
 		// TODO Auto-generated constructor stub
+		
 	}
 
 	/* (non-Javadoc)
@@ -78,25 +81,17 @@ public class CommentSelectionAction implements IEditorActionDelegate{
 		TextSelection selection = (TextSelection) editor.getSelectionProvider()
 				.getSelection();
 		IDocument doc = editor.getInputDocument();
-
-		String commentBegin = "<!--";
-		String commentEnd = "-->";
-
-		if (selection.getLength() > 0) {
-			try {
-				int offset;
-				offset = selection.getOffset();
-				doc.replace(offset, 0, commentBegin);
-				offset += selection.getLength() + commentBegin.length();
-				doc.replace(offset, 0, commentEnd);
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		} else {
-			// TODO: Comment the range!
-			System.out.println("Comment the range!");
+		
+		String text = doc.get();
+		
+		text = text.substring(selection.getOffset()-10, selection.getOffset()+selection.getLength()+10);
+		if (text.contains(commentBegin) && text.contains(commentEnd)){
+			uncommentSelection(selection,doc);
 		}
-
+		else{
+			commentSelection(selection,doc);
+		}
+		
 		return;
 	}
 
@@ -112,5 +107,63 @@ public class CommentSelectionAction implements IEditorActionDelegate{
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
+	public void commentSelection(TextSelection selection, IDocument doc){
+		if (selection.getLength() > 0) {
+			try {
+				int offset;
+				offset = selection.getOffset();
+				doc.replace(offset, 0, commentBegin);
+				offset += selection.getLength() + commentBegin.length();
+				doc.replace(offset, 0, commentEnd);
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// TODO: Comment the range!
+			System.out.println("Comment the range!");
+		}
+	}
+	
+	public void uncommentSelection(TextSelection selection, IDocument doc){
+		int startLine  = selection.getStartLine();
+		int endLine = selection.getEndLine();
 
+		if (selection.getLength() > 0) {
+			try {
+				int offset;
+				offset = selection.getOffset();
+				IRegion region = doc.getLineInformationOfOffset(offset);
+				String text = doc.get(doc.getLineOffset(startLine), offset - region.getOffset());
+				
+				int index = text.lastIndexOf(commentBegin);
+				if (index != -1)
+					doc.replace(doc.getLineOffset(startLine) + index, commentBegin.length(), "");
+				else{
+					text = selection.getText();
+					index = text.indexOf(commentBegin);
+					doc.replace(offset + index, commentBegin.length(), "");
+				}
+				
+				offset += selection.getLength();
+				region = doc.getLineInformationOfOffset(offset);
+				text = doc.get(offset, doc.getLineLength(endLine) - (offset - region.getOffset()) );
+				index = text.indexOf(commentEnd);
+				if (index != -1)
+					doc.replace(offset, commentEnd.length(), "");
+				else{
+					text = selection.getText();
+					index = text.lastIndexOf(commentEnd);
+					if (index != -1)
+						doc.replace(selection.getOffset() + index, commentEnd.length(), "");
+				}
+				
+				
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// TODO: Comment the range!
+			System.out.println("Comment the range!");
+		}
+	}
 }
