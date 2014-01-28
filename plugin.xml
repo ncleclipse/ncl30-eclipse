@@ -283,17 +283,7 @@
              accelerator="Ctrl+Shift+/"
              class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
              id="ncl30-eclipse.commentSelection"
-             label="Comment Selection">
-       </action>
-    </editorContribution>
-    <editorContribution
-          id="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
-          targetID="br.ufma.deinf.laws.ncleclipse.editors.NCLMultiPageEditor">
-       <action
-             accelerator="Ctrl+Shift+/"
-             class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
-             id="ncl30-eclipse.uncommentSelection"
-             label="Uncomment Selection">
+             label="Comment/Uncomment Selection">
        </action>
     </editorContribution>
  </extension> 
@@ -371,15 +361,8 @@
           targetID="#TextEditorContext">
        <action
              class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
-             id="ncl30-eclipse.uncommentSelectionAction"
-             label="Uncomment Selection"
-             menubarPath="additions">
-       </action>
-       <action
-             class="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
-             definitionId="br.ufma.deinf.laws.ncleclipse.actions.CommentSelectionAction"
-             id="ncl30-eclipse.commentSelectionAction"
-             label="Comment Selection"
+             id="ncl30-eclipse.CommentSelectionAction"
+             label="Comment/Uncomment Selection"
              menubarPath="additions">
        </action>
     </viewerContribution>
