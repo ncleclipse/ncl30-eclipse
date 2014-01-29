@@ -82,15 +82,20 @@ public class CommentSelectionAction implements IEditorActionDelegate{
 				.getSelection();
 		IDocument doc = editor.getInputDocument();
 		
-		String text = doc.get();
+		try {
+			ITypedRegion region = doc.getPartition(selection.getOffset());
+			if (region.getType().equals("__xml_comment")){
+				uncommentSelection(selection, doc);
+			}
+			else{
+				commentSelection(selection, doc);
+			}
+			
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		text = text.substring(selection.getOffset()-10, selection.getOffset()+selection.getLength()+10);
-		if (text.contains(commentBegin) && text.contains(commentEnd)){
-			uncommentSelection(selection,doc);
-		}
-		else{
-			commentSelection(selection,doc);
-		}
 		
 		return;
 	}
@@ -144,7 +149,7 @@ public class CommentSelectionAction implements IEditorActionDelegate{
 					doc.replace(offset + index, commentBegin.length(), "");
 				}
 				
-				offset += selection.getLength();
+				offset += selection.getLength()-commentEnd.length()-1;
 				region = doc.getLineInformationOfOffset(offset);
 				text = doc.get(offset, doc.getLineLength(endLine) - (offset - region.getOffset()) );
 				index = text.indexOf(commentEnd);
