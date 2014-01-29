@@ -23,8 +23,6 @@
  ******************************************************************************/
 package br.ufma.deinf.laws.ncleclipse.actions;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -41,7 +39,6 @@ import org.eclipse.ui.PlatformUI;
 
 import br.ufma.deinf.laws.ncleclipse.NCLEditor;
 import br.ufma.deinf.laws.ncleclipse.NCLMultiPageEditor;
-import br.ufma.deinf.laws.ncleclipse.document.NCLSourceDocument;
 
 /**
  * @author Rodrigo Costa <rodrim.c@laws.deinf.ufma.br>
@@ -84,10 +81,10 @@ public class CommentSelectionAction implements IEditorActionDelegate{
 		
 		try {
 			ITypedRegion region = doc.getPartition(selection.getOffset());
-			if (region.getType().equals("__xml_comment")){
-				uncommentSelection(selection, doc);
+			if (region.getType().equals("__xml_comment")) {
+				uncommentSelection(region, doc);
 			}
-			else{
+			else {
 				commentSelection(selection, doc);
 			}
 			
@@ -129,46 +126,21 @@ public class CommentSelectionAction implements IEditorActionDelegate{
 		}
 	}
 	
-	public void uncommentSelection(TextSelection selection, IDocument doc){
-		int startLine  = selection.getStartLine();
-		int endLine = selection.getEndLine();
-
-		if (selection.getLength() > 0) {
-			try {
-				int offset;
-				offset = selection.getOffset();
-				IRegion region = doc.getLineInformationOfOffset(offset);
-				String text = doc.get(doc.getLineOffset(startLine), offset - region.getOffset());
+	public void uncommentSelection(ITypedRegion region, IDocument doc){
+		int offset  = region.getOffset();
+		int endOffset = region.getOffset() + (region.getLength() - commentBegin.length() - commentEnd.length());
+		
+		if(!region.getType().equals("__xml_comment"))
+			return; // we should ignore if the region is not a comment
 				
-				int index = text.lastIndexOf(commentBegin);
-				if (index != -1)
-					doc.replace(doc.getLineOffset(startLine) + index, commentBegin.length(), "");
-				else{
-					text = selection.getText();
-					index = text.indexOf(commentBegin);
-					doc.replace(offset + index, commentBegin.length(), "");
-				}
-				
-				offset += selection.getLength()-commentEnd.length()-1;
-				region = doc.getLineInformationOfOffset(offset);
-				text = doc.get(offset, doc.getLineLength(endLine) - (offset - region.getOffset()) );
-				index = text.indexOf(commentEnd);
-				if (index != -1)
-					doc.replace(offset, commentEnd.length(), "");
-				else{
-					text = selection.getText();
-					index = text.lastIndexOf(commentEnd);
-					if (index != -1)
-						doc.replace(selection.getOffset() + index, commentEnd.length(), "");
-				}
-				
-				
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		} else {
-			// TODO: Comment the range!
-			System.out.println("Comment the range!");
+		try {
+			doc.replace(offset, commentBegin.length(), ""); // remove start comment
+			
+			if(doc.get(endOffset, commentEnd.length()).equals(commentEnd))
+				doc.replace(endOffset, commentEnd.length(), ""); // remove end comment
+			
+		} catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 	}
 }
