@@ -1,4 +1,14 @@
-THIS IS A ECLIPSE PLUG-IN THAT HELPS NCL DEVELOPERS IN THE PROCCES OF INTERACTIVE APPLICATION CREATION.
-THE NCL ECLIPSE IS BASED IN THE FACT
+# NCL Eclipse
 
-TODO MORE
+This is NCL Eclipse.  NCL Eclipse is an [Eclipse](http://eclipse.orG) plug-in
+that helps in the process of creating interactive TV applications in [Nested
+Context Language](http://www.ncl.org).
+
+## Main features
+
+  * Content sugestion
+  * Code validation and error marking
+  * Integration with NCL player
+  * Media preview
+  * Language tooltips, including multi-language support (English, Portuguese, Spanish)
+
